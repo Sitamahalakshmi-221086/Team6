@@ -1,2 +1,3 @@
-Team 6
-project
+
+# Placement Management System
+Developed by Team6
