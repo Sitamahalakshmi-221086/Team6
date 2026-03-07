@@ -203,8 +203,20 @@
       document.getElementById('success-sub').textContent = subs[role];
       const successCta = document.getElementById('success-cta');
       successCta.textContent = ctas[role];
-      
-      successCta.href = '#';
+
+       
+      if (role === 'tpo') {
+        successCta.href = 'TPOdashboard.html';
+        
+        // redirect automatically for better UX
+        setTimeout(() => {
+          window.location.href = 'TPOdashboard.html';
+        }, 1500)
+      } else {
+        successCta.href = '#';
+      }
+
+    
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusPlace – TPO Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/tpodashboard.css" />
+</head>
+<body>
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar">
+    <a href="Login.html" class="sidebar-logo">
+      <div class="logo-icon">🎓</div>
+      <span class="logo-text">Campus<span>Place</span></span>
+    </a>
+
+    <div class="sidebar-role-badge">🛡️ TPO / Admin</div>
+
+    <p class="sidebar-section-label">Main Menu</p>
+    <ul class="sidebar-nav">
+      <li><a class="active" href="#"><span class="nav-icon">🏠</span> Dashboard</a></li>
+      <li><a href="#"><span class="nav-icon">🏢</span> Companies <span class="nav-badge">3</span></a></li>
+      <li><a href="#"><span class="nav-icon">🎯</span> Placement Drives</a></li>
+      <li><a href="#"><span class="nav-icon">👩‍🎓</span> Students</a></li>
+      <li><a href="#"><span class="nav-icon">📋</span> Applications</a></li>
+      <li><a href="#"><span class="nav-icon">📢</span> Announcements</a></li>
+    </ul>
+
+    <p class="sidebar-section-label">Reports & Settings</p>
+    <ul class="sidebar-nav">
+      <li><a href="#"><span class="nav-icon">📊</span> Analytics</a></li>
+      <li><a href="#"><span class="nav-icon">📁</span> Documents</a></li>
+      <li><a href="#"><span class="nav-icon">⚙️</span> Settings</a></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">TP</div>
+        <div class="sidebar-user-info">
+          <div class="name">TPO Admin</div>
+          <div class="email">tpo@college.edu</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="window.location.href='tpologin.html'">
+        🚪 Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1>TPO Dashboard</h1>
+        <p>Saturday, 07 March 2026</p>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-search">🔍 Search students, companies…</div>
+        <div class="topbar-btn">🔔<span class="dot"></span></div>
+        <div class="topbar-btn">📧<span class="dot"></span></div>
+      </div>
+    </header>
+
+    <!-- PAGE BODY -->
+    <div class="page-body">
+
+      <!-- WELCOME BANNER -->
+      <div class="welcome-banner">
+        <div class="welcome-text">
+          <h2>Welcome back, <span>TPO Admin</span> 🛡️</h2>
+          <p>You have <strong style="color:#fff;">5 pending approvals</strong> and <strong style="color:#fff;">3 new company registrations</strong> today.</p>
+        </div>
+        <div class="welcome-actions">
+          <button class="btn-primary">+ Add Drive</button>
+          <button class="btn-ghost">View Reports</button>
+        </div>
+      </div>
+
+      <!-- STAT CARDS -->
+      <div class="stats-grid">
+        <div class="stat-card s1">
+          <div class="stat-icon">👩‍🎓</div>
+          <span class="stat-change up">↑ 4.2%</span>
+          <div class="stat-val">1,284</div>
+          <div class="stat-lbl">Registered Students</div>
+        </div>
+        <div class="stat-card s2">
+          <div class="stat-icon">🏢</div>
+          <span class="stat-change up">↑ 12%</span>
+          <div class="stat-val">87</div>
+          <div class="stat-lbl">Active Companies</div>
+        </div>
+        <div class="stat-card s3">
+          <div class="stat-icon">✅</div>
+          <span class="stat-change up">↑ 7.8%</span>
+          <div class="stat-val">342</div>
+          <div class="stat-lbl">Placed Students</div>
+        </div>
+        <div class="stat-card s4">
+          <div class="stat-icon">📋</div>
+          <span class="stat-change down">↓ 2.1%</span>
+          <div class="stat-val">5</div>
+          <div class="stat-lbl">Pending Approvals</div>
+        </div>
+      </div>
+
+      <!-- TWO COL: Recent Drives + Activity -->
+      <div class="two-col">
+
+        <!-- RECENT DRIVES -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Recent Placement Drives</span>
+            <button class="btn-link">View All →</button>
+          </div>
+          <div class="card-body">
+            <table class="drives-table">
+              <thead>
+                <tr>
+                  <th>Company</th>
+                  <th>Package</th>
+                  <th>Applied</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="company-cell">
+                      <div class="company-logo" style="background:#fff7ed;">🔵</div>
+                      <div><div class="company-name">Infosys</div><div class="company-role">SDE Intern</div></div>
+                    </div>
+                  </td>
+                  <td style="font-weight:600;">₹6 LPA</td>
+                  <td>128</td>
+                  <td><span class="status-pill pill-active">Active</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="company-cell">
+                      <div class="company-logo" style="background:#fffbeb;">🟡</div>
+                      <div><div class="company-name">Wipro</div><div class="company-role">Analyst</div></div>
+                    </div>
+                  </td>
+                  <td style="font-weight:600;">₹4.5 LPA</td>
+                  <td>95</td>
+                  <td><span class="status-pill pill-upcoming">Upcoming</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="company-cell">
+                      <div class="company-logo" style="background:#fce7f3;">🔴</div>
+                      <div><div class="company-name">TCS</div><div class="company-role">Graduate Trainee</div></div>
+                    </div>
+                  </td>
+                  <td style="font-weight:600;">₹3.6 LPA</td>
+                  <td>214</td>
+                  <td><span class="status-pill pill-closed">Closed</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="company-cell">
+                      <div class="company-logo" style="background:#dcfce7;">🟢</div>
+                      <div><div class="company-name">Accenture</div><div class="company-role">Associate</div></div>
+                    </div>
+                  </td>
+                  <td style="font-weight:600;">₹7 LPA</td>
+                  <td>76</td>
+                  <td><span class="status-pill pill-active">Active</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ACTIVITY FEED -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Recent Activity</span>
+            <span class="card-meta">Today</span>
+          </div>
+          <div class="card-body">
+            <ul class="activity-list">
+              <li>
+                <div class="act-icon" style="background:#fff7ed;">📩</div>
+                <div>
+                  <div class="act-text"><strong>Infosys</strong> submitted a new drive request</div>
+                  <div class="act-time">2 mins ago</div>
+                </div>
+              </li>
+              <li>
+                <div class="act-icon" style="background:#dcfce7;">✅</div>
+                <div>
+                  <div class="act-text"><strong>Riya Sharma</strong> accepted offer from TCS</div>
+                  <div class="act-time">18 mins ago</div>
+                </div>
+              </li>
+              <li>
+                <div class="act-icon" style="background:#fffbeb;">📋</div>
+                <div>
+                  <div class="act-text"><strong>5 students</strong> submitted resumes for Wipro drive</div>
+                  <div class="act-time">1 hr ago</div>
+                </div>
+              </li>
+              <li>
+                <div class="act-icon" style="background:#fdf4ff;">🆕</div>
+                <div>
+                  <div class="act-text"><strong>Google</strong> registered as a new recruiter</div>
+                  <div class="act-time">3 hrs ago</div>
+                </div>
+              </li>
+              <li>
+                <div class="act-icon" style="background:#fef2f2;">⚠️</div>
+                <div>
+                  <div class="act-text"><strong>Placement policy</strong> updated by super admin</div>
+                  <div class="act-time">Yesterday</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- THREE COL: Quick Actions + Mini Chart + Upcoming -->
+      <div class="three-col">
+
+        <!-- QUICK ACTIONS -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">Quick Actions</span></div>
+          <div class="card-body">
+            <div class="quick-actions">
+              <button class="qa-btn"><span class="qa-icon">➕</span>New Drive</button>
+              <button class="qa-btn"><span class="qa-icon">👤</span>Add Student</button>
+              <button class="qa-btn"><span class="qa-icon">🏢</span>Add Company</button>
+              <button class="qa-btn"><span class="qa-icon">📢</span>Announce</button>
+              <button class="qa-btn"><span class="qa-icon">📊</span>Reports</button>
+              <button class="qa-btn"><span class="qa-icon">📁</span>Documents</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MINI CHART -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Placements This Month</span>
+            <span class="card-meta">Mar 2026</span>
+          </div>
+          <div class="card-body">
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--navy);margin-bottom:4px;">342</div>
+            <div style="font-size:12px;color:#16a34a;font-weight:600;margin-bottom:20px;">↑ 7.8% vs last month</div>
+            <div class="mini-chart">
+              <div class="bar-wrap"><div class="bar" style="height:30px;"></div><div class="bar-lbl">W1</div></div>
+              <div class="bar-wrap"><div class="bar active" style="height:45px;"></div><div class="bar-lbl">W2</div></div>
+              <div class="bar-wrap"><div class="bar" style="height:25px;"></div><div class="bar-lbl">W3</div></div>
+              <div class="bar-wrap"><div class="bar active" style="height:55px;"></div><div class="bar-lbl">W4</div></div>
+              <div class="bar-wrap"><div class="bar" style="height:40px;"></div><div class="bar-lbl">W5</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- UPCOMING EVENTS -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Upcoming Events</span>
+            <button class="btn-link">See Calendar →</button>
+          </div>
+          <div class="card-body">
+            <ul class="upcoming-list">
+              <li>
+                <div class="upcoming-date"><div class="dd">10</div><div class="mm">Mar</div></div>
+                <div class="upcoming-info"><div class="ev-name">Google Pre-Placement Talk</div><div class="ev-meta">10:00 AM · Auditorium</div></div>
+              </li>
+              <li>
+                <div class="upcoming-date"><div class="dd">14</div><div class="mm">Mar</div></div>
+                <div class="upcoming-info"><div class="ev-name">Infosys Written Test</div><div class="ev-meta">9:00 AM · Lab Block A</div></div>
+              </li>
+              <li>
+                <div class="upcoming-date"><div class="dd">18</div><div class="mm">Mar</div></div>
+                <div class="upcoming-info"><div class="ev-name">Wipro HR Interview Round</div><div class="ev-meta">11:00 AM · Conference Room</div></div>
+              </li>
+              <li>
+                <div class="upcoming-date"><div class="dd">22</div><div class="mm">Mar</div></div>
+                <div class="upcoming-info"><div class="ev-name">Resume Submission Deadline</div><div class="ev-meta">Accenture Drive · All Branches</div></div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div><!-- end three-col -->
+
+    </div><!-- end page-body -->
+  </div><!-- end main -->
+
+</body>
+</html>
