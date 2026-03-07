@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusPlace – Student Log In</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../css/loginstyle.css" />
+  <link rel="stylesheet" href="../css/studentlogin.css" />
+</head>
+
+<body>
+
+  <div class="page-wrap">
+
+    <!-- ── LEFT PANEL ── -->
+    <aside class="left-panel">
+      <div class="left-content">
+        <a href="../index.html" class="logo"
+          style="margin-bottom: 40px; display: inline-flex; align-items: center; gap: 10px; text-decoration: none;">
+          <div class="logo-icon"
+            style="width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #1e3a8a, #2563eb); display: flex; align-items: center; justify-content: center; font-size: 17px; box-shadow: 0 4px 10px rgba(0,0,0,.2);">
+            🎓</div>
+          <span class="logo-text"
+            style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.25rem; color: #fff; letter-spacing: -0.02em;">Campus<span
+              style="color: #67e8f9;">Place</span></span>
+        </a>
+        <div class="left-badge"><span class="left-badge-dot"></span> Welcome Back</div>
+        <h2 class="left-title">Log Back<br />Into Your<br /><span style="color:#67e8f9;">Dashboard</span></h2>
+        <p class="left-sub">Access your personalised placement portal. Pick your role and sign in to continue.</p>
+
+        <div class="role-info-list" style="pointer-events: none;">
+          <div class="role-info-card highlight" id="left-student">
+            <div class="role-info-icon student">🎓</div>
+            <div class="role-info-text">
+              <div class="role-info-name">Student</div>
+              <div class="role-info-desc">View jobs, track applications & manage your profile</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:auto;" class="left-stats">
+          <div class="left-stat">
+            <div class="left-stat-num">500+</div>
+            <div class="left-stat-label">Colleges</div>
+          </div>
+          <div class="left-stat">
+            <div class="left-stat-num">12k+</div>
+            <div class="left-stat-label">Students</div>
+          </div>
+          <div class="left-stat">
+            <div class="left-stat-num">800+</div>
+            <div class="left-stat-label">Recruiters</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ── RIGHT PANEL ── -->
+    <main class="right-panel">
+
+      <!-- ══ STAGE 2a – STUDENT LOGIN ══ -->
+      <div class="form-stage active" id="stage-2-student">
+        <button class="btn-back" onclick="window.location.href='Login.html'">← Change Role</button>
+
+        <div class="stage-header">
+          <div class="stage-num">Step 02 / 02</div>
+          <h1 class="stage-title">Student <span class="shimmer-text">Login</span></h1>
+          <p class="stage-sub">Sign in with your college email to continue.</p>
+        </div>
+
+        <div class="role-badge student">🎓 Student Account</div>
+
+        <form onsubmit="return false;">
+          <div class="form-group">
+            <label>College Email <span>*</span></label>
+            <input type="email" id="sl-email" placeholder="you@college.edu" oninput="clearErr(this)" />
+            <span class="error-msg" id="err-sl-email">Enter a valid email address.</span>
+          </div>
+
+          <div class="form-group">
+            <label>Password <span>*</span></label>
+            <div class="pwd-wrap">
+              <input type="password" id="sl-pwd" placeholder="Enter your password" oninput="clearErr(this)" />
+              <button type="button" class="show-pwd" onclick="togglePwd('sl-pwd',this)">👁</button>
+            </div>
+            <span class="error-msg" id="err-sl-pwd">Please enter your password.</span>
+          </div>
+
+          <div class="forgot-row">
+            <span class="forgot-link" onclick="showForgot('student')">Forgot password?</span>
+          </div>
+
+          <div id="forgot-student" class="forgot-panel" style="display:none;">
+            <h3>Reset Password</h3>
+            <p>Enter your college email and we'll send you a reset link.</p>
+            <input type="email" placeholder="you@college.edu" style="margin-bottom:12px;" />
+            <button class="btn-send-reset" onclick="sendReset(this)">Send Reset Link</button>
+          </div>
+
+          <div id="login-err-student"
+            style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;font-size:13px;color:#dc2626;margin-bottom:16px;">
+            ❌ Invalid email or password. Please try again.
+          </div>
+
+          <button class="btn-login student" onclick="doLogin('student')">
+            <span class="spinner" id="spin-student"></span>
+            Sign In to Dashboard →
+          </button>
+        </form>
+
+        <div class="divider">
+          <hr /><span>or</span>
+          <hr />
+        </div>
+        <div class="already">New student? <a href="StudentSignup.html">Create an account</a></div>
+      </div>
+
+      <!-- ══ STAGE 3 – SUCCESS ══ -->
+      <div class="form-stage" id="stage-3">
+        <div class="success-wrap">
+          <div class="success-circle">✓</div>
+          <h1 class="success-title" id="success-title">Welcome Back! 👋</h1>
+          <p class="success-sub" id="success-sub">You've successfully signed in. Redirecting to your dashboard…</p>
+          <a href="#" class="btn-dashboard" id="success-cta">Go to Dashboard →</a>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    /* ── DO LOGIN ── */
+    function doLogin(role) {
+      const emailMap = { student: 'sl-email' };
+      const pwdMap = { student: 'sl-pwd' };
+
+      const emailEl = document.getElementById(emailMap[role]);
+      const pwdEl = document.getElementById(pwdMap[role]);
+      const errBox = document.getElementById('login-err-' + role);
+      const spinner = document.getElementById('spin-' + role);
+
+      let ok = true;
+      errBox.style.display = 'none';
+
+      // Validate email
+      if (!emailEl.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value)) {
+        emailEl.classList.add('error');
+        document.getElementById('err-' + emailMap[role]).classList.add('show');
+        ok = false;
+      }
+      // Validate password
+      if (!pwdEl.value) {
+        pwdEl.classList.add('error');
+        document.getElementById('err-' + pwdMap[role]).classList.add('show');
+        ok = false;
+      }
+      if (!ok) return;
+
+      // Simulate login
+      spinner.style.display = 'block';
+      spinner.parentElement.disabled = true;
+
+      setTimeout(() => {
+        spinner.style.display = 'none';
+        spinner.parentElement.disabled = false;
+
+        // Demo: treat any input as success (swap to fail to test error state)
+        const isSuccess = true;
+
+        if (isSuccess) {
+          showSuccess(role, emailEl.value);
+        } else {
+          errBox.style.display = 'block';
+        }
+      }, 1200);
+    }
+
+    /* ── SUCCESS ── */
+    function showSuccess(role, email) {
+      document.getElementById('stage-2-' + role).classList.remove('active');
+      document.getElementById('stage-3').classList.add('active');
+
+      const titles = {
+        student: 'Welcome Back! 👋',
+      };
+      const subs = {
+        student: `Signed in as ${email}. Redirecting to your student dashboard…`,
+      };
+      const ctas = {
+        student: 'Go to Student Dashboard →',
+      };
+
+      document.getElementById('success-title').textContent = titles[role];
+      document.getElementById('success-sub').textContent = subs[role];
+      const successCta = document.getElementById('success-cta');
+      successCta.textContent = ctas[role];
+      
+      if (role === 'student') {
+        successCta.href = 'StudentDashboard.html';
+        
+        // redirect automatically for better UX
+        setTimeout(() => {
+          window.location.href = 'StudentDashboard.html';
+        }, 1500)
+      } else {
+        successCta.href = '#';
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ── FORGOT PASSWORD ── */
+    function showForgot(role) {
+      const panel = document.getElementById('forgot-' + role);
+      panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function sendReset(btn) {
+      const input = btn.previousElementSibling;
+      if (!input.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)) {
+        input.style.borderColor = '#ef4444';
+        setTimeout(() => input.style.borderColor = '', 1500);
+        return;
+      }
+      btn.textContent = 'Sending…';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = '✅ Reset link sent!';
+        btn.style.background = '#059669';
+        setTimeout(() => {
+          btn.textContent = 'Send Reset Link';
+          btn.style.background = '';
+          btn.disabled = false;
+          input.value = '';
+        }, 3000);
+      }, 1000);
+    }
+
+    /* ── HELPERS ── */
+    function togglePwd(id, btn) {
+      const inp = document.getElementById(id);
+      if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+      else { inp.type = 'password'; btn.textContent = '👁'; }
+    }
+
+    function clearErr(el) {
+      el.classList.remove('error');
+      const errEl = document.getElementById('err-' + el.id);
+      if (errEl) errEl.classList.remove('show');
+    }
+  </script>
+</body>
+
+</html>
+
+
+

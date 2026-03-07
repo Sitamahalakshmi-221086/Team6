@@ -1,0 +1,17 @@
+
+/* ── TPO SPECIFIC ── */
+.role-badge.tpo {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    color: #c2410c;
+}
+
+.btn-login.tpo {
+    background: var(--orange);
+    box-shadow: 0 4px 14px rgba(194, 65, 12, .3);
+}
+
+.btn-login.tpo:hover {
+    background: #9a3412;
+    box-shadow: 0 8px 20px rgba(194, 65, 12, .4);
+}

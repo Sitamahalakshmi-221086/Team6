@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusPlace – Sign Up (TPO)</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../css/signupstyle.css" />
+</head>
+
+<body>
+  <div class="page-wrap">
+
+    <!-- ── LEFT PANEL ── -->
+    <aside class="left-panel">
+      <div class="left-content">
+        <a href="../index.html" class="logo"
+          style="margin-bottom: 40px; display: inline-flex; align-items: center; gap: 10px; text-decoration: none;">
+          <div class="logo-icon"
+            style="width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #1e3a8a, #2563eb); display: flex; align-items: center; justify-content: center; font-size: 17px; box-shadow: 0 4px 10px rgba(0,0,0,.2);">
+            🎓</div>
+          <span class="logo-text"
+            style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.25rem; color: #fff; letter-spacing: -0.02em;">Campus<span
+              style="color: #67e8f9;">Place</span></span>
+        </a>
+        <div class="left-badge"><span class="left-badge-dot"></span> <span id="sidebar-role-label">TPO Registration</span>
+        </div>
+        <h2 class="left-title">Start Your<br /><span style="color:#67e8f9;">Placement</span><br />Journey</h2>
+        <p class="left-sub">Create your profile in 4 quick steps and get matched with top companies visiting your
+          campus.</p>
+
+        <div class="progress-steps">
+          <div class="progress-step done-step" id="sidebar-step-1">
+            <div class="step-circle done" id="circle-1">✓</div>
+            <div class="step-info">
+              <div class="step-name">Select Role</div>
+              <div class="step-desc">Choose your user type</div>
+            </div>
+          </div>
+          <div class="progress-step active-step" id="sidebar-step-2">
+            <div class="step-circle active" id="circle-2">2</div>
+            <div class="step-info">
+              <div class="step-name">Personal Details</div>
+              <div class="step-desc" id="sidebar-step2-desc">Institution & admin info</div>
+            </div>
+          </div>
+          <div class="progress-step" id="sidebar-step-3">
+            <div class="step-circle pending" id="circle-3">3</div>
+            <div class="step-info">
+              <div class="step-name">Verify Email</div>
+              <div class="step-desc">Confirm your identity</div>
+            </div>
+          </div>
+          <div class="progress-step" id="sidebar-step-4">
+            <div class="step-circle pending" id="circle-4">✓</div>
+            <div class="step-info">
+              <div class="step-name">Dashboard Ready</div>
+              <div class="step-desc">Account activated!</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:auto; padding-top:32px;">
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="progress-bar" style="width:50%;"></div>
+          </div>
+          <div class="progress-label">
+            <span id="progress-step-label">Step 2 of 4</span>
+            <span class="progress-pct" id="progress-pct">50%</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ── RIGHT PANEL ── -->
+    <main class="right-panel">
+
+      <!-- ══ STAGE 2 – TPO PERSONAL DETAILS ══ -->
+      <div class="form-stage active" id="stage-2-tpo">
+        <div class="stage-header">
+          <div class="stage-num">Stage 02 / 04</div>
+          <h1 class="stage-title">TPO / Admin <span class="shimmer-text">Details</span></h1>
+          <p class="stage-sub">Provide your institutional and contact details.</p>
+        </div>
+
+        <div
+          style="display:inline-flex;align-items:center;gap:8px;background:#fff7ed;border:1px solid #fed7aa;border-radius:100px;padding:6px 16px;margin-bottom:24px;">
+          <span>🛡️</span><span style="font-size:13px;font-weight:600;color:#c2410c;">TPO / Admin Registration</span>
+        </div>
+
+        <form onsubmit="return false;">
+          <div class="form-grid">
+
+            <div class="form-group">
+              <label>Full Name <span>*</span></label>
+              <input type="text" id="t-name" placeholder="e.g. Dr. Ramesh Kumar" oninput="clearErr(this)" />
+              <span class="error-msg" id="err-t-name">Please enter your full name.</span>
+            </div>
+
+            <div class="form-group">
+              <label>Official College Email <span>*</span></label>
+              <input type="email" id="t-email" placeholder="tpo@college.edu" oninput="clearErr(this)" />
+              <span class="error-msg" id="err-t-email">Enter a valid college email.</span>
+            </div>
+
+            <div class="form-group">
+              <label>Password <span>*</span></label>
+              <div class="pwd-wrap">
+                <input type="password" id="t-pwd" placeholder="Create a strong password"
+                  oninput="checkPwd(this,'tpb','t-pwd-label');clearErr(this)" />
+                <button type="button" class="show-pwd" onclick="togglePwd('t-pwd',this)">👁</button>
+              </div>
+              <div class="pwd-strength">
+                <div class="pwd-bars">
+                  <div class="pwd-bar" id="tpb1"></div>
+                  <div class="pwd-bar" id="tpb2"></div>
+                  <div class="pwd-bar" id="tpb3"></div>
+                  <div class="pwd-bar" id="tpb4"></div>
+                </div>
+                <div class="pwd-label" id="t-pwd-label">Enter a password</div>
+              </div>
+              <span class="error-msg" id="err-t-pwd">Password must be at least 8 characters.</span>
+            </div>
+
+            <div class="form-group">
+              <label>Phone Number <span>*</span></label>
+              <input type="tel" id="t-phone" placeholder="+91 98765 43210" oninput="clearErr(this)" maxlength="13" />
+              <span class="error-msg" id="err-t-phone">Enter a valid phone number.</span>
+            </div>
+
+            <div class="form-group span2">
+              <label>College / Institution Name <span>*</span></label>
+              <input type="text" id="t-college" placeholder="e.g. IIT Bombay / VIT Vellore" oninput="clearErr(this)" />
+              <span class="error-msg" id="err-t-college">Please enter your college name.</span>
+            </div>
+
+            <div class="form-group">
+              <label>Designation <span>*</span></label>
+              <select id="t-designation" onchange="clearErr(this)">
+                <option value="">Select designation</option>
+                <option>Training &amp; Placement Officer</option>
+                <option>Assistant TPO</option>
+                <option>Head of Department</option>
+                <option>Dean – Placements</option>
+                <option>Faculty Coordinator</option>
+                <option>Admin</option>
+                <option>Other</option>
+              </select>
+              <span class="error-msg" id="err-t-designation">Please select your designation.</span>
+            </div>
+
+            <div class="form-group">
+              <label>Department / Office</label>
+              <input type="text" id="t-dept" placeholder="e.g. Placement Cell" />
+            </div>
+
+            <div class="form-group">
+              <label>College Location <span>*</span></label>
+              <input type="text" id="t-location" placeholder="City, State" oninput="clearErr(this)" />
+              <span class="error-msg" id="err-t-location">Please enter the college location.</span>
+            </div>
+
+            <div class="form-group">
+              <label>NAAC Accreditation</label>
+              <select id="t-accreditation">
+                <option value="">Select grade</option>
+                <option>A++ (NAAC)</option>
+                <option>A+ (NAAC)</option>
+                <option>A (NAAC)</option>
+                <option>B++ (NAAC)</option>
+                <option>B+ (NAAC)</option>
+                <option>NBA Accredited</option>
+                <option>Not Accredited</option>
+              </select>
+            </div>
+
+            <div class="form-group span2">
+              <label>Admin Access Code <span>*</span></label>
+              <input type="text" id="t-code" placeholder="Enter the admin invite code issued by CampusPlace"
+                oninput="clearErr(this)" />
+              <span class="error-msg" id="err-t-code">Please enter a valid admin access code.</span>
+              <div
+                style="margin-top:8px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:12px;color:#92400e;line-height:1.6;">
+                ⚠️ TPO accounts require an invite code. Contact <strong>support@campusplace.in</strong> to receive one.
+              </div>
+            </div>
+
+            <div class="form-group span2">
+              <label>About Your Placement Cell</label>
+              <textarea id="t-about"
+                placeholder="Describe your placement cell's activities, average placements per year, notable recruiters…"></textarea>
+            </div>
+
+          </div>
+          <div class="form-nav">
+            <button class="btn-prev" onclick="window.location.href='Signup.html'">← Back</button>
+            <button class="btn-next" style="background:#c2410c;box-shadow:0 4px 14px rgba(194,65,12,.3);"
+              onclick="goNext(2)">Save &amp; Continue →</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ══ STAGE 3 – EMAIL VERIFICATION ══ -->
+      <div class="form-stage" id="stage-3">
+        <div class="stage-header">
+          <div class="stage-num">Stage 03 / 04</div>
+          <h1 class="stage-title">Verify Your Email</h1>
+          <p class="stage-sub">We've sent a 6-digit OTP to your email. Enter it below to activate your account.</p>
+        </div>
+
+        <div class="verify-center">
+          <div class="email-illustration">📧</div>
+          <div class="verify-email-display" id="verify-email-show">you@example.com</div>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:28px;">Check your inbox (and spam folder just in
+            case)</p>
+
+          <div class="otp-row">
+            <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,0)"
+              oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+            <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,1)"
+              oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+            <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,2)"
+              oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+            <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,3)"
+              oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+            <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,4)"
+              oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+            <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,5)"
+              oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+          </div>
+
+          <div id="otp-error" style="display:none;color:#ef4444;font-size:13px;margin-bottom:16px;">Incorrect OTP.
+            Please try again.</div>
+
+          <div class="resend-row">
+            Didn't receive it?
+            <button class="resend-btn" onclick="resendOtp()" id="resend-btn">Resend OTP</button>
+            <span class="timer-badge" id="timer-badge">⏱ Resend in <span id="timer-count">30</span>s</span>
+          </div>
+        </div>
+
+        <div class="form-nav">
+          <button class="btn-prev" onclick="goTo(2)">← Back</button>
+          <button class="btn-next" onclick="verifyOtp()">
+            <span id="verify-spinner" class="spinner"></span>
+            Verify &amp; Activate →
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ STAGE 4 – SUCCESS ══ -->
+      <div class="form-stage" id="stage-4">
+        <div class="success-wrap">
+          <div class="success-circle" id="success-icon">✓</div>
+          <h1 class="success-title" id="success-title">TPO Account Activated! 🛡️</h1>
+          <p class="success-sub" id="success-sub">Your placement office dashboard is ready. Manage drives, students, and companies from one place.</p>
+          <div class="success-items" id="success-items">
+            <div class="success-item"><span class="success-item-icon">🏢</span><span>Manage and approve company registrations</span></div>
+            <div class="success-item"><span class="success-item-icon">📋</span><span>Schedule and track all campus placement drives</span></div>
+            <div class="success-item"><span class="success-item-icon">👥</span><span>Monitor student profiles and application status</span></div>
+            <div class="success-item"><span class="success-item-icon">📈</span><span>Access analytics and placement reports</span></div>
+          </div>
+          <a href="Login.html" class="btn-dashboard" id="success-cta">Go to TPO Dashboard →</a>
+          <p style="margin-top:16px;font-size:13px;color:var(--muted);">You'll receive a welcome email with next steps
+            shortly.</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    let currentStage = 2;
+    let selectedRole = 'tpo';
+    let resendTimer = null;
+    const DEMO_OTP = '123456';
+
+    /* ── NAVIGATION ── */
+    function goNext(from) {
+      if (from === 2) {
+        if (!validateStage2()) return;
+        document.getElementById('verify-email-show').textContent = document.getElementById('t-email').value;
+        goTo(3);
+        startResendTimer();
+      }
+    }
+
+    function goTo(stage) {
+      // Hide current stage
+      const curEl = document.getElementById('stage-' + (currentStage === 2 ? '2-tpo' : currentStage));
+      if (curEl) curEl.classList.remove('active');
+
+      currentStage = stage;
+
+      document.getElementById('stage-' + (stage === 2 ? '2-tpo' : stage)).classList.add('active');
+
+      updateSidebar(stage);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ── BACK BUTTON from stage 3 goes to the right stage-2 ── */
+    document.querySelector('#stage-3 .btn-prev').onclick = function () {
+      currentStage = 3;
+      goTo(2);
+    };
+
+    function updateSidebar(stage) {
+      const pcts = ['25%', '50%', '75%', '100%'];
+      document.getElementById('progress-bar').style.width = pcts[stage - 1];
+      document.getElementById('progress-pct').textContent = pcts[stage - 1];
+      document.getElementById('progress-step-label').textContent = 'Step ' + stage + ' of 4';
+
+      for (let i = 1; i <= 4; i++) {
+        const circle = document.getElementById('circle-' + i);
+        const step = document.getElementById('sidebar-step-' + i);
+        step.classList.remove('active-step', 'done-step');
+        if (i < stage) {
+          circle.className = 'step-circle done';
+          circle.textContent = '✓';
+          step.classList.add('done-step');
+        } else if (i === stage) {
+          circle.className = 'step-circle active';
+          circle.textContent = i === 4 ? '✓' : i;
+          step.classList.add('active-step');
+        } else {
+          circle.className = 'step-circle pending';
+          circle.textContent = i === 4 ? '✓' : i;
+        }
+      }
+    }
+
+    /* ── VALIDATION ── */
+    function validateStage2() {
+      let ok = true;
+      let checks = [
+        { id: 't-name', err: 'err-t-name', test: v => v.trim().length >= 2 },
+        { id: 't-email', err: 'err-t-email', test: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+        { id: 't-pwd', err: 'err-t-pwd', test: v => v.length >= 8 },
+        { id: 't-phone', err: 'err-t-phone', test: v => v.replace(/\D/g, '').length >= 10 },
+        { id: 't-college', err: 'err-t-college', test: v => v.trim().length >= 2 },
+        { id: 't-designation', err: 'err-t-designation', test: v => v !== '' },
+        { id: 't-location', err: 'err-t-location', test: v => v.trim().length >= 2 },
+        { id: 't-code', err: 'err-t-code', test: v => v.trim().length >= 4 },
+      ];
+      checks.forEach(c => runCheck(c, () => ok = false));
+
+      if (!ok) document.querySelector('.error')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return ok;
+    }
+
+    function runCheck(c, fail) {
+      const el = document.getElementById(c.id);
+      const errEl = document.getElementById(c.err);
+      if (!el || !errEl) return;
+      if (!c.test(el.value)) { el.classList.add('error'); errEl.classList.add('show'); fail(); }
+    }
+
+    function clearErr(el) {
+      el.classList.remove('error');
+      const errEl = document.getElementById('err-' + el.id);
+      if (errEl) errEl.classList.remove('show');
+    }
+
+    /* ── PASSWORD ── */
+    function checkPwd(input, prefix, labelId) {
+      const v = input.value;
+      const bars = [1, 2, 3, 4].map(i => document.getElementById(prefix + i));
+      const lbl = document.getElementById(labelId);
+      bars.forEach(b => { if (b) b.className = 'pwd-bar'; });
+      if (!v) { lbl.textContent = 'Enter a password'; lbl.style.color = '#94a3b8'; return; }
+      let score = 0;
+      if (v.length >= 8) score++;
+      if (/[A-Z]/.test(v)) score++;
+      if (/[0-9]/.test(v)) score++;
+      if (/[^A-Za-z0-9]/.test(v)) score++;
+      const cls = score <= 1 ? 'weak' : score <= 2 ? 'fair' : 'strong';
+      const texts = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+      const colors = ['', '#ef4444', '#f59e0b', '#22c55e', '#22c55e'];
+      for (let i = 0; i < score; i++) bars[i].classList.add(cls);
+      lbl.textContent = texts[score] || '';
+      lbl.style.color = colors[score];
+    }
+
+    function togglePwd(id, btn) {
+      const inp = document.getElementById(id);
+      if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+      else { inp.type = 'password'; btn.textContent = '👁'; }
+    }
+
+
+    /* ── OTP ── */
+    const otpInputs = document.querySelectorAll('.otp-input');
+
+    function otpMove(el, idx) {
+      if (el.value && idx < 5) otpInputs[idx + 1].focus();
+      if (event.key === 'Backspace' && !el.value && idx > 0) otpInputs[idx - 1].focus();
+    }
+
+    function verifyOtp() {
+      const otp = Array.from(otpInputs).map(i => i.value).join('');
+      const spinner = document.getElementById('verify-spinner');
+      const errEl = document.getElementById('otp-error');
+      errEl.style.display = 'none';
+      if (otp.length < 6) { errEl.textContent = 'Please enter all 6 digits.'; errEl.style.display = 'block'; return; }
+      spinner.style.display = 'block';
+      setTimeout(() => {
+        spinner.style.display = 'none';
+        if (otp === DEMO_OTP) {
+          goTo(4);
+        } else {
+          errEl.textContent = 'Incorrect OTP. Try: 123456 (demo)';
+          errEl.style.display = 'block';
+          otpInputs.forEach(i => { i.value = ''; i.style.borderColor = '#ef4444'; });
+          otpInputs[0].focus();
+          setTimeout(() => otpInputs.forEach(i => i.style.borderColor = ''), 1200);
+        }
+      }, 1000);
+    }
+
+    /* ── RESEND TIMER ── */
+    function startResendTimer() {
+      let t = 30;
+      document.getElementById('resend-btn').style.display = 'none';
+      document.getElementById('timer-badge').style.display = 'inline-flex';
+      document.getElementById('timer-count').textContent = t;
+      clearInterval(resendTimer);
+      resendTimer = setInterval(() => {
+        t--;
+        document.getElementById('timer-count').textContent = t;
+        if (t <= 0) {
+          clearInterval(resendTimer);
+          document.getElementById('resend-btn').style.display = 'inline';
+          document.getElementById('timer-badge').style.display = 'none';
+        }
+      }, 1000);
+    }
+
+    function resendOtp() {
+      otpInputs.forEach(i => i.value = '');
+      otpInputs[0].focus();
+      startResendTimer();
+      const toast = document.createElement('div');
+      toast.textContent = '✅ OTP resent!';
+      Object.assign(toast.style, {
+        position: 'fixed', bottom: '32px', left: '50%', transform: 'translateX(-50%)',
+        background: '#059669', color: '#fff', padding: '10px 24px', borderRadius: '100px',
+        fontSize: '14px', fontWeight: '600', zIndex: '9999',
+        boxShadow: '0 4px 16px rgba(5,150,105,.4)'
+      });
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2500);
+    }
+  </script>
+</body>
+
+</html>
+
+
+
