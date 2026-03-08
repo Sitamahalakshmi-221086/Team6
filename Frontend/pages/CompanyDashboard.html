@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CampusPlace – Company Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/companydashboard.css"/>
+</head>
+<body>
+<div class="wrap">
+<aside class="sidebar" id="sidebar">
+  <div class="sb-inner">
+    <a href="../index.html" class="logo"><div class="logo-icon">🎓</div><span class="logo-text">Campus<span>Place</span></span></a>
+    <div class="co-mini"><div class="co-av" id="nav-av">IN</div><div><div class="co-name" id="nav-co-name">Infosys Ltd.</div><div class="co-role">Recruiter Account</div></div></div>
+    <nav>
+      <div class="nav-label-sec">Main</div>
+      <a class="nav-a active" onclick="show('overview')" href="#"><span class="nav-ic">⚡</span><span class="nav-lbl">Overview</span></a>
+      <a class="nav-a" onclick="show('profile')" href="#"><span class="nav-ic">🏢</span><span class="nav-lbl">Company Profile</span></a>
+      <div class="nav-label-sec">Hiring</div>
+      <a class="nav-a" onclick="show('postjob')" href="#"><span class="nav-ic">➕</span><span class="nav-lbl">Post Job</span></a>
+      <a class="nav-a" onclick="show('managejobs')" href="#"><span class="nav-ic">📋</span><span class="nav-lbl">Manage Job Posts</span><span class="nav-badge">4</span></a>
+      <a class="nav-a" onclick="show('applicants')" href="#"><span class="nav-ic">👥</span><span class="nav-lbl">View Applicants</span><span class="nav-badge">12</span></a>
+      <a class="nav-a" onclick="show('shortlist')" href="#"><span class="nav-ic">⭐</span><span class="nav-lbl">Shortlist Candidates</span></a>
+      <div class="nav-label-sec">Process</div>
+      <a class="nav-a" onclick="show('interviews')" href="#"><span class="nav-ic">📅</span><span class="nav-lbl">Interview Schedule</span></a>
+      <a class="nav-a" onclick="show('tracker')" href="#"><span class="nav-ic">📊</span><span class="nav-lbl">Recruitment Tracker</span></a>
+      <a class="nav-a" onclick="show('selected')" href="#"><span class="nav-ic">✅</span><span class="nav-lbl">Selected Candidates</span></a>
+      <div class="nav-label-sec">Communication</div>
+      <a class="nav-a" onclick="show('messages')" href="#"><span class="nav-ic">💬</span><span class="nav-lbl">Messages</span><span class="nav-badge red">3</span></a>
+      <a class="nav-a" onclick="show('analytics')" href="#"><span class="nav-ic">📈</span><span class="nav-lbl">Analytics</span></a>
+    </nav>
+    <div class="sb-footer"><a href="Login.html" class="logout"><span>🚪</span> Logout</a></div>
+  </div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">&#9776;</button>
+    <div class="topbar-title" id="tb-title">Overview</div>
+    <div class="tb-right">
+      <div class="tb-search"><span>🔍</span><input type="text" placeholder="Search candidates, jobs…"/></div>
+      <div class="tb-notif" onclick="show('messages')">💬<span class="notif-dot"></span></div>
+      <div class="tb-av" id="tb-av">IN</div>
+    </div>
+  </header>
+
+  <!-- OVERVIEW -->
+  <section class="sec active" id="sec-overview">
+    <div class="sec-hdr">
+      <div><h2 class="sec-title">Welcome back, <span id="ov-name">Infosys Ltd.</span> 👋</h2><p class="sec-sub">Here's what's happening with your campus recruitment today.</p></div>
+      <button class="btn-primary" onclick="show('postjob')">+ Post New Job</button>
+    </div>
+    <div class="stats-grid">
+      <div class="stat" style="--ac:#059669"><div class="stat-ic">📋</div><div class="stat-val">4</div><div class="stat-lbl">Active Job Posts</div><div class="stat-chg up">↑ 1 this week</div></div>
+      <div class="stat" style="--ac:#047857"><div class="stat-ic">👥</div><div class="stat-val">127</div><div class="stat-lbl">Total Applicants</div><div class="stat-chg up">↑ 23 this week</div></div>
+      <div class="stat" style="--ac:#7c3aed"><div class="stat-ic">⭐</div><div class="stat-val">34</div><div class="stat-lbl">Shortlisted</div><div class="stat-chg up">↑ 8 new</div></div>
+      <div class="stat" style="--ac:#d97706"><div class="stat-ic">📅</div><div class="stat-val">9</div><div class="stat-lbl">Interviews Today</div><div class="stat-chg">3 pending</div></div>
+      <div class="stat" style="--ac:#dc2626"><div class="stat-ic">✅</div><div class="stat-val">12</div><div class="stat-lbl">Offers Extended</div><div class="stat-chg up">↑ 3 this month</div></div>
+      <div class="stat" style="--ac:#0891b2"><div class="stat-ic">💬</div><div class="stat-val">3</div><div class="stat-lbl">Unread Messages</div><div class="stat-chg">Reply pending</div></div>
+    </div>
+    <div class="ov-grid">
+      <div class="card">
+        <div class="card-hdr"><h3 class="card-title">Recent Applicants</h3><button class="btn-ghost" onclick="show('applicants')">View All →</button></div>
+        <div class="app-list">
+          <div class="app-row"><div class="av av-md" style="background:#f0fdf4;color:#059669">AS</div><div class="app-info"><div class="app-name">Arjun Sharma</div><div class="app-meta">CSE · 8.9 CGPA · IIT Delhi</div></div><span class="pill pill-new">New</span></div>
+          <div class="app-row"><div class="av av-md" style="background:#faf5ff;color:#7c3aed">PK</div><div class="app-info"><div class="app-name">Priya Kumar</div><div class="app-meta">IT · 9.1 CGPA · NIT Trichy</div></div><span class="pill pill-reviewed">Reviewed</span></div>
+          <div class="app-row"><div class="av av-md" style="background:#fff7ed;color:#d97706">RV</div><div class="app-info"><div class="app-name">Rahul Verma</div><div class="app-meta">Data Sci · 8.5 CGPA · BITS</div></div><span class="pill pill-shortlisted">Shortlisted</span></div>
+          <div class="app-row"><div class="av av-md" style="background:#fef2f2;color:#dc2626">SM</div><div class="app-info"><div class="app-name">Sneha Mehta</div><div class="app-meta">ECE · 8.2 CGPA · VIT</div></div><span class="pill pill-new">New</span></div>
+          <div class="app-row"><div class="av av-md" style="background:#f0fdf4;color:#059669">NK</div><div class="app-info"><div class="app-name">Neha Kapoor</div><div class="app-meta">CSE · 9.3 CGPA · DTU</div></div><span class="pill pill-interview">Interview</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hdr"><h3 class="card-title">Today's Interviews</h3><button class="btn-ghost" onclick="show('interviews')">Full Schedule →</button></div>
+        <div class="int-list">
+          <div class="int-row"><div class="int-time">09:00 AM</div><div class="int-detail"><div class="int-name">Arjun Sharma</div><div class="int-role">SDE Round 1 · Google Meet</div></div><span class="pill pill-confirmed">Confirmed</span></div>
+          <div class="int-row"><div class="int-time">11:30 AM</div><div class="int-detail"><div class="int-name">Priya Kumar</div><div class="int-role">Tech Interview · Zoom</div></div><span class="pill pill-confirmed">Confirmed</span></div>
+          <div class="int-row"><div class="int-time">02:00 PM</div><div class="int-detail"><div class="int-name">Rahul Verma</div><div class="int-role">HR Round · On-site</div></div><span class="pill pill-pending">Pending</span></div>
+          <div class="int-row"><div class="int-time">04:30 PM</div><div class="int-detail"><div class="int-name">Sneha Mehta</div><div class="int-role">Technical · Teams</div></div><span class="pill pill-pending">Pending</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROFILE -->
+  <section class="sec" id="sec-profile">
+    <div class="sec-hdr"><div><h2 class="sec-title">Company Profile</h2><p class="sec-sub">Manage your company information visible to students.</p></div><button class="btn-primary" onclick="toast('\u2705 Profile saved!')">Save Changes</button></div>
+    <div class="profile-grid">
+      <div class="card prof-card">
+        <div class="prof-banner"></div>
+        <div class="prof-logo-wrap">
+          <div class="prof-logo" id="prof-logo-disp">IN</div>
+          <button class="prof-logo-edit" onclick="document.getElementById('logo-up').click()">📷</button>
+          <input type="file" id="logo-up" accept="image/*" style="display:none" onchange="prevLogo(this)"/>
+        </div>
+        <div class="prof-info">
+          <div class="prof-company-name" id="prof-name-disp">Infosys Technologies Ltd.</div>
+          <div class="prof-tagline">Building Tomorrow's Technology, Today</div>
+          <div class="tags" style="margin-top:10px"><span class="tag">🏢 IT</span><span class="tag">📍 Bengaluru</span><span class="tag">👥 5000+</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3 class="card-title" style="margin-bottom:18px">Basic Information</h3>
+        <div class="form-grid">
+          <div class="fg"><label>Company Name <span>*</span></label><input type="text" id="p-name" value="Infosys Technologies Ltd." oninput="updProf()"/></div>
+          <div class="fg"><label>Official Email <span>*</span></label><input type="email" value="hr@infosys.com"/></div>
+          <div class="fg"><label>Phone</label><input type="tel" value="+91 80 2852 0261"/></div>
+          <div class="fg"><label>Website</label><input type="text" value="https://infosys.com"/></div>
+          <div class="fg"><label>Industry</label><select><option selected>Information Technology</option><option>Banking &amp; Finance</option><option>Consulting</option><option>E-Commerce</option></select></div>
+          <div class="fg"><label>Company Size</label><select><option>1-50</option><option>51-200</option><option>201-1000</option><option>1001-5000</option><option selected>5000+</option></select></div>
+          <div class="fg span2"><label>Address</label><input type="text" value="Electronics City, Bengaluru, Karnataka 560100"/></div>
+          <div class="fg span2"><label>About Company</label><textarea style="min-height:90px">Infosys is a global leader in next-generation digital services and consulting. We enable clients in more than 50 countries to navigate their digital transformation.</textarea></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POST JOB -->
+  <section class="sec" id="sec-postjob">
+    <div class="sec-hdr"><div><h2 class="sec-title">Post a New Job</h2><p class="sec-sub">Create a job listing visible to students across campuses.</p></div></div>
+    <div class="card" style="max-width:780px">
+      <div class="form-grid">
+        <div class="fg"><label>Job Title <span>*</span></label><input type="text" id="j-title" placeholder="e.g. Software Development Engineer"/><span class="err" id="e-title">Please enter a job title.</span></div>
+        <div class="fg"><label>Job Type <span>*</span></label><select id="j-type"><option value="">Select type</option><option>Full Time</option><option>Internship</option><option>Part Time</option><option>Contract</option></select><span class="err" id="e-type">Please select job type.</span></div>
+        <div class="fg"><label>Location <span>*</span></label><input type="text" id="j-loc" placeholder="e.g. Bengaluru / Remote"/><span class="err" id="e-loc">Please enter location.</span></div>
+        <div class="fg"><label>CTC / Stipend</label><input type="text" placeholder="e.g. ₹6-8 LPA"/></div>
+        <div class="fg"><label>Min CGPA</label><input type="number" placeholder="e.g. 7.0" min="0" max="10" step="0.1"/></div>
+        <div class="fg"><label>Deadline <span>*</span></label><input type="date" id="j-dl"/><span class="err" id="e-dl">Please set a deadline.</span></div>
+        <div class="fg span2"><label>Eligible Branches</label>
+          <div class="chk-grid">
+            <label class="chk-item"><input type="checkbox" checked/> CSE</label>
+            <label class="chk-item"><input type="checkbox" checked/> IT</label>
+            <label class="chk-item"><input type="checkbox"/> ECE</label>
+            <label class="chk-item"><input type="checkbox"/> EEE</label>
+            <label class="chk-item"><input type="checkbox"/> Mechanical</label>
+            <label class="chk-item"><input type="checkbox" checked/> Data Science</label>
+            <label class="chk-item"><input type="checkbox"/> Civil</label>
+          </div>
+        </div>
+        <div class="fg span2"><label>Required Skills</label>
+          <div class="skills-wrap" id="jsk-wrap" onclick="document.getElementById('jsk-inp').focus()">
+            <input type="text" id="jsk-inp" class="skill-inp" placeholder="Type skill + Enter…" onkeydown="addJSkill(event)"/>
+          </div>
+        </div>
+        <div class="fg span2"><label>Job Description <span>*</span></label><textarea id="j-desc" placeholder="Describe the role…" style="min-height:110px"></textarea><span class="err" id="e-desc">Please add a description.</span></div>
+        <div class="fg span2"><label>Selection Process</label><input type="text" placeholder="e.g. Online Test → Technical Interview → HR Round"/></div>
+      </div>
+      <div style="display:flex;gap:11px;margin-top:16px">
+        <button class="btn-primary" onclick="submitJob()">🚀 Publish Job Post</button>
+        <button class="btn-sec" onclick="toast('💾 Saved as draft!')">💾 Save as Draft</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MANAGE JOBS -->
+  <section class="sec" id="sec-managejobs">
+    <div class="sec-hdr"><div><h2 class="sec-title">Manage Job Posts</h2><p class="sec-sub">View, edit and manage all posted jobs.</p></div><button class="btn-primary" onclick="show('postjob')">+ Post New Job</button></div>
+    <div class="filter-bar">
+      <button class="filt active" onclick="filtJobs(this,'all')">All (4)</button>
+      <button class="filt" onclick="filtJobs(this,'active')">Active (3)</button>
+      <button class="filt" onclick="filtJobs(this,'draft')">Draft (1)</button>
+      <button class="filt" onclick="filtJobs(this,'closed')">Closed (0)</button>
+    </div>
+    <div class="jobs-list">
+      <div class="job-item" data-st="active"><div style="flex:1"><div class="job-title">Software Development Engineer</div><div class="job-meta">Full Time · Bengaluru · ₹6-8 LPA · Min CGPA: 7.0</div><div class="tags"><span class="tag-sm">CSE</span><span class="tag-sm">IT</span><span class="tag-sm">Data Science</span></div></div><div class="job-right"><span class="pill pill-confirmed">Active</span><div class="job-stat"><strong>47</strong> Applicants</div><div class="job-dl">Deadline: 30 Mar 2026</div><div class="act-btns"><button class="btn-ic" onclick="show('applicants')">👥</button><button class="btn-ic">✏️</button><button class="btn-ic danger">🗑️</button></div></div></div>
+      <div class="job-item" data-st="active"><div style="flex:1"><div class="job-title">Data Analyst Intern</div><div class="job-meta">Internship · Remote · ₹20,000/month · Min CGPA: 6.5</div><div class="tags"><span class="tag-sm">Data Science</span><span class="tag-sm">IT</span></div></div><div class="job-right"><span class="pill pill-confirmed">Active</span><div class="job-stat"><strong>31</strong> Applicants</div><div class="job-dl">Deadline: 15 Apr 2026</div><div class="act-btns"><button class="btn-ic" onclick="show('applicants')">👥</button><button class="btn-ic">✏️</button><button class="btn-ic danger">🗑️</button></div></div></div>
+      <div class="job-item" data-st="active"><div style="flex:1"><div class="job-title">Systems Engineer</div><div class="job-meta">Full Time · Pune · ₹4.5 LPA · Min CGPA: 6.0</div><div class="tags"><span class="tag-sm">CSE</span><span class="tag-sm">ECE</span><span class="tag-sm">EEE</span></div></div><div class="job-right"><span class="pill pill-confirmed">Active</span><div class="job-stat"><strong>49</strong> Applicants</div><div class="job-dl">Deadline: 10 Apr 2026</div><div class="act-btns"><button class="btn-ic" onclick="show('applicants')">👥</button><button class="btn-ic">✏️</button><button class="btn-ic danger">🗑️</button></div></div></div>
+      <div class="job-item" data-st="draft"><div style="flex:1"><div class="job-title">Cloud Infrastructure Engineer</div><div class="job-meta">Full Time · Hyderabad · ₹7-10 LPA · Min CGPA: 7.5</div><div class="tags"><span class="tag-sm">CSE</span><span class="tag-sm">IT</span></div></div><div class="job-right"><span class="pill pill-pending">Draft</span><div class="job-stat">–</div><div class="job-dl">Not published</div><div class="act-btns"><button class="btn-ic">🚀</button><button class="btn-ic">✏️</button><button class="btn-ic danger">🗑️</button></div></div></div>
+    </div>
+  </section>
+
+  <!-- APPLICANTS -->
+  <section class="sec" id="sec-applicants">
+    <div class="sec-hdr"><div><h2 class="sec-title">View Applicants</h2><p class="sec-sub">Browse all students who applied to your job posts.</p></div><div class="hdr-filt"><select class="sel-sm"><option>All Jobs</option><option>SDE</option><option>Data Analyst</option><option>Systems Engineer</option></select></div></div>
+    <div class="filter-bar">
+      <button class="filt active">All (127)</button><button class="filt">New (45)</button><button class="filt">Reviewed (48)</button><button class="filt">Shortlisted (34)</button>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th><input type="checkbox" onchange="selAll(this)"/></th><th>Candidate</th><th>College</th><th>Branch</th><th>CGPA</th><th>Applied For</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr><td><input type="checkbox"/></td><td><div class="tc"><div class="av av-sm" style="background:#f0fdf4;color:#059669">AS</div><div><div class="cand-name">Arjun Sharma</div><div class="cand-email">arjun@iitd.ac.in</div></div></div></td><td>IIT Delhi</td><td>CSE</td><td><span class="cgpa cgpa-hi">8.9</span></td><td>SDE</td><td><span class="pill pill-new">New</span></td><td><div class="act-btns"><button class="btn-ic">📄</button><button class="btn-ic" onclick="qShortlist(this)">⭐</button><button class="btn-ic" onclick="show('interviews')">📅</button></div></td></tr>
+          <tr><td><input type="checkbox"/></td><td><div class="tc"><div class="av av-sm" style="background:#faf5ff;color:#7c3aed">PK</div><div><div class="cand-name">Priya Kumar</div><div class="cand-email">priya@nitt.edu</div></div></div></td><td>NIT Trichy</td><td>IT</td><td><span class="cgpa cgpa-hi">9.1</span></td><td>SDE</td><td><span class="pill pill-shortlisted">Shortlisted</span></td><td><div class="act-btns"><button class="btn-ic">📄</button><button class="btn-ic">⭐</button><button class="btn-ic" onclick="show('interviews')">📅</button></div></td></tr>
+          <tr><td><input type="checkbox"/></td><td><div class="tc"><div class="av av-sm" style="background:#fff7ed;color:#d97706">RV</div><div><div class="cand-name">Rahul Verma</div><div class="cand-email">rahul@bits.ac.in</div></div></div></td><td>BITS Pilani</td><td>Data Science</td><td><span class="cgpa cgpa-hi">8.5</span></td><td>Data Analyst</td><td><span class="pill pill-interview">Interview</span></td><td><div class="act-btns"><button class="btn-ic">📄</button><button class="btn-ic">⭐</button><button class="btn-ic" onclick="show('interviews')">📅</button></div></td></tr>
+          <tr><td><input type="checkbox"/></td><td><div class="tc"><div class="av av-sm" style="background:#fef2f2;color:#dc2626">SM</div><div><div class="cand-name">Sneha Mehta</div><div class="cand-email">sneha@vit.ac.in</div></div></div></td><td>VIT Vellore</td><td>ECE</td><td><span class="cgpa cgpa-md">8.2</span></td><td>Systems Eng.</td><td><span class="pill pill-new">New</span></td><td><div class="act-btns"><button class="btn-ic">📄</button><button class="btn-ic" onclick="qShortlist(this)">⭐</button><button class="btn-ic" onclick="show('interviews')">📅</button></div></td></tr>
+          <tr><td><input type="checkbox"/></td><td><div class="tc"><div class="av av-sm" style="background:#f0fdf4;color:#059669">NK</div><div><div class="cand-name">Neha Kapoor</div><div class="cand-email">neha@dtu.ac.in</div></div></div></td><td>DTU Delhi</td><td>CSE</td><td><span class="cgpa cgpa-hi">9.3</span></td><td>SDE</td><td><span class="pill pill-shortlisted">Shortlisted</span></td><td><div class="act-btns"><button class="btn-ic">📄</button><button class="btn-ic">⭐</button><button class="btn-ic" onclick="show('interviews')">📅</button></div></td></tr>
+          <tr><td><input type="checkbox"/></td><td><div class="tc"><div class="av av-sm" style="background:#faf5ff;color:#7c3aed">AJ</div><div><div class="cand-name">Amit Joshi</div><div class="cand-email">amit@vjti.ac.in</div></div></div></td><td>VJTI Mumbai</td><td>Mechanical</td><td><span class="cgpa cgpa-lo">7.8</span></td><td>Systems Eng.</td><td><span class="pill pill-reviewed">Reviewed</span></td><td><div class="act-btns"><button class="btn-ic">📄</button><button class="btn-ic" onclick="qShortlist(this)">⭐</button><button class="btn-ic" onclick="show('interviews')">📅</button></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SHORTLIST -->
+  <section class="sec" id="sec-shortlist">
+    <div class="sec-hdr"><div><h2 class="sec-title">Shortlist Candidates</h2><p class="sec-sub">Manage shortlisted candidates and move them to interviews.</p></div><button class="btn-primary" onclick="show('interviews')">📅 Schedule Interviews</button></div>
+    <div class="sl-grid">
+      <div class="sl-card"><div class="sl-hdr"><div class="av av-lg" style="background:#faf5ff;color:#7c3aed">PK</div><div><div class="sl-name">Priya Kumar</div><div class="sl-college">NIT Trichy · IT · 9.1 CGPA</div></div><span class="pill pill-shortlisted" style="margin-left:auto">Shortlisted</span></div><div class="tags"><span class="tag-sm">Java</span><span class="tag-sm">Spring Boot</span><span class="tag-sm">React</span><span class="tag-sm">MySQL</span></div><div class="sl-footer"><span class="sl-job">Applied: SDE</span><div class="act-btns"><button class="btn-sm btn-sm-green" onclick="show('interviews')">Schedule Interview</button><button class="btn-sm btn-sm-red">Remove</button></div></div></div>
+      <div class="sl-card"><div class="sl-hdr"><div class="av av-lg" style="background:#f0fdf4;color:#059669">NK</div><div><div class="sl-name">Neha Kapoor</div><div class="sl-college">DTU Delhi · CSE · 9.3 CGPA</div></div><span class="pill pill-shortlisted" style="margin-left:auto">Shortlisted</span></div><div class="tags"><span class="tag-sm">Python</span><span class="tag-sm">ML</span><span class="tag-sm">TensorFlow</span><span class="tag-sm">SQL</span></div><div class="sl-footer"><span class="sl-job">Applied: SDE</span><div class="act-btns"><button class="btn-sm btn-sm-green" onclick="show('interviews')">Schedule Interview</button><button class="btn-sm btn-sm-red">Remove</button></div></div></div>
+      <div class="sl-card"><div class="sl-hdr"><div class="av av-lg" style="background:#fff7ed;color:#d97706">RV</div><div><div class="sl-name">Rahul Verma</div><div class="sl-college">BITS Pilani · Data Sci · 8.5 CGPA</div></div><span class="pill pill-interview" style="margin-left:auto">Interview</span></div><div class="tags"><span class="tag-sm">Python</span><span class="tag-sm">Pandas</span><span class="tag-sm">Power BI</span><span class="tag-sm">Tableau</span></div><div class="sl-footer"><span class="sl-job">Applied: Data Analyst</span><div class="act-btns"><button class="btn-sm btn-sm-green" onclick="show('interviews')">View Interview</button><button class="btn-sm btn-sm-red">Remove</button></div></div></div>
+      <div class="sl-card"><div class="sl-hdr"><div class="av av-lg" style="background:#f0fdf4;color:#059669">AS</div><div><div class="sl-name">Arjun Sharma</div><div class="sl-college">IIT Delhi · CSE · 8.9 CGPA</div></div><span class="pill pill-new" style="margin-left:auto">New</span></div><div class="tags"><span class="tag-sm">C++</span><span class="tag-sm">DSA</span><span class="tag-sm">Node.js</span><span class="tag-sm">MongoDB</span></div><div class="sl-footer"><span class="sl-job">Applied: SDE</span><div class="act-btns"><button class="btn-sm btn-sm-green" onclick="show('interviews')">Schedule Interview</button><button class="btn-sm btn-sm-red">Remove</button></div></div></div>
+    </div>
+  </section>
+
+  <!-- INTERVIEWS -->
+  <section class="sec" id="sec-interviews">
+    <div class="sec-hdr"><div><h2 class="sec-title">Interview Schedule</h2><p class="sec-sub">Plan and manage all your upcoming interviews.</p></div><button class="btn-primary" onclick="document.getElementById('sch-modal').style.display='flex'">+ Schedule Interview</button></div>
+    <div class="int-legend"><span class="ldot" style="background:#059669"></span>Technical<span class="ldot" style="background:#047857"></span>HR Round<span class="ldot" style="background:#d97706"></span>Group Discussion<span class="ldot" style="background:#dc2626"></span>Final Round</div>
+    <div class="icards">
+      <div class="icard" style="--lc:#059669"><div class="ic-date"><div class="ic-day">07</div><div class="ic-month">MAR</div></div><div class="ic-body"><div class="ic-time">09:00 AM – 10:00 AM</div><div class="ic-name">Arjun Sharma</div><div class="ic-meta">SDE · Technical Round 1 · Google Meet</div><div class="ic-link">meet.google.com/abc-defg-hij</div></div><div class="ic-right"><span class="pill pill-confirmed">Confirmed</span><div class="act-btns"><button class="btn-ic">✏️</button><button class="btn-ic">🔔</button></div></div></div>
+      <div class="icard" style="--lc:#059669"><div class="ic-date"><div class="ic-day">07</div><div class="ic-month">MAR</div></div><div class="ic-body"><div class="ic-time">11:30 AM – 12:30 PM</div><div class="ic-name">Priya Kumar</div><div class="ic-meta">SDE · Technical Round · Zoom</div><div class="ic-link">zoom.us/j/123456789</div></div><div class="ic-right"><span class="pill pill-confirmed">Confirmed</span><div class="act-btns"><button class="btn-ic">✏️</button><button class="btn-ic">🔔</button></div></div></div>
+      <div class="icard" style="--lc:#047857"><div class="ic-date"><div class="ic-day">07</div><div class="ic-month">MAR</div></div><div class="ic-body"><div class="ic-time">02:00 PM – 03:00 PM</div><div class="ic-name">Rahul Verma</div><div class="ic-meta">Data Analyst · HR Round · On-site</div><div class="ic-link">Infosys Office, Bengaluru</div></div><div class="ic-right"><span class="pill pill-pending">Pending</span><div class="act-btns"><button class="btn-ic">✏️</button><button class="btn-ic">🔔</button></div></div></div>
+      <div class="icard" style="--lc:#d97706"><div class="ic-date"><div class="ic-day">10</div><div class="ic-month">MAR</div></div><div class="ic-body"><div class="ic-time">10:00 AM – 11:30 AM</div><div class="ic-name">Neha Kapoor, Sneha Mehta +3</div><div class="ic-meta">SDE · Group Discussion · MS Teams</div><div class="ic-link">teams.microsoft.com/l/meetup-join/...</div></div><div class="ic-right"><span class="pill pill-confirmed">Confirmed</span><div class="act-btns"><button class="btn-ic">✏️</button><button class="btn-ic">🔔</button></div></div></div>
+    </div>
+    <div class="modal-ov" id="sch-modal" style="display:none">
+      <div class="modal">
+        <div class="modal-hdr"><span class="modal-title">Schedule Interview</span><button class="modal-close" onclick="document.getElementById('sch-modal').style.display='none'">&times;</button></div>
+        <div class="form-grid" style="gap:14px">
+          <div class="fg"><label>Candidate Name</label><input type="text" placeholder="Search candidate…"/></div>
+          <div class="fg"><label>Interview Type</label><select><option>Technical</option><option>HR Round</option><option>Group Discussion</option><option>Final Round</option></select></div>
+          <div class="fg"><label>Date</label><input type="date"/></div>
+          <div class="fg"><label>Time</label><input type="time"/></div>
+          <div class="fg span2"><label>Meeting Link / Venue</label><input type="text" placeholder="Zoom/Meet link or office address"/></div>
+        </div>
+        <div style="display:flex;gap:11px;margin-top:18px">
+          <button class="btn-primary" onclick="document.getElementById('sch-modal').style.display='none';toast('📅 Interview scheduled!')">Confirm</button>
+          <button class="btn-sec" onclick="document.getElementById('sch-modal').style.display='none'">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRACKER -->
+  <section class="sec" id="sec-tracker">
+    <div class="sec-hdr"><div><h2 class="sec-title">Recruitment Tracker</h2><p class="sec-sub">Visual pipeline of your entire recruitment process.</p></div></div>
+    <div class="pipeline">
+      <div class="pipe-col"><div class="pipe-hdr" style="background:#dcfce7;color:#166534"><span>📥 Applied</span><span class="pipe-cnt">127</span></div><div class="pipe-card"><div class="pc-name">Arjun Sharma</div><div class="pc-meta">SDE · IIT Delhi</div></div><div class="pipe-card"><div class="pc-name">Priya Kumar</div><div class="pc-meta">SDE · NIT Trichy</div></div><div class="pipe-card"><div class="pc-name">Amit Joshi</div><div class="pc-meta">Systems · VJTI</div></div><div class="pipe-more">+124 more</div></div>
+      <div class="pipe-col"><div class="pipe-hdr" style="background:#fef9c3;color:#854d0e"><span>🔍 Reviewed</span><span class="pipe-cnt">48</span></div><div class="pipe-card"><div class="pc-name">Sneha Mehta</div><div class="pc-meta">Systems · VIT</div></div><div class="pipe-card"><div class="pc-name">Karan Singh</div><div class="pc-meta">SDE · Manipal</div></div><div class="pipe-more">+46 more</div></div>
+      <div class="pipe-col"><div class="pipe-hdr" style="background:#faf5ff;color:#6b21a8"><span>⭐ Shortlisted</span><span class="pipe-cnt">34</span></div><div class="pipe-card"><div class="pc-name">Neha Kapoor</div><div class="pc-meta">SDE · DTU</div></div><div class="pipe-card"><div class="pc-name">Rahul Verma</div><div class="pc-meta">Data Analyst · BITS</div></div><div class="pipe-more">+32 more</div></div>
+      <div class="pipe-col"><div class="pipe-hdr" style="background:#fff7ed;color:#9a3412"><span>📅 Interview</span><span class="pipe-cnt">9</span></div><div class="pipe-card"><div class="pc-name">Priya Kumar</div><div class="pc-meta">Round 1 · Today</div></div><div class="pipe-card"><div class="pc-name">Arjun Sharma</div><div class="pc-meta">Round 1 · Today</div></div><div class="pipe-more">+7 more</div></div>
+      <div class="pipe-col"><div class="pipe-hdr" style="background:#dcfce7;color:#166534"><span>✅ Selected</span><span class="pipe-cnt">12</span></div><div class="pipe-card sel"><div class="pc-name">Divya Nair</div><div class="pc-meta">SDE · Offer Sent</div></div><div class="pipe-card sel"><div class="pc-name">Rohan Das</div><div class="pc-meta">Systems · Joined</div></div><div class="pipe-more">+10 more</div></div>
+    </div>
+  </section>
+
+  <!-- SELECTED -->
+  <section class="sec" id="sec-selected">
+    <div class="sec-hdr"><div><h2 class="sec-title">Selected Candidates</h2><p class="sec-sub">Candidates who cleared all rounds and received offers.</p></div><button class="btn-sec">📤 Export List</button></div>
+    <div class="sel-stats">
+      <div class="sel-stat"><div class="sel-val">12</div><div class="sel-lbl">Total Selected</div></div>
+      <div class="sel-stat"><div class="sel-val">8</div><div class="sel-lbl">Offers Accepted</div></div>
+      <div class="sel-stat"><div class="sel-val">3</div><div class="sel-lbl">Offer Pending</div></div>
+      <div class="sel-stat"><div class="sel-val">1</div><div class="sel-lbl">Declined</div></div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Candidate</th><th>College</th><th>Branch</th><th>CGPA</th><th>Role Offered</th><th>CTC</th><th>Offer Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr><td><div class="tc"><div class="av av-sm" style="background:#f0fdf4;color:#059669">DN</div><div><div class="cand-name">Divya Nair</div><div class="cand-email">divya@iitb.ac.in</div></div></div></td><td>IIT Bombay</td><td>CSE</td><td><span class="cgpa cgpa-hi">9.2</span></td><td>SDE</td><td>₹8 LPA</td><td><span class="pill pill-confirmed">Accepted</span></td><td><button class="btn-sm btn-sm-green">Send Letter</button></td></tr>
+          <tr><td><div class="tc"><div class="av av-sm" style="background:#dcfce7;color:#047857">RD</div><div><div class="cand-name">Rohan Das</div><div class="cand-email">rohan@nits.ac.in</div></div></div></td><td>NIT Silchar</td><td>CSE</td><td><span class="cgpa cgpa-hi">8.7</span></td><td>Systems Eng.</td><td>₹4.5 LPA</td><td><span class="pill pill-confirmed">Accepted</span></td><td><button class="btn-sm btn-sm-green">Send Letter</button></td></tr>
+          <tr><td><div class="tc"><div class="av av-sm" style="background:#faf5ff;color:#7c3aed">MR</div><div><div class="cand-name">Meera Rao</div><div class="cand-email">meera@vit.ac.in</div></div></div></td><td>VIT Vellore</td><td>Data Science</td><td><span class="cgpa cgpa-hi">8.9</span></td><td>Data Analyst</td><td>₹5 LPA</td><td><span class="pill pill-pending">Pending</span></td><td><button class="btn-sm btn-sm-green">Send Reminder</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- MESSAGES -->
+  <section class="sec" id="sec-messages">
+    <div class="sec-hdr"><div><h2 class="sec-title">Messages</h2><p class="sec-sub">Communicate with students and placement coordinators.</p></div></div>
+    <div class="msg-wrap">
+      <div class="msg-list">
+        <div class="msg-search"><input type="text" placeholder="Search conversations…"/></div>
+        <div class="msg-item active" onclick="openChat(this,'Arjun Sharma','AS','#f0fdf4','#059669')"><div class="msg-av" style="background:#f0fdf4;color:#059669">AS</div><div class="msg-prev"><div class="msg-name">Arjun Sharma</div><div class="msg-last">Thank you for the opportunity!</div></div><div class="msg-meta2"><div class="msg-time">10:24 AM</div><div class="msg-unread">2</div></div></div>
+        <div class="msg-item" onclick="openChat(this,'Priya Kumar','PK','#faf5ff','#7c3aed')"><div class="msg-av" style="background:#faf5ff;color:#7c3aed">PK</div><div class="msg-prev"><div class="msg-name">Priya Kumar</div><div class="msg-last">Can you confirm the interview time?</div></div><div class="msg-meta2"><div class="msg-time">9:15 AM</div><div class="msg-unread">1</div></div></div>
+        <div class="msg-item" onclick="openChat(this,'TPO – IIT Delhi','TD','#fff7ed','#c2410c')"><div class="msg-av" style="background:#fff7ed;color:#c2410c">TD</div><div class="msg-prev"><div class="msg-name">TPO – IIT Delhi</div><div class="msg-last">Drive confirmed for March 15th</div></div><div class="msg-meta2"><div class="msg-time">Yesterday</div></div></div>
+        <div class="msg-item" onclick="openChat(this,'Rahul Verma','RV','#fff7ed','#d97706')"><div class="msg-av" style="background:#fff7ed;color:#d97706">RV</div><div class="msg-prev"><div class="msg-name">Rahul Verma</div><div class="msg-last">I have attached my updated resume.</div></div><div class="msg-meta2"><div class="msg-time">Yesterday</div></div></div>
+      </div>
+      <div class="chat-win">
+        <div class="chat-hdr"><div class="chat-hdr-av" id="chat-av" style="background:#f0fdf4;color:#059669">AS</div><div class="chat-hdr-name" id="chat-name">Arjun Sharma</div><div class="act-btns"><button class="btn-ic" onclick="show('interviews')">📅</button><button class="btn-ic">👤</button></div></div>
+        <div class="chat-body" id="chat-body">
+          <div class="bubble recv">Hi! I applied for the SDE position. Could you let me know the next steps?</div>
+          <div class="bubble sent">Hi Arjun! Thanks for applying. You've been shortlisted for a technical interview. We'll share details soon.</div>
+          <div class="bubble recv">That's great news! Thank you for the opportunity!</div>
+        </div>
+        <div class="chat-inp-wrap">
+          <input type="text" class="chat-inp" id="chat-inp" placeholder="Type a message…" onkeydown="sendMsg(event)"/>
+          <button class="chat-send" onclick="sendMsg({key:'Enter'})">&#10148;</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANALYTICS -->
+  <section class="sec" id="sec-analytics">
+    <div class="sec-hdr"><div><h2 class="sec-title">Analytics</h2><p class="sec-sub">Insights into your campus recruitment performance.</p></div><button class="btn-sec">📤 Export Report</button></div>
+    <div class="stats-grid">
+      <div class="stat" style="--ac:#059669"><div class="stat-ic">👀</div><div class="stat-val">1,240</div><div class="stat-lbl">Job Post Views</div></div>
+      <div class="stat" style="--ac:#047857"><div class="stat-ic">📩</div><div class="stat-val">127</div><div class="stat-lbl">Total Applications</div></div>
+      <div class="stat" style="--ac:#7c3aed"><div class="stat-ic">📊</div><div class="stat-val">10.2%</div><div class="stat-lbl">Conversion Rate</div></div>
+      <div class="stat" style="--ac:#d97706"><div class="stat-ic">⏱️</div><div class="stat-val">4.2d</div><div class="stat-lbl">Avg. Time to Shortlist</div></div>
+    </div>
+    <div class="an-grid">
+      <div class="card"><h3 class="card-title" style="margin-bottom:18px">Applications by Branch</h3><div class="bar-chart"><div class="bar-row"><span class="bar-lbl">CSE</span><div class="bar-wrap"><div class="bar-fill" style="width:78%;background:#059669"></div></div><span class="bar-val">49</span></div><div class="bar-row"><span class="bar-lbl">IT</span><div class="bar-wrap"><div class="bar-fill" style="width:52%;background:#7c3aed"></div></div><span class="bar-val">33</span></div><div class="bar-row"><span class="bar-lbl">Data Sci</span><div class="bar-wrap"><div class="bar-fill" style="width:38%;background:#047857"></div></div><span class="bar-val">24</span></div><div class="bar-row"><span class="bar-lbl">ECE</span><div class="bar-wrap"><div class="bar-fill" style="width:22%;background:#d97706"></div></div><span class="bar-val">14</span></div><div class="bar-row"><span class="bar-lbl">Mech</span><div class="bar-wrap"><div class="bar-fill" style="width:11%;background:#dc2626"></div></div><span class="bar-val">7</span></div></div></div>
+      <div class="card"><h3 class="card-title" style="margin-bottom:18px">Recruitment Funnel</h3><div class="funnel"><div class="funnel-step" style="--fw:100%;--fc:#059669"><span>Applied</span><strong>127</strong></div><div class="funnel-step" style="--fw:80%;--fc:#7c3aed"><span>Reviewed</span><strong>48</strong></div><div class="funnel-step" style="--fw:58%;--fc:#047857"><span>Shortlisted</span><strong>34</strong></div><div class="funnel-step" style="--fw:38%;--fc:#d97706"><span>Interviewed</span><strong>9</strong></div><div class="funnel-step" style="--fw:20%;--fc:#dc2626"><span>Selected</span><strong>12</strong></div></div></div>
+      <div class="card"><h3 class="card-title" style="margin-bottom:18px">Top Performing Colleges</h3><div class="coll-list"><div class="coll-row"><span class="rank">1</span><span class="coll-name">IIT Delhi</span><span class="coll-apps">18 applicants</span></div><div class="coll-row"><span class="rank">2</span><span class="coll-name">NIT Trichy</span><span class="coll-apps">14 applicants</span></div><div class="coll-row"><span class="rank">3</span><span class="coll-name">BITS Pilani</span><span class="coll-apps">12 applicants</span></div><div class="coll-row"><span class="rank">4</span><span class="coll-name">DTU Delhi</span><span class="coll-apps">11 applicants</span></div><div class="coll-row"><span class="rank">5</span><span class="coll-name">VIT Vellore</span><span class="coll-apps">9 applicants</span></div></div></div>
+      <div class="card"><h3 class="card-title" style="margin-bottom:18px">CGPA Distribution</h3><div class="bar-chart"><div class="bar-row"><span class="bar-lbl">9.0-10</span><div class="bar-wrap"><div class="bar-fill" style="width:22%;background:#059669"></div></div><span class="bar-val">28</span></div><div class="bar-row"><span class="bar-lbl">8.0-8.9</span><div class="bar-wrap"><div class="bar-fill" style="width:48%;background:#047857"></div></div><span class="bar-val">61</span></div><div class="bar-row"><span class="bar-lbl">7.0-7.9</span><div class="bar-wrap"><div class="bar-fill" style="width:24%;background:#d97706"></div></div><span class="bar-val">30</span></div><div class="bar-row"><span class="bar-lbl">Below 7</span><div class="bar-wrap"><div class="bar-fill" style="width:6%;background:#dc2626"></div></div><span class="bar-val">8</span></div></div></div>
+    </div>
+  </section>
+
+</main>
+</div>
+<div class="toast" id="toast-el"></div>
+<script>
+const SEC_MAP={overview:"sec-overview",profile:"sec-profile",postjob:"sec-postjob",managejobs:"sec-managejobs",applicants:"sec-applicants",shortlist:"sec-shortlist",interviews:"sec-interviews",tracker:"sec-tracker",selected:"sec-selected",messages:"sec-messages",analytics:"sec-analytics"};
+const TITLES={overview:"Overview",profile:"Company Profile",postjob:"Post Job",managejobs:"Manage Job Posts",applicants:"View Applicants",shortlist:"Shortlist Candidates",interviews:"Interview Schedule",tracker:"Recruitment Tracker",selected:"Selected Candidates",messages:"Messages",analytics:"Analytics"};
+function show(k){
+  document.querySelectorAll(".sec").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll(".nav-a").forEach(n=>n.classList.remove("active"));
+  document.getElementById(SEC_MAP[k]).classList.add("active");
+  document.querySelectorAll(".nav-a").forEach(n=>{if(n.getAttribute("onclick")&&n.getAttribute("onclick").includes("'"+k+"'"))n.classList.add("active")});
+  document.getElementById("tb-title").textContent=TITLES[k];
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(window.innerWidth<900)document.getElementById("sidebar").classList.remove("open");
+}
+function updProf(){
+  const name=document.getElementById("p-name").value;
+  document.getElementById("prof-name-disp").textContent=name;
+  const ini=name.split(" ").map(w=>w[0]||"").join("").slice(0,2).toUpperCase();
+  ["prof-logo-disp","nav-av","tb-av"].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=ini});
+  document.getElementById("nav-co-name").textContent=name;
+  document.getElementById("ov-name").textContent=name;
+}
+function prevLogo(input){
+  if(!input.files[0])return;
+  const r=new FileReader();
+  r.onload=e=>{const el=document.getElementById("prof-logo-disp");el.textContent="";el.style.backgroundImage="url("+e.target.result+")";el.style.backgroundSize="cover"};
+  r.readAsDataURL(input.files[0]);
+}
+let jSkills=[];
+function addJSkill(e){
+  if(e.key!=="Enter")return;e.preventDefault();
+  const inp=document.getElementById("jsk-inp");const val=inp.value.trim();
+  if(!val||jSkills.includes(val)){inp.value="";return}
+  jSkills.push(val);renderJS();inp.value="";
+}
+function removeJS(s){jSkills=jSkills.filter(x=>x!==s);renderJS()}
+function renderJS(){
+  const wrap=document.getElementById("jsk-wrap");
+  wrap.querySelectorAll(".stag").forEach(t=>t.remove());
+  jSkills.forEach(s=>{const t=document.createElement("span");t.className="stag";t.innerHTML=s+"<button onclick=\"removeJS('"+s+"')\">&times;</button>";wrap.insertBefore(t,document.getElementById("jsk-inp"))});
+}
+function submitJob(){
+  const t=document.getElementById("j-title").value;
+  const ty=document.getElementById("j-type").value;
+  const l=document.getElementById("j-loc").value;
+  const d=document.getElementById("j-dl").value;
+  const de=document.getElementById("j-desc").value;
+  let ok=true;
+  const chk=(v,id)=>{document.getElementById(id).style.display=v?"none":"block";if(!v)ok=false};
+  chk(t,"e-title");chk(ty,"e-type");chk(l,"e-loc");chk(d,"e-dl");chk(de,"e-desc");
+  if(!ok)return;toast("\u{1F680} Job published successfully!");show("managejobs");
+}
+function filtJobs(btn,status){
+  document.querySelectorAll("#sec-managejobs .filt").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  document.querySelectorAll(".job-item").forEach(c=>{c.style.display=(status==="all"||c.dataset.st===status)?"flex":"none"});
+}
+function selAll(cb){document.querySelectorAll("#sec-applicants tbody input[type=checkbox]").forEach(c=>c.checked=cb.checked)}
+function qShortlist(btn){
+  const pill=btn.closest("tr").querySelector(".pill");
+  pill.className="pill pill-shortlisted";pill.textContent="Shortlisted";
+  toast("\u2B50 Candidate shortlisted!");
+}
+function openChat(item,name,ini,bg,color){
+  document.querySelectorAll(".msg-item").forEach(i=>i.classList.remove("active"));
+  item.classList.add("active");
+  document.getElementById("chat-av").textContent=ini;
+  document.getElementById("chat-av").style.background=bg;
+  document.getElementById("chat-av").style.color=color;
+  document.getElementById("chat-name").textContent=name;
+  const u=item.querySelector(".msg-unread");if(u)u.remove();
+}
+function sendMsg(e){
+  if(e.key!=="Enter")return;
+  const inp=document.getElementById("chat-inp");const val=inp.value.trim();if(!val)return;
+  const body=document.getElementById("chat-body");
+  const b=document.createElement("div");b.className="bubble sent";b.textContent=val;
+  body.appendChild(b);inp.value="";body.scrollTop=body.scrollHeight;
+}
+function toast(msg){
+  const el=document.getElementById("toast-el");
+  el.textContent=msg;el.classList.add("show");
+  setTimeout(()=>el.classList.remove("show"),3000);
+}
+</script>
+</body>
+</html>

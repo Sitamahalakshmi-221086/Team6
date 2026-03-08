@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusPlace – Log In</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../css/loginstyle.css" />
+</head>
+
+<body>
+
+  <div class="page-wrap">
+
+    <!-- ── LEFT PANEL ── -->
+    <aside class="left-panel">
+      <div class="left-content">
+        <a href="../index.html" class="logo"
+          style="margin-bottom: 40px; display: inline-flex; align-items: center; gap: 10px; text-decoration: none;">
+          <div class="logo-icon"
+            style="width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #1e3a8a, #2563eb); display: flex; align-items: center; justify-content: center; font-size: 17px; box-shadow: 0 4px 10px rgba(0,0,0,.2);">
+            🎓</div>
+          <span class="logo-text"
+            style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.25rem; color: #fff; letter-spacing: -0.02em;">Campus<span
+              style="color: #67e8f9;">Place</span></span>
+        </a>
+        <div class="left-badge"><span class="left-badge-dot"></span> Welcome Back</div>
+        <h2 class="left-title">Log Back<br />Into Your<br /><span style="color:#67e8f9;">Dashboard</span></h2>
+        <p class="left-sub">Access your personalised placement portal. Pick your role and sign in to continue.</p>
+
+        <div class="role-info-list">
+          <div class="role-info-card" id="left-student">
+            <div class="role-info-icon student">🎓</div>
+            <div class="role-info-text">
+              <div class="role-info-name">Student</div>
+              <div class="role-info-desc">View jobs, track applications & manage your profile</div>
+            </div>
+          </div>
+          <div class="role-info-card" id="left-company">
+            <div class="role-info-icon company">🏢</div>
+            <div class="role-info-text">
+              <div class="role-info-name">Company / Recruiter</div>
+              <div class="role-info-desc">Post jobs, browse talent & manage campus drives</div>
+            </div>
+          </div>
+          <div class="role-info-card" id="left-tpo">
+            <div class="role-info-icon tpo">🛡️</div>
+            <div class="role-info-text">
+              <div class="role-info-name">TPO / Admin</div>
+              <div class="role-info-desc">Oversee placements, students & company activity</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="left-stats">
+          <div class="left-stat">
+            <div class="left-stat-num">500+</div>
+            <div class="left-stat-label">Colleges</div>
+          </div>
+          <div class="left-stat">
+            <div class="left-stat-num">12k+</div>
+            <div class="left-stat-label">Students</div>
+          </div>
+          <div class="left-stat">
+            <div class="left-stat-num">800+</div>
+            <div class="left-stat-label">Recruiters</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ── RIGHT PANEL ── -->
+    <main class="right-panel">
+
+      <!-- ══ STAGE 1 – ROLE SELECTION ══ -->
+      <div class="form-stage active" id="stage-1">
+        <div class="stage-header">
+          <div class="stage-num">Step 01 / 02</div>
+          <h1 class="stage-title">Welcome <span class="shimmer-text">Back!</span></h1>
+          <p class="stage-sub">Choose your role to continue to your dashboard.</p>
+        </div>
+
+        <div class="role-grid">
+          <div class="role-card" id="card-student" onclick="selectRole('student')">
+            <div class="role-card-icon">🎓</div>
+            <div class="role-card-name">Student</div>
+            <div class="role-card-desc">Access jobs &amp; placement tracker</div>
+          </div>
+          <div class="role-card" id="card-company" onclick="selectRole('company')">
+            <div class="role-card-icon">🏢</div>
+            <div class="role-card-name">Company</div>
+            <div class="role-card-desc">Manage jobs &amp; campus drives</div>
+          </div>
+          <div class="role-card" id="card-tpo" onclick="selectRole('tpo')">
+            <div class="role-card-icon">🛡️</div>
+            <div class="role-card-name">TPO / Admin</div>
+            <div class="role-card-desc">Oversee placement activities</div>
+          </div>
+        </div>
+
+        <div id="role-error" style="display:none;font-size:12px;color:#ef4444;margin-bottom:16px;">Please select a role
+          to continue.</div>
+
+        <button class="btn-login student" id="continue-btn" onclick="goToLogin()" style="margin-top:4px;">
+          Continue <span>→</span>
+        </button>
+
+        <div class="divider">
+          <hr /><span>or</span>
+          <hr />
+        </div>
+        <div class="already">Don't have an account? <a href="Signup.html">Sign up here</a></div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    let selectedRole = '';
+
+    /* ── ROLE SELECTION ── */
+    function selectRole(value) {
+      selectedRole = value;
+
+      // Reset all cards
+      ['student', 'company', 'tpo'].forEach(r => {
+        const card = document.getElementById('card-' + r);
+        card.style.borderColor = '#e2e8f0';
+        card.style.background = '#fff';
+        card.style.boxShadow = 'none';
+        card.style.transform = 'none';
+      });
+
+      // Highlight selected
+      const card = document.getElementById('card-' + value);
+      const styles = {
+        student: ['#2563eb', '#eff6ff', '0 0 0 4px rgba(37,99,235,.12)'],
+        company: ['#059669', '#f0fdf4', '0 0 0 4px rgba(5,150,105,.12)'],
+        tpo: ['#c2410c', '#fff7ed', '0 0 0 4px rgba(194,65,12,.12)'],
+      };
+      card.style.borderColor = styles[value][0];
+      card.style.background = styles[value][1];
+      card.style.boxShadow = styles[value][2];
+      card.style.transform = 'translateY(-3px)';
+
+      // Update continue button color
+      const btn = document.getElementById('continue-btn');
+      btn.className = 'btn-login ' + value;
+
+      // Highlight left panel card
+      ['student', 'company', 'tpo'].forEach(r => {
+        document.getElementById('left-' + r).classList.remove('highlight');
+      });
+      document.getElementById('left-' + value).classList.add('highlight');
+
+      document.getElementById('role-error').style.display = 'none';
+    }
+
+    /* ── GO TO LOGIN FORM ── */
+    function goToLogin() {
+      if (!selectedRole) {
+        document.getElementById('role-error').style.display = 'block';
+        return;
+      }
+      
+      const routes = {
+        student: 'studentlogin.html',
+        company: 'companylogin.html',
+        tpo: 'TPOlogin.html'
+      }
+      window.location.href = routes[selectedRole];
+    }
+  </script>
+</body>
+
+</html>
+
+
