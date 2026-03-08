@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusPlace – Student Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../css/studentdashboardstyle.css" />
+</head>
+
+<body>
+
+  <!-- ─── SIDEBAR ─── -->
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-mark">🎓</div>
+      <span class="sb-logo-name">Campus<span>Place</span></span>
+    </div>
+    <div class="sb-user">
+      <div class="av" id="sb-av">AS</div>
+      <div>
+        <div class="sb-uname" id="sb-name">Arjun Sharma</div>
+        <div class="sb-udept">CSE · 3rd Year</div>
+      </div>
+    </div>
+    <nav class="sb-nav">
+      <button class="nl on" onclick="go('home',this)"> <span class="ic">🏠</span> Home</button>
+      <button class="nl" onclick="go('jobs',this)"> <span class="ic">💼</span> Job Listings <span
+          class="nb b">12</span></button>
+      <button class="nl" onclick="go('applications',this)"><span class="ic">📋</span> My Applications <span
+          class="nb b">4</span></button>
+      <button class="nl" onclick="go('drives',this)"> <span class="ic">🏢</span> Campus Drives</button>
+      <button class="nl" onclick="go('tests',this)"> <span class="ic">📝</span> Tests &amp; Exams <span
+          class="nb">2</span></button>
+      <button class="nl" onclick="go('resume',this)"> <span class="ic">📄</span> Resume Builder</button>
+      <button class="nl" onclick="go('resources',this)"> <span class="ic">📚</span> Prep Resources</button>
+      <button class="nl" onclick="go('profile',this)"> <span class="ic">👤</span> My Profile</button>
+      <button class="nl" onclick="go('settings',this)"> <span class="ic">⚙️</span> Settings</button>
+    </nav>
+    <div class="sb-foot">
+      <button class="nl" style="color:var(--red);" onclick="logout()"><span class="ic">🚪</span> Log Out</button>
+    </div>
+  </aside>
+
+  <!-- ─── NOTIFICATION PANEL ─── -->
+  <div class="notif-panel" id="notif-panel">
+    <div class="notif-header">
+      <span class="notif-title">Notifications</span>
+      <button class="notif-close" onclick="toggleNotif()">✕</button>
+    </div>
+    <div class="notif-item"><span class="notif-dot2 unread"></span>
+      <div>
+        <div class="notif-text">You've been <strong>shortlisted</strong> for Amazon Data Analyst role.</div>
+        <div class="notif-time">2 hours ago</div>
+      </div>
+    </div>
+    <div class="notif-item"><span class="notif-dot2 unread"></span>
+      <div>
+        <div class="notif-text">Microsoft campus drive registration closes <strong>March 15</strong>.</div>
+        <div class="notif-time">5 hours ago</div>
+      </div>
+    </div>
+    <div class="notif-item"><span class="notif-dot2 unread"></span>
+      <div>
+        <div class="notif-text">New job posted: <strong>ML Engineer</strong> at Flipkart.</div>
+        <div class="notif-time">Yesterday</div>
+      </div>
+    </div>
+    <div class="notif-item"><span class="notif-dot2 read"></span>
+      <div>
+        <div class="notif-text">Placement orientation on <strong>Mar 16, 11 AM</strong> – Main Auditorium.</div>
+        <div class="notif-time">2 days ago</div>
+      </div>
+    </div>
+    <div class="notif-item"><span class="notif-dot2 read"></span>
+      <div>
+        <div class="notif-text">Your application to Zomato is under review.</div>
+        <div class="notif-time">3 days ago</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── JOB DETAIL MODAL ─── -->
+  <div class="overlay" id="job-modal" onclick="closeModal(event)">
+    <div class="modal">
+      <button class="modal-close" onclick="document.getElementById('job-modal').classList.remove('on')">✕</button>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <div class="co" style="width:44px;height:44px;font-size:22px;" id="m-logo">🔵</div>
+        <div>
+          <h3 id="m-title">Software Engineer Intern</h3>
+          <div class="modal-co" id="m-company">Microsoft India · Hyderabad</div>
+        </div>
+      </div>
+      <div class="modal-grid">
+        <div class="mf">
+          <div class="mf-l">Package</div>
+          <div class="mf-v" id="m-ctc" style="color:var(--green);">₹12 LPA</div>
+        </div>
+        <div class="mf">
+          <div class="mf-l">Type</div>
+          <div class="mf-v" id="m-type">Full Time</div>
+        </div>
+        <div class="mf">
+          <div class="mf-l">Location</div>
+          <div class="mf-v" id="m-loc">Hybrid</div>
+        </div>
+        <div class="mf">
+          <div class="mf-l">Deadline</div>
+          <div class="mf-v" id="m-dl">March 20, 2025</div>
+        </div>
+        <div class="mf">
+          <div class="mf-l">Min CGPA</div>
+          <div class="mf-v" id="m-cgpa">7.0</div>
+        </div>
+        <div class="mf">
+          <div class="mf-l">Eligible Branches</div>
+          <div class="mf-v" id="m-branch">CSE, IT, ECE</div>
+        </div>
+      </div>
+      <div class="modal-section-title">Job Description</div>
+      <div class="modal-desc" id="m-desc">We are looking for a motivated Software Engineer Intern to join our team. You
+        will work on building scalable web applications and contribute to real-world products used by millions.</div>
+      <div class="modal-section-title">Required Skills</div>
+      <div class="req-tags" id="m-skills"></div>
+      <div class="modal-footer">
+        <span style="font-size:12px;color:var(--sub);" id="m-applied-note"></span>
+        <button class="btn lg" id="m-apply-btn" onclick="applyFromModal()">Apply Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── MAIN ─── -->
+  <div class="main">
+    <header class="topbar">
+      <span class="tb-title" id="tb-title">Home</span>
+      <div class="tb-right">
+        <div class="tb-notif" onclick="toggleNotif()">🔔<span class="rdot" id="notif-dot"></span></div>
+        <div class="tb-chip" onclick="go('profile', document.querySelector('[onclick*=profile]'))" title="My Profile">
+          <div class="av" id="tb-av" style="width:24px;height:24px;font-size:9px;">AS</div>
+          <span id="tb-name">Arjun</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="body">
+
+      <!-- ══════════════════════════════ HOME ══════════════════════════════ -->
+      <div class="page on" id="pg-home">
+        <div class="greet">
+          <div>
+            <h2 id="greet-msg">Good morning, Arjun 👋</h2>
+            <p>You have 2 interviews scheduled and 3 new job matches today.</p>
+          </div>
+          <span class="greet-em">🎓</span>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-l">Jobs Available</div>
+            <div class="stat-v">12</div>
+            <div class="stat-n g">3 new today</div>
+          </div>
+          <div class="stat">
+            <div class="stat-l">Applied</div>
+            <div class="stat-v">4</div>
+            <div class="stat-n s">1 this week</div>
+          </div>
+          <div class="stat">
+            <div class="stat-l">Interviews</div>
+            <div class="stat-v">2</div>
+            <div class="stat-n a">Next: Mar 18</div>
+          </div>
+          <div class="stat">
+            <div class="stat-l">Profile</div>
+            <div class="stat-v">75%</div>
+            <div class="stat-n b">Add photo → 90%</div>
+          </div>
+        </div>
+
+        <div class="cols">
+          <div>
+            <!-- Recommended Jobs -->
+            <div class="block">
+              <div class="bh"><span class="bt">⭐ Recommended for You</span><button class="va"
+                  onclick="go('jobs',document.querySelector('[onclick*=jobs]'))">View all →</button></div>
+              <div id="home-reco-jobs"></div>
+            </div>
+            <!-- Recent Applications -->
+            <div class="block">
+              <div class="bh"><span class="bt">📋 Recent Applications</span><button class="va"
+                  onclick="go('applications',document.querySelector('[onclick*=applications]'))">View all →</button>
+              </div>
+              <div class="ar">
+                <div class="co">🔵</div>
+                <div class="am">
+                  <div class="an">SDE Intern – Microsoft India</div>
+                  <div class="ac">Applied Mar 10 · ₹12 LPA</div>
+                </div><span class="pill interview">Interview Scheduled</span>
+              </div>
+              <div class="ar">
+                <div class="co">🟠</div>
+                <div class="am">
+                  <div class="an">Data Analyst – Amazon</div>
+                  <div class="ac">Applied Mar 8 · ₹18 LPA</div>
+                </div><span class="pill short">Shortlisted</span>
+              </div>
+              <div class="ar">
+                <div class="co">🔴</div>
+                <div class="am">
+                  <div class="an">Frontend Developer – Zomato</div>
+                  <div class="ac">Applied Mar 5 · ₹8 LPA</div>
+                </div><span class="pill review">Under Review</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right column -->
+          <div>
+            <!-- Profile strength -->
+            <div class="block" style="padding:14px 16px;margin-bottom:14px;">
+              <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px;">
+                <div class="av" id="home-av" style="width:36px;height:36px;font-size:12px;">AS</div>
+                <div>
+                  <div style="font-size:13px;font-weight:600;" id="home-name">Arjun Sharma</div>
+                  <div style="font-size:11px;color:var(--sub);">CSE · 3rd Year · CGPA 8.5</div>
+                </div>
+              </div>
+              <div class="pbar-lbl"><span>Profile Strength</span><span>75%</span></div>
+              <div class="pbar">
+                <div class="pbar-fill" style="width:75%;"></div>
+              </div>
+              <div class="checklist">
+                <div class="ci done">✅ Basic info filled</div>
+                <div class="ci done">✅ Resume uploaded</div>
+                <div class="ci done">✅ Skills added</div>
+                <div class="ci todo">⬜ Add LinkedIn URL</div>
+                <div class="ci todo">⬜ Upload profile photo</div>
+              </div>
+              <button class="btn sec" style="margin-top:10px;width:100%;padding:7px;"
+                onclick="go('profile',document.querySelector('[onclick*=profile]'))">Edit Profile</button>
+            </div>
+            <!-- Notices -->
+            <div class="block">
+              <div class="bh"><span class="bt">🔔 Recent Notices</span><button class="va"
+                  onclick="go('settings',document.querySelector('[onclick*=settings]'))">View all →</button></div>
+              <div class="nr"><span class="dot g"></span>
+                <div>
+                  <div class="nb2">You've been <strong>shortlisted</strong> for Amazon Data Analyst.</div>
+                  <div class="nt">2 hours ago</div>
+                </div>
+              </div>
+              <div class="nr"><span class="dot b"></span>
+                <div>
+                  <div class="nb2">Microsoft drive registration closes <strong>March 15</strong>.</div>
+                  <div class="nt">5 hours ago</div>
+                </div>
+              </div>
+              <div class="nr"><span class="dot a"></span>
+                <div>
+                  <div class="nb2">Placement orientation – <strong>Mar 16, 11 AM</strong>, Main Auditorium.</div>
+                  <div class="nt">2 days ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════ JOB LISTINGS ══════════════════════════════ -->
+      <div class="page" id="pg-jobs">
+        <div class="tabs">
+          <button class="tab on" onclick="switchTab('jobs','all',this)">All Jobs</button>
+          <button class="tab" onclick="switchTab('jobs','reco',this)">⭐ Recommended</button>
+          <button class="tab" onclick="switchTab('jobs','intern',this)">Internships</button>
+        </div>
+
+        <!-- All Jobs -->
+        <div class="tab-panel on" id="jobs-all">
+          <div class="search-bar">
+            <input class="search-input" placeholder="🔍  Search jobs, companies…" oninput="filterJobs(this.value)"
+              id="job-search" />
+            <select class="filter-select" id="filter-skill" onchange="filterJobs()">
+              <option value="">All Skills</option>
+              <option>React</option>
+              <option>Python</option>
+              <option>Java</option>
+              <option>Node.js</option>
+              <option>AWS</option>
+            </select>
+            <select class="filter-select" id="filter-loc" onchange="filterJobs()">
+              <option value="">All Locations</option>
+              <option>Bangalore</option>
+              <option>Hyderabad</option>
+              <option>Noida</option>
+              <option>Remote</option>
+            </select>
+            <select class="filter-select" id="filter-type" onchange="filterJobs()">
+              <option value="">All Types</option>
+              <option>Full Time</option>
+              <option>Internship</option>
+            </select>
+          </div>
+          <div class="block" id="jobs-list-block">
+            <div id="jobs-list"></div>
+          </div>
+        </div>
+
+        <!-- Recommended -->
+        <div class="tab-panel" id="jobs-reco">
+          <div
+            style="background:#fffbeb;border:1px solid #fde68a;border-radius:9px;padding:10px 14px;font-size:13px;margin-bottom:14px;">
+            ⭐ Based on your skills (<strong>React, Node.js, MongoDB</strong>), branch (<strong>CSE</strong>) and CGPA
+            (<strong>8.5</strong>)
+          </div>
+          <div class="block" id="reco-list"></div>
+        </div>
+
+        <!-- Internships -->
+        <div class="tab-panel" id="jobs-intern">
+          <div class="block" id="intern-list"></div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════ APPLICATIONS ══════════════════════════════ -->
+      <div class="page" id="pg-applications">
+        <div class="tabs">
+          <button class="tab on" onclick="switchTab('apps','all',this)">All</button>
+          <button class="tab" onclick="switchTab('apps','active',this)">Active</button>
+          <button class="tab" onclick="switchTab('apps','closed',this)">Closed</button>
+        </div>
+        <div class="tab-panel on" id="apps-all">
+          <div class="block">
+            <div class="ar">
+              <div class="co">🔵</div>
+              <div class="am">
+                <div class="an">SDE Intern – Microsoft India</div>
+                <div class="ac">Full Time · ₹12 LPA · Applied Mar 10</div>
+              </div><span class="pill interview">Interview Scheduled</span>
+            </div>
+            <div class="ar">
+              <div class="co">🟠</div>
+              <div class="am">
+                <div class="an">Data Analyst – Amazon Dev Centre</div>
+                <div class="ac">Full Time · ₹18 LPA · Applied Mar 8</div>
+              </div><span class="pill short">Shortlisted</span>
+            </div>
+            <div class="ar">
+              <div class="co">🔴</div>
+              <div class="am">
+                <div class="an">Frontend Developer – Zomato</div>
+                <div class="ac">Internship · ₹8 LPA · Applied Mar 5</div>
+              </div><span class="pill review">Under Review</span>
+            </div>
+            <div class="ar">
+              <div class="co">🟣</div>
+              <div class="am">
+                <div class="an">Backend Engineer – Swiggy</div>
+                <div class="ac">Full Time · ₹14 LPA · Applied Feb 28</div>
+              </div><span class="pill rejected">Rejected</span>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" id="apps-active">
+          <div class="block">
+            <div class="ar">
+              <div class="co">🔵</div>
+              <div class="am">
+                <div class="an">SDE Intern – Microsoft India</div>
+                <div class="ac">Full Time · ₹12 LPA · Applied Mar 10</div>
+              </div><span class="pill interview">Interview Scheduled</span>
+            </div>
+            <div class="ar">
+              <div class="co">🟠</div>
+              <div class="am">
+                <div class="an">Data Analyst – Amazon Dev Centre</div>
+                <div class="ac">Full Time · ₹18 LPA · Applied Mar 8</div>
+              </div><span class="pill short">Shortlisted</span>
+            </div>
+            <div class="ar">
+              <div class="co">🔴</div>
+              <div class="am">
+                <div class="an">Frontend Developer – Zomato</div>
+                <div class="ac">Internship · ₹8 LPA · Applied Mar 5</div>
+              </div><span class="pill review">Under Review</span>
+            </div>
+          </div>
+        </div>
+        <div class="tab-panel" id="apps-closed">
+          <div class="block">
+            <div class="ar">
+              <div class="co">🟣</div>
+              <div class="am">
+                <div class="an">Backend Engineer – Swiggy</div>
+                <div class="ac">Full Time · ₹14 LPA · Applied Feb 28</div>
+              </div><span class="pill rejected">Rejected</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════ CAMPUS DRIVES ══════════════════════════════ -->
+      <div class="page" id="pg-drives">
+        <div class="block">
+          <div class="bh"><span class="bt">Upcoming Campus Drives</span></div>
+          <div class="dr">
+            <div class="dp">
+              <div class="dd">18</div>
+              <div class="dm">Mar</div>
+            </div>
+            <div class="dinfo">
+              <div class="dname">Microsoft Campus Drive</div>
+              <div class="dmeta">10:00 AM · Main Auditorium · SDE, SDE-2 roles · Eligibility: CGPA ≥ 7.0</div>
+            </div><span class="pill registered">Registered</span>
+          </div>
+          <div class="dr">
+            <div class="dp">
+              <div class="dd">22</div>
+              <div class="dm">Mar</div>
+            </div>
+            <div class="dinfo">
+              <div class="dname">TCS Mass Hiring Drive</div>
+              <div class="dmeta">9:00 AM · Block B Hall · Multiple roles · All branches eligible</div>
+            </div><span class="pill upcoming"><button class="btn"
+                style="padding:4px 12px;font-size:11.5px;">Register</button></span>
+          </div>
+          <div class="dr">
+            <div class="dp">
+              <div class="dd">28</div>
+              <div class="dm">Mar</div>
+            </div>
+            <div class="dinfo">
+              <div class="dname">Infosys Off-Campus Drive</div>
+              <div class="dmeta">Online · Zoom · Cloud & DevOps · Eligibility: CGPA ≥ 6.5</div>
+            </div><span class="pill upcoming"><button class="btn"
+                style="padding:4px 12px;font-size:11.5px;">Register</button></span>
+          </div>
+          <div class="dr">
+            <div class="dp">
+              <div class="dd">3</div>
+              <div class="dm">Apr</div>
+            </div>
+            <div class="dinfo">
+              <div class="dname">Wipro Campus Connect</div>
+              <div class="dmeta">2:00 PM · Seminar Hall · Engineering roles</div>
+            </div><span class="pill upcoming"><button class="btn"
+                style="padding:4px 12px;font-size:11.5px;">Register</button></span>
+          </div>
+          <div class="dr">
+            <div class="dp">
+              <div class="dd">7</div>
+              <div class="dm">Apr</div>
+            </div>
+            <div class="dinfo">
+              <div class="dname">HCL Tech Hiring</div>
+              <div class="dmeta">11:00 AM · Block A · CSE & IT · Eligibility: CGPA ≥ 6.0</div>
+            </div><span class="pill upcoming"><button class="btn"
+                style="padding:4px 12px;font-size:11.5px;">Register</button></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════ TESTS & EXAMS ══════════════════════════════ -->
+      <div class="page" id="pg-tests">
+        <div class="sec-h">Tests & Exams</div>
+        <div class="test-card">
+          <div class="test-icon" style="background:#ecfeff;">💻</div>
+          <div class="test-info">
+            <div class="test-name">Infosys InfyTQ – Online Test</div>
+            <span class="test-mode online">Online</span>
+            <div class="test-meta">📅 Date: March 20, 2025 &nbsp;·&nbsp; 🕙 Time: 10:00 AM – 12:00 PM &nbsp;·&nbsp; ⏳
+              Duration: 2 hours</div>
+            <div style="font-size:12px;color:var(--sub);margin-bottom:10px;">Sections: Aptitude, Logical Reasoning,
+              Coding (2 problems)</div>
+            <button class="btn"
+              onclick="alert('Test link will be sent to your registered email 30 minutes before the test.')">Start Test
+              →</button>
+          </div>
+        </div>
+        <div class="test-card">
+          <div class="test-icon" style="background:#fffbeb;">📋</div>
+          <div class="test-info">
+            <div class="test-name">TCS NQT – Offline Test</div>
+            <span class="test-mode offline">Offline</span>
+            <div class="test-meta">📅 Date: March 22, 2025 &nbsp;·&nbsp; 🕘 Time: 9:00 AM</div>
+            <div style="font-size:12px;color:var(--sub);margin-bottom:10px;">📍 Venue: Seminar Hall A, Block B
+              &nbsp;·&nbsp; Carry: College ID, HB pencil, pen</div>
+            <div
+              style="background:#fffbeb;border:1px solid #fde68a;border-radius:7px;padding:9px 12px;font-size:12px;color:#92400e;">
+              ⚠️ Report by 8:30 AM. No electronic devices allowed. Bring printed hall ticket.
+            </div>
+          </div>
+        </div>
+        <div class="block" style="margin-top:8px;">
+          <div class="bh"><span class="bt">Completed Tests</span></div>
+          <div class="ar">
+            <div class="test-icon"
+              style="background:#f0fdf4;width:36px;height:36px;border-radius:8px;font-size:16px;flex-shrink:0;">✅</div>
+            <div class="am">
+              <div class="an">Wipro WILP Written Test</div>
+              <div class="ac">Completed Feb 20 · Score: 78/100</div>
+            </div><span class="pill registered">Passed</span>
+          </div>
+          <div class="ar">
+            <div class="test-icon"
+              style="background:#fef2f2;width:36px;height:36px;border-radius:8px;font-size:16px;flex-shrink:0;">❌</div>
+            <div class="am">
+              <div class="an">Zomato Technical Screening</div>
+              <div class="ac">Completed Mar 3 · Score: 42/100</div>
+            </div><span class="pill rejected">Did not qualify</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════ RESUME BUILDER ══════════════════════════════ -->
+      <div class="page" id="pg-resume">
+        <div class="sec-h">Resume Builder</div>
+        <div class="rb-steps">
+          <div class="rb-step on" id="rs0" onclick="rbGo(0)">1. Personal</div>
+          <div class="rb-step" id="rs1" onclick="rbGo(1)">2. Education</div>
+          <div class="rb-step" id="rs2" onclick="rbGo(2)">3. Skills</div>
+          <div class="rb-step" id="rs3" onclick="rbGo(3)">4. Projects</div>
+          <div class="rb-step" id="rs4" onclick="rbGo(4)">5. Preview</div>
+        </div>
+
+        <!-- Step 1: Personal -->
+        <div class="rb-panel on" id="rbp0">
+          <div class="detail-block">
+            <div class="detail-title">Personal Information</div>
+            <div class="form-grid">
+              <div class="fg"><label>Full Name</label><input id="rb-name" placeholder="Arjun Sharma" /></div>
+              <div class="fg"><label>Email</label><input id="rb-email" placeholder="arjun@college.edu" /></div>
+              <div class="fg"><label>Phone</label><input id="rb-phone" placeholder="+91 98765 43210" /></div>
+              <div class="fg"><label>LinkedIn URL</label><input id="rb-linkedin" placeholder="linkedin.com/in/arjun" />
+              </div>
+              <div class="fg full"><label>Objective / Summary</label><textarea id="rb-obj"
+                  placeholder="A passionate CSE student seeking…"></textarea></div>
+            </div>
+            <button class="btn lg" style="margin-top:14px;" onclick="rbGo(1)">Next: Education →</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Education -->
+        <div class="rb-panel" id="rbp1">
+          <div class="detail-block">
+            <div class="detail-title">Education</div>
+            <div class="form-grid">
+              <div class="fg"><label>College / University</label><input id="rb-college" placeholder="JNTU Hyderabad" />
+              </div>
+              <div class="fg"><label>Degree & Branch</label><input id="rb-degree"
+                  placeholder="B.Tech – Computer Science" /></div>
+              <div class="fg"><label>Year of Passing</label><input id="rb-year" placeholder="2026" /></div>
+              <div class="fg"><label>CGPA</label><input id="rb-cgpa" placeholder="8.5" /></div>
+              <div class="fg"><label>12th School & Percentage</label><input id="rb-12" placeholder="ABC School – 92%" />
+              </div>
+              <div class="fg"><label>10th School & Percentage</label><input id="rb-10" placeholder="XYZ School – 95%" />
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:14px;">
+              <button class="btn sec lg" onclick="rbGo(0)">← Back</button>
+              <button class="btn lg" onclick="rbGo(2)">Next: Skills →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Skills -->
+        <div class="rb-panel" id="rbp2">
+          <div class="detail-block">
+            <div class="detail-title">Skills & Experience</div>
+            <div class="form-grid">
+              <div class="fg full">
+                <label>Technical Skills (press Enter or comma to add)</label>
+                <div class="skill-tags" id="rb-skills-wrap" onclick="document.getElementById('rb-skill-input').focus()">
+                  <span class="skill-tag">React<button onclick="removeSkillRb(this)">×</button></span>
+                  <span class="skill-tag">Node.js<button onclick="removeSkillRb(this)">×</button></span>
+                  <span class="skill-tag">MongoDB<button onclick="removeSkillRb(this)">×</button></span>
+                  <input class="skill-input" id="rb-skill-input" placeholder="Add skill…"
+                    onkeydown="addSkillRb(event)" />
+                </div>
+              </div>
+              <div class="fg full"><label>Internship / Work Experience</label><textarea id="rb-exp"
+                  placeholder="Frontend Intern @ XYZ Corp (June–Aug 2024) – Built dashboard with React…"></textarea>
+              </div>
+              <div class="fg full"><label>Certifications</label><input id="rb-cert"
+                  placeholder="AWS Cloud Practitioner, Google Analytics, etc." /></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:14px;">
+              <button class="btn sec lg" onclick="rbGo(1)">← Back</button>
+              <button class="btn lg" onclick="rbGo(3)">Next: Projects →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Projects -->
+        <div class="rb-panel" id="rbp3">
+          <div class="detail-block">
+            <div class="detail-title">Projects</div>
+            <div class="form-grid">
+              <div class="fg"><label>Project 1 Title</label><input id="rb-p1t" placeholder="E-Commerce Platform" />
+              </div>
+              <div class="fg"><label>Tech Stack</label><input id="rb-p1s" placeholder="React, Node.js, MongoDB" /></div>
+              <div class="fg full"><label>Description</label><textarea id="rb-p1d"
+                  placeholder="Built a full-stack e-commerce app with cart, payment integration…"></textarea></div>
+              <div class="fg"><label>Project 2 Title</label><input id="rb-p2t" placeholder="Portfolio Website" /></div>
+              <div class="fg"><label>Tech Stack</label><input id="rb-p2s" placeholder="HTML, CSS, JS" /></div>
+              <div class="fg full"><label>Description</label><textarea id="rb-p2d"
+                  placeholder="Personal portfolio showcasing projects and skills…"></textarea></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:14px;">
+              <button class="btn sec lg" onclick="rbGo(2)">← Back</button>
+              <button class="btn lg" onclick="rbGo(4)">Preview Resume →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5: Preview -->
+        <div class="rb-panel" id="rbp4">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+            <button class="btn sec" onclick="rbGo(3)">← Edit</button>
+            <button class="btn" onclick="alert('PDF download would be triggered here in the live system.')">⬇ Download
+              PDF</button>
+          </div>
+          <div class="preview-box" id="resume-preview">
+            <h1 id="pv-name">Arjun Sharma</h1>
+            <div class="pv-contact" id="pv-contact">arjun@college.edu · +91 98765 43210 · linkedin.com/in/arjun</div>
+            <div class="pv-sec">
+              <h3>Objective</h3>
+              <p class="pv-item" id="pv-obj">A passionate CSE student seeking challenging roles to apply my skills.</p>
+            </div>
+            <div class="pv-sec">
+              <h3>Education</h3>
+              <p class="pv-item" id="pv-edu"><strong>B.Tech – Computer Science</strong> · JNTU Hyderabad · CGPA: 8.5 ·
+                2026</p>
+              <p class="pv-item" id="pv-12">12th: ABC School – 92%</p>
+              <p class="pv-item" id="pv-10">10th: XYZ School – 95%</p>
+            </div>
+            <div class="pv-sec">
+              <h3>Skills</h3>
+              <p class="pv-item" id="pv-skills">React, Node.js, MongoDB</p>
+            </div>
+            <div class="pv-sec">
+              <h3>Projects</h3>
+              <p class="pv-item" id="pv-p1"><strong>E-Commerce Platform</strong> (React, Node.js, MongoDB) – Built a
+                full-stack e-commerce app.</p>
+              <p class="pv-item" id="pv-p2"><strong>Portfolio Website</strong> (HTML, CSS, JS) – Personal portfolio
+                showcasing projects.</p>
+            </div>
+            <div class="pv-sec">
+              <h3>Experience</h3>
+              <p class="pv-item" id="pv-exp">Frontend Intern @ XYZ Corp (June–Aug 2024)</p>
+            </div>
+            <div class="pv-sec">
+              <h3>Certifications</h3>
+              <p class="pv-item" id="pv-cert">AWS Cloud Practitioner, Google Analytics</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════ PREP RESOURCES ══════════════════════════════ -->
+      <div class="page" id="pg-resources">
+        <div class="sec-h">Placement Preparation Resources</div>
+        <div class="res-grid">
+          <div class="res-card" onclick="alert('Opening Aptitude Practice…')">
+            <div class="res-icon">🧮</div>
+            <div class="res-title">Aptitude Practice</div>
+            <div class="res-desc">Quantitative, logical, verbal – topic-wise questions with solutions.</div>
+          </div>
+          <div class="res-card" onclick="alert('Opening Coding Practice…')">
+            <div class="res-icon">💻</div>
+            <div class="res-title">Coding Practice</div>
+            <div class="res-desc">DSA problems curated by company difficulty. LeetCode / HackerRank links.</div>
+          </div>
+          <div class="res-card" onclick="alert('Opening Interview Prep…')">
+            <div class="res-icon">🎙️</div>
+            <div class="res-title">Interview Prep</div>
+            <div class="res-desc">HR questions, technical rounds, STAR method answers and tips.</div>
+          </div>
+          <div class="res-card" onclick="alert('Opening Interview Experiences…')">
+            <div class="res-icon">💬</div>
+            <div class="res-title">Interview Experiences</div>
+            <div class="res-desc">Senior students' real interview experiences at top companies.</div>
+          </div>
+          <div class="res-card" onclick="alert('Opening Group Discussion Guide…')">
+            <div class="res-icon">🗣️</div>
+            <div class="res-title">Group Discussion</div>
+            <div class="res-desc">GD tips, current topics, and practice strategies.</div>
+          </div>
+          <div class="res-card" onclick="alert('Opening Resume Tips…')">
+            <div class="res-icon">📄</div>
+            <div class="res-title">Resume Tips</div>
+            <div class="res-desc">Best practices for writing a placement-ready resume with examples.</div>
+          </div>
+        </div>
+
+        <div class="sec-h" style="margin-top:20px;">Company-Wise Preparation</div>
+        <div class="block">
+          <div class="bh"><span class="bt">Top Recruiters at Your College</span></div>
+          <div class="jr">
+            <div class="co">🔵</div>
+            <div class="jm">
+              <div class="jt">Microsoft</div>
+              <div class="ji">SDE, PM roles · Online test + 3 rounds</div>
+            </div>
+            <div class="jr-right"><button class="btn sec" onclick="alert('Opening Microsoft prep guide…')">View
+                Guide</button></div>
+          </div>
+          <div class="jr">
+            <div class="co">🟠</div>
+            <div class="jm">
+              <div class="jt">Amazon</div>
+              <div class="ji">SDE, DA roles · OA + Bar raiser round</div>
+            </div>
+            <div class="jr-right"><button class="btn sec" onclick="alert('Opening Amazon prep guide…')">View
+                Guide</button></div>
+          </div>
+          <div class="jr">
+            <div class="co">🟢</div>
+            <div class="jm">
+              <div class="jt">Infosys</div>
+              <div class="ji">SE, Systems Engineer · InfyTQ based</div>
+            </div>
+            <div class="jr-right"><button class="btn sec" onclick="alert('Opening Infosys prep guide…')">View
+                Guide</button></div>
+          </div>
+          <div class="jr">
+            <div class="co">🟡</div>
+            <div class="jm">
+              <div class="jt">TCS</div>
+              <div class="ji">Ninja, Digital, Prime · NQT based</div>
+            </div>
+            <div class="jr-right"><button class="btn sec" onclick="alert('Opening TCS prep guide…')">View Guide</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════ MY PROFILE ══════════════════════════════ -->
+      <div class="page" id="pg-profile">
+
+        <!-- Profile Header Card -->
+        <div
+          style="background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;">
+          <!-- Banner -->
+          <div
+            style="height:90px;background:linear-gradient(110deg,var(--navy) 0%,var(--blue) 60%,#0891b2 100%);position:relative;">
+            <button id="edit-btn" onclick="toggleEdit()"
+              style="position:absolute;top:12px;right:14px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:7px;padding:5px 14px;font-size:12px;font-weight:600;backdrop-filter:blur(4px);cursor:pointer;">✏️
+              Edit Profile</button>
+          </div>
+          <!-- Avatar + name row -->
+          <div style="padding:0 24px 20px;display:flex;align-items:flex-end;gap:16px;margin-top:-32px;position:relative;z-index:2;">
+            <div id="pg-av"
+              style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--blue));display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:#fff;border:4px solid var(--white);flex-shrink:0;">
+              AS</div>
+            <div style="padding-bottom:4px;flex:1;">
+              <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;margin-bottom:2px;"
+                id="pg-name">Arjun Sharma</div>
+              <div style="font-size:12.5px;color:var(--sub);" id="pg-email">arjun@college.edu</div>
+            </div>
+            <div style="padding-bottom:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+              <span
+                style="background:#eff6ff;color:var(--blue);font-size:11px;font-weight:700;border-radius:100px;padding:3px 11px;">🎓
+                CSE · 3rd Year</span>
+              <span
+                style="background:#f0fdf4;color:var(--green);font-size:11px;font-weight:700;border-radius:100px;padding:3px 11px;">CGPA
+                8.5</span>
+              <span
+                style="background:#fffbeb;color:var(--amber);font-size:11px;font-weight:700;border-radius:100px;padding:3px 11px;">Roll
+                No: 21CSE045</span>
+            </div>
+          </div>
+          <!-- Profile strength bar -->
+          <div style="padding:0 24px 18px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;">
+              <span style="font-weight:600;">Profile Strength</span>
+              <span style="font-weight:700;color:var(--blue);">75% — Good</span>
+            </div>
+            <div style="height:6px;background:#e5e7eb;border-radius:100px;overflow:hidden;">
+              <div
+                style="height:100%;width:75%;border-radius:100px;background:linear-gradient(90deg,var(--blue),#0891b2);">
+              </div>
+            </div>
+            <div style="display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;">
+              <span style="font-size:12px;color:var(--green);">✅ Basic info</span>
+              <span style="font-size:12px;color:var(--green);">✅ Resume uploaded</span>
+              <span style="font-size:12px;color:var(--green);">✅ Skills added</span>
+              <span style="font-size:12px;color:var(--sub);">⬜ LinkedIn URL</span>
+              <span style="font-size:12px;color:var(--sub);">⬜ Profile photo</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW MODE -->
+        <div id="profile-view">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+
+            <!-- Personal & Academic -->
+            <div class="detail-block">
+              <div class="detail-title">Personal & Academic Details</div>
+              <div class="dg">
+                <div class="df"><label>Full Name</label>
+                  <p id="pv-fname">Arjun Sharma</p>
+                </div>
+                <div class="df"><label>Roll Number</label>
+                  <p>21CSE045</p>
+                </div>
+                <div class="df"><label>Branch</label>
+                  <p>Computer Science & Engg.</p>
+                </div>
+                <div class="df"><label>Year</label>
+                  <p>3rd Year</p>
+                </div>
+                <div class="df"><label>CGPA</label>
+                  <p>8.5 / 10</p>
+                </div>
+                <div class="df"><label>Phone</label>
+                  <p>+91 98765 43210</p>
+                </div>
+                <div class="df"><label>Preferred Location</label>
+                  <p>Bangalore, Hyderabad</p>
+                </div>
+                <div class="df"><label>LinkedIn</label>
+                  <p style="color:var(--sub);">Not added
+                    <button onclick="toggleEdit()"
+                      style="background:none;border:none;color:var(--blue);font-size:12px;font-weight:600;cursor:pointer;margin-left:4px;">+
+                      Add</button>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Skills & Resume -->
+            <div>
+              <div class="detail-block" style="margin-bottom:14px;">
+                <div class="detail-title">Skills</div>
+                <div style="display:flex;flex-wrap:wrap;gap:7px;">
+                  <span class="skill-tag" style="cursor:default;">React</span>
+                  <span class="skill-tag" style="cursor:default;">Node.js</span>
+                  <span class="skill-tag" style="cursor:default;">MongoDB</span>
+                  <span class="skill-tag" style="cursor:default;">JavaScript</span>
+                  <span class="skill-tag" style="cursor:default;">Python</span>
+                </div>
+              </div>
+
+              <div class="detail-block">
+                <div class="detail-title">Resume</div>
+                <div
+                  style="display:flex;align-items:center;gap:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">
+                  <span style="font-size:24px;">📄</span>
+                  <div style="flex:1;">
+                    <div style="font-size:13px;font-weight:600;">Arjun_Resume_2025.pdf</div>
+                    <div style="font-size:11.5px;color:var(--sub);margin-top:2px;">Uploaded Mar 1, 2025 · 320 KB</div>
+                  </div>
+                  <button class="btn sec" style="padding:5px 14px;font-size:12px;"
+                    onclick="alert('Downloading resume…')">⬇ Download</button>
+                </div>
+                <button onclick="toggleEdit()"
+                  style="margin-top:10px;width:100%;padding:8px;background:none;border:1.5px dashed var(--border);border-radius:8px;font-size:12.5px;color:var(--sub);cursor:pointer;"
+                  onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'"
+                  onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--sub)'">
+                  + Upload new resume
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats row -->
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:4px;">
+            <div
+              style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-align:center;">
+              <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--blue);">4</div>
+              <div style="font-size:11.5px;color:var(--sub);margin-top:3px;">Applications</div>
+            </div>
+            <div
+              style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-align:center;">
+              <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--green);">2</div>
+              <div style="font-size:11.5px;color:var(--sub);margin-top:3px;">Shortlisted</div>
+            </div>
+            <div
+              style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-align:center;">
+              <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--amber);">2</div>
+              <div style="font-size:11.5px;color:var(--sub);margin-top:3px;">Interviews</div>
+            </div>
+            <div
+              style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-align:center;">
+              <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--sub);">0</div>
+              <div style="font-size:11.5px;color:var(--sub);margin-top:3px;">Offers</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EDIT MODE -->
+        <div id="profile-edit" style="display:none;">
+          <div class="detail-block">
+            <div class="detail-title">Edit Profile</div>
+            <div class="form-grid">
+              <div class="fg"><label>Full Name</label><input id="edit-name" value="Arjun Sharma" /></div>
+              <div class="fg"><label>Phone</label><input id="edit-phone" value="+91 98765 43210" /></div>
+              <div class="fg"><label>Branch</label>
+                <select id="edit-branch">
+                  <option selected>Computer Science & Engg.</option>
+                  <option>Information Technology</option>
+                  <option>Electronics & Communication</option>
+                  <option>Mechanical Engineering</option>
+                  <option>Civil Engineering</option>
+                </select>
+              </div>
+              <div class="fg"><label>Year</label>
+                <select id="edit-year">
+                  <option>1st Year</option>
+                  <option>2nd Year</option>
+                  <option selected>3rd Year</option>
+                  <option>4th Year</option>
+                </select>
+              </div>
+              <div class="fg"><label>CGPA</label><input id="edit-cgpa" value="8.5" /></div>
+              <div class="fg"><label>Preferred Job Location</label><input id="edit-loc" value="Bangalore, Hyderabad" />
+              </div>
+              <div class="fg full"><label>LinkedIn URL</label><input id="edit-linkedin"
+                  placeholder="linkedin.com/in/yourname" /></div>
+              <div class="fg full"><label>GitHub URL</label><input id="edit-github" placeholder="github.com/yourname" />
+              </div>
+              <div class="fg full">
+                <label>Skills (press Enter or comma to add)</label>
+                <div class="skill-tags" id="p-skills-wrap" onclick="document.getElementById('p-skill-input').focus()">
+                  <span class="skill-tag">React<button onclick="removePSkill(this)">×</button></span>
+                  <span class="skill-tag">Node.js<button onclick="removePSkill(this)">×</button></span>
+                  <span class="skill-tag">MongoDB<button onclick="removePSkill(this)">×</button></span>
+                  <span class="skill-tag">JavaScript<button onclick="removePSkill(this)">×</button></span>
+                  <span class="skill-tag">Python<button onclick="removePSkill(this)">×</button></span>
+                  <input class="skill-input" id="p-skill-input" placeholder="Add skill…" onkeydown="addPSkill(event)" />
+                </div>
+              </div>
+              <div class="fg full">
+                <label>Upload New Resume (PDF)</label>
+                <input type="file" accept=".pdf" style="padding:6px;" />
+              </div>
+              <div class="fg full"><label>About / Bio</label><textarea id="edit-bio"
+                  placeholder="A brief intro about yourself for recruiters…" style="min-height:72px;"></textarea></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:16px;">
+              <button class="btn lg" onclick="saveProfile()">💾 Save Changes</button>
+              <button class="btn sec lg" onclick="toggleEdit()">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ══════════════════════════════ SETTINGS ══════════════════════════════ -->
+      <div class="page" id="pg-settings">
+        <div class="settings-card">
+          <div class="sr"><span>Email Notifications</span><span class="sv">On</span></div>
+          <div class="sr"><span>Profile Visible to Companies</span><span class="sv">Yes</span></div>
+          <div class="sr"><span>Resume Visible to Recruiters</span><span class="sv">Yes</span></div>
+          <div class="sr"><span>Account Email</span><span style="font-size:12.5px;color:var(--sub);"
+              id="set-email">arjun@college.edu</span></div>
+          <div class="sr"><span>Password</span><button class="btn sec" style="padding:4px 12px;font-size:12px;"
+              onclick="alert('Password reset email sent.')">Change Password</button></div>
+        </div>
+        <button class="logout-btn" onclick="logout()">🚪 Log Out</button>
+      </div>
+
+    </div><!-- /body -->
+  </div><!-- /main -->
+
+  <script>
+    // ─── JOB DATA ───
+    const JOBS = [
+      { id: 1, logo: '🔵', title: 'Software Engineer Intern', company: 'Microsoft India', loc: 'Hyderabad · Hybrid', type: 'Full Time', ctc: '₹12 LPA', dl: 'Mar 20', cgpa: '7.0', branch: 'CSE, IT, ECE', desc: 'Work on scalable web applications using React and Node.js. Contribute to real products used by millions globally.', skills: ['React', 'Node.js', 'JavaScript'], reco: true, intern: false },
+      { id: 2, logo: '🟠', title: 'Data Analyst', company: 'Amazon Dev Centre', loc: 'Bangalore', type: 'Full Time', ctc: '₹18 LPA', dl: 'Mar 25', cgpa: '7.5', branch: 'CSE, IT, EEE', desc: 'Analyze large datasets to derive business insights. Work with SQL, Python and AWS toolsets.', skills: ['Python', 'SQL', 'AWS'], reco: false, intern: false },
+      { id: 3, logo: '🟣', title: 'Backend Engineer', company: 'Swiggy', loc: 'Bangalore', type: 'Full Time', ctc: '₹14 LPA', dl: 'Apr 1', cgpa: '6.5', branch: 'CSE, IT', desc: 'Build and scale REST APIs handling millions of requests. Expertise in Java/Spring Boot preferred.', skills: ['Java', 'Spring Boot', 'MySQL'], reco: false, intern: false },
+      { id: 4, logo: '🔴', title: 'Frontend Developer Intern', company: 'Zomato', loc: 'Remote', type: 'Internship', ctc: '₹8 LPA', dl: 'Mar 30', cgpa: '6.0', branch: 'All', desc: 'Build pixel-perfect UI components. Work closely with design team on consumer-facing products.', skills: ['React', 'TypeScript', 'CSS'], reco: true, intern: true },
+      { id: 5, logo: '🟤', title: 'ML Engineer', company: 'Flipkart', loc: 'Bangalore', type: 'Full Time', ctc: '₹22 LPA', dl: 'Apr 5', cgpa: '8.0', branch: 'CSE, IT', desc: 'Develop and deploy machine learning models for product recommendations and fraud detection.', skills: ['Python', 'TensorFlow', 'Pandas'], reco: false, intern: false },
+      { id: 6, logo: '🟢', title: 'Cloud Engineer', company: 'Infosys', loc: 'Hyderabad', type: 'Full Time', ctc: '₹16 LPA', dl: 'Apr 10', cgpa: '6.0', branch: 'All', desc: 'Design and maintain cloud infrastructure on AWS/Azure. Automate deployments using CI/CD pipelines.', skills: ['AWS', 'DevOps', 'Linux'], reco: false, intern: false },
+      { id: 7, logo: '🔷', title: 'Full Stack Developer', company: 'Paytm', loc: 'Noida', type: 'Full Time', ctc: '₹10 LPA', dl: 'Apr 8', cgpa: '6.5', branch: 'CSE, IT', desc: 'Build and maintain features across the full stack. Fast-paced fintech environment.', skills: ['React', 'Node.js', 'MongoDB'], reco: true, intern: false },
+      { id: 8, logo: '🟡', title: 'React Developer Intern', company: 'Razorpay', loc: 'Bangalore', type: 'Internship', ctc: '₹6 LPA', dl: 'Apr 15', cgpa: '6.0', branch: 'CSE, IT', desc: 'Work on React-based internal tools and dashboards for the payments team.', skills: ['React', 'JavaScript'], reco: true, intern: true },
+    ];
+
+    let appliedJobs = new Set();
+    let currentModalJobId = null;
+
+    // ─── INIT ───
+    window.addEventListener('DOMContentLoaded', () => {
+      const name = sessionStorage.getItem('cp_student_name') || 'Arjun Sharma';
+      const email = sessionStorage.getItem('cp_student_email') || 'arjun@college.edu';
+      const first = name.split(' ')[0];
+      const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+
+      ['sb-av', 'home-av', 'pg-av', 'tb-av'].forEach(id => { const e = document.getElementById(id); if (e) e.textContent = initials; });
+      ['sb-name', 'home-name', 'pg-name', 'pv-fname'].forEach(id => { const e = document.getElementById(id); if (e) e.textContent = name; });
+      ['pg-email', 'set-email'].forEach(id => { const e = document.getElementById(id); if (e) e.textContent = email; });
+      document.getElementById('tb-name').textContent = first;
+
+      const h = new Date().getHours();
+      const g = h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
+      document.getElementById('greet-msg').textContent = `Good ${g}, ${first} 👋`;
+
+      renderJobsAll();
+      renderRecoJobs();
+      renderInternships();
+      renderHomeReco();
+    });
+
+    // ─── NAV ───
+    const TITLES = { home: 'Home', jobs: 'Job Listings', applications: 'My Applications', drives: 'Campus Drives', tests: 'Tests & Exams', resume: 'Resume Builder', resources: 'Prep Resources', profile: 'My Profile', settings: 'Settings' };
+    function go(id, btn) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+      document.querySelectorAll('.nl').forEach(n => n.classList.remove('on'));
+      document.getElementById('pg-' + id).classList.add('on');
+      if (btn) btn.classList.add('on');
+      document.getElementById('tb-title').textContent = TITLES[id] || id;
+      document.getElementById('notif-panel').classList.remove('on');
+    }
+
+    // ─── TABS ───
+    function switchTab(group, id, btn) {
+      const panels = { jobs: ['all', 'reco', 'intern'], apps: ['all', 'active', 'closed'] };
+      panels[group].forEach(t => {
+        document.getElementById(group === 'jobs' ? `jobs-${t}` : `apps-${t}`).classList.remove('on');
+      });
+      btn.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+      document.getElementById(group === 'jobs' ? `jobs-${id}` : `apps-${id}`).classList.add('on');
+      btn.classList.add('on');
+    }
+
+    // ─── JOB RENDERING ───
+    function jobHTML(j, showApply = true) {
+      const applied = appliedJobs.has(j.id);
+      return `<div class="jr">
+    <div class="co">${j.logo}</div>
+    <div class="jm">
+      <div class="jt">${j.title}</div>
+      <div class="ji">${j.company} · ${j.loc} · ${j.type} · Min CGPA: ${j.cgpa}</div>
+    </div>
+    <div class="jr-right">
+      <span class="ctc">${j.ctc}</span>
+      <span class="dl">Closes ${j.dl}</span>
+      <button class="btn sec" onclick="openModal(${j.id})">Details</button>
+      ${showApply ? `<button class="btn${applied ? ' done' : ''}" id="apply-btn-${j.id}" onclick="applyJob(${j.id},this)">${applied ? '✅ Applied' : 'Apply'}</button>` : ''}
+    </div>
+  </div>`;
+    }
+    function renderJobsAll() { document.getElementById('jobs-list').innerHTML = JOBS.map(j => jobHTML(j)).join(''); }
+    function renderRecoJobs() { document.getElementById('reco-list').innerHTML = JOBS.filter(j => j.reco).map(j => jobHTML(j)).join(''); }
+    function renderInternships() { document.getElementById('intern-list').innerHTML = JOBS.filter(j => j.intern).map(j => jobHTML(j)).join(''); }
+    function renderHomeReco() { document.getElementById('home-reco-jobs').innerHTML = JOBS.filter(j => j.reco).slice(0, 3).map(j => jobHTML(j)).join(''); }
+
+    // ─── FILTER ───
+    function filterJobs() {
+      const q = (document.getElementById('job-search').value || '').toLowerCase();
+      const skill = document.getElementById('filter-skill').value;
+      const loc = document.getElementById('filter-loc').value;
+      const type = document.getElementById('filter-type').value;
+      const filtered = JOBS.filter(j => {
+        const matchQ = !q || (j.title + j.company + j.loc).toLowerCase().includes(q);
+        const matchS = !skill || j.skills.some(s => s.toLowerCase() === skill.toLowerCase());
+        const matchL = !loc || j.loc.toLowerCase().includes(loc.toLowerCase());
+        const matchT = !type || j.type === type;
+        return matchQ && matchS && matchL && matchT;
+      });
+      document.getElementById('jobs-list').innerHTML = filtered.length ? filtered.map(j => jobHTML(j)).join('') : '<div style="padding:20px;text-align:center;color:var(--sub);font-size:13px;">No jobs found matching your filters.</div>';
+    }
+
+    // ─── MODAL ───
+    function openModal(id) {
+      const j = JOBS.find(x => x.id === id);
+      currentModalJobId = id;
+      document.getElementById('m-logo').textContent = j.logo;
+      document.getElementById('m-title').textContent = j.title;
+      document.getElementById('m-company').textContent = `${j.company} · ${j.loc}`;
+      document.getElementById('m-ctc').textContent = j.ctc;
+      document.getElementById('m-type').textContent = j.type;
+      document.getElementById('m-loc').textContent = j.loc;
+      document.getElementById('m-dl').textContent = j.dl;
+      document.getElementById('m-cgpa').textContent = `${j.cgpa} and above`;
+      document.getElementById('m-branch').textContent = j.branch;
+      document.getElementById('m-desc').textContent = j.desc;
+      document.getElementById('m-skills').innerHTML = j.skills.map(s => `<span class="req-tag">${s}</span>`).join('');
+      const applied = appliedJobs.has(id);
+      document.getElementById('m-apply-btn').textContent = applied ? '✅ Applied' : 'Apply Now';
+      document.getElementById('m-apply-btn').className = 'btn lg' + (applied ? ' done' : '');
+      document.getElementById('m-applied-note').textContent = applied ? 'You have already applied for this role.' : '';
+      document.getElementById('job-modal').classList.add('on');
+    }
+    function applyFromModal() {
+      if (!currentModalJobId || appliedJobs.has(currentModalJobId)) return;
+      applyJob(currentModalJobId, document.getElementById('m-apply-btn'));
+      document.getElementById('m-applied-note').textContent = 'You have already applied for this role.';
+    }
+    function closeModal(e) { if (e.target === document.getElementById('job-modal')) document.getElementById('job-modal').classList.remove('on'); }
+
+    function applyJob(id, btn) {
+      if (appliedJobs.has(id)) return;
+      appliedJobs.add(id);
+      document.querySelectorAll(`#apply-btn-${id}`).forEach(b => { b.classList.add('done'); b.textContent = '✅ Applied'; });
+      if (btn) { btn.classList.add('done'); btn.textContent = '✅ Applied'; }
+    }
+
+    // ─── NOTIF PANEL ───
+    function toggleNotif() {
+      document.getElementById('notif-panel').classList.toggle('on');
+    }
+    document.addEventListener('click', e => {
+      const panel = document.getElementById('notif-panel');
+      const btn = document.querySelector('.tb-notif');
+      if (!panel.contains(e.target) && !btn.contains(e.target)) panel.classList.remove('on');
+    });
+
+    // ─── PROFILE EDIT ───
+    function toggleEdit() {
+      const view = document.getElementById('profile-view');
+      const edit = document.getElementById('profile-edit');
+      const btn = document.getElementById('edit-btn');
+      const isEditing = edit.style.display !== 'none';
+      view.style.display = isEditing ? 'block' : 'none';
+      edit.style.display = isEditing ? 'none' : 'block';
+      btn.textContent = isEditing ? '✏️ Edit' : 'Cancel';
+    }
+    function saveProfile() {
+      toggleEdit();
+    }
+    function addPSkill(e) {
+      if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); const v = e.target.value.trim().replace(',', ''); if (v) { const t = document.createElement('span'); t.className = 'skill-tag'; t.innerHTML = `${v}<button onclick="removePSkill(this)">×</button>`; document.getElementById('p-skills-wrap').insertBefore(t, e.target); } e.target.value = ''; }
+    }
+    function removePSkill(btn) { btn.closest('.skill-tag').remove(); }
+
+    // ─── RESUME BUILDER ───
+    let rbStep = 0;
+    function rbGo(step) {
+      if (step === 4) generatePreview();
+      document.querySelectorAll('.rb-panel').forEach((p, i) => p.classList.toggle('on', i === step));
+      document.querySelectorAll('.rb-step').forEach((s, i) => { s.classList.remove('on', 'done'); if (i < step) s.classList.add('done'); else if (i === step) s.classList.add('on'); });
+      rbStep = step;
+    }
+    function addSkillRb(e) {
+      if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); const v = e.target.value.trim().replace(',', ''); if (v) { const t = document.createElement('span'); t.className = 'skill-tag'; t.innerHTML = `${v}<button onclick="removeSkillRb(this)">×</button>`; document.getElementById('rb-skills-wrap').insertBefore(t, e.target); } e.target.value = ''; }
+    }
+    function removeSkillRb(btn) { btn.closest('.skill-tag').remove(); }
+    function generatePreview() {
+      const g = id => document.getElementById(id)?.value || '';
+      document.getElementById('pv-name').textContent = g('rb-name') || 'Your Name';
+      document.getElementById('pv-contact').textContent = `${g('rb-email')} · ${g('rb-phone')} · ${g('rb-linkedin')}`;
+      document.getElementById('pv-obj').textContent = g('rb-obj') || '—';
+      document.getElementById('pv-edu').innerHTML = `<strong>${g('rb-degree')}</strong> · ${g('rb-college')} · CGPA: ${g('rb-cgpa')} · ${g('rb-year')}`;
+      document.getElementById('pv-12').textContent = `12th: ${g('rb-12')}`;
+      document.getElementById('pv-10').textContent = `10th: ${g('rb-10')}`;
+      const skills = [...document.querySelectorAll('#rb-skills-wrap .skill-tag')].map(t => t.textContent.replace('×', '').trim()).join(', ');
+      document.getElementById('pv-skills').textContent = skills || '—';
+      document.getElementById('pv-p1').innerHTML = `<strong>${g('rb-p1t')}</strong> (${g('rb-p1s')}) – ${g('rb-p1d')}`;
+      document.getElementById('pv-p2').innerHTML = `<strong>${g('rb-p2t')}</strong> (${g('rb-p2s')}) – ${g('rb-p2d')}`;
+      document.getElementById('pv-exp').textContent = g('rb-exp') || '—';
+      document.getElementById('pv-cert').textContent = g('rb-cert') || '—';
+    }
+
+    // ─── LOGOUT ───
+    function logout() { sessionStorage.clear(); window.location.href = 'Login.html'; }
+  </script>
+</body>
+
+</html>
+
+
