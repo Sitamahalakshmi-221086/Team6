@@ -1,17 +1,17 @@
 
 /* ── TPO SPECIFIC ── */
 .role-badge.tpo {
-    background: #fff7ed;
-    border: 1px solid #fed7aa;
-    color: #c2410c;
+    background: #f5f3ff;
+    border: 1px solid #ddd6fe;
+    color: #7c3aed;
 }
 
 .btn-login.tpo {
-    background: var(--orange);
-    box-shadow: 0 4px 14px rgba(194, 65, 12, .3);
+    background: #7c3aed;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, .3);
 }
 
 .btn-login.tpo:hover {
-    background: #9a3412;
-    box-shadow: 0 8px 20px rgba(194, 65, 12, .4);
+    background: #6d28d9;
+    box-shadow: 0 8px 20px rgba(124, 58, 237, .4);
 }
