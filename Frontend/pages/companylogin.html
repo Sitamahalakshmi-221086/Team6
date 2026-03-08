@@ -204,8 +204,16 @@
       const successCta = document.getElementById('success-cta');
       successCta.textContent = ctas[role];
       
-      successCta.href = '#';
-
+      if (role === 'company') {
+        successCta.href = 'CompanyDashboard.html';
+        
+        // redirect automatically for better UX
+        setTimeout(() => {
+          window.location.href = 'CompanyDashboard.html';
+        }, 1500)
+      } else {
+        successCta.href = '#';
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
