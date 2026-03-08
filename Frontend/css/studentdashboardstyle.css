@@ -20,6 +20,7 @@
     --sub: #6b7280;
     --white: #ffffff;
     --sw: 230px;
+    --sw-min: 58px;
 }
 
 body {
@@ -78,15 +79,66 @@ textarea {
     display: flex;
     flex-direction: column;
     z-index: 20;
-    overflow-y: auto;
+    overflow: hidden;
+    transition: width .22s cubic-bezier(.4, 0, .2, 1);
 }
 
+/* ── collapsed state ── */
+.sidebar.collapsed {
+    width: var(--sw-min);
+}
+
+.sidebar.collapsed .sb-label-text,
+.sidebar.collapsed .nb,
+.sidebar.collapsed .sb-uname,
+.sidebar.collapsed .sb-udept,
+.sidebar.collapsed .sb-logo-name {
+    display: none;
+}
+
+.sidebar.collapsed .sb-logo {
+    justify-content: center;
+    padding: 14px 0;
+}
+
+.sidebar.collapsed .sb-user {
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.sidebar.collapsed .sb-nav {
+    padding: 8px 6px;
+}
+
+.sidebar.collapsed .nl {
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.sidebar.collapsed .nl .ic {
+    margin: 0;
+    width: 20px;
+    text-align: center;
+}
+
+.sidebar.collapsed .sb-foot {
+    padding: 8px 6px;
+}
+
+/* logo row — clickable toggle */
 .sb-logo {
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 16px 16px 13px;
     border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+    transition: background .15s;
+}
+
+.sb-logo:hover {
+    background: #eff6ff;
 }
 
 .sb-logo-mark {
@@ -98,6 +150,11 @@ textarea {
     place-items: center;
     font-size: 14px;
     flex-shrink: 0;
+    transition: transform .3s cubic-bezier(.4, 0, .2, 1), box-shadow .2s;
+}
+
+.sb-logo:hover .sb-logo-mark {
+    box-shadow: 0 0 0 3px rgba(37,99,235,.22);
 }
 
 .sb-logo-name {
@@ -214,6 +271,11 @@ textarea {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    transition: margin-left .22s cubic-bezier(.4, 0, .2, 1);
+}
+
+.main.expanded {
+    margin-left: var(--sw-min);
 }
 
 .topbar {

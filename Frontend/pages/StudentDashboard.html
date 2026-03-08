@@ -13,9 +13,9 @@
 <body>
 
   <!-- ─── SIDEBAR ─── -->
-  <aside class="sidebar">
-    <div class="sb-logo">
-      <div class="sb-logo-mark">🎓</div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-logo" onclick="toggleSidebar()" title="Click to collapse / expand" style="cursor:pointer;">
+      <div class="sb-logo-mark" id="logo-mark-st">🎓</div>
       <span class="sb-logo-name">Campus<span>Place</span></span>
     </div>
     <div class="sb-user">
@@ -26,21 +26,21 @@
       </div>
     </div>
     <nav class="sb-nav">
-      <button class="nl on" onclick="go('home',this)"> <span class="ic">🏠</span> Home</button>
-      <button class="nl" onclick="go('jobs',this)"> <span class="ic">💼</span> Job Listings <span
+      <button class="nl on" onclick="go('home',this)" title="Home"> <span class="ic">🏠</span> <span class="sb-label-text">Home</span></button>
+      <button class="nl" onclick="go('jobs',this)" title="Job Listings"> <span class="ic">💼</span> <span class="sb-label-text">Job Listings</span> <span
           class="nb b">12</span></button>
-      <button class="nl" onclick="go('applications',this)"><span class="ic">📋</span> My Applications <span
+      <button class="nl" onclick="go('applications',this)" title="My Applications"><span class="ic">📋</span> <span class="sb-label-text">My Applications</span> <span
           class="nb b">4</span></button>
-      <button class="nl" onclick="go('drives',this)"> <span class="ic">🏢</span> Campus Drives</button>
-      <button class="nl" onclick="go('tests',this)"> <span class="ic">📝</span> Tests &amp; Exams <span
+      <button class="nl" onclick="go('drives',this)" title="Campus Drives"> <span class="ic">🏢</span> <span class="sb-label-text">Campus Drives</span></button>
+      <button class="nl" onclick="go('tests',this)" title="Tests &amp; Exams"> <span class="ic">📝</span> <span class="sb-label-text">Tests &amp; Exams</span> <span
           class="nb">2</span></button>
-      <button class="nl" onclick="go('resume',this)"> <span class="ic">📄</span> Resume Builder</button>
-      <button class="nl" onclick="go('resources',this)"> <span class="ic">📚</span> Prep Resources</button>
-      <button class="nl" onclick="go('profile',this)"> <span class="ic">👤</span> My Profile</button>
-      <button class="nl" onclick="go('settings',this)"> <span class="ic">⚙️</span> Settings</button>
+      <button class="nl" onclick="go('resume',this)" title="Resume Builder"> <span class="ic">📄</span> <span class="sb-label-text">Resume Builder</span></button>
+      <button class="nl" onclick="go('resources',this)" title="Prep Resources"> <span class="ic">📚</span> <span class="sb-label-text">Prep Resources</span></button>
+      <button class="nl" onclick="go('profile',this)" title="My Profile"> <span class="ic">👤</span> <span class="sb-label-text">My Profile</span></button>
+      <button class="nl" onclick="go('settings',this)" title="Settings"> <span class="ic">⚙️</span> <span class="sb-label-text">Settings</span></button>
     </nav>
     <div class="sb-foot">
-      <button class="nl" style="color:var(--red);" onclick="logout()"><span class="ic">🚪</span> Log Out</button>
+      <button class="nl" style="color:var(--red);" onclick="logout()" title="Log Out"><span class="ic">🚪</span> <span class="sb-label-text">Log Out</span></button>
     </div>
   </aside>
 
@@ -132,7 +132,7 @@
   </div>
 
   <!-- ─── MAIN ─── -->
-  <div class="main">
+  <div class="main" id="main-content">
     <header class="topbar">
       <span class="tb-title" id="tb-title">Home</span>
       <div class="tb-right">
@@ -1152,6 +1152,18 @@
       document.getElementById('pv-p2').innerHTML = `<strong>${g('rb-p2t')}</strong> (${g('rb-p2s')}) – ${g('rb-p2d')}`;
       document.getElementById('pv-exp').textContent = g('rb-exp') || '—';
       document.getElementById('pv-cert').textContent = g('rb-cert') || '—';
+    }
+
+    // ─── SIDEBAR TOGGLE ───
+    let sidebarOpen = true;
+    function toggleSidebar() {
+      sidebarOpen = !sidebarOpen;
+      const sidebar = document.getElementById('sidebar');
+      const main = document.getElementById('main-content');
+      const logoMark = document.getElementById('logo-mark-st');
+      sidebar.classList.toggle('collapsed', !sidebarOpen);
+      main.classList.toggle('expanded', !sidebarOpen);
+      logoMark.style.transform = sidebarOpen ? 'rotate(0deg)' : 'rotate(180deg)';
     }
 
     // ─── LOGOUT ───
