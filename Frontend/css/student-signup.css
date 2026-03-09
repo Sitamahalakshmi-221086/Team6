@@ -1,25 +1,13 @@
-/* Skills tags */
-.skills-wrap { border: 1.5px solid var(--border); border-radius: 10px; padding: 8px 10px; background: #fff; min-height: 48px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; transition: border-color .2s, box-shadow .2s; cursor: text; }
-.skills-wrap:focus-within { border-color: var(--blue2); box-shadow: 0 0 0 3px rgba(37, 99, 235, .1); }
-.skill-tag { display: inline-flex; align-items: center; gap: 5px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 3px 10px; font-size: 12.5px; color: var(--blue2); font-weight: 500; }
-.skill-tag button { background: none; border: none; cursor: pointer; color: #93c5fd; font-size: 14px; line-height: 1; padding: 0; display: flex; align-items: center; }
-.skill-tag button:hover { color: #ef4444; }
-.skills-input { border: none !important; outline: none; padding: 3px 6px !important; font-size: 13px; flex: 1; min-width: 100px; box-shadow: none !important; }
-.skills-hint { font-size: 12px; color: var(--muted); margin-top: 5px; }
+/* Student Specific Accents */
+:root {
+  --accent: #2563eb;
+  --accent-dark: #1e3a8a;
+  --accent-light: #eff6ff;
+  --accent-ring: rgba(37, 99, 235, .12);
+}
 
-/* Resume upload */
-.upload-zone { border: 2px dashed var(--border); border-radius: 12px; padding: 28px 20px; text-align: center; cursor: pointer; transition: all .2s; background: #fafcff; position: relative; }
-.upload-zone:hover, .upload-zone.drag-over { border-color: var(--blue2); background: #eff6ff; }
-.upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-.upload-icon { font-size: 32px; margin-bottom: 10px; }
-.upload-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-.upload-sub { font-size: 12px; color: var(--muted); }
-.upload-done { display: none; align-items: center; gap: 10px; background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 10px; padding: 12px 16px; margin-top: 12px; }
-.upload-done.show { display: flex; }
-.upload-done-icon { font-size: 20px; }
-.upload-done-name { font-size: 13px; font-weight: 600; color: #059669; }
-
-/* CGPA helper */
-.cgpa-track { margin-top: 8px; background: #f1f5f9; border-radius: 100px; height: 6px; overflow: hidden; }
-.cgpa-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, #ef4444, #f59e0b, #22c55e); transition: width .3s; }
-.cgpa-hint { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.left-panel { background: linear-gradient(160deg, #1e3a8a 0%, #1d4ed8 60%, #0891b2 100%) !important; }
+.env-strip { background: linear-gradient(90deg, #1e3a8a, #0891b2) !important; }
+.logo-accent, .left-title span { color: #67e8f9 !important; }
+.btn-next { background: #1e3a8a; box-shadow: 0 4px 14px rgba(30, 58, 138, .3); }
+.btn-next:hover { background: #2563eb; }
