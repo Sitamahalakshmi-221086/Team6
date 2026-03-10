@@ -1392,7 +1392,8 @@ textarea {
 }
 
 .profile-banner {
-  height: 90px;
+  height: 117px;
+ 
   background: linear-gradient(110deg, var(--ind-deep), var(--ind-dark) 55%, var(--ind));
 }
 
@@ -1400,7 +1401,7 @@ textarea {
   padding: 0 22px 20px;
   display: flex;
   align-items: flex-end;
-  gap: 16px;
+  gap: 14px;
   margin-top: -28px;
 }
 
@@ -1433,13 +1434,14 @@ textarea {
 .profile-name {
   font-family: 'Syne', sans-serif;
   font-weight: 800;
-  font-size: 1.05rem;
-  margin-bottom: 3px;
+  font-size: 1.5rem;
+  margin-bottom: 6px;
 }
 
 .profile-sub {
   font-size: 12.5px;
   color: var(--sub);
+  margin-top: 1px;
 }
 
 .profile-badges {
