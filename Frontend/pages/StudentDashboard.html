@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="../css/studentdashboardstyle.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
@@ -15,32 +16,42 @@
   <!-- ─── SIDEBAR ─── -->
   <aside class="sidebar" id="sidebar">
     <div class="sb-logo" onclick="toggleSidebar()" title="Click to collapse / expand" style="cursor:pointer;">
-      <div class="sb-logo-mark" id="logo-mark-st">🎓</div>
+      <div class="sb-logo-mark" id="logo-mark-st"><i data-lucide="graduation-cap"></i></div>
       <span class="sb-logo-name">Campus<span>Place</span></span>
     </div>
     <div class="sb-user">
       <div class="av" id="sb-av">AS</div>
       <div>
         <div class="sb-uname" id="sb-name">Arjun Sharma</div>
-        <div class="sb-udept">CSE · 3rd Year</div>
+        <div class="sb-udept">CSE | 3rd Year</div>
       </div>
     </div>
     <nav class="sb-nav">
-      <button class="nl on" onclick="go('home',this)" title="Home"> <span class="ic">🏠</span> <span class="sb-label-text">Home</span></button>
-      <button class="nl" onclick="go('jobs',this)" title="Job Listings"> <span class="ic">💼</span> <span class="sb-label-text">Job Listings</span> <span
+      <button class="nl on" onclick="go('home',this)" title="Home"> <span class="ic"><i data-lucide="home"></i></span>
+        <span class="sb-label-text">Home</span></button>
+      <button class="nl" onclick="go('jobs',this)" title="Job Listings"> <span class="ic"><i
+            data-lucide="briefcase"></i></span> <span class="sb-label-text">Job Listings</span> <span
           class="nb b">12</span></button>
-      <button class="nl" onclick="go('applications',this)" title="My Applications"><span class="ic">📋</span> <span class="sb-label-text">My Applications</span> <span
+      <button class="nl" onclick="go('applications',this)" title="My Applications"><span class="ic"><i
+            data-lucide="clipboard-list"></i></span> <span class="sb-label-text">My Applications</span> <span
           class="nb b">4</span></button>
-      <button class="nl" onclick="go('drives',this)" title="Campus Drives"> <span class="ic">🏢</span> <span class="sb-label-text">Campus Drives</span></button>
-      <button class="nl" onclick="go('tests',this)" title="Tests &amp; Exams"> <span class="ic">📝</span> <span class="sb-label-text">Tests &amp; Exams</span> <span
+      <button class="nl" onclick="go('drives',this)" title="Campus Drives"> <span class="ic"><i
+            data-lucide="building-2"></i></span> <span class="sb-label-text">Campus Drives</span></button>
+      <button class="nl" onclick="go('tests',this)" title="Tests &amp; Exams"> <span class="ic"><i
+            data-lucide="file-text"></i></span> <span class="sb-label-text">Tests &amp; Exams</span> <span
           class="nb">2</span></button>
-      <button class="nl" onclick="go('resume',this)" title="Resume Builder"> <span class="ic">📄</span> <span class="sb-label-text">Resume Builder</span></button>
-      <button class="nl" onclick="go('resources',this)" title="Prep Resources"> <span class="ic">📚</span> <span class="sb-label-text">Prep Resources</span></button>
-      <button class="nl" onclick="go('profile',this)" title="My Profile"> <span class="ic">👤</span> <span class="sb-label-text">My Profile</span></button>
-      <button class="nl" onclick="go('settings',this)" title="Settings"> <span class="ic">⚙️</span> <span class="sb-label-text">Settings</span></button>
+      <button class="nl" onclick="go('resume',this)" title="Resume Builder"> <span class="ic"><i
+            data-lucide="file-user"></i></span> <span class="sb-label-text">Resume Builder</span></button>
+      <button class="nl" onclick="go('resources',this)" title="Prep Resources"> <span class="ic"><i
+            data-lucide="book-open"></i></span> <span class="sb-label-text">Prep Resources</span></button>
+      <button class="nl" onclick="go('profile',this)" title="My Profile"> <span class="ic"><i
+            data-lucide="user"></i></span> <span class="sb-label-text">My Profile</span></button>
+      <button class="nl" onclick="go('settings',this)" title="Settings"> <span class="ic"><i
+            data-lucide="settings"></i></span> <span class="sb-label-text">Settings</span></button>
     </nav>
     <div class="sb-foot">
-      <button class="nl" style="color:var(--red);" onclick="logout()" title="Log Out"><span class="ic">🚪</span> <span class="sb-label-text">Log Out</span></button>
+      <button class="nl" style="color:var(--red);" onclick="logout()" title="Log Out"><span class="ic"><i
+            data-lucide="log-out"></i></span> <span class="sb-label-text">Log Out</span></button>
     </div>
   </aside>
 
@@ -48,7 +59,8 @@
   <div class="notif-panel" id="notif-panel">
     <div class="notif-header">
       <span class="notif-title">Notifications</span>
-      <button class="notif-close" onclick="toggleNotif()">✕</button>
+      <button class="notif-close" onclick="toggleNotif()"><i data-lucide="x"
+          style="width:16px;height:16px;"></i></button>
     </div>
     <div class="notif-item"><span class="notif-dot2 unread"></span>
       <div>
@@ -85,9 +97,11 @@
   <!-- ─── JOB DETAIL MODAL ─── -->
   <div class="overlay" id="job-modal" onclick="closeModal(event)">
     <div class="modal">
-      <button class="modal-close" onclick="document.getElementById('job-modal').classList.remove('on')">✕</button>
+      <button class="modal-close" onclick="document.getElementById('job-modal').classList.remove('on')"><i
+          data-lucide="x"></i></button>
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-        <div class="co" style="width:44px;height:44px;font-size:22px;" id="m-logo">🔵</div>
+        <div class="co" style="width:44px;height:44px;font-size:22px;" id="m-logo"><i data-lucide="building-2"></i>
+        </div>
         <div>
           <h3 id="m-title">Software Engineer Intern</h3>
           <div class="modal-co" id="m-company">Microsoft India · Hyderabad</div>
@@ -136,7 +150,8 @@
     <header class="topbar">
       <span class="tb-title" id="tb-title">Home</span>
       <div class="tb-right">
-        <div class="tb-notif" onclick="toggleNotif()">🔔<span class="rdot" id="notif-dot"></span></div>
+        <div class="tb-notif" onclick="toggleNotif()"><i data-lucide="bell"></i><span class="rdot"
+            id="notif-dot"></span></div>
         <div class="tb-chip" onclick="go('profile', document.querySelector('[onclick*=profile]'))" title="My Profile">
           <div class="av" id="tb-av" style="width:24px;height:24px;font-size:9px;">AS</div>
           <span id="tb-name">Arjun</span>
@@ -150,10 +165,12 @@
       <div class="page on" id="pg-home">
         <div class="greet">
           <div>
-            <h2 id="greet-msg">Good morning, Arjun 👋</h2>
+            <h2 id="greet-msg">Good morning, Arjun <i data-lucide="smile"
+                class="ic-md" style="vertical-align:text-bottom;"></i></h2>
             <p>You have 2 interviews scheduled and 3 new job matches today.</p>
           </div>
-          <span class="greet-em">🎓</span>
+          </div>
+          <span class="greet-em"><i data-lucide="graduation-cap"></i></span>
         </div>
         <div class="stats">
           <div class="stat">
@@ -182,34 +199,40 @@
           <div>
             <!-- Recommended Jobs -->
             <div class="block">
-              <div class="bh"><span class="bt">⭐ Recommended for You</span><button class="va"
-                  onclick="go('jobs',document.querySelector('[onclick*=jobs]'))">View all →</button></div>
+              <div class="bh"><span class="bt"><i data-lucide="star"
+                    class="ic-sm" style="fill:var(--amber);color:var(--amber);vertical-align:text-bottom;margin-right:4px;"></i>
+                  Recommended for You</span><button class="va"
+                  onclick="go('jobs',document.querySelector('[onclick*=jobs]'))">View all <i data-lucide="arrow-right"
+                    class="ic-sm" style="vertical-align:middle;"></i></button></div>
               <div id="home-reco-jobs"></div>
             </div>
             <!-- Recent Applications -->
             <div class="block">
-              <div class="bh"><span class="bt">📋 Recent Applications</span><button class="va"
-                  onclick="go('applications',document.querySelector('[onclick*=applications]'))">View all →</button>
+              <div class="bh"><span class="bt"><i data-lucide="clipboard-list"
+                    class="ic-sm" style="vertical-align:text-bottom;margin-right:4px;"></i> Recent
+                  Applications</span><button class="va"
+                  onclick="go('applications',document.querySelector('[onclick*=applications]'))">View all <i
+                    data-lucide="arrow-right" class="ic-sm" style="vertical-align:middle;"></i></button>
               </div>
               <div class="ar">
-                <div class="co">🔵</div>
+                <div class="co"><i data-lucide="briefcase" style="color:var(--blue);"></i></div>
                 <div class="am">
                   <div class="an">SDE Intern – Microsoft India</div>
-                  <div class="ac">Applied Mar 10 · ₹12 LPA</div>
+                  <div class="ac">Applied Mar 10 | ₹12 LPA</div>
                 </div><span class="pill interview">Interview Scheduled</span>
               </div>
               <div class="ar">
-                <div class="co">🟠</div>
+                <div class="co"><i data-lucide="briefcase" style="color:var(--amber);"></i></div>
                 <div class="am">
                   <div class="an">Data Analyst – Amazon</div>
-                  <div class="ac">Applied Mar 8 · ₹18 LPA</div>
+                  <div class="ac">Applied Mar 8 | ₹18 LPA</div>
                 </div><span class="pill short">Shortlisted</span>
               </div>
               <div class="ar">
-                <div class="co">🔴</div>
+                <div class="co"><i data-lucide="briefcase" style="color:var(--red);"></i></div>
                 <div class="am">
                   <div class="an">Frontend Developer – Zomato</div>
-                  <div class="ac">Applied Mar 5 · ₹8 LPA</div>
+                  <div class="ac">Applied Mar 5 | ₹8 LPA</div>
                 </div><span class="pill review">Under Review</span>
               </div>
             </div>
@@ -223,7 +246,7 @@
                 <div class="av" id="home-av" style="width:36px;height:36px;font-size:12px;">AS</div>
                 <div>
                   <div style="font-size:13px;font-weight:600;" id="home-name">Arjun Sharma</div>
-                  <div style="font-size:11px;color:var(--sub);">CSE · 3rd Year · CGPA 8.5</div>
+                  <div style="font-size:11px;color:var(--sub);">CSE | 3rd Year | CGPA 8.5</div>
                 </div>
               </div>
               <div class="pbar-lbl"><span>Profile Strength</span><span>75%</span></div>
@@ -231,19 +254,27 @@
                 <div class="pbar-fill" style="width:75%;"></div>
               </div>
               <div class="checklist">
-                <div class="ci done">✅ Basic info filled</div>
-                <div class="ci done">✅ Resume uploaded</div>
-                <div class="ci done">✅ Skills added</div>
-                <div class="ci todo">⬜ Add LinkedIn URL</div>
-                <div class="ci todo">⬜ Upload profile photo</div>
+                <div class="ci done"><i data-lucide="check-circle"
+                    class="ic-sm" style="color:var(--green);margin-right:6px;"></i> Basic info filled</div>
+                <div class="ci done"><i data-lucide="check-circle"
+                    class="ic-sm" style="color:var(--green);margin-right:6px;"></i> Resume uploaded</div>
+                <div class="ci done"><i data-lucide="check-circle"
+                    class="ic-sm" style="color:var(--green);margin-right:6px;"></i> Skills added</div>
+                <div class="ci todo"><i data-lucide="circle"
+                    class="ic-sm" style="color:var(--sub);margin-right:6px;"></i> Add LinkedIn URL</div>
+                <div class="ci todo"><i data-lucide="circle"
+                    class="ic-sm" style="color:var(--sub);margin-right:6px;"></i> Upload profile photo</div>
               </div>
               <button class="btn sec" style="margin-top:10px;width:100%;padding:7px;"
                 onclick="go('profile',document.querySelector('[onclick*=profile]'))">Edit Profile</button>
             </div>
             <!-- Notices -->
             <div class="block">
-              <div class="bh"><span class="bt">🔔 Recent Notices</span><button class="va"
-                  onclick="go('settings',document.querySelector('[onclick*=settings]'))">View all →</button></div>
+              <div class="bh"><span class="bt"><i data-lucide="bell"
+                    class="ic-sm" style="vertical-align:text-bottom;margin-right:4px;"></i> Recent
+                  Notices</span><button class="va"
+                  onclick="go('settings',document.querySelector('[onclick*=settings]'))">View all <i
+                    data-lucide="arrow-right" class="ic-sm" style="vertical-align:middle;"></i></button></div>
               <div class="nr"><span class="dot g"></span>
                 <div>
                   <div class="nb2">You've been <strong>shortlisted</strong> for Amazon Data Analyst.</div>
@@ -271,7 +302,9 @@
       <div class="page" id="pg-jobs">
         <div class="tabs">
           <button class="tab on" onclick="switchTab('jobs','all',this)">All Jobs</button>
-          <button class="tab" onclick="switchTab('jobs','reco',this)">⭐ Recommended</button>
+          <button class="tab" onclick="switchTab('jobs','reco',this)"><i data-lucide="star"
+              class="ic-sm" style="fill:var(--amber);color:var(--amber);vertical-align:text-bottom;margin-right:4px;"></i>
+            Recommended</button>
           <button class="tab" onclick="switchTab('jobs','intern',this)">Internships</button>
         </div>
 
@@ -310,7 +343,9 @@
         <div class="tab-panel" id="jobs-reco">
           <div
             style="background:#fffbeb;border:1px solid #fde68a;border-radius:9px;padding:10px 14px;font-size:13px;margin-bottom:14px;">
-            ⭐ Based on your skills (<strong>React, Node.js, MongoDB</strong>), branch (<strong>CSE</strong>) and CGPA
+            <i data-lucide="star"
+              class="ic-sm" style="fill:var(--amber);color:var(--amber);vertical-align:text-bottom;margin-right:4px;"></i>
+            Based on your skills (<strong>React, Node.js, MongoDB</strong>), branch (<strong>CSE</strong>) and CGPA
             (<strong>8.5</strong>)
           </div>
           <div class="block" id="reco-list"></div>
@@ -332,31 +367,31 @@
         <div class="tab-panel on" id="apps-all">
           <div class="block">
             <div class="ar">
-              <div class="co">🔵</div>
+              <div class="co"><i data-lucide="briefcase" style="color:var(--blue);"></i></div>
               <div class="am">
                 <div class="an">SDE Intern – Microsoft India</div>
-                <div class="ac">Full Time · ₹12 LPA · Applied Mar 10</div>
+                <div class="ac">Full Time | ₹12 LPA | Applied Mar 10</div>
               </div><span class="pill interview">Interview Scheduled</span>
             </div>
             <div class="ar">
-              <div class="co">🟠</div>
+              <div class="co"><i data-lucide="briefcase" style="color:var(--amber);"></i></div>
               <div class="am">
                 <div class="an">Data Analyst – Amazon Dev Centre</div>
-                <div class="ac">Full Time · ₹18 LPA · Applied Mar 8</div>
+                <div class="ac">Full Time | ₹18 LPA | Applied Mar 8</div>
               </div><span class="pill short">Shortlisted</span>
             </div>
             <div class="ar">
-              <div class="co">🔴</div>
+              <div class="co"><i data-lucide="briefcase" style="color:var(--red);"></i></div>
               <div class="am">
                 <div class="an">Frontend Developer – Zomato</div>
-                <div class="ac">Internship · ₹8 LPA · Applied Mar 5</div>
+                <div class="ac">Internship | ₹8 LPA | Applied Mar 5</div>
               </div><span class="pill review">Under Review</span>
             </div>
             <div class="ar">
-              <div class="co">🟣</div>
+              <div class="co"><i data-lucide="briefcase" style="color:var(--purple);"></i></div>
               <div class="am">
                 <div class="an">Backend Engineer – Swiggy</div>
-                <div class="ac">Full Time · ₹14 LPA · Applied Feb 28</div>
+                <div class="ac">Full Time | ₹14 LPA | Applied Feb 28</div>
               </div><span class="pill rejected">Rejected</span>
             </div>
           </div>
@@ -364,21 +399,21 @@
         <div class="tab-panel" id="apps-active">
           <div class="block">
             <div class="ar">
-              <div class="co">🔵</div>
+              <div class="co"><i data-lucide="briefcase" style="color:var(--blue);"></i></div>
               <div class="am">
                 <div class="an">SDE Intern – Microsoft India</div>
                 <div class="ac">Full Time · ₹12 LPA · Applied Mar 10</div>
               </div><span class="pill interview">Interview Scheduled</span>
             </div>
             <div class="ar">
-              <div class="co">🟠</div>
+              <div class="co"><i data-lucide="briefcase" style="color:var(--amber);"></i></div>
               <div class="am">
                 <div class="an">Data Analyst – Amazon Dev Centre</div>
                 <div class="ac">Full Time · ₹18 LPA · Applied Mar 8</div>
               </div><span class="pill short">Shortlisted</span>
             </div>
             <div class="ar">
-              <div class="co">🔴</div>
+              <div class="co"><i data-lucide="briefcase" style="color:var(--red);"></i></div>
               <div class="am">
                 <div class="an">Frontend Developer – Zomato</div>
                 <div class="ac">Internship · ₹8 LPA · Applied Mar 5</div>
@@ -389,7 +424,7 @@
         <div class="tab-panel" id="apps-closed">
           <div class="block">
             <div class="ar">
-              <div class="co">🟣</div>
+              <div class="co"><i data-lucide="briefcase" style="color:var(--purple);"></i></div>
               <div class="am">
                 <div class="an">Backend Engineer – Swiggy</div>
                 <div class="ac">Full Time · ₹14 LPA · Applied Feb 28</div>
@@ -410,7 +445,7 @@
             </div>
             <div class="dinfo">
               <div class="dname">Microsoft Campus Drive</div>
-              <div class="dmeta">10:00 AM · Main Auditorium · SDE, SDE-2 roles · Eligibility: CGPA ≥ 7.0</div>
+              <div class="dmeta">10:00 AM | Main Auditorium | SDE, SDE-2 roles | Eligibility: CGPA >= 7.0</div>
             </div><span class="pill registered">Registered</span>
           </div>
           <div class="dr">
@@ -420,7 +455,7 @@
             </div>
             <div class="dinfo">
               <div class="dname">TCS Mass Hiring Drive</div>
-              <div class="dmeta">9:00 AM · Block B Hall · Multiple roles · All branches eligible</div>
+              <div class="dmeta">9:00 AM | Block B Hall | Multiple roles | All branches eligible</div>
             </div><span class="pill upcoming"><button class="btn"
                 style="padding:4px 12px;font-size:11.5px;">Register</button></span>
           </div>
@@ -431,7 +466,7 @@
             </div>
             <div class="dinfo">
               <div class="dname">Infosys Off-Campus Drive</div>
-              <div class="dmeta">Online · Zoom · Cloud & DevOps · Eligibility: CGPA ≥ 6.5</div>
+              <div class="dmeta">Online | Zoom | Cloud & DevOps | Eligibility: CGPA >= 6.5</div>
             </div><span class="pill upcoming"><button class="btn"
                 style="padding:4px 12px;font-size:11.5px;">Register</button></span>
           </div>
@@ -442,7 +477,7 @@
             </div>
             <div class="dinfo">
               <div class="dname">Wipro Campus Connect</div>
-              <div class="dmeta">2:00 PM · Seminar Hall · Engineering roles</div>
+              <div class="dmeta">2:00 PM | Seminar Hall | Engineering roles</div>
             </div><span class="pill upcoming"><button class="btn"
                 style="padding:4px 12px;font-size:11.5px;">Register</button></span>
           </div>
@@ -453,7 +488,7 @@
             </div>
             <div class="dinfo">
               <div class="dname">HCL Tech Hiring</div>
-              <div class="dmeta">11:00 AM · Block A · CSE & IT · Eligibility: CGPA ≥ 6.0</div>
+              <div class="dmeta">11:00 AM | Block A | CSE & IT | Eligibility: CGPA >= 6.0</div>
             </div><span class="pill upcoming"><button class="btn"
                 style="padding:4px 12px;font-size:11.5px;">Register</button></span>
           </div>
@@ -464,27 +499,38 @@
       <div class="page" id="pg-tests">
         <div class="sec-h">Tests & Exams</div>
         <div class="test-card">
-          <div class="test-icon" style="background:#ecfeff;">💻</div>
+          <div class="test-icon" style="background:#ecfeff;"><i data-lucide="monitor" style="color:var(--cyan);"></i>
+          </div>
           <div class="test-info">
             <div class="test-name">Infosys InfyTQ – Online Test</div>
             <span class="test-mode online">Online</span>
-            <div class="test-meta">📅 Date: March 20, 2025 &nbsp;·&nbsp; 🕙 Time: 10:00 AM – 12:00 PM &nbsp;·&nbsp; ⏳
-              Duration: 2 hours</div>
+            <div class="test-meta"><i data-lucide="calendar"
+                class="ic-sm" style="vertical-align:middle;margin-right:2px;"></i> Date: March 20, 2025
+              &nbsp;|&nbsp; <i data-lucide="clock"
+                class="ic-sm" style="vertical-align:middle;margin-right:2px;"></i> Time: 10:00 AM - 12:00 PM
+              &nbsp;|&nbsp; <i data-lucide="timer"
+                class="ic-sm" style="vertical-align:middle;margin-right:2px;"></i> Duration: 2 hours</div>
             <div style="font-size:12px;color:var(--sub);margin-bottom:10px;">Sections: Aptitude, Logical Reasoning,
               Coding (2 problems)</div>
             <button class="btn"
               onclick="alert('Test link will be sent to your registered email 30 minutes before the test.')">Start Test
-              →</button>
+              <i data-lucide="arrow-right" class="ic-sm" style="vertical-align:middle;"></i></button>
           </div>
         </div>
         <div class="test-card">
-          <div class="test-icon" style="background:#fffbeb;">📋</div>
+          <div class="test-icon" style="background:#fffbeb;"><i data-lucide="clipboard-list"
+              style="color:var(--amber);"></i></div>
           <div class="test-info">
             <div class="test-name">TCS NQT – Offline Test</div>
             <span class="test-mode offline">Offline</span>
-            <div class="test-meta">📅 Date: March 22, 2025 &nbsp;·&nbsp; 🕘 Time: 9:00 AM</div>
-            <div style="font-size:12px;color:var(--sub);margin-bottom:10px;">📍 Venue: Seminar Hall A, Block B
-              &nbsp;·&nbsp; Carry: College ID, HB pencil, pen</div>
+            <div class="test-meta"><i data-lucide="calendar"
+                class="ic-sm" style="vertical-align:middle;margin-right:2px;"></i> Date: March 22, 2025
+              &nbsp;|&nbsp; <i data-lucide="clock"
+                class="ic-sm" style="vertical-align:middle;margin-right:2px;"></i> Time: 9:00 AM</div>
+            <div style="font-size:12px;color:var(--sub);margin-bottom:10px;"><i data-lucide="map-pin"
+                class="ic-sm" style="vertical-align:middle;margin-right:2px;"></i> Venue: Seminar Hall A, Block
+              B
+              &nbsp;|&nbsp; Carry: College ID, HB pencil, pen</div>
             <div
               style="background:#fffbeb;border:1px solid #fde68a;border-radius:7px;padding:9px 12px;font-size:12px;color:#92400e;">
               ⚠️ Report by 8:30 AM. No electronic devices allowed. Bring printed hall ticket.
@@ -494,19 +540,21 @@
         <div class="block" style="margin-top:8px;">
           <div class="bh"><span class="bt">Completed Tests</span></div>
           <div class="ar">
-            <div class="test-icon"
-              style="background:#f0fdf4;width:36px;height:36px;border-radius:8px;font-size:16px;flex-shrink:0;">✅</div>
+            <div
+              style="background:#f0fdf4;width:36px;height:36px;border-radius:8px;font-size:16px;flex-shrink:0;display:grid;place-items:center;">
+              <i data-lucide="check-circle" style="color:var(--green);"></i></div>
             <div class="am">
               <div class="an">Wipro WILP Written Test</div>
-              <div class="ac">Completed Feb 20 · Score: 78/100</div>
+              <div class="ac">Completed Feb 20 | Score: 78/100</div>
             </div><span class="pill registered">Passed</span>
           </div>
           <div class="ar">
-            <div class="test-icon"
-              style="background:#fef2f2;width:36px;height:36px;border-radius:8px;font-size:16px;flex-shrink:0;">❌</div>
+            <div
+              style="background:#fef2f2;width:36px;height:36px;border-radius:8px;font-size:16px;flex-shrink:0;display:grid;place-items:center;">
+              <i data-lucide="x-circle" style="color:var(--red);"></i></div>
             <div class="am">
               <div class="an">Zomato Technical Screening</div>
-              <div class="ac">Completed Mar 3 · Score: 42/100</div>
+              <div class="ac">Completed Mar 3 | Score: 42/100</div>
             </div><span class="pill rejected">Did not qualify</span>
           </div>
         </div>
@@ -536,7 +584,8 @@
               <div class="fg full"><label>Objective / Summary</label><textarea id="rb-obj"
                   placeholder="A passionate CSE student seeking…"></textarea></div>
             </div>
-            <button class="btn lg" style="margin-top:14px;" onclick="rbGo(1)">Next: Education →</button>
+            <button class="btn lg" style="margin-top:14px;" onclick="rbGo(1)">Next: Education <i
+                data-lucide="arrow-right" class="ic-sm" style="vertical-align:middle;"></i></button>
           </div>
         </div>
 
@@ -557,8 +606,10 @@
               </div>
             </div>
             <div style="display:flex;gap:8px;margin-top:14px;">
-              <button class="btn sec lg" onclick="rbGo(0)">← Back</button>
-              <button class="btn lg" onclick="rbGo(2)">Next: Skills →</button>
+              <button class="btn sec lg" onclick="rbGo(0)"><i data-lucide="arrow-left"
+                  class="ic-sm" style="vertical-align:middle;"></i> Back</button>
+              <button class="btn lg" onclick="rbGo(2)">Next: Skills <i data-lucide="arrow-right"
+                  class="ic-sm" style="vertical-align:middle;"></i></button>
             </div>
           </div>
         </div>
@@ -585,8 +636,10 @@
                   placeholder="AWS Cloud Practitioner, Google Analytics, etc." /></div>
             </div>
             <div style="display:flex;gap:8px;margin-top:14px;">
-              <button class="btn sec lg" onclick="rbGo(1)">← Back</button>
-              <button class="btn lg" onclick="rbGo(3)">Next: Projects →</button>
+              <button class="btn sec lg" onclick="rbGo(1)"><i data-lucide="arrow-left"
+                  class="ic-sm" style="vertical-align:middle;"></i> Back</button>
+              <button class="btn lg" onclick="rbGo(3)">Next: Projects <i data-lucide="arrow-right"
+                  class="ic-sm" style="vertical-align:middle;"></i></button>
             </div>
           </div>
         </div>
@@ -607,8 +660,10 @@
                   placeholder="Personal portfolio showcasing projects and skills…"></textarea></div>
             </div>
             <div style="display:flex;gap:8px;margin-top:14px;">
-              <button class="btn sec lg" onclick="rbGo(2)">← Back</button>
-              <button class="btn lg" onclick="rbGo(4)">Preview Resume →</button>
+              <button class="btn sec lg" onclick="rbGo(2)"><i data-lucide="arrow-left"
+                  class="ic-sm" style="vertical-align:middle;"></i> Back</button>
+              <button class="btn lg" onclick="rbGo(4)">Preview Resume <i data-lucide="arrow-right"
+                  class="ic-sm" style="vertical-align:middle;"></i></button>
             </div>
           </div>
         </div>
@@ -616,9 +671,11 @@
         <!-- Step 5: Preview -->
         <div class="rb-panel" id="rbp4">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-            <button class="btn sec" onclick="rbGo(3)">← Edit</button>
-            <button class="btn" onclick="alert('PDF download would be triggered here in the live system.')">⬇ Download
-              PDF</button>
+            <button class="btn sec" onclick="rbGo(3)"><i data-lucide="arrow-left"
+                class="ic-sm" style="vertical-align:middle;"></i> Edit</button>
+            <button class="btn" onclick="alert('PDF download would be triggered here in the live system.')"><i
+                data-lucide="download" class="ic-sm" style="vertical-align:middle;margin-right:4px;"></i>
+              Download PDF</button>
           </div>
           <div class="preview-box" id="resume-preview">
             <h1 id="pv-name">Arjun Sharma</h1>
@@ -662,32 +719,32 @@
         <div class="sec-h">Placement Preparation Resources</div>
         <div class="res-grid">
           <div class="res-card" onclick="alert('Opening Aptitude Practice…')">
-            <div class="res-icon">🧮</div>
+            <div class="res-icon"><i data-lucide="calculator"></i></div>
             <div class="res-title">Aptitude Practice</div>
             <div class="res-desc">Quantitative, logical, verbal – topic-wise questions with solutions.</div>
           </div>
           <div class="res-card" onclick="alert('Opening Coding Practice…')">
-            <div class="res-icon">💻</div>
+            <div class="res-icon"><i data-lucide="code"></i></div>
             <div class="res-title">Coding Practice</div>
             <div class="res-desc">DSA problems curated by company difficulty. LeetCode / HackerRank links.</div>
           </div>
           <div class="res-card" onclick="alert('Opening Interview Prep…')">
-            <div class="res-icon">🎙️</div>
+            <div class="res-icon"><i data-lucide="mic"></i></div>
             <div class="res-title">Interview Prep</div>
             <div class="res-desc">HR questions, technical rounds, STAR method answers and tips.</div>
           </div>
           <div class="res-card" onclick="alert('Opening Interview Experiences…')">
-            <div class="res-icon">💬</div>
+            <div class="res-icon"><i data-lucide="message-square"></i></div>
             <div class="res-title">Interview Experiences</div>
             <div class="res-desc">Senior students' real interview experiences at top companies.</div>
           </div>
           <div class="res-card" onclick="alert('Opening Group Discussion Guide…')">
-            <div class="res-icon">🗣️</div>
+            <div class="res-icon"><i data-lucide="users"></i></div>
             <div class="res-title">Group Discussion</div>
             <div class="res-desc">GD tips, current topics, and practice strategies.</div>
           </div>
           <div class="res-card" onclick="alert('Opening Resume Tips…')">
-            <div class="res-icon">📄</div>
+            <div class="res-icon"><i data-lucide="file-user"></i></div>
             <div class="res-title">Resume Tips</div>
             <div class="res-desc">Best practices for writing a placement-ready resume with examples.</div>
           </div>
@@ -697,37 +754,37 @@
         <div class="block">
           <div class="bh"><span class="bt">Top Recruiters at Your College</span></div>
           <div class="jr">
-            <div class="co">🔵</div>
+            <div class="co"><i data-lucide="briefcase" style="color:var(--blue);"></i></div>
             <div class="jm">
               <div class="jt">Microsoft</div>
-              <div class="ji">SDE, PM roles · Online test + 3 rounds</div>
+              <div class="ji">SDE, PM roles | Online test + 3 rounds</div>
             </div>
             <div class="jr-right"><button class="btn sec" onclick="alert('Opening Microsoft prep guide…')">View
                 Guide</button></div>
           </div>
           <div class="jr">
-            <div class="co">🟠</div>
+            <div class="co"><i data-lucide="briefcase" style="color:var(--amber);"></i></div>
             <div class="jm">
               <div class="jt">Amazon</div>
-              <div class="ji">SDE, DA roles · OA + Bar raiser round</div>
+              <div class="ji">SDE, DA roles | OA + Bar raiser round</div>
             </div>
             <div class="jr-right"><button class="btn sec" onclick="alert('Opening Amazon prep guide…')">View
                 Guide</button></div>
           </div>
           <div class="jr">
-            <div class="co">🟢</div>
+            <div class="co"><i data-lucide="briefcase" style="color:var(--green);"></i></div>
             <div class="jm">
               <div class="jt">Infosys</div>
-              <div class="ji">SE, Systems Engineer · InfyTQ based</div>
+              <div class="ji">SE, Systems Engineer | InfyTQ based</div>
             </div>
             <div class="jr-right"><button class="btn sec" onclick="alert('Opening Infosys prep guide…')">View
                 Guide</button></div>
           </div>
           <div class="jr">
-            <div class="co">🟡</div>
+            <div class="co"><i data-lucide="briefcase" style="color:var(--amber);"></i></div>
             <div class="jm">
               <div class="jt">TCS</div>
-              <div class="ji">Ninja, Digital, Prime · NQT based</div>
+              <div class="ji">Ninja, Digital, Prime | NQT based</div>
             </div>
             <div class="jr-right"><button class="btn sec" onclick="alert('Opening TCS prep guide…')">View Guide</button>
             </div>
@@ -739,54 +796,43 @@
       <div class="page" id="pg-profile">
 
         <!-- Profile Header Card -->
-        <div
-          style="background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;">
+        <div class="profile-card-hdr">
           <!-- Banner -->
-          <div
-            style="height:130px;background:linear-gradient(110deg,var(--navy) 0%,var(--blue) 60%,#0891b2 100%);position:relative;">
-            <button id="edit-btn" onclick="toggleEdit()"
-              style="position:absolute;top:12px;right:14px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:7px;padding:5px 14px;font-size:12px;font-weight:600;backdrop-filter:blur(4px);cursor:pointer;">✏️
-              Edit Profile</button>
+          <div class="profile-banner-st">
+            <button id="edit-btn" class="edit-prof-btn" onclick="toggleEdit()">
+              <i data-lucide="edit-3"></i> Edit Profile
+            </button>
           </div>
           <!-- Avatar + name row -->
-          <div style="padding:0 24px 20px;display:flex;align-items:flex-end;gap:16px;;margin-top:-45px;position:relative;z-index:2;">
-            <div id="pg-av"
-              style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--blue));display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:#fff;border:4px solid var(--white);flex-shrink:0;">
-              AS</div>
-            <div style="padding-bottom:4px;flex:1;">
-              <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;margin-bottom:2px;"
-                id="pg-name">Arjun Sharma</div>
-              <div style="font-size:12.5px;color:var(--sub);" id="pg-email">arjun@college.edu</div>
+          <div class="profile-av-row">
+            <div id="pg-av" class="profile-big-av">AS</div>
+            <div class="profile-name-box">
+              <div class="profile-name-txt" id="pg-name">Arjun Sharma</div>
+              <div class="profile-email-txt" id="pg-email">arjun@college.edu</div>
             </div>
-            <div style="padding-bottom:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-              <span
-                style="background:#eff6ff;color:var(--blue);font-size:11px;font-weight:700;border-radius:100px;padding:3px 11px;">🎓
-                CSE · 3rd Year</span>
-              <span
-                style="background:#f0fdf4;color:var(--green);font-size:11px;font-weight:700;border-radius:100px;padding:3px 11px;">CGPA
-                8.5</span>
-              <span
-                style="background:#fffbeb;color:var(--amber);font-size:11px;font-weight:700;border-radius:100px;padding:3px 11px;">Roll
-                No: 21CSE045</span>
+            <div class="profile-tags-row">
+              <span class="profile-tag-st blue">
+                <i data-lucide="graduation-cap"></i> CSE · 3rd Year
+              </span>
+              <span class="profile-tag-st green">CGPA 8.5</span>
+              <span class="profile-tag-st amber">Roll No: 21CSE045</span>
             </div>
           </div>
           <!-- Profile strength bar -->
-          <div style="padding:0 24px 18px;">
-            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;">
-              <span style="font-weight:600;">Profile Strength</span>
-              <span style="font-weight:700;color:var(--blue);">75% — Good</span>
+          <div class="profile-strength-box">
+            <div class="ps-header">
+              <span class="ps-label">Profile Strength</span>
+              <span class="ps-val">75% — Good</span>
             </div>
-            <div style="height:6px;background:#e5e7eb;border-radius:100px;overflow:hidden;">
-              <div
-                style="height:100%;width:75%;border-radius:100px;background:linear-gradient(90deg,var(--blue),#0891b2);">
-              </div>
+            <div class="ps-bar">
+              <div class="ps-fill" style="width:75%;"></div>
             </div>
-            <div style="display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;">
-              <span style="font-size:12px;color:var(--green);">✅ Basic info</span>
-              <span style="font-size:12px;color:var(--green);">✅ Resume uploaded</span>
-              <span style="font-size:12px;color:var(--green);">✅ Skills added</span>
-              <span style="font-size:12px;color:var(--sub);">⬜ LinkedIn URL</span>
-              <span style="font-size:12px;color:var(--sub);">⬜ Profile photo</span>
+            <div class="ps-checklist">
+              <span class="ps-check done"><i data-lucide="check-circle"></i> Basic info</span>
+              <span class="ps-check done"><i data-lucide="check-circle"></i> Resume uploaded</span>
+              <span class="ps-check done"><i data-lucide="check-circle"></i> Skills added</span>
+              <span class="ps-check todo"><i data-lucide="circle"></i> LinkedIn URL</span>
+              <span class="ps-check todo"><i data-lucide="circle"></i> Profile photo</span>
             </div>
           </div>
         </div>
@@ -847,13 +893,14 @@
                 <div class="detail-title">Resume</div>
                 <div
                   style="display:flex;align-items:center;gap:12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">
-                  <span style="font-size:24px;">📄</span>
+                  <i data-lucide="file-text" style="width:24px;height:24px;color:var(--sub);"></i>
                   <div style="flex:1;">
                     <div style="font-size:13px;font-weight:600;">Arjun_Resume_2025.pdf</div>
-                    <div style="font-size:11.5px;color:var(--sub);margin-top:2px;">Uploaded Mar 1, 2025 · 320 KB</div>
+                    <div style="font-size:11.5px;color:var(--sub);margin-top:2px;">Uploaded Mar 1, 2025 | 320 KB</div>
                   </div>
                   <button class="btn sec" style="padding:5px 14px;font-size:12px;"
-                    onclick="alert('Downloading resume…')">⬇ Download</button>
+                    onclick="alert('Downloading resume…')"><i data-lucide="download"
+                      class="ic-sm" style="vertical-align:middle;margin-right:4px;"></i> Download</button>
                 </div>
                 <button onclick="toggleEdit()"
                   style="margin-top:10px;width:100%;padding:8px;background:none;border:1.5px dashed var(--border);border-radius:8px;font-size:12.5px;color:var(--sub);cursor:pointer;"
@@ -940,7 +987,8 @@
                   placeholder="A brief intro about yourself for recruiters…" style="min-height:72px;"></textarea></div>
             </div>
             <div style="display:flex;gap:8px;margin-top:16px;">
-              <button class="btn lg" onclick="saveProfile()">💾 Save Changes</button>
+              <button class="btn lg" onclick="saveProfile()"><i data-lucide="save"
+                  class="ic-sm" style="vertical-align:middle;margin-right:4px;"></i> Save Changes</button>
               <button class="btn sec lg" onclick="toggleEdit()">Cancel</button>
             </div>
           </div>
@@ -959,7 +1007,8 @@
           <div class="sr"><span>Password</span><button class="btn sec" style="padding:4px 12px;font-size:12px;"
               onclick="alert('Password reset email sent.')">Change Password</button></div>
         </div>
-        <button class="logout-btn" onclick="logout()">🚪 Log Out</button>
+        <button class="logout-btn" onclick="logout()"><i data-lucide="log-out"
+            style="width:16px;height:16px;margin-right:6px;"></i> Log Out</button>
       </div>
 
     </div><!-- /body -->
@@ -968,14 +1017,14 @@
   <script>
     // ─── JOB DATA ───
     const JOBS = [
-      { id: 1, logo: '🔵', title: 'Software Engineer Intern', company: 'Microsoft India', loc: 'Hyderabad · Hybrid', type: 'Full Time', ctc: '₹12 LPA', dl: 'Mar 20', cgpa: '7.0', branch: 'CSE, IT, ECE', desc: 'Work on scalable web applications using React and Node.js. Contribute to real products used by millions globally.', skills: ['React', 'Node.js', 'JavaScript'], reco: true, intern: false },
-      { id: 2, logo: '🟠', title: 'Data Analyst', company: 'Amazon Dev Centre', loc: 'Bangalore', type: 'Full Time', ctc: '₹18 LPA', dl: 'Mar 25', cgpa: '7.5', branch: 'CSE, IT, EEE', desc: 'Analyze large datasets to derive business insights. Work with SQL, Python and AWS toolsets.', skills: ['Python', 'SQL', 'AWS'], reco: false, intern: false },
-      { id: 3, logo: '🟣', title: 'Backend Engineer', company: 'Swiggy', loc: 'Bangalore', type: 'Full Time', ctc: '₹14 LPA', dl: 'Apr 1', cgpa: '6.5', branch: 'CSE, IT', desc: 'Build and scale REST APIs handling millions of requests. Expertise in Java/Spring Boot preferred.', skills: ['Java', 'Spring Boot', 'MySQL'], reco: false, intern: false },
-      { id: 4, logo: '🔴', title: 'Frontend Developer Intern', company: 'Zomato', loc: 'Remote', type: 'Internship', ctc: '₹8 LPA', dl: 'Mar 30', cgpa: '6.0', branch: 'All', desc: 'Build pixel-perfect UI components. Work closely with design team on consumer-facing products.', skills: ['React', 'TypeScript', 'CSS'], reco: true, intern: true },
-      { id: 5, logo: '🟤', title: 'ML Engineer', company: 'Flipkart', loc: 'Bangalore', type: 'Full Time', ctc: '₹22 LPA', dl: 'Apr 5', cgpa: '8.0', branch: 'CSE, IT', desc: 'Develop and deploy machine learning models for product recommendations and fraud detection.', skills: ['Python', 'TensorFlow', 'Pandas'], reco: false, intern: false },
-      { id: 6, logo: '🟢', title: 'Cloud Engineer', company: 'Infosys', loc: 'Hyderabad', type: 'Full Time', ctc: '₹16 LPA', dl: 'Apr 10', cgpa: '6.0', branch: 'All', desc: 'Design and maintain cloud infrastructure on AWS/Azure. Automate deployments using CI/CD pipelines.', skills: ['AWS', 'DevOps', 'Linux'], reco: false, intern: false },
-      { id: 7, logo: '🔷', title: 'Full Stack Developer', company: 'Paytm', loc: 'Noida', type: 'Full Time', ctc: '₹10 LPA', dl: 'Apr 8', cgpa: '6.5', branch: 'CSE, IT', desc: 'Build and maintain features across the full stack. Fast-paced fintech environment.', skills: ['React', 'Node.js', 'MongoDB'], reco: true, intern: false },
-      { id: 8, logo: '🟡', title: 'React Developer Intern', company: 'Razorpay', loc: 'Bangalore', type: 'Internship', ctc: '₹6 LPA', dl: 'Apr 15', cgpa: '6.0', branch: 'CSE, IT', desc: 'Work on React-based internal tools and dashboards for the payments team.', skills: ['React', 'JavaScript'], reco: true, intern: true },
+      { id: 1, logo: 'briefcase', logoColor: 'var(--blue)', title: 'Software Engineer Intern', company: 'Microsoft India', loc: 'Hyderabad · Hybrid', type: 'Full Time', ctc: '₹12 LPA', dl: 'Mar 20', cgpa: '7.0', branch: 'CSE, IT, ECE', desc: 'Work on scalable web applications using React and Node.js. Contribute to real products used by millions globally.', skills: ['React', 'Node.js', 'JavaScript'], reco: true, intern: false },
+      { id: 2, logo: 'briefcase', logoColor: 'var(--amber)', title: 'Data Analyst', company: 'Amazon Dev Centre', loc: 'Bangalore', type: 'Full Time', ctc: '₹18 LPA', dl: 'Mar 25', cgpa: '7.5', branch: 'CSE, IT, EEE', desc: 'Analyze large datasets to derive business insights. Work with SQL, Python and AWS toolsets.', skills: ['Python', 'SQL', 'AWS'], reco: false, intern: false },
+      { id: 3, logo: 'briefcase', logoColor: 'var(--purple)', title: 'Backend Engineer', company: 'Swiggy', loc: 'Bangalore', type: 'Full Time', ctc: '₹14 LPA', dl: 'Apr 1', cgpa: '6.5', branch: 'CSE, IT', desc: 'Build and scale REST APIs handling millions of requests. Expertise in Java/Spring Boot preferred.', skills: ['Java', 'Spring Boot', 'MySQL'], reco: false, intern: false },
+      { id: 4, logo: 'briefcase', logoColor: 'var(--red)', title: 'Frontend Developer Intern', company: 'Zomato', loc: 'Remote', type: 'Internship', ctc: '₹8 LPA', dl: 'Mar 30', cgpa: '6.0', branch: 'All', desc: 'Build pixel-perfect UI components. Work closely with design team on consumer-facing products.', skills: ['React', 'TypeScript', 'CSS'], reco: true, intern: true },
+      { id: 5, logo: 'briefcase', logoColor: 'var(--sub)', title: 'ML Engineer', company: 'Flipkart', loc: 'Bangalore', type: 'Full Time', ctc: '₹22 LPA', dl: 'Apr 5', cgpa: '8.0', branch: 'CSE, IT', desc: 'Develop and deploy machine learning models for product recommendations and fraud detection.', skills: ['Python', 'TensorFlow', 'Pandas'], reco: false, intern: false },
+      { id: 6, logo: 'briefcase', logoColor: 'var(--green)', title: 'Cloud Engineer', company: 'Infosys', loc: 'Hyderabad', type: 'Full Time', ctc: '₹16 LPA', dl: 'Apr 10', cgpa: '6.0', branch: 'All', desc: 'Design and maintain cloud infrastructure on AWS/Azure. Automate deployments using CI/CD pipelines.', skills: ['AWS', 'DevOps', 'Linux'], reco: false, intern: false },
+      { id: 7, logo: 'briefcase', logoColor: 'var(--cyan)', title: 'Full Stack Developer', company: 'Paytm', loc: 'Noida', type: 'Full Time', ctc: '₹10 LPA', dl: 'Apr 8', cgpa: '6.5', branch: 'CSE, IT', desc: 'Build and maintain features across the full stack. Fast-paced fintech environment.', skills: ['React', 'Node.js', 'MongoDB'], reco: true, intern: false },
+      { id: 8, logo: 'briefcase', logoColor: 'var(--amber)', title: 'React Developer Intern', company: 'Razorpay', loc: 'Bangalore', type: 'Internship', ctc: '₹6 LPA', dl: 'Apr 15', cgpa: '6.0', branch: 'CSE, IT', desc: 'Work on React-based internal tools and dashboards for the payments team.', skills: ['React', 'JavaScript'], reco: true, intern: true },
     ];
 
     let appliedJobs = new Set();
@@ -995,7 +1044,7 @@
 
       const h = new Date().getHours();
       const g = h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
-      document.getElementById('greet-msg').textContent = `Good ${g}, ${first} 👋`;
+      document.getElementById('greet-msg').innerHTML = `Good ${g}, ${first} <i data-lucide="smile" style="width:18px;height:18px;vertical-align:text-bottom;"></i>`;
 
       renderJobsAll();
       renderRecoJobs();
@@ -1029,7 +1078,7 @@
     function jobHTML(j, showApply = true) {
       const applied = appliedJobs.has(j.id);
       return `<div class="jr">
-    <div class="co">${j.logo}</div>
+    <div class="co"><i data-lucide="${j.logo}" style="color:${j.logoColor || 'var(--blue)'};"></i></div>
     <div class="jm">
       <div class="jt">${j.title}</div>
       <div class="ji">${j.company} · ${j.loc} · ${j.type} · Min CGPA: ${j.cgpa}</div>
@@ -1094,8 +1143,9 @@
     function applyJob(id, btn) {
       if (appliedJobs.has(id)) return;
       appliedJobs.add(id);
-      document.querySelectorAll(`#apply-btn-${id}`).forEach(b => { b.classList.add('done'); b.textContent = '✅ Applied'; });
-      if (btn) { btn.classList.add('done'); btn.textContent = '✅ Applied'; }
+      document.querySelectorAll(`#apply-btn-${id}`).forEach(b => { b.classList.add('done'); b.innerHTML = '<i data-lucide="check-circle" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i> Applied'; });
+      if (btn) { btn.classList.add('done'); btn.innerHTML = '<i data-lucide="check-circle" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i> Applied'; }
+      lucide.createIcons();
     }
 
     // ─── NOTIF PANEL ───
@@ -1116,7 +1166,8 @@
       const isEditing = edit.style.display !== 'none';
       view.style.display = isEditing ? 'block' : 'none';
       edit.style.display = isEditing ? 'none' : 'block';
-      btn.textContent = isEditing ? '✏️ Edit' : 'Cancel';
+      btn.innerHTML = isEditing ? '<i data-lucide="edit-3" style="width:12px;height:12px;margin-right:4px;"></i> Edit Profile' : 'Cancel';
+      lucide.createIcons();
     }
     function saveProfile() {
       toggleEdit();
@@ -1142,16 +1193,16 @@
       const g = id => document.getElementById(id)?.value || '';
       document.getElementById('pv-name').textContent = g('rb-name') || 'Your Name';
       document.getElementById('pv-contact').textContent = `${g('rb-email')} · ${g('rb-phone')} · ${g('rb-linkedin')}`;
-      document.getElementById('pv-obj').textContent = g('rb-obj') || '—';
-      document.getElementById('pv-edu').innerHTML = `<strong>${g('rb-degree')}</strong> · ${g('rb-college')} · CGPA: ${g('rb-cgpa')} · ${g('rb-year')}`;
+      document.getElementById('pv-obj').textContent = g('rb-obj') || '-';
+      document.getElementById('pv-edu').innerHTML = `<strong>${g('rb-degree')}</strong> | ${g('rb-college')} | CGPA: ${g('rb-cgpa')} | ${g('rb-year')}`;
       document.getElementById('pv-12').textContent = `12th: ${g('rb-12')}`;
       document.getElementById('pv-10').textContent = `10th: ${g('rb-10')}`;
       const skills = [...document.querySelectorAll('#rb-skills-wrap .skill-tag')].map(t => t.textContent.replace('×', '').trim()).join(', ');
-      document.getElementById('pv-skills').textContent = skills || '—';
-      document.getElementById('pv-p1').innerHTML = `<strong>${g('rb-p1t')}</strong> (${g('rb-p1s')}) – ${g('rb-p1d')}`;
-      document.getElementById('pv-p2').innerHTML = `<strong>${g('rb-p2t')}</strong> (${g('rb-p2s')}) – ${g('rb-p2d')}`;
-      document.getElementById('pv-exp').textContent = g('rb-exp') || '—';
-      document.getElementById('pv-cert').textContent = g('rb-cert') || '—';
+      document.getElementById('pv-skills').textContent = skills || '-';
+      document.getElementById('pv-p1').innerHTML = `<strong>${g('rb-p1t')}</strong> (${g('rb-p1s')}) - ${g('rb-p1d')}`;
+      document.getElementById('pv-p2').innerHTML = `<strong>${g('rb-p2t')}</strong> (${g('rb-p2s')}) - ${g('rb-p2d')}`;
+      document.getElementById('pv-exp').textContent = g('rb-exp') || '-';
+      document.getElementById('pv-cert').textContent = g('rb-cert') || '-';
     }
 
     // ─── SIDEBAR TOGGLE ───
@@ -1168,9 +1219,10 @@
 
     // ─── LOGOUT ───
     function logout() { sessionStorage.clear(); window.location.href = 'Login.html'; }
+
+    // Initialize Lucide icons
+    lucide.createIcons();
   </script>
 </body>
 
 </html>
-
-

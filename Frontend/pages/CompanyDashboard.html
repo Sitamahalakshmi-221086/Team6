@@ -7,35 +7,11 @@
   <title>CampusPlace – Recruiter Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap"
     rel="stylesheet" />
-  <link href="../css/CompanyDashboard.css" rel="stylesheet" />
+  <link href="../css/companydashboard.css" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
- HEAD
-<div class="wrap">
-<aside class="sidebar" id="sidebar">
-  <div class="sb-inner">
-    <a href="../index.html" class="logo"><div class="logo-icon">🎓</div><span class="logo-text">Campus<span>Place</span></span></a>
-    <div class="co-mini"><div class="co-av" id="nav-av">IN</div><div><div class="co-name" id="nav-co-name">Infosys Ltd.</div><div class="co-role">Recruiter Account</div></div></div>
-    <nav>
-      <div class="nav-label-sec">Main</div>
-      <a class="nav-a active" onclick="show('overview')" href="#"><span class="nav-ic">⚡</span><span class="nav-lbl">Overview</span></a>
-      <a class="nav-a" onclick="show('profile')" href="#"><span class="nav-ic">🏢</span><span class="nav-lbl">Company Profile</span></a>
-      <div class="nav-label-sec">Hiring</div>
-      <a class="nav-a" onclick="show('postjob')" href="#"><span class="nav-ic">➕</span><span class="nav-lbl">Post Job</span></a>
-      <a class="nav-a" onclick="show('managejobs')" href="#"><span class="nav-ic">📋</span><span class="nav-lbl">Manage Job Posts</span><span class="nav-badge">4</span></a>
-      <a class="nav-a" onclick="show('applicants')" href="#"><span class="nav-ic">👥</span><span class="nav-lbl">View Applicants</span><span class="nav-badge">12</span></a>
-      <a class="nav-a" onclick="show('shortlist')" href="#"><span class="nav-ic">⭐</span><span class="nav-lbl">Shortlist Candidates</span></a>
-      <div class="nav-label-sec">Process</div>
-      <a class="nav-a" onclick="show('interviews')" href="#"><span class="nav-ic">📅</span><span class="nav-lbl">Interview Schedule</span></a>
-      <a class="nav-a" onclick="show('tracker')" href="#"><span class="nav-ic">📊</span><span class="nav-lbl">Recruitment Tracker</span></a>
-      <a class="nav-a" onclick="show('selected')" href="#"><span class="nav-ic">✅</span><span class="nav-lbl">Selected Candidates</span></a>
-      <div class="nav-label-sec">Communication</div>
-      <a class="nav-a" onclick="show('messages')" href="#"><span class="nav-ic">💬</span><span class="nav-lbl">Messages</span><span class="nav-badge red">3</span></a>
-      <a class="nav-a" onclick="show('analytics')" href="#"><span class="nav-ic">📈</span><span class="nav-lbl">Analytics</span></a>
-    </nav>
-    <div class="sb-footer"><a href="../index.html" class="logout"><span>🚪</span> Logout</a></div>
-
 
   <!-- ══ NOTIF PANEL ══ -->
   <div class="notif-panel" id="notif-panel">
@@ -73,8 +49,8 @@
         <div class="n-time">Yesterday</div>
       </div>
     </div>
- c155db61c9572432618d50aaad1deb4487e51c64
   </div>
+
 
   <!-- ══ POST JOB MODAL ══ -->
   <div class="overlay" id="post-modal" onclick="closeOverlay(event,'post-modal')">
@@ -865,25 +841,24 @@
 
       <!-- ════ COMPANY PROFILE ════ -->
       <div class="page" id="pg-profile">
-        <div class="profile-banner-wrap">
-          <div class="profile-banner"></div>
+        <div class="profile-card-hdr">
+          <div class="profile-banner-st">
+            <button class="edit-prof-btn" onclick="toggleEdit()">
+              <i data-lucide="edit-3"></i> Edit Profile
+            </button>
+          </div>
           <div class="profile-av-row">
             <div class="profile-big-av">
-              <svg viewBox="0 0 24 24">
-                <rect x="2" y="7" width="20" height="14" rx="2" />
-                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-                <line x1="12" y1="12" x2="12" y2="16" />
-                <line x1="10" y1="14" x2="14" y2="14" />
-              </svg>
+              <i data-lucide="building-2"></i>
             </div>
             <div class="profile-info">
               <div class="profile-co-name" id="pg-coname">Infosys Technologies Ltd.</div>
               <div class="profile-co-meta" id="pg-coemail">hr@infosys.com</div>
             </div>
             <div class="profile-badges">
-              <span class="p-badge t">IT Services</span>
-              <span class="p-badge g">Verified</span>
-              <span class="p-badge a">Bangalore</span>
+              <span class="p-badge t"><i data-lucide="briefcase"></i> IT Services</span>
+              <span class="p-badge g"><i data-lucide="check-circle"></i> Verified</span>
+              <span class="p-badge a"><i data-lucide="map-pin"></i> Bangalore</span>
             </div>
           </div>
         </div>
@@ -1176,6 +1151,8 @@
 
     // ── LOGOUT ──
     function logout() { sessionStorage.clear(); window.location.href = 'Login.html'; }
+    // Initialize Lucide icons
+    lucide.createIcons();
   </script>
 </body>
 

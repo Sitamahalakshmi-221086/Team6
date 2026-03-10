@@ -1416,25 +1416,20 @@ textarea {
 }
 
 .profile-big-av svg {
-  width: 26px;
-  height: 26px;
-  stroke: #fff;
-  fill: none;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .profile-info {
-  flex: 1;
   padding-bottom: 4px;
+  flex: 1;
 }
 
 .profile-name {
   font-family: 'Syne', sans-serif;
   font-weight: 800;
-  font-size: 1.05rem;
-  margin-bottom: 3px;
+  font-size: 1.5rem;
+  margin-bottom: 2px;
+  color: var(--text);
 }
 
 .profile-sub {
@@ -1443,32 +1438,35 @@ textarea {
 }
 
 .profile-badges {
+  padding-bottom: 8px;
   display: flex;
-  gap: 6px;
+  gap: 8px;
   flex-wrap: wrap;
-  padding-bottom: 6px;
-  align-self: flex-end;
+  align-items: center;
 }
 
 .p-badge {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   border-radius: 100px;
-  padding: 2px 10px;
+  padding: 3px 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .p-badge.i {
-  background: #ffedd5;
+  background: #f5f3ff;
   color: var(--ind-dark);
 }
 
 .p-badge.g {
-  background: #dcfce7;
+  background: #f0fdf4;
   color: var(--green);
 }
 
 .p-badge.a {
-  background: #fef9c3;
+  background: #fffbeb;
   color: var(--amber);
 }
 
