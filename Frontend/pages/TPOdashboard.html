@@ -7,7 +7,8 @@
   <title>CampusPlace – TPO Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="../css/tpodashboard.css">
+  <link href="../css/tpodashboard.css" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
@@ -1026,15 +1027,15 @@
 
       <!-- ══════════ PROFILE ══════════ -->
       <div class="page" id="pg-profile">
-        <!-- Header card — avatar sits cleanly inside the white area below banner -->
-        <div class="profile-wrap">
-          <div class="profile-banner"></div>
-          <div class="profile-body-row">
+        <div class="profile-card-hdr">
+          <div class="profile-banner-st">
+            <button class="edit-prof-btn" onclick="toggleEdit()">
+              <i data-lucide="edit-3"></i> Edit Profile
+            </button>
+          </div>
+          <div class="profile-av-row">
             <div class="profile-big-av">
-              <svg viewBox="0 0 24 24">
-                <path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z" />
-                <path d="M6 12v5c3 3 9 3 12 0v-5" />
-              </svg>
+              <i data-lucide="graduation-cap"></i>
             </div>
             <div class="profile-info">
               <div class="profile-name" id="pg-name">Dr. Ramesh Kumar</div>
@@ -1311,6 +1312,8 @@
 
     // ── LOGOUT ──
     function logout() { sessionStorage.clear(); window.location.href = 'Login.html'; }
+    // Initialize Lucide icons
+    lucide.createIcons();
   </script>
 </body>
 
