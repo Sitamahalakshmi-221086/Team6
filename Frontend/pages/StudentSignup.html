@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CampusPlace – Sign Up (Student)</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <!-- no external SDK needed – Brevo uses plain fetch -->
+  <!-- EmailJS SDK — no server needed -->
+  
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,7 +25,7 @@
     .env-strip { height: 4px; background: linear-gradient(90deg, #1e3a8a, #0891b2); }
     .page-wrap { display: flex; min-height: calc(100vh - 4px); }
 
-    /* ── LEFT PANEL ── */
+    /* LEFT PANEL */
     .left-panel {
       width: 340px; flex-shrink: 0;
       background: linear-gradient(160deg, #1e3a8a 0%, #1d4ed8 60%, #0891b2 100%);
@@ -41,7 +42,6 @@
     .left-title { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; line-height: 1.2; margin-bottom: 12px; }
     .left-title span { color: #67e8f9; }
     .left-sub { font-size: 13px; color: rgba(255,255,255,.75); line-height: 1.6; margin-bottom: 32px; }
-
     .progress-steps { display: flex; flex-direction: column; gap: 16px; }
     .progress-step { display: flex; align-items: center; gap: 12px; opacity: .5; transition: opacity .3s; }
     .progress-step.active-step, .progress-step.done-step { opacity: 1; }
@@ -51,13 +51,12 @@
     .step-circle.pending { background: rgba(255,255,255,.15); color: rgba(255,255,255,.6); }
     .step-name { font-size: 13px; font-weight: 600; }
     .step-desc { font-size: 11px; color: rgba(255,255,255,.6); margin-top: 2px; }
-
     .progress-bar-wrap { background: rgba(255,255,255,.15); border-radius: 100px; height: 5px; margin-bottom: 8px; overflow: hidden; }
     .progress-bar-fill { height: 100%; background: #67e8f9; border-radius: 100px; transition: width .4s; }
     .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: rgba(255,255,255,.7); }
     .progress-pct { font-weight: 700; color: #67e8f9; }
 
-    /* ── RIGHT PANEL ── */
+    /* RIGHT PANEL */
     .right-panel { flex: 1; padding: 48px; display: flex; align-items: flex-start; justify-content: center; }
     .form-stage { display: none; width: 100%; max-width: 680px; }
     .form-stage.active { display: block; }
@@ -160,13 +159,22 @@
     .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    /* Demo banner */
+    .demo-banner {
+      background: linear-gradient(90deg, #fef3c7, #fde68a);
+      border: 1px solid #fbbf24; border-radius: 10px;
+      padding: 10px 16px; font-size: 13px; color: #92400e;
+      margin-bottom: 20px; display: flex; align-items: flex-start; gap: 8px;
+    }
+
     /* Success */
     .success-wrap { text-align: center; padding: 40px 20px; }
-    .success-circle { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-dark), #0891b2); display: flex; align-items: center; justify-content: center; font-size: 36px; color: #fff; margin: 0 auto 24px; box-shadow: 0 8px 32px rgba(37,99,235,.3); }
+    .success-circle { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-dark), #0891b2); display: flex; align-items: center; justify-content: center; font-size: 36px; color: #fff; margin: 0 auto 24px; box-shadow: 0 8px 32px rgba(37,99,235,.3); animation: popIn .5s cubic-bezier(.175,.885,.32,1.275); }
+    @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     .success-title { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; margin-bottom: 10px; }
     .success-sub { font-size: 15px; color: var(--sub); margin-bottom: 28px; }
     .success-items { display: flex; flex-direction: column; gap: 12px; text-align: left; max-width: 420px; margin: 0 auto 32px; }
-    .success-item { display: flex; align-items: center; gap: 12px; font-size: 14px; color: #374151; }
+    .success-item { display: flex; align-items: center; gap: 12px; font-size: 14px; color: #374151; background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; }
     .success-item-icon { font-size: 20px; }
     .btn-dashboard { display: inline-block; background: var(--accent-dark); color: #fff; text-decoration: none; border-radius: 12px; padding: 14px 32px; font-size: 15px; font-weight: 700; box-shadow: 0 4px 16px rgba(30,58,138,.3); transition: all .2s; }
     .btn-dashboard:hover { background: var(--accent); transform: translateY(-1px); }
@@ -188,14 +196,14 @@
   <div class="env-strip"></div>
   <div class="page-wrap">
 
-    <!-- ── LEFT PANEL ── -->
+    <!-- LEFT PANEL -->
     <aside class="left-panel">
       <div class="left-content">
         <a href="../index.html" class="logo">
           <div class="logo-icon">🎓</div>
           <span class="logo-text">Campus<span class="logo-accent">Place</span></span>
         </a>
-        <div class="left-badge"><span class="left-badge-dot"></span> <span>Student Registration</span></div>
+        <div class="left-badge"><span class="left-badge-dot"></span> Student Registration</div>
         <h2 class="left-title">Start Your<br /><span>Placement</span><br />Journey</h2>
         <p class="left-sub">Create your profile in 4 quick steps and get matched with top companies visiting your campus.</p>
 
@@ -242,16 +250,14 @@
       </div>
     </aside>
 
-    <!-- ── RIGHT PANEL ── -->
+    <!-- RIGHT PANEL -->
     <main class="right-panel">
 
-      <!-- ══ STAGE 2 – STUDENT DETAILS ══ -->
+      <!-- STAGE 2 – STUDENT DETAILS -->
       <div class="form-stage active" id="stage-2-student">
-        <div class="stage-header">
-          <div class="stage-num">Stage 02 / 04</div>
-          <h1 class="stage-title">Your <span class="shimmer-text">Details</span></h1>
-          <p class="stage-sub">Fill in your academic and personal information to build your profile.</p>
-        </div>
+        <div class="stage-num">Stage 02 / 04</div>
+        <h1 class="stage-title">Your <span class="shimmer-text">Details</span></h1>
+        <p class="stage-sub">Fill in your academic and personal information to build your profile.</p>
 
         <div style="display:inline-flex;align-items:center;gap:8px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:100px;padding:6px 16px;margin-bottom:24px;">
           <span>🎓</span><span style="font-size:13px;font-weight:600;color:#1d4ed8;">Student Registration</span>
@@ -374,6 +380,7 @@
             </div>
 
           </div>
+
           <div class="form-nav">
             <button class="btn-prev" onclick="window.location.href='Signup.html'">← Back</button>
             <button class="btn-next" id="btn-send-otp" onclick="goNext(2)">Save &amp; Continue →</button>
@@ -381,27 +388,31 @@
         </form>
       </div>
 
-      <!-- ══ STAGE 3 – EMAIL VERIFICATION ══ -->
+      <!-- STAGE 3 – EMAIL VERIFICATION -->
       <div class="form-stage" id="stage-3">
-        <div class="stage-header">
-          <div class="stage-num">Stage 03 / 04</div>
-          <h1 class="stage-title">Verify Your <span class="shimmer-text">Email</span></h1>
-          <p class="stage-sub">We've sent a 6-digit OTP to your email. Enter it below to activate your account.</p>
-        </div>
+        <div class="stage-num">Stage 03 / 04</div>
+        <h1 class="stage-title">Verify Your <span class="shimmer-text">Email</span></h1>
+        <p class="stage-sub">We've sent a 6-digit OTP to your email. Enter it below to activate your account.</p>
 
-        <!-- Sending state -->
+        <!-- Sending spinner -->
         <div id="otp-sending-state" class="otp-sending" style="display:none;">
           <div class="otp-sending-spinner"></div>
           <p style="font-size:14px;color:var(--sub);font-weight:500;">Sending OTP to your email…</p>
         </div>
 
-        <!-- Entry state -->
-        <div id="otp-entry-state">
+        <!-- OTP Entry -->
+        <div id="otp-entry-state" style="display:none;">
+
+          <!-- Dev mode banner (only shown when EmailJS fails) -->
+          <div class="demo-banner" id="demo-mode-banner" style="display:none;">
+            ⚠️ <div><strong>EmailJS not reachable.</strong> Running in demo mode — your OTP is shown below.</div>
+          </div>
+
           <div class="verify-center">
             <span class="email-illustration">📧</span>
             <div class="verify-email-display" id="verify-email-show">you@example.com</div>
             <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">Check your inbox (and spam folder just in case)</p>
-            <p style="font-size:12px;color:var(--muted);margin-bottom:28px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:8px 14px;display:inline-block;">
+            <p id="otp-sent-badge" style="font-size:12px;color:var(--muted);margin-bottom:28px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:8px 14px;display:inline-block;">
               ✅ OTP sent successfully! Valid for <strong>10 minutes</strong>.
             </p>
 
@@ -414,7 +425,13 @@
               <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,5)" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
             </div>
 
-            <div id="otp-error" style="display:none;font-size:13px;margin-bottom:16px;"></div>
+            <!-- Dev OTP box (only shown when EmailJS fails) -->
+            <div id="dev-otp-display" style="display:none;margin-bottom:16px;background:#fffbeb;border:1.5px dashed #fbbf24;border-radius:10px;padding:12px 20px;">
+              <p style="font-size:12px;color:#92400e;margin-bottom:4px;font-weight:600;">🔧 DEV MODE — OTP for testing:</p>
+              <p id="dev-otp-value" style="font-size:28px;font-weight:800;color:#1e3a8a;letter-spacing:8px;margin:0;"></p>
+            </div>
+
+            <div id="otp-error" style="display:none;color:#ef4444;font-size:13px;margin-bottom:16px;"></div>
 
             <div class="resend-row">
               Didn't receive it?
@@ -433,7 +450,7 @@
         </div>
       </div>
 
-      <!-- ══ STAGE 4 – SUCCESS ══ -->
+      <!-- STAGE 4 – SUCCESS -->
       <div class="form-stage" id="stage-4">
         <div class="success-wrap">
           <div class="success-circle">✓</div>
@@ -445,7 +462,7 @@
             <div class="success-item"><span class="success-item-icon">🔔</span><span>Email notifications turned on for new drives</span></div>
             <div class="success-item"><span class="success-item-icon">📄</span><span>Resume visible to verified recruiters</span></div>
           </div>
-          <a href="Login.html" class="btn-dashboard">Go to My Dashboard →</a>
+          <a href="StudentLogin.html".html" class="btn-dashboard">Go to My Dashboard →</a>
           <p style="margin-top:16px;font-size:13px;color:var(--muted);">You'll receive a welcome email with next steps shortly.</p>
         </div>
       </div>
@@ -454,67 +471,36 @@
   </div>
 
   <script>
-    /* ════════════════════════════════════════════
-       BREVO CONFIG — paste your values here
-       Same account you used for companysignup!
-    ════════════════════════════════════════════ */
-    const BREVO_API_KEY      = 'REMOVED_SECRET-22fe31ad0c01e8ea0451bd165dd21d5afd1096fe1e356c5fcf47ea66cdf985c3-iTaZuMInNXbABQYI';   // 🔧 same key as companysignup
-    const BREVO_SENDER_EMAIL = 'gurazlasrisantoshi@gmail.com';   // 🔧 same sender email as companysignup
-    const BREVO_SENDER_NAME  = 'CampusPlace';
-
-    /* ── STATE ── */
+    
+    /* STATE */
     let currentStage = 2;
     let skills       = [];
     let resendTimer  = null;
     let generatedOtp = '';
     let otpExpiry    = null;
+    let isDevMode    = false;
     const OTP_TTL_MS = 10 * 60 * 1000;
 
-    /* ════ OTP HELPERS ════ */
+    /* OTP helpers */
     function generateOtp() {
       return Math.floor(100000 + Math.random() * 900000).toString();
     }
 
+    /* ✅ EmailJS — sends OTP directly from browser, no server needed */
     async function sendOtpEmail(toEmail, toName, otp) {
-      const res = await fetch('https://api.brevo.com/v3/smtp/email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'api-key': BREVO_API_KEY },
-        body: JSON.stringify({
-          sender: { name: BREVO_SENDER_NAME, email: BREVO_SENDER_EMAIL },
-          to: [{ email: toEmail, name: toName || 'Student' }],
-          subject: `Your CampusPlace OTP: ${otp}`,
-          htmlContent: `
-            <div style="font-family:DM Sans,sans-serif;max-width:480px;margin:auto;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;">
-              <div style="background:linear-gradient(135deg,#1e3a8a,#0891b2);padding:28px 32px;text-align:center;">
-                <h1 style="color:#fff;font-size:22px;margin:0;">🎓 CampusPlace</h1>
-                <p style="color:rgba(255,255,255,.8);font-size:13px;margin:6px 0 0;">Student Registration – Email Verification</p>
-              </div>
-              <div style="padding:32px;">
-                <p style="font-size:15px;color:#0f172a;margin-bottom:8px;">Hello <strong>${toName || 'Student'}</strong>,</p>
-                <p style="font-size:14px;color:#64748b;margin-bottom:24px;">
-                  Use the OTP below to verify your email and activate your CampusPlace student account.
-                </p>
-                <div style="background:#eff6ff;border:2px dashed #2563eb;border-radius:12px;padding:20px;text-align:center;margin-bottom:24px;">
-                  <p style="font-size:13px;color:#1d4ed8;margin:0 0 8px;font-weight:600;letter-spacing:1px;">YOUR ONE-TIME PASSWORD</p>
-                  <p style="font-size:40px;font-weight:800;color:#1e3a8a;letter-spacing:10px;margin:0;">${otp}</p>
-                </div>
-                <p style="font-size:13px;color:#94a3b8;">⏱ Valid for <strong>10 minutes</strong>. Do not share this OTP with anyone.</p>
-              </div>
-              <div style="background:#f8fafc;padding:16px 32px;text-align:center;font-size:12px;color:#94a3b8;">
-                If you didn't request this, please ignore this email.
-              </div>
-            </div>
-          `
-        })
-      });
-      if (!res.ok) {
-        const errBody = await res.json().catch(() => ({}));
-        throw new Error(errBody.message || `HTTP ${res.status}`);
-      }
-      return res;
-    }
+  const res = await fetch('http://localhost:3000/send-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: toEmail, name: toName, otp: otp })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `HTTP ${res.status}`);
+  }
+  return res;
+}
 
-    /* ════ NAVIGATION ════ */
+    /* NAVIGATION */
     async function goNext(from) {
       if (from !== 2) return;
       if (!validateStage2()) return;
@@ -533,42 +519,46 @@
 
       try {
         await sendOtpEmail(email, name, generatedOtp);
-        showStage3Sending(false);
-        startResendTimer();
+        isDevMode = false;
+        document.getElementById('demo-mode-banner').style.display = 'none';
+        document.getElementById('dev-otp-display').style.display  = 'none';
+        document.getElementById('otp-sent-badge').style.display   = 'inline-block';
         showToast('✅ OTP sent to ' + email, '#2563eb');
       } catch (err) {
-        console.error('OTP send error:', err);
-        showStage3Sending(false);
-        startResendTimer();
-        const errEl = document.getElementById('otp-error');
-        errEl.style.color   = '#f59e0b';
-        errEl.innerHTML     = '⚙️ <strong>Dev mode:</strong> Brevo not configured. Your OTP is: <strong>' + generatedOtp + '</strong>';
-        errEl.style.display = 'block';
-        showToast('⚠️ Could not send email. Configure Brevo API key.', '#f59e0b', 5000);
+        console.warn('EmailJS error:', err);
+        isDevMode = true;
+        document.getElementById('demo-mode-banner').style.display = 'flex';
+        document.getElementById('dev-otp-display').style.display  = 'block';
+        document.getElementById('dev-otp-value').textContent      = generatedOtp;
+        document.getElementById('otp-sent-badge').style.display   = 'none';
+        showToast('⚠️ EmailJS not reachable – using dev mode', '#f59e0b', 4000);
       }
 
+      showStage3Sending(false);
+      startResendTimer();
       btn.disabled = false;
     }
 
     function showStage3Sending(isSending) {
       document.getElementById('otp-sending-state').style.display = isSending ? 'flex' : 'none';
-      document.getElementById('otp-entry-state').style.display   = isSending ? 'none'  : 'block';
+      document.getElementById('otp-entry-state').style.display   = isSending ? 'none' : 'block';
     }
 
     function goBackToStage2() {
+      clearInterval(resendTimer);
+      otpInputs.forEach(i => { i.value = ''; i.style.borderColor = ''; });
+      document.getElementById('otp-error').style.display      = 'none';
+      document.getElementById('otp-entry-state').style.display = 'none';
       currentStage = 3;
       goTo(2);
-      otpInputs.forEach(i => { i.value = ''; i.style.borderColor = ''; });
-      document.getElementById('otp-error').style.display = 'none';
-      clearInterval(resendTimer);
     }
 
     function goTo(stage) {
       const curId = currentStage === 2 ? 'stage-2-student' : 'stage-' + currentStage;
-      const el    = document.getElementById(curId);
+      const el = document.getElementById(curId);
       if (el) el.classList.remove('active');
       currentStage = stage;
-      const newId  = stage === 2 ? 'stage-2-student' : 'stage-' + stage;
+      const newId = stage === 2 ? 'stage-2-student' : 'stage-' + stage;
       document.getElementById(newId).classList.add('active');
       updateSidebar(stage);
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -593,7 +583,7 @@
       }
     }
 
-    /* ════ VALIDATION ════ */
+    /* VALIDATION */
     function validateStage2() {
       let ok = true;
       const checks = [
@@ -625,7 +615,7 @@
       if (errEl) errEl.classList.remove('show');
     }
 
-    /* ════ PASSWORD ════ */
+    /* PASSWORD */
     function checkPwd(input, prefix, labelId) {
       const v    = input.value;
       const bars = [1,2,3,4].map(i => document.getElementById(prefix + i));
@@ -651,7 +641,7 @@
       else { inp.type = 'password'; btn.textContent = '👁'; }
     }
 
-    /* ════ CGPA ════ */
+    /* CGPA */
     function updateCgpa(input) {
       const v    = parseFloat(input.value);
       const fill = document.getElementById('cgpa-fill');
@@ -665,7 +655,7 @@
       }
     }
 
-    /* ════ SKILLS ════ */
+    /* SKILLS */
     function addSkill(e) {
       if (e.key !== 'Enter' && e.key !== ',') return;
       e.preventDefault();
@@ -691,7 +681,7 @@
       });
     }
 
-    /* ════ RESUME UPLOAD ════ */
+    /* RESUME UPLOAD */
     function handleFile(input) {
       const file = input.files[0];
       if (!file) return;
@@ -720,7 +710,7 @@
       }
     });
 
-    /* ════ OTP VERIFY ════ */
+    /* OTP VERIFY */
     const otpInputs = document.querySelectorAll('.otp-input');
 
     function otpMove(el, idx) {
@@ -738,7 +728,7 @@
       if (otp.length < 6) { errEl.textContent = 'Please enter all 6 digits.'; errEl.style.display = 'block'; return; }
 
       if (Date.now() > otpExpiry) {
-        errEl.textContent = '⏰ OTP has expired. Please resend.';
+        errEl.textContent   = '⏰ OTP has expired. Please resend.';
         errEl.style.display = 'block';
         otpInputs.forEach(i => { i.value = ''; i.style.borderColor = '#ef4444'; });
         setTimeout(() => otpInputs.forEach(i => i.style.borderColor = ''), 1200);
@@ -766,7 +756,7 @@
       }, 800);
     }
 
-    /* ════ RESEND ════ */
+    /* RESEND */
     function startResendTimer(seconds = 30) {
       let t = seconds;
       document.getElementById('resend-btn').style.display  = 'none';
@@ -798,14 +788,17 @@
 
       try {
         await sendOtpEmail(email, name, generatedOtp);
+        isDevMode = false;
+        document.getElementById('dev-otp-display').style.display  = 'none';
+        document.getElementById('demo-mode-banner').style.display = 'none';
+        document.getElementById('otp-sent-badge').style.display   = 'inline-block';
         showToast('✅ New OTP sent to ' + email, '#2563eb');
       } catch (err) {
-        console.error('Resend error:', err);
-        const errEl = document.getElementById('otp-error');
-        errEl.style.color   = '#f59e0b';
-        errEl.innerHTML     = '⚙️ <strong>Dev mode:</strong> Brevo not configured. Your OTP is: <strong>' + generatedOtp + '</strong>';
-        errEl.style.display = 'block';
-        showToast('⚠️ Email send failed – check Brevo config', '#f59e0b', 4000);
+        isDevMode = true;
+        document.getElementById('dev-otp-value').textContent      = generatedOtp;
+        document.getElementById('dev-otp-display').style.display  = 'block';
+        document.getElementById('demo-mode-banner').style.display = 'flex';
+        showToast('⚠️ Email send failed – using dev mode', '#f59e0b', 4000);
       }
 
       btn.disabled = false;
@@ -813,7 +806,7 @@
       otpInputs[0].focus();
     }
 
-    /* ════ TOAST ════ */
+    /* TOAST */
     function showToast(msg, bg = '#2563eb', duration = 2500) {
       const toast = document.createElement('div');
       toast.className        = 'toast';
