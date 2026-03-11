@@ -1,4 +1,5 @@
 // ─── JOB DATA ───
+    // [BACKEND_NEEDED]: Replace this hardcoded array with a fetch call to the backend (e.g., GET /api/jobs)
     const JOBS = [
       { id: 1, logo: 'briefcase', logoColor: 'var(--blue)', title: 'Software Engineer Intern', company: 'Microsoft India', loc: 'Hyderabad · Hybrid', type: 'Full Time', ctc: '₹12 LPA', dl: 'Mar 20', cgpa: '7.0', branch: 'CSE, IT, ECE', desc: 'Work on scalable web applications using React and Node.js. Contribute to real products used by millions globally.', skills: ['React', 'Node.js', 'JavaScript'], reco: true, intern: false },
       { id: 2, logo: 'briefcase', logoColor: 'var(--amber)', title: 'Data Analyst', company: 'Amazon Dev Centre', loc: 'Bangalore', type: 'Full Time', ctc: '₹18 LPA', dl: 'Mar 25', cgpa: '7.5', branch: 'CSE, IT, EEE', desc: 'Analyze large datasets to derive business insights. Work with SQL, Python and AWS toolsets.', skills: ['Python', 'SQL', 'AWS'], reco: false, intern: false },
@@ -125,6 +126,7 @@
 
     function applyJob(id, btn) {
       if (appliedJobs.has(id)) return;
+      // [BACKEND_NEEDED]: Replace this local state update with a real API call (e.g., POST /api/jobs/apply)
       appliedJobs.add(id);
       document.querySelectorAll(`#apply-btn-${id}`).forEach(b => { b.classList.add('done'); b.innerHTML = '<i data-lucide="check-circle" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i> Applied'; });
       if (btn) { btn.classList.add('done'); btn.innerHTML = '<i data-lucide="check-circle" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i> Applied'; }
@@ -153,6 +155,7 @@
       lucide.createIcons();
     }
     function saveProfile() {
+      // [BACKEND_NEEDED]: Add a real API call to save the updated profile data (e.g., PUT /api/student/profile)
       toggleEdit();
     }
     function addPSkill(e) {

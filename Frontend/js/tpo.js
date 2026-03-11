@@ -64,6 +64,7 @@
 
     // ── PROFILE EDIT ──
     function togglePfEdit() {
+      // [BACKEND_NEEDED]: Add logic to save the updated TPO profile data to the backend (e.g., PUT /api/tpo/profile)
       const v = document.getElementById('pf-view');
       const ed = document.getElementById('pf-edit');
       const isEditing = ed.style.display !== 'none';

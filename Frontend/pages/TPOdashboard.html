@@ -79,7 +79,7 @@
           style="min-height:100px;"></textarea></div>
       <div class="fg"><label>Attachment (optional)</label><input type="file" style="padding:6px;" /></div>
       <div style="display:flex;gap:8px;margin-top:4px;">
-        <button class="btn lg" onclick="closeModal('notice-modal');showToast('Notice posted to all students.')">
+        <button class="btn lg" onclick="closeModal('notice-modal');showToast('Notice posted to all students.')"><!-- [BACKEND_NEEDED]: Logic to save and broadcast notice -->
           <svg viewBox="0 0 24 24">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
             <path d="M13.73 21a2 2 0 0 1-3.46 0" />
@@ -121,7 +121,7 @@
       </div>
       <div style="display:flex;gap:8px;margin-top:4px;">
         <button class="btn lg"
-          onclick="closeModal('drive-modal');showToast('Drive scheduled and notified to students.')">
+          onclick="closeModal('drive-modal');showToast('Drive scheduled and notified to students.')"><!-- [BACKEND_NEEDED]: Logic to save drive and notify students -->
           <svg viewBox="0 0 24 24">
             <path d="M5 13l4 4L19 7" />
           </svg>
@@ -375,7 +375,7 @@
                 <div class="req-meta">Drive request · Apr 5 · Roles: SDE, SDE-2 · ₹18–25 LPA · CSE, IT · CGPA ≥ 7.5
                 </div>
                 <div class="req-actions"><button class="btn sm green"
-                    onclick="showToast('Microsoft drive approved.')">Approve</button><button
+                    onclick="showToast('Microsoft drive approved.')"><!-- [BACKEND_NEEDED]: Logic to approve drive request -->Approve</button><button
                     class="btn sm red">Decline</button><button class="btn sm sec">View Details</button></div>
               </div>
               <div class="req-card">
@@ -650,7 +650,7 @@
                 <div class="tr-name">Karan Patel</div>
                 <div class="tr-sub">Roll: 21IT022</div>
               </div><span style="font-size:12.5px;color:var(--sub);">IT · 7.8</span><button class="btn sm"
-                onclick="showToast('Reminder sent to Karan Patel.')">Send Reminder</button>
+                onclick="showToast('Reminder sent to Karan Patel.')"><!-- [BACKEND_NEEDED]: Logic to send reminder notification -->Send Reminder</button>
             </div>
             <div class="tr g3">
               <div>

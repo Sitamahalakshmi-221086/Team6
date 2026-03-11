@@ -131,6 +131,7 @@ let currentStage = 2;
       errEl.style.display = 'none';
       if (otp.length < 6) { errEl.textContent = 'Please enter all 6 digits.'; errEl.style.display = 'block'; return; }
       spinner.style.display = 'block';
+      // [BACKEND_NEEDED]: Replace this demo timeout and check with real API call (e.g., POST /api/auth/tpo/verify-otp)
       setTimeout(() => {
         spinner.style.display = 'none';
         if (otp === DEMO_OTP) {
@@ -164,6 +165,7 @@ let currentStage = 2;
     }
 
     function resendOtp() {
+      // [BACKEND_NEEDED]: Replace this logic with real API call (e.g., POST /api/auth/tpo/resend-otp)
       otpInputs.forEach(i => i.value = '');
       otpInputs[0].focus();
       startResendTimer();
