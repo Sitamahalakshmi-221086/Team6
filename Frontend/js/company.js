@@ -67,6 +67,7 @@
 
     // ── COMPANY PROFILE EDIT ──
     function toggleCpEdit() {
+      // [BACKEND_NEEDED]: Add logic to save the updated company profile data to the backend (e.g., PUT /api/company/profile)
       const v = document.getElementById('cp-view');
       const e = document.getElementById('cp-edit');
       const isEditing = e.style.display !== 'none';

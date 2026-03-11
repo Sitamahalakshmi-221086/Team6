@@ -117,7 +117,7 @@
       </div>
       <div style="display:flex;gap:8px;margin-top:6px;">
         <button class="btn lg"
-          onclick="document.getElementById('post-modal').classList.remove('on');showToast('Job posted successfully!')">
+          onclick="document.getElementById('post-modal').classList.remove('on');showToast('Job posted successfully!')"><!-- [BACKEND_NEEDED]: Logic to save new job post to backend -->
           <svg viewBox="0 0 24 24">
             <path d="M5 13l4 4L19 7" />
           </svg>
@@ -351,7 +351,7 @@
                   <div class="cand-name">Riya Sharma</div>
                   <div class="cand-meta">CSE · CGPA 8.9 · JNTU Hyderabad · Frontend Developer</div>
                 </div>
-                <div class="cand-right"><span class="pill new">New</span><button class="btn sm">Review</button></div>
+                <div class="cand-right"><span class="pill new">New</span><button class="btn sm"><!-- [BACKEND_NEEDED]: Fetch candidate details/resume -->Review</button></div>
               </div>
               <div class="app-card">
                 <div class="cand-av">AK</div>
@@ -625,7 +625,7 @@
                 <div class="tr-name">Full Stack Developer</div>
                 <div class="tr-sub">Not published · Created Mar 7</div>
               </div>
-              <button class="btn sm">Publish</button>
+              <button class="btn sm"><!-- [BACKEND_NEEDED]: Logic to publish draft job -->Publish</button>
               <button class="btn sm sec">Edit</button>
             </div>
           </div>
@@ -772,7 +772,7 @@
       <div class="page" id="pg-drives">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
           <span class="sec-h" style="margin:0;">Campus Drives</span>
-          <button class="btn" onclick="showToast('Schedule drive feature coming soon.')">
+          <button class="btn" onclick="showToast('Schedule drive feature coming soon.')"><!-- [BACKEND_NEEDED]: Logic to open drive scheduler -->
             <svg viewBox="0 0 24 24">
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />

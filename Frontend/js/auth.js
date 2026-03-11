@@ -148,6 +148,7 @@ let selectedRole = '';
       spinner.style.display = 'block'; spinner.parentElement.disabled = true;
       setTimeout(() => {
         spinner.style.display = 'none'; spinner.parentElement.disabled = false;
+        // [BACKEND_NEEDED]: Replace this demo logic with real API endpoint call (e.g., POST /api/auth/login)
         const hrefs = { student: 'StudentDashboard.html', company: 'CompanyDashboard.html', tpo: 'TPODashboard.html' };
         if (role === 'student') {
           sessionStorage.setItem('cp_student_email', emailEl.value);
@@ -177,6 +178,8 @@ let selectedRole = '';
     }
 
     function showForgot(role) { const p = document.getElementById('forgot-' + role); p.style.display = p.style.display === 'none' ? 'block' : 'none'; }
-    function sendReset(btn) { const i = btn.previousElementSibling; if (!i.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(i.value)) { i.style.borderColor = '#ef4444'; setTimeout(() => i.style.borderColor = '', 1500); return; } btn.textContent = 'Sending…'; btn.disabled = true; setTimeout(() => { btn.textContent = '✅ Reset link sent!'; btn.style.background = '#059669'; setTimeout(() => { btn.textContent = 'Send Reset Link'; btn.style.background = ''; btn.disabled = false; i.value = ''; }, 3000); }, 1000); }
+    function sendReset(btn) { const i = btn.previousElementSibling; if (!i.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(i.value)) { i.style.borderColor = '#ef4444'; setTimeout(() => i.style.borderColor = '', 1500); return; } btn.textContent = 'Sending…'; btn.disabled = true; 
+    // [BACKEND_NEEDED]: Replace this demo delay with real API call (e.g., POST /api/auth/forgot-password)
+    setTimeout(() => { btn.textContent = '✅ Reset link sent!'; btn.style.background = '#059669'; setTimeout(() => { btn.textContent = 'Send Reset Link'; btn.style.background = ''; btn.disabled = false; i.value = ''; }, 3000); }, 1000); }
     function togglePwd(id, btn) { const i = document.getElementById(id); i.type = i.type === 'password' ? 'text' : 'password'; btn.textContent = i.type === 'password' ? '👁' : '🙈'; }
     function clearErr(el) { el.classList.remove('error'); const e = document.getElementById('err-' + el.id); if (e) e.classList.remove('show'); }
