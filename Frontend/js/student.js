@@ -39,6 +39,12 @@
     // ─── NAV ───
     const TITLES = { home: 'Home', jobs: 'Job Listings', applications: 'My Applications', drives: 'Campus Drives', tests: 'Tests & Exams', resume: 'Resume Builder', resources: 'Prep Resources', profile: 'My Profile', settings: 'Settings' };
     function go(id, btn) {
+      // If resume is clicked, open the standalone resume builder page
+      //this is extra code added by me
+      if (id === 'resume') {
+      window.location.href = 'resume-builder.html'; // same pages folder
+      return;
+     }
       document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
       document.querySelectorAll('.nl').forEach(n => n.classList.remove('on'));
       document.getElementById('pg-' + id).classList.add('on');
@@ -190,6 +196,7 @@
       document.getElementById('pv-exp').textContent = g('rb-exp') || '-';
       document.getElementById('pv-cert').textContent = g('rb-cert') || '-';
     }
+
 
     // ─── SIDEBAR TOGGLE ───
     let sidebarOpen = true;

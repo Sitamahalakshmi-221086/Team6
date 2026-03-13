@@ -1,4 +1,4 @@
-*,
+ *,
 *::before,
 *::after {
     box-sizing: border-box;
@@ -1749,4 +1749,4 @@ textarea {
     .form-grid {
         grid-template-columns: 1fr;
     }
-}
+} 

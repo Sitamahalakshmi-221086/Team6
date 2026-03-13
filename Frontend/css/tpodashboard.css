@@ -1429,12 +1429,9 @@ textarea {
   font-family: 'Syne', sans-serif;
   font-weight: 800;
   font-size: 1.5rem;
-<<<<<<< HEAD
   margin-bottom: 6px;
-=======
   margin-bottom: 2px;
   color: var(--text);
->>>>>>> 02be2236cdfd4c1c3175cc40f286a25ac0d0fc43
 }
 
 .profile-sub {
