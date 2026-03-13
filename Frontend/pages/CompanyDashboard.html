@@ -1,21 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CampusPlace – Recruiter Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/loginstyle.css" />
-  <link rel="stylesheet" href="../css/companydashboard.css" />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap"
     rel="stylesheet" />
-  <link href="../css/companydashboard.css" rel="stylesheet" />
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="../css/loginstyle.css" />
+  <link rel="stylesheet" href="../css/companydashboard.css" />
 </head>
+
 <body>
 
   <!-- ══ NOTIFICATION PANEL ══ -->
-  <!-- ══ NOTIF PANEL ══ -->
   <div class="notif-panel" id="notif-panel">
     <div class="notif-h">
       <span>Notifications</span>
@@ -64,10 +62,18 @@
         <div class="fg"><label>Job Title *</label><input placeholder="e.g. Software Engineer Intern" /></div>
         <div class="fg"><label>Department</label><input placeholder="e.g. Engineering, Analytics" /></div>
         <div class="fg"><label>Job Type *</label>
-          <select><option>Full Time</option><option>Internship</option><option>Part Time</option></select>
+          <select>
+            <option>Full Time</option>
+            <option>Internship</option>
+            <option>Part Time</option>
+          </select>
         </div>
         <div class="fg"><label>Work Mode</label>
-          <select><option>On-site</option><option>Hybrid</option><option>Remote</option></select>
+          <select>
+            <option>On-site</option>
+            <option>Hybrid</option>
+            <option>Remote</option>
+          </select>
         </div>
         <div class="fg"><label>Location</label><input placeholder="e.g. Bangalore, Hyderabad" /></div>
         <div class="fg"><label>Package / CTC *</label><input placeholder="e.g. ₹12 LPA or ₹25,000/month" /></div>
@@ -87,42 +93,45 @@
           <div class="tag-wrap" id="college-tags" onclick="document.getElementById('college-inp').focus()">
             <span class="tag">JNTU Hyderabad<button onclick="removeTag(this)">×</button></span>
             <span class="tag">Osmania University<button onclick="removeTag(this)">×</button></span>
-            <input class="tag-input" id="college-inp" placeholder="Type college name and press Enter…" onkeydown="addCollegeTag(event)" />
+            <input class="tag-input" id="college-inp" placeholder="Type college name and press Enter…"
+              onkeydown="addCollegeTag(event)" />
           </div>
-          <div style="font-size:11px;color:var(--sub);margin-top:4px;">Leave empty to post to all colleges on the platform.</div>
+          <div style="font-size:11px;color:var(--sub);margin-top:4px;">Leave empty to post to all colleges on the
+            platform.</div>
         </div>
         <div class="fg full"><label>Required Skills</label>
           <div class="tag-wrap" id="skill-tags" onclick="document.getElementById('skill-inp').focus()">
             <span class="tag">React<button onclick="removeTag(this)">×</button></span>
             <span class="tag">Node.js<button onclick="removeTag(this)">×</button></span>
-            <input class="tag-input" id="skill-inp" placeholder="Add skill and press Enter…" onkeydown="addSkillTag(event)" />
+            <input class="tag-input" id="skill-inp" placeholder="Add skill and press Enter…"
+              onkeydown="addSkillTag(event)" />
           </div>
         </div>
         <div class="fg full"><label>Job Description *</label>
-          <textarea placeholder="Describe responsibilities, requirements, and what makes this role exciting…" style="min-height:100px;"></textarea>
+          <textarea placeholder="Describe responsibilities, requirements, and what makes this role exciting…"
+            style="min-height:100px;"></textarea>
         </div>
         <div class="fg full"><label>Selection Process</label>
           <input placeholder="e.g. Online Test → Technical Round → HR Round" />
         </div>
       </div>
       <div style="display:flex;gap:8px;margin-top:16px;">
-        <button class="btn lg" onclick="document.getElementById('post-modal').classList.remove('on');showToast('Job posted successfully!')">
-          <svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
-      <div style="display:flex;gap:8px;margin-top:6px;">
         <button class="btn lg"
-          onclick="document.getElementById('post-modal').classList.remove('on');showToast('Job posted successfully!')"><!-- [BACKEND_NEEDED]: Logic to save new job post to backend -->
+          onclick="document.getElementById('post-modal').classList.remove('on');showToast('Job posted successfully!')">
           <svg viewBox="0 0 24 24">
             <path d="M5 13l4 4L19 7" />
           </svg>
           Post Job
         </button>
-        <button class="btn sec lg" onclick="document.getElementById('post-modal').classList.remove('on')">Cancel</button>
+        <button class="btn sec lg"
+          onclick="document.getElementById('post-modal').classList.remove('on')">Cancel</button>
       </div>
     </div>
   </div>
 
   <!-- ══ TOAST ══ -->
-  <div id="toast" style="display:none;position:fixed;bottom:24px;right:24px;background:#134e4a;color:#fff;padding:11px 18px;border-radius:9px;font-size:13px;font-weight:600;z-index:99;animation:fadeIn .3s ease both;box-shadow:0 4px 20px rgba(0,0,0,.15);">
+  <div id="toast"
+    style="display:none;position:fixed;bottom:24px;right:24px;background:#134e4a;color:#fff;padding:11px 18px;border-radius:9px;font-size:13px;font-weight:600;z-index:99;animation:fadeIn .3s ease both;box-shadow:0 4px 20px rgba(0,0,0,.15);">
     Job posted!
   </div>
 
@@ -131,9 +140,9 @@
     <div class="sb-logo" onclick="toggleSidebar()" title="Click to collapse / expand">
       <div class="sb-logo-mark" id="logo-mark">
         <svg viewBox="0 0 24 24">
-          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-          <path d="M2 17l10 5 10-5"/>
-          <path d="M2 12l10 5 10-5"/>
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
         </svg>
       </div>
       <span class="sb-logo-name">Campus<span>Place</span></span>
@@ -142,8 +151,8 @@
     <div class="sb-user">
       <div class="co-av">
         <svg viewBox="0 0 24 24">
-          <rect x="2" y="7" width="20" height="14" rx="2"/>
-          <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+          <rect x="2" y="7" width="20" height="14" rx="2" />
+          <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
         </svg>
       </div>
       <div>
@@ -155,38 +164,67 @@
     <nav class="sb-nav">
       <div class="sb-label">Main</div>
       <button class="nl on" onclick="go('home',this)">
-        <svg class="ic" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <svg class="ic" viewBox="0 0 24 24">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
+        </svg>
         <span class="sb-label-text">Dashboard</span>
       </button>
       <button class="nl" onclick="go('jobs',this)">
-        <svg class="ic" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+        <svg class="ic" viewBox="0 0 24 24">
+          <rect x="2" y="7" width="20" height="14" rx="2" />
+          <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+        </svg>
         <span class="sb-label-text">Job Postings</span>
         <span class="nb t">5</span>
       </button>
       <button class="nl" onclick="go('candidates',this)">
-        <svg class="ic" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <svg class="ic" viewBox="0 0 24 24">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
         <span class="sb-label-text">Applicants</span>
         <span class="nb">24</span>
       </button>
       <button class="nl" onclick="go('drives',this)">
-        <svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <svg class="ic" viewBox="0 0 24 24">
+          <rect x="3" y="4" width="18" height="18" rx="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+        </svg>
         <span class="sb-label-text">Campus Drives</span>
       </button>
 
       <div class="sb-label">Manage</div>
       <button class="nl" onclick="go('profile',this)">
-        <svg class="ic" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+        <svg class="ic" viewBox="0 0 24 24">
+          <rect x="2" y="7" width="20" height="14" rx="2" />
+          <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+          <line x1="12" y1="12" x2="12" y2="16" />
+          <line x1="10" y1="14" x2="14" y2="14" />
+        </svg>
         <span class="sb-label-text">Company Profile</span>
       </button>
       <button class="nl" onclick="go('settings',this)">
-        <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <svg class="ic" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+        </svg>
         <span class="sb-label-text">Settings</span>
       </button>
     </nav>
 
     <div class="sb-foot">
       <button class="nl" style="color:var(--red);" onclick="logout()">
-        <svg class="ic" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <svg class="ic" viewBox="0 0 24 24">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" y1="12" x2="9" y2="12" />
+        </svg>
         <span class="sb-label-text">Log Out</span>
       </button>
     </div>
@@ -202,16 +240,25 @@
       </div>
       <div class="tb-right">
         <button class="btn" onclick="document.getElementById('post-modal').classList.add('on')">
-          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <svg viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
           Post a Job
         </button>
         <div class="icon-btn" onclick="toggleNotif()" title="Notifications">
-          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <svg viewBox="0 0 24 24">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
           <span class="rdot" id="notif-rdot"></span>
         </div>
         <div class="tb-chip" onclick="go('profile', document.querySelectorAll('.nl')[4])" title="Company Profile">
           <div class="tb-chip-av">
-            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+            <svg viewBox="0 0 24 24">
+              <rect x="2" y="7" width="20" height="14" rx="2" />
+              <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+            </svg>
           </div>
           <span id="tb-name">Infosys</span>
         </div>
@@ -228,13 +275,21 @@
             <p>You have 24 pending applicants and 2 campus drives this month.</p>
           </div>
           <div class="banner-icon">
-            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+            <svg viewBox="0 0 24 24">
+              <rect x="2" y="7" width="20" height="14" rx="2" />
+              <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+              <line x1="12" y1="12" x2="12" y2="16" />
+              <line x1="10" y1="14" x2="14" y2="14" />
+            </svg>
           </div>
         </div>
 
         <div class="stats">
           <div class="stat">
-            <div class="stat-icon t"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>
+            <div class="stat-icon t"><svg viewBox="0 0 24 24">
+                <rect x="2" y="7" width="20" height="14" rx="2" />
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+              </svg></div>
             <div class="stat-body">
               <div class="stat-l">Active Jobs</div>
               <div class="stat-v">5</div>
@@ -242,7 +297,10 @@
             </div>
           </div>
           <div class="stat">
-            <div class="stat-icon g"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+            <div class="stat-icon g"><svg viewBox="0 0 24 24">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+              </svg></div>
             <div class="stat-body">
               <div class="stat-l">Total Applicants</div>
               <div class="stat-v">24</div>
@@ -250,7 +308,12 @@
             </div>
           </div>
           <div class="stat">
-            <div class="stat-icon a"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <div class="stat-icon a"><svg viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="18" rx="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg></div>
             <div class="stat-body">
               <div class="stat-l">Drives This Month</div>
               <div class="stat-v">2</div>
@@ -258,7 +321,9 @@
             </div>
           </div>
           <div class="stat">
-            <div class="stat-icon r"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <div class="stat-icon r"><svg viewBox="0 0 24 24">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+              </svg></div>
             <div class="stat-body">
               <div class="stat-l">Shortlisted</div>
               <div class="stat-v">9</div>
@@ -273,36 +338,48 @@
             <div class="block">
               <div class="bh">
                 <span class="bt">
-                  <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                  <svg viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                  </svg>
                   Recent Applicants
                 </span>
                 <button class="va" onclick="go('candidates',document.querySelectorAll('.nl')[2])">View all →</button>
               </div>
               <div class="app-card">
                 <div class="cand-av">RS</div>
-            <div>
-              <div class="cand-name">Riya Sharma</div><div class="cand-meta">CSE · CGPA 8.9 · JNTU Hyderabad · Frontend Developer</div></div>
-                <div class="cand-right"><span class="pill new">New</span><button class="btn sm">Review</button></div>
                 <div>
                   <div class="cand-name">Riya Sharma</div>
                   <div class="cand-meta">CSE · CGPA 8.9 · JNTU Hyderabad · Frontend Developer</div>
                 </div>
-                <div class="cand-right"><span class="pill new">New</span><button class="btn sm"><!-- [BACKEND_NEEDED]: Fetch candidate details/resume -->Review</button></div>
+                <div class="cand-right"><span class="pill new">New</span><button class="btn sm">Review</button></div>
               </div>
               <div class="app-card">
                 <div class="cand-av">AK</div>
-                <div><div class="cand-name">Arjun Kumar</div><div class="cand-meta">IT · CGPA 8.2 · Osmania University · Data Analyst</div></div>
-                <div class="cand-right"><span class="pill short">Shortlisted</span><button class="btn sm">Review</button></div>
+                <div>
+                  <div class="cand-name">Arjun Kumar</div>
+                  <div class="cand-meta">IT · CGPA 8.2 · Osmania University · Data Analyst</div>
+                </div>
+                <div class="cand-right"><span class="pill short">Shortlisted</span><button
+                    class="btn sm">Review</button></div>
               </div>
               <div class="app-card">
                 <div class="cand-av">PM</div>
-                <div><div class="cand-name">Priya Menon</div><div class="cand-meta">CSE · CGPA 9.1 · IIT Hyderabad · Backend Engineer</div></div>
-                <div class="cand-right"><span class="pill interview">Interview</span><button class="btn sm">Review</button></div>
+                <div>
+                  <div class="cand-name">Priya Menon</div>
+                  <div class="cand-meta">CSE · CGPA 9.1 · IIT Hyderabad · Backend Engineer</div>
+                </div>
+                <div class="cand-right"><span class="pill interview">Interview</span><button
+                    class="btn sm">Review</button></div>
               </div>
               <div class="app-card">
                 <div class="cand-av">VR</div>
-                <div><div class="cand-name">Vikram Reddy</div><div class="cand-meta">ECE · CGPA 7.6 · NIT Warangal · Cloud Engineer</div></div>
-                <div class="cand-right"><span class="pill review">Reviewing</span><button class="btn sm">Review</button></div>
+                <div>
+                  <div class="cand-name">Vikram Reddy</div>
+                  <div class="cand-meta">ECE · CGPA 7.6 · NIT Warangal · Cloud Engineer</div>
+                </div>
+                <div class="cand-right"><span class="pill review">Reviewing</span><button class="btn sm">Review</button>
+                </div>
               </div>
             </div>
 
@@ -310,28 +387,41 @@
             <div class="block">
               <div class="bh">
                 <span class="bt">
-                  <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                  <svg viewBox="0 0 24 24">
+                    <rect x="2" y="7" width="20" height="14" rx="2" />
+                    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                  </svg>
                   Active Job Posts
                 </span>
                 <button class="va" onclick="go('jobs',document.querySelectorAll('.nl')[1])">View all →</button>
               </div>
-              <div class="tr-head job-grid"><span>Role</span><span>Type</span><span>Applicants</span><span>Deadline</span><span>Status</span></div>
+              <div class="tr-head job-grid">
+                <span>Role</span><span>Type</span><span>Applicants</span><span>Deadline</span><span>Status</span></div>
               <div class="tr job-grid">
-                <div><div class="tr-name">Frontend Developer</div><div class="tr-sub">Bangalore · ₹12 LPA</div></div>
+                <div>
+                  <div class="tr-name">Frontend Developer</div>
+                  <div class="tr-sub">Bangalore · ₹12 LPA</div>
+                </div>
                 <span style="font-size:12.5px;color:var(--sub);">Full Time</span>
                 <span style="font-size:13px;font-weight:600;">11</span>
                 <span style="font-size:12px;color:var(--sub);">Mar 20</span>
                 <span class="pill active">Active</span>
               </div>
               <div class="tr job-grid">
-                <div><div class="tr-name">Data Analyst</div><div class="tr-sub">Hyderabad · ₹18 LPA</div></div>
+                <div>
+                  <div class="tr-name">Data Analyst</div>
+                  <div class="tr-sub">Hyderabad · ₹18 LPA</div>
+                </div>
                 <span style="font-size:12.5px;color:var(--sub);">Full Time</span>
                 <span style="font-size:13px;font-weight:600;">8</span>
                 <span style="font-size:12px;color:var(--red);">Mar 15</span>
                 <span class="pill active">Active</span>
               </div>
               <div class="tr job-grid">
-                <div><div class="tr-name">Cloud Engineer</div><div class="tr-sub">Remote · ₹16 LPA</div></div>
+                <div>
+                  <div class="tr-name">Cloud Engineer</div>
+                  <div class="tr-sub">Remote · ₹16 LPA</div>
+                </div>
                 <span style="font-size:12.5px;color:var(--sub);">Full Time</span>
                 <span style="font-size:13px;font-weight:600;">5</span>
                 <span style="font-size:12px;color:var(--sub);">Apr 5</span>
@@ -346,35 +436,80 @@
             <div class="block" style="margin-bottom:14px;">
               <div class="bh">
                 <span class="bt">
-                  <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  <svg viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
                   Campus Drives
                 </span>
                 <button class="va" onclick="go('drives',document.querySelectorAll('.nl')[3])">View all →</button>
               </div>
               <div class="drive-row">
-                <div class="date-box"><div class="date-d">18</div><div class="date-m">Mar</div></div>
-                <div class="drive-info"><div class="drive-name">JNTU Hyderabad</div><div class="drive-meta">10:00 AM · Main Hall · 120 students</div></div>
+                <div class="date-box">
+                  <div class="date-d">18</div>
+                  <div class="date-m">Mar</div>
+                </div>
+                <div class="drive-info">
+                  <div class="drive-name">JNTU Hyderabad</div>
+                  <div class="drive-meta">10:00 AM · Main Hall · 120 students</div>
+                </div>
                 <span class="pill active">Confirmed</span>
               </div>
               <div class="drive-row">
-                <div class="date-box"><div class="date-d">25</div><div class="date-m">Mar</div></div>
-                <div class="drive-info"><div class="drive-name">Osmania University</div><div class="drive-meta">9:00 AM · Seminar Hall · 80 students</div></div>
+                <div class="date-box">
+                  <div class="date-d">25</div>
+                  <div class="date-m">Mar</div>
+                </div>
+                <div class="drive-info">
+                  <div class="drive-name">Osmania University</div>
+                  <div class="drive-meta">9:00 AM · Seminar Hall · 80 students</div>
+                </div>
                 <span class="pill pending">Pending</span>
               </div>
               <div class="drive-row">
-                <div class="date-box"><div class="date-d">3</div><div class="date-m">Apr</div></div>
-                <div class="drive-info"><div class="drive-name">NIT Warangal</div><div class="drive-meta">Online · Zoom · 200 students</div></div>
+                <div class="date-box">
+                  <div class="date-d">3</div>
+                  <div class="date-m">Apr</div>
+                </div>
+                <div class="drive-info">
+                  <div class="drive-name">NIT Warangal</div>
+                  <div class="drive-meta">Online · Zoom · 200 students</div>
+                </div>
                 <span class="pill pending">Pending</span>
               </div>
             </div>
 
             <!-- Recent Activity -->
             <div class="block">
-              <div class="bh"><span class="bt"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Recent Activity</span></div>
-              <div class="act-row"><span class="act-dot t"></span><div><div class="act-text"><strong>Riya Sharma</strong> applied to Frontend Developer.</div><div class="act-time">10 min ago</div></div></div>
-              <div class="act-row"><span class="act-dot g"></span><div><div class="act-text"><strong>Priya Menon</strong> moved to Interview stage.</div><div class="act-time">2 hours ago</div></div></div>
-              <div class="act-row"><span class="act-dot a"></span><div><div class="act-text">Job post "Cloud Engineer" expires in 2 days.</div><div class="act-time">Yesterday</div></div></div>
-              <div class="act-row"><span class="act-dot t"></span><div><div class="act-text">JNTU Hyderabad drive confirmed for Mar 18.</div><div class="act-time">Yesterday</div></div></div>
+              <div class="bh"><span class="bt"><svg viewBox="0 0 24 24">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                  </svg> Recent Activity</span></div>
+              <div class="act-row"><span class="act-dot t"></span>
+                <div>
+                  <div class="act-text"><strong>Riya Sharma</strong> applied to Frontend Developer.</div>
+                  <div class="act-time">10 min ago</div>
+                </div>
+              </div>
+              <div class="act-row"><span class="act-dot g"></span>
+                <div>
+                  <div class="act-text"><strong>Priya Menon</strong> moved to Interview stage.</div>
+                  <div class="act-time">2 hours ago</div>
+                </div>
+              </div>
+              <div class="act-row"><span class="act-dot a"></span>
+                <div>
+                  <div class="act-text">Job post "Cloud Engineer" expires in 2 days.</div>
+                  <div class="act-time">Yesterday</div>
+                </div>
+              </div>
+              <div class="act-row"><span class="act-dot t"></span>
+                <div>
+                  <div class="act-text">JNTU Hyderabad drive confirmed for Mar 18.</div>
+                  <div class="act-time">Yesterday</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -385,7 +520,10 @@
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
           <span class="sec-h" style="margin:0;">Job Postings</span>
           <button class="btn" onclick="document.getElementById('post-modal').classList.add('on')">
-            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <svg viewBox="0 0 24 24">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
             Post New Job
           </button>
         </div>
@@ -396,63 +534,94 @@
         </div>
         <div class="tab-panel on" id="jt-active">
           <div class="block">
-            <div class="tr-head job-grid"><span>Role & Location</span><span>Type</span><span>Applicants</span><span>Deadline</span><span>Status</span></div>
+            <div class="tr-head job-grid"><span>Role &
+                Location</span><span>Type</span><span>Applicants</span><span>Deadline</span><span>Status</span></div>
             <div class="tr job-grid">
-              <div><div class="tr-name">Frontend Developer</div><div class="tr-sub">Bangalore · ₹12 LPA · CSE, IT</div></div>
+              <div>
+                <div class="tr-name">Frontend Developer</div>
+                <div class="tr-sub">Bangalore · ₹12 LPA · CSE, IT</div>
+              </div>
               <span style="font-size:12.5px;color:var(--sub);">Full Time</span>
               <span style="font-size:13px;font-weight:600;color:var(--teal-dark);">11</span>
               <span style="font-size:12px;color:var(--sub);">Mar 20</span>
-              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button class="btn sm sec">Edit</button></div>
+              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
+                  class="btn sm sec">Edit</button></div>
             </div>
             <div class="tr job-grid">
-              <div><div class="tr-name">Data Analyst</div><div class="tr-sub">Hyderabad · ₹18 LPA · CSE, IT, EEE</div></div>
+              <div>
+                <div class="tr-name">Data Analyst</div>
+                <div class="tr-sub">Hyderabad · ₹18 LPA · CSE, IT, EEE</div>
+              </div>
               <span style="font-size:12.5px;color:var(--sub);">Full Time</span>
               <span style="font-size:13px;font-weight:600;color:var(--teal-dark);">8</span>
               <span style="font-size:12px;color:var(--red);">Mar 15</span>
-              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button class="btn sm sec">Edit</button></div>
+              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
+                  class="btn sm sec">Edit</button></div>
             </div>
             <div class="tr job-grid">
-              <div><div class="tr-name">Cloud Engineer</div><div class="tr-sub">Remote · ₹16 LPA · All branches</div></div>
+              <div>
+                <div class="tr-name">Cloud Engineer</div>
+                <div class="tr-sub">Remote · ₹16 LPA · All branches</div>
+              </div>
               <span style="font-size:12.5px;color:var(--sub);">Full Time</span>
               <span style="font-size:13px;font-weight:600;color:var(--teal-dark);">5</span>
               <span style="font-size:12px;color:var(--sub);">Apr 5</span>
-              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button class="btn sm sec">Edit</button></div>
+              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
+                  class="btn sm sec">Edit</button></div>
             </div>
             <div class="tr job-grid">
-              <div><div class="tr-name">Backend Engineer</div><div class="tr-sub">Pune · ₹14 LPA · CSE, IT</div></div>
+              <div>
+                <div class="tr-name">Backend Engineer</div>
+                <div class="tr-sub">Pune · ₹14 LPA · CSE, IT</div>
+              </div>
               <span style="font-size:12.5px;color:var(--sub);">Full Time</span>
               <span style="font-size:13px;font-weight:600;color:var(--teal-dark);">0</span>
               <span style="font-size:12px;color:var(--sub);">Apr 12</span>
-              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button class="btn sm sec">Edit</button></div>
+              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
+                  class="btn sm sec">Edit</button></div>
             </div>
             <div class="tr job-grid">
-              <div><div class="tr-name">React Developer Intern</div><div class="tr-sub">Remote · ₹25k/mo · CSE, IT</div></div>
+              <div>
+                <div class="tr-name">React Developer Intern</div>
+                <div class="tr-sub">Remote · ₹25k/mo · CSE, IT</div>
+              </div>
               <span style="font-size:12.5px;color:var(--sub);">Internship</span>
               <span style="font-size:13px;font-weight:600;color:var(--teal-dark);">0</span>
               <span style="font-size:12px;color:var(--sub);">Apr 18</span>
-              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button class="btn sm sec">Edit</button></div>
+              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
+                  class="btn sm sec">Edit</button></div>
             </div>
           </div>
         </div>
         <div class="tab-panel" id="jt-closed">
           <div class="block">
-            <div class="tr-head job-grid"><span>Role & Location</span><span>Type</span><span>Applicants</span><span>Closed On</span><span>Status</span></div>
+            <div class="tr-head job-grid"><span>Role &
+                Location</span><span>Type</span><span>Applicants</span><span>Closed On</span><span>Status</span></div>
             <div class="tr job-grid">
-              <div><div class="tr-name">ML Engineer</div><div class="tr-sub">Bangalore · ₹22 LPA</div></div>
+              <div>
+                <div class="tr-name">ML Engineer</div>
+                <div class="tr-sub">Bangalore · ₹22 LPA</div>
+              </div>
               <span style="font-size:12.5px;color:var(--sub);">Full Time</span>
               <span style="font-size:13px;font-weight:600;">18</span>
               <span style="font-size:12px;color:var(--sub);">Mar 1</span>
               <span class="pill closed">Closed</span>
             </div>
             <div class="tr job-grid">
-              <div><div class="tr-name">DevOps Engineer</div><div class="tr-sub">Hyderabad · ₹20 LPA</div></div>
+              <div>
+                <div class="tr-name">DevOps Engineer</div>
+                <div class="tr-sub">Hyderabad · ₹20 LPA</div>
+              </div>
               <span style="font-size:12.5px;color:var(--sub);">Full Time</span>
               <span style="font-size:13px;font-weight:600;">12</span>
               <span style="font-size:12px;color:var(--sub);">Feb 20</span>
               <span class="pill closed">Closed</span>
             </div>
             <div class="tr job-grid">
-              <div><div class="tr-name">Systems Engineer</div><div class="tr-sub">Chennai · ₹10 LPA</div></div>
+              <div>
+                <div class="tr-name">Systems Engineer</div>
+                <div class="tr-sub">Chennai · ₹10 LPA</div>
+              </div>
               <span style="font-size:12.5px;color:var(--sub);">Full Time</span>
               <span style="font-size:13px;font-weight:600;">22</span>
               <span style="font-size:12px;color:var(--sub);">Feb 10</span>
@@ -463,13 +632,11 @@
         <div class="tab-panel" id="jt-draft">
           <div class="block">
             <div class="act-row" style="align-items:center;gap:14px;">
-              <div style="flex:1;"><div class="tr-name">Full Stack Developer</div><div class="tr-sub">Not published · Created Mar 7</div></div>
-              <button class="btn sm">Publish</button>
               <div style="flex:1;">
                 <div class="tr-name">Full Stack Developer</div>
                 <div class="tr-sub">Not published · Created Mar 7</div>
               </div>
-              <button class="btn sm"><!-- [BACKEND_NEEDED]: Logic to publish draft job -->Publish</button>
+              <button class="btn sm">Publish</button>
               <button class="btn sm sec">Edit</button>
             </div>
           </div>
@@ -488,67 +655,105 @@
         </div>
         <div class="tab-panel on" id="at-all">
           <div class="block">
-            <div class="tr-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Status</span></div>
+            <div class="tr-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
+                CGPA</span><span>Status</span></div>
             <div class="tr cand-grid">
-              <div><div class="tr-name">Riya Sharma</div><div class="tr-sub">Mar 10 · Resume attached</div></div>
+              <div>
+                <div class="tr-name">Riya Sharma</div>
+                <div class="tr-sub">Mar 10 · Resume attached</div>
+              </div>
               <span style="font-size:13px;">Frontend Developer</span>
               <span style="font-size:12.5px;color:var(--sub);">JNTU Hyd · 8.9</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill new">New</span><button class="btn sm">Review</button></div>
+              <div style="display:flex;gap:6px;align-items:center;"><span class="pill new">New</span><button
+                  class="btn sm">Review</button></div>
             </div>
             <div class="tr cand-grid">
-              <div><div class="tr-name">Arjun Kumar</div><div class="tr-sub">Mar 8 · Resume attached</div></div>
+              <div>
+                <div class="tr-name">Arjun Kumar</div>
+                <div class="tr-sub">Mar 8 · Resume attached</div>
+              </div>
               <span style="font-size:13px;">Data Analyst</span>
               <span style="font-size:12.5px;color:var(--sub);">Osmania · 8.2</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill short">Shortlisted</span><button class="btn sm">Review</button></div>
+              <div style="display:flex;gap:6px;align-items:center;"><span class="pill short">Shortlisted</span><button
+                  class="btn sm">Review</button></div>
             </div>
             <div class="tr cand-grid">
-              <div><div class="tr-name">Priya Menon</div><div class="tr-sub">Mar 7 · Resume attached</div></div>
+              <div>
+                <div class="tr-name">Priya Menon</div>
+                <div class="tr-sub">Mar 7 · Resume attached</div>
+              </div>
               <span style="font-size:13px;">Backend Engineer</span>
               <span style="font-size:12.5px;color:var(--sub);">IIT Hyd · 9.1</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill interview">Interview</span><button class="btn sm">Review</button></div>
+              <div style="display:flex;gap:6px;align-items:center;"><span class="pill interview">Interview</span><button
+                  class="btn sm">Review</button></div>
             </div>
             <div class="tr cand-grid">
-              <div><div class="tr-name">Vikram Reddy</div><div class="tr-sub">Mar 7 · Resume attached</div></div>
+              <div>
+                <div class="tr-name">Vikram Reddy</div>
+                <div class="tr-sub">Mar 7 · Resume attached</div>
+              </div>
               <span style="font-size:13px;">Cloud Engineer</span>
               <span style="font-size:12.5px;color:var(--sub);">NIT Warangal · 7.6</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill review">Reviewing</span><button class="btn sm">Review</button></div>
+              <div style="display:flex;gap:6px;align-items:center;"><span class="pill review">Reviewing</span><button
+                  class="btn sm">Review</button></div>
             </div>
             <div class="tr cand-grid">
-              <div><div class="tr-name">Sneha Rao</div><div class="tr-sub">Mar 6 · Resume attached</div></div>
+              <div>
+                <div class="tr-name">Sneha Rao</div>
+                <div class="tr-sub">Mar 6 · Resume attached</div>
+              </div>
               <span style="font-size:13px;">Data Analyst</span>
               <span style="font-size:12.5px;color:var(--sub);">CBIT · 8.5</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill hired">Hired</span><button class="btn sm sec">View</button></div>
+              <div style="display:flex;gap:6px;align-items:center;"><span class="pill hired">Hired</span><button
+                  class="btn sm sec">View</button></div>
             </div>
             <div class="tr cand-grid">
-              <div><div class="tr-name">Karan Patel</div><div class="tr-sub">Mar 5 · Resume attached</div></div>
+              <div>
+                <div class="tr-name">Karan Patel</div>
+                <div class="tr-sub">Mar 5 · Resume attached</div>
+              </div>
               <span style="font-size:13px;">Frontend Developer</span>
               <span style="font-size:12.5px;color:var(--sub);">VIT Chennai · 7.8</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill rejected">Rejected</span><button class="btn sm sec">View</button></div>
+              <div style="display:flex;gap:6px;align-items:center;"><span class="pill rejected">Rejected</span><button
+                  class="btn sm sec">View</button></div>
             </div>
           </div>
         </div>
         <div class="tab-panel" id="at-new">
           <div class="block">
-            <div class="tr-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Action</span></div>
+            <div class="tr-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
+                CGPA</span><span>Action</span></div>
             <div class="tr cand-grid">
-              <div><div class="tr-name">Riya Sharma</div><div class="tr-sub">Mar 10</div></div>
+              <div>
+                <div class="tr-name">Riya Sharma</div>
+                <div class="tr-sub">Mar 10</div>
+              </div>
               <span style="font-size:13px;">Frontend Developer</span>
               <span style="font-size:12.5px;color:var(--sub);">JNTU Hyd · 8.9</span>
-              <div style="display:flex;gap:6px;"><button class="btn sm">Shortlist</button><button class="btn sm red">Reject</button></div>
+              <div style="display:flex;gap:6px;"><button class="btn sm">Shortlist</button><button
+                  class="btn sm red">Reject</button></div>
             </div>
             <div class="tr cand-grid">
-              <div><div class="tr-name">Lakshmi V</div><div class="tr-sub">Mar 10</div></div>
+              <div>
+                <div class="tr-name">Lakshmi V</div>
+                <div class="tr-sub">Mar 10</div>
+              </div>
               <span style="font-size:13px;">React Intern</span>
               <span style="font-size:12.5px;color:var(--sub);">Osmania · 8.0</span>
-              <div style="display:flex;gap:6px;"><button class="btn sm">Shortlist</button><button class="btn sm red">Reject</button></div>
+              <div style="display:flex;gap:6px;"><button class="btn sm">Shortlist</button><button
+                  class="btn sm red">Reject</button></div>
             </div>
           </div>
         </div>
         <div class="tab-panel" id="at-short">
           <div class="block">
-            <div class="tr-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Action</span></div>
+            <div class="tr-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
+                CGPA</span><span>Action</span></div>
             <div class="tr cand-grid">
-              <div><div class="tr-name">Arjun Kumar</div><div class="tr-sub">Mar 8</div></div>
+              <div>
+                <div class="tr-name">Arjun Kumar</div>
+                <div class="tr-sub">Mar 8</div>
+              </div>
               <span>Data Analyst</span>
               <span style="font-size:12.5px;color:var(--sub);">Osmania · 8.2</span>
               <div style="display:flex;gap:6px;"><button class="btn sm">Schedule Interview</button></div>
@@ -557,20 +762,29 @@
         </div>
         <div class="tab-panel" id="at-interview">
           <div class="block">
-            <div class="tr-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Action</span></div>
+            <div class="tr-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
+                CGPA</span><span>Action</span></div>
             <div class="tr cand-grid">
-              <div><div class="tr-name">Priya Menon</div><div class="tr-sub">Mar 18, 10 AM</div></div>
+              <div>
+                <div class="tr-name">Priya Menon</div>
+                <div class="tr-sub">Mar 18, 10 AM</div>
+              </div>
               <span>Backend Engineer</span>
               <span style="font-size:12.5px;color:var(--sub);">IIT Hyd · 9.1</span>
-              <div style="display:flex;gap:6px;"><button class="btn sm">Mark Hired</button><button class="btn sm red">Reject</button></div>
+              <div style="display:flex;gap:6px;"><button class="btn sm">Mark Hired</button><button
+                  class="btn sm red">Reject</button></div>
             </div>
           </div>
         </div>
         <div class="tab-panel" id="at-hired">
           <div class="block">
-            <div class="tr-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Status</span></div>
+            <div class="tr-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
+                CGPA</span><span>Status</span></div>
             <div class="tr cand-grid">
-              <div><div class="tr-name">Sneha Rao</div><div class="tr-sub">Offer sent Mar 6</div></div>
+              <div>
+                <div class="tr-name">Sneha Rao</div>
+                <div class="tr-sub">Offer sent Mar 6</div>
+              </div>
               <span>Data Analyst</span>
               <span style="font-size:12.5px;color:var(--sub);">CBIT · 8.5</span>
               <span class="pill hired">Hired</span>
@@ -584,8 +798,6 @@
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
           <span class="sec-h" style="margin:0;">Campus Drives</span>
           <button class="btn" onclick="showToast('Schedule drive feature coming soon.')">
-            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          <button class="btn" onclick="showToast('Schedule drive feature coming soon.')"><!-- [BACKEND_NEEDED]: Logic to open drive scheduler -->
             <svg viewBox="0 0 24 24">
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
@@ -596,31 +808,62 @@
         <div class="block">
           <div class="bh"><span class="bt">Upcoming Drives</span></div>
           <div class="drive-row">
-            <div class="date-box"><div class="date-d">18</div><div class="date-m">Mar</div></div>
-            <div class="drive-info"><div class="drive-name">JNTU Hyderabad</div><div class="drive-meta">10:00 AM · CSE Block Hall · 120 registered students · Roles: SDE, Systems Engineer</div></div>
+            <div class="date-box">
+              <div class="date-d">18</div>
+              <div class="date-m">Mar</div>
+            </div>
+            <div class="drive-info">
+              <div class="drive-name">JNTU Hyderabad</div>
+              <div class="drive-meta">10:00 AM · CSE Block Hall · 120 registered students · Roles: SDE, Systems Engineer
+              </div>
+            </div>
             <span class="pill active">Confirmed</span>
           </div>
           <div class="drive-row">
-            <div class="date-box"><div class="date-d">25</div><div class="date-m">Mar</div></div>
-            <div class="drive-info"><div class="drive-name">Osmania University</div><div class="drive-meta">9:00 AM · Seminar Hall B · 80 students · Roles: Data Analyst</div></div>
+            <div class="date-box">
+              <div class="date-d">25</div>
+              <div class="date-m">Mar</div>
+            </div>
+            <div class="drive-info">
+              <div class="drive-name">Osmania University</div>
+              <div class="drive-meta">9:00 AM · Seminar Hall B · 80 students · Roles: Data Analyst</div>
+            </div>
             <span class="pill pending">Pending TPO</span>
           </div>
           <div class="drive-row">
-            <div class="date-box"><div class="date-d">3</div><div class="date-m">Apr</div></div>
-            <div class="drive-info"><div class="drive-name">NIT Warangal</div><div class="drive-meta">Online · Zoom · 200 students · All roles</div></div>
+            <div class="date-box">
+              <div class="date-d">3</div>
+              <div class="date-m">Apr</div>
+            </div>
+            <div class="drive-info">
+              <div class="drive-name">NIT Warangal</div>
+              <div class="drive-meta">Online · Zoom · 200 students · All roles</div>
+            </div>
             <span class="pill pending">Pending TPO</span>
           </div>
         </div>
         <div class="block">
           <div class="bh"><span class="bt">Completed Drives</span></div>
           <div class="drive-row">
-            <div class="date-box" style="background:#f3f4f6;"><div class="date-d" style="color:var(--sub);">10</div><div class="date-m" style="color:var(--sub);">Mar</div></div>
-            <div class="drive-info"><div class="drive-name">VIT Chennai</div><div class="drive-meta">Completed · 95 attended · 8 selected</div></div>
+            <div class="date-box" style="background:#f3f4f6;">
+              <div class="date-d" style="color:var(--sub);">10</div>
+              <div class="date-m" style="color:var(--sub);">Mar</div>
+            </div>
+            <div class="drive-info">
+              <div class="drive-name">VIT Chennai</div>
+              <div class="drive-meta">Completed · 95 attended · 8 selected</div>
+            </div>
             <span class="pill closed">Done</span>
           </div>
           <div class="drive-row">
-            <div class="date-box" style="background:#f3f4f6;"><div class="date-d" style="color:var(--sub);">28</div><div class="date-m" style="color:var(--sub);">Feb</div></div>
-            <div class="drive-info"><div class="drive-name">CBIT Hyderabad</div><div class="drive-meta">Completed · 60 attended · 5 selected</div></div>
+            <div class="date-box" style="background:#f3f4f6;">
+              <div class="date-d" style="color:var(--sub);">28</div>
+              <div class="date-m" style="color:var(--sub);">Feb</div>
+            </div>
+            <div class="drive-info">
+              <div class="drive-name">CBIT Hyderabad</div>
+              <div class="drive-meta">Completed · 60 attended · 5 selected</div>
+            </div>
             <span class="pill closed">Done</span>
           </div>
         </div>
@@ -636,9 +879,13 @@
           </div>
           <div class="profile-av-row">
             <div class="profile-big-av">
-              <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="25" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
-              <i data-lucide="building-2"></i>
-          </div>
+              <svg viewBox="0 0 24 24">
+                <rect x="2" y="7" width="20" height="25" rx="2" />
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                <line x1="12" y1="12" x2="12" y2="16" />
+                <line x1="10" y1="14" x2="14" y2="14" />
+              </svg>
+            </div>
             <div class="profile-info">
               <div class="profile-co-name" id="pg-coname">Infosys Technologies Ltd.</div>
               <div class="profile-co-meta" id="pg-coemail">hr@infosys.com</div>
@@ -654,42 +901,65 @@
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
           <div class="form-card">
             <div class="form-title">
-              <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+              <svg viewBox="0 0 24 24">
+                <rect x="2" y="7" width="20" height="14" rx="2" />
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+              </svg>
               Company Details
             </div>
             <div id="cp-view">
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
                 <div>
-                  <div style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">Company Name</div>
+                  <div
+                    style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">
+                    Company Name</div>
                   <div style="font-size:13.5px;font-weight:500;">Infosys Technologies Ltd.</div>
                 </div>
                 <div>
-                  <div style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">Industry</div>
+                  <div
+                    style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">
+                    Industry</div>
                   <div style="font-size:13.5px;font-weight:500;">IT Services & Consulting</div>
                 </div>
                 <div>
-                  <div style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">Company Size</div>
+                  <div
+                    style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">
+                    Company Size</div>
                   <div style="font-size:13.5px;font-weight:500;">10,000+ Employees</div>
                 </div>
                 <div>
-                  <div style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">Headquarters</div>
+                  <div
+                    style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">
+                    Headquarters</div>
                   <div style="font-size:13.5px;font-weight:500;">Bangalore, Karnataka</div>
                 </div>
                 <div>
-                  <div style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">Website</div>
+                  <div
+                    style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">
+                    Website</div>
                   <div style="font-size:13.5px;font-weight:500;color:var(--teal-dark);">infosys.com</div>
                 </div>
                 <div>
-                  <div style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">Official HR Email</div>
+                  <div
+                    style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">
+                    Official HR Email</div>
                   <div style="font-size:13.5px;font-weight:500;">hr@infosys.com</div>
                 </div>
               </div>
               <div style="margin-top:14px;">
-                <div style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;">About</div>
-                <div style="font-size:13px;line-height:1.65;color:var(--sub);">Infosys is a global leader in next-generation digital services and consulting. We enable clients in more than 50 countries to navigate their digital transformation.</div>
+                <div
+                  style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;">
+                  About</div>
+                <div style="font-size:13px;line-height:1.65;color:var(--sub);">Infosys is a global leader in
+                  next-generation digital services and consulting. We enable clients in more than 50 countries to
+                  navigate their digital transformation.</div>
               </div>
               <button class="btn sec" style="margin-top:14px;" onclick="toggleCpEdit()">
-                <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                <svg viewBox="0 0 24 24"
+                  style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                </svg>
                 Edit Profile
               </button>
             </div>
@@ -697,14 +967,23 @@
               <div class="form-grid">
                 <div class="fg"><label>Company Name</label><input value="Infosys Technologies Ltd." /></div>
                 <div class="fg"><label>Industry</label><input value="IT Services & Consulting" /></div>
-                <div class="fg"><label>Company Size</label><select><option>1–50</option><option>51–200</option><option>201–1000</option><option>1001–10,000</option><option selected>10,000+</option></select></div>
+                <div class="fg"><label>Company Size</label><select>
+                    <option>1–50</option>
+                    <option>51–200</option>
+                    <option>201–1000</option>
+                    <option>1001–10,000</option>
+                    <option selected>10,000+</option>
+                  </select></div>
                 <div class="fg"><label>Headquarters</label><input value="Bangalore, Karnataka" /></div>
                 <div class="fg"><label>Website</label><input value="infosys.com" /></div>
                 <div class="fg"><label>HR Contact Email</label><input value="hr@infosys.com" /></div>
-                <div class="fg full"><label>About Company</label><textarea style="min-height:80px;">Infosys is a global leader in next-generation digital services and consulting.</textarea></div>
+                <div class="fg full"><label>About Company</label><textarea
+                    style="min-height:80px;">Infosys is a global leader in next-generation digital services and consulting.</textarea>
+                </div>
               </div>
               <div style="display:flex;gap:8px;margin-top:4px;">
-                <button class="btn lg" onclick="toggleCpEdit();showToast('Profile updated successfully.')">Save Changes</button>
+                <button class="btn lg" onclick="toggleCpEdit();showToast('Profile updated successfully.')">Save
+                  Changes</button>
                 <button class="btn sec lg" onclick="toggleCpEdit()">Cancel</button>
               </div>
             </div>
@@ -713,26 +992,53 @@
           <div>
             <div class="form-card" style="margin-bottom:14px;">
               <div class="form-title">
-                <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                <svg viewBox="0 0 24 24">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
                 Hiring Stats
               </div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;"><div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--teal-dark);">5</div><div style="font-size:11.5px;color:var(--sub);margin-top:2px;">Active Jobs</div></div>
-                <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;"><div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--green);">24</div><div style="font-size:11.5px;color:var(--sub);margin-top:2px;">Total Applicants</div></div>
-                <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;"><div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--amber);">2</div><div style="font-size:11.5px;color:var(--sub);margin-top:2px;">Drives This Month</div></div>
-                <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;"><div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--blue);">3</div><div style="font-size:11.5px;color:var(--sub);margin-top:2px;">Hired This Year</div></div>
+                <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;">
+                  <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--teal-dark);">5
+                  </div>
+                  <div style="font-size:11.5px;color:var(--sub);margin-top:2px;">Active Jobs</div>
+                </div>
+                <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;">
+                  <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--green);">24
+                  </div>
+                  <div style="font-size:11.5px;color:var(--sub);margin-top:2px;">Total Applicants</div>
+                </div>
+                <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;">
+                  <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--amber);">2
+                  </div>
+                  <div style="font-size:11.5px;color:var(--sub);margin-top:2px;">Drives This Month</div>
+                </div>
+                <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;">
+                  <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--blue);">3</div>
+                  <div style="font-size:11.5px;color:var(--sub);margin-top:2px;">Hired This Year</div>
+                </div>
               </div>
             </div>
             <div class="form-card">
               <div class="form-title">
-                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
                 Registered Colleges
               </div>
               <div style="display:flex;flex-direction:column;gap:8px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 10px;background:var(--bg);border-radius:7px;"><span>JNTU Hyderabad</span><span class="pill active">Active</span></div>
-                <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 10px;background:var(--bg);border-radius:7px;"><span>Osmania University</span><span class="pill active">Active</span></div>
-                <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 10px;background:var(--bg);border-radius:7px;"><span>NIT Warangal</span><span class="pill pending">Pending</span></div>
-                <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 10px;background:var(--bg);border-radius:7px;"><span>VIT Chennai</span><span class="pill active">Active</span></div>
+                <div
+                  style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 10px;background:var(--bg);border-radius:7px;">
+                  <span>JNTU Hyderabad</span><span class="pill active">Active</span></div>
+                <div
+                  style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 10px;background:var(--bg);border-radius:7px;">
+                  <span>Osmania University</span><span class="pill active">Active</span></div>
+                <div
+                  style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 10px;background:var(--bg);border-radius:7px;">
+                  <span>NIT Warangal</span><span class="pill pending">Pending</span></div>
+                <div
+                  style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 10px;background:var(--bg);border-radius:7px;">
+                  <span>VIT Chennai</span><span class="pill active">Active</span></div>
               </div>
             </div>
           </div>
@@ -746,11 +1052,17 @@
           <div class="sr"><span>Email Notifications</span><span class="sv">On</span></div>
           <div class="sr"><span>New Applicant Alerts</span><span class="sv">On</span></div>
           <div class="sr"><span>Company Profile Visibility</span><span class="sv">Public</span></div>
-          <div class="sr"><span>Account Email</span><span style="font-size:12.5px;color:var(--sub);" id="set-email">hr@infosys.com</span></div>
-          <div class="sr"><span>Password</span><button class="btn sm sec" onclick="showToast('Password reset email sent.')">Change Password</button></div>
+          <div class="sr"><span>Account Email</span><span style="font-size:12.5px;color:var(--sub);"
+              id="set-email">hr@infosys.com</span></div>
+          <div class="sr"><span>Password</span><button class="btn sm sec"
+              onclick="showToast('Password reset email sent.')">Change Password</button></div>
         </div>
         <button class="logout-btn" onclick="logout()">
-          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <svg viewBox="0 0 24 24">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
           Log Out
         </button>
       </div><!-- /pg-settings -->
@@ -762,14 +1074,14 @@
     // ── INIT ──
     window.addEventListener('DOMContentLoaded', () => {
       const email = sessionStorage.getItem('cp_company_email') || 'hr@infosys.com';
-      const co    = sessionStorage.getItem('cp_company_name')  || 'Infosys Technologies';
+      const co = sessionStorage.getItem('cp_company_name') || 'Infosys Technologies';
       const short = co.split(' ')[0];
 
-      document.getElementById('sb-uname').textContent  = co;
-      document.getElementById('tb-name').textContent   = short;
+      document.getElementById('sb-uname').textContent = co;
+      document.getElementById('tb-name').textContent = short;
       document.getElementById('pg-coname').textContent = co + ' Ltd.';
       document.getElementById('pg-coemail').textContent = email;
-      document.getElementById('set-email').textContent  = email;
+      document.getElementById('set-email').textContent = email;
 
       const h = new Date().getHours();
       const g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
@@ -886,6 +1198,6 @@
       window.location.href = 'Login.html';
     }
   </script>
-  <script src="../js/company.js"></script>
 </body>
+
 </html>

@@ -213,10 +213,10 @@
       const successCta = document.getElementById('success-cta');
       successCta.textContent = ctas[role];
 
-       
+
       if (role === 'tpo') {
         successCta.href = 'TPODashboard.html';
-        
+
         // redirect automatically for better UX
         setTimeout(() => {
           window.location.href = 'TPODashboard.html';
@@ -225,7 +225,7 @@
         successCta.href = '#';
       }
 
-    
+
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -270,10 +270,6 @@
       if (errEl) errEl.classList.remove('show');
     }
   </script>
-  <script src="../js/tpo-login.js"></script>
 </body>
 
 </html>
-
-
-

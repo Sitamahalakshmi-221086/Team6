@@ -811,11 +811,11 @@
               <div class="profile-email-txt" id="pg-email">arjun@college.edu</div>
             </div>
             <div class="profile-tags-row">
-              <span class="profile-tag-st blue">
+              <span class="profile-tag-st blue" id="pg-branch-year">
                 <i data-lucide="graduation-cap"></i> CSE · 3rd Year
               </span>
-              <span class="profile-tag-st green">CGPA 8.5</span>
-              <span class="profile-tag-st amber">Roll No: 21CSE045</span>
+              <span class="profile-tag-st green" id="pg-cgpa-tag">CGPA 8.5</span>
+              <span class="profile-tag-st amber" id="pg-roll-tag">Roll No: 21CSE045</span>
             </div>
           </div>
           <!-- Profile strength bar -->
@@ -849,25 +849,28 @@
                   <p id="pv-fname">Arjun Sharma</p>
                 </div>
                 <div class="df"><label>Roll Number</label>
-                  <p>21CSE045</p>
+                  <p id="pv-roll">21CSE045</p>
                 </div>
                 <div class="df"><label>Branch</label>
-                  <p>Computer Science & Engg.</p>
+                  <p id="pv-branch">Computer Science & Engg.</p>
                 </div>
                 <div class="df"><label>Year</label>
-                  <p>3rd Year</p>
+                  <p id="pv-year">3rd Year</p>
                 </div>
                 <div class="df"><label>CGPA</label>
-                  <p>8.5 / 10</p>
+                  <p id="pv-cgpa">8.5 / 10</p>
                 </div>
                 <div class="df"><label>Phone</label>
-                  <p>+91 98765 43210</p>
+                  <p id="pv-phone">+91 98765 43210</p>
                 </div>
                 <div class="df"><label>Preferred Location</label>
-                  <p>Bangalore, Hyderabad</p>
+                  <p id="pv-loc">Hyderabad</p>
+                </div>
+                <div class="df"><label>GitHub</label>
+                  <p id="pv-github" style="color:var(--sub);">Not added</p>
                 </div>
                 <div class="df"><label>LinkedIn</label>
-                  <p style="color:var(--sub);">Not added
+                  <p id="pv-linkedin" style="color:var(--sub);">Not added
                     <button onclick="toggleEdit()"
                       style="background:none;border:none;color:var(--blue);font-size:12px;font-weight:600;cursor:pointer;margin-left:4px;">+
                       Add</button>
@@ -880,7 +883,7 @@
             <div>
               <div class="detail-block" style="margin-bottom:14px;">
                 <div class="detail-title">Skills</div>
-                <div style="display:flex;flex-wrap:wrap;gap:7px;">
+                <div id="pv-skills" style="display:flex;flex-wrap:wrap;gap:7px;">
                   <span class="skill-tag" style="cursor:default;">React</span>
                   <span class="skill-tag" style="cursor:default;">Node.js</span>
                   <span class="skill-tag" style="cursor:default;">MongoDB</span>

@@ -1393,7 +1393,7 @@ textarea {
 
 .profile-banner {
   height: 117px;
- 
+
   background: linear-gradient(110deg, var(--ind-deep), var(--ind-dark) 55%, var(--ind));
 }
 
@@ -1430,8 +1430,11 @@ textarea {
   font-weight: 800;
   font-size: 1.5rem;
   margin-bottom: 6px;
+/* <<<<<<< HEAD
   margin-bottom: 2px;
   color: var(--text);
+=======
+>>>>>>> database */
 }
 
 .profile-sub {
