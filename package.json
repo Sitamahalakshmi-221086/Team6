@@ -1,7 +1,6 @@
 {
   "name": "team6",
   "version": "1.0.0",
-  "type": "module",
   "description": "HEAD # Placement Management System Developed by Team6 Team 6 Team project  92e3a128d8303c77348081cd1873fded7f5147f8",
   "main": "index.js",
   "scripts": {
@@ -20,9 +19,13 @@
   "homepage": "https://github.com/Sitamahalakshmi-221086/Team6#readme",
   "dependencies": {
     "axios": "^1.13.6",
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "mongoose": "^9.3.0",
+    "morgan": "^1.10.1",
+    "multer": "^2.1.1",
     "nodemailer": "^8.0.2"
   }
 }

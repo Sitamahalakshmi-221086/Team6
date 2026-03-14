@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CampusPlace – Sign Up (TPO)</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<<<<<<< Updated upstream
   <!-- EmailJS SDK — no server needed -->
 
 
@@ -157,51 +158,58 @@
       .form-group.span2 { grid-column: 1; }
     }
   </style>
+=======
+  <link rel="stylesheet" href="../css/signupstyle.css" />
+  <link rel="stylesheet" href="../css/tpo-signup.css" />
+>>>>>>> Stashed changes
 </head>
-
 <body>
   <div class="env-strip"></div>
   <div class="page-wrap">
 
+<<<<<<< Updated upstream
     <!-- LEFT PANEL -->
+=======
+>>>>>>> Stashed changes
     <aside class="left-panel">
       <div class="left-content">
         <a href="../index.html" class="logo">
           <div class="logo-icon">🛡️</div>
           <span class="logo-text">Campus<span class="logo-accent">Place</span></span>
         </a>
+<<<<<<< Updated upstream
         <div class="left-badge"><span class="left-badge-dot"></span> TPO Registration</div>
         <h2 class="left-title">Start Your<br /><span>Placement</span><br />Journey</h2>
         <p class="left-sub">Create your profile in 4 quick steps and manage campus placements seamlessly.</p>
+=======
+        <div class="left-badge"><span class="left-badge-dot"></span> <span id="sidebar-role-label">TPO Registration</span></div>
+        <h2 class="left-title">Start Your<br /><span>Placement</span><br />Journey</h2>
+        <p class="left-sub">Create your profile in 4 quick steps and get matched with top companies visiting your campus.</p>
+>>>>>>> Stashed changes
 
         <div class="progress-steps">
           <div class="progress-step done-step" id="sidebar-step-1">
             <div class="step-circle done" id="circle-1">✓</div>
-            <div class="step-info">
-              <div class="step-name">Select Role</div>
-              <div class="step-desc">Choose your user type</div>
-            </div>
+            <div class="step-info"><div class="step-name">Select Role</div><div class="step-desc">Choose your user type</div></div>
           </div>
           <div class="progress-step active-step" id="sidebar-step-2">
             <div class="step-circle active" id="circle-2">2</div>
+<<<<<<< Updated upstream
             <div class="step-info">
               <div class="step-name">Personal Details</div>
               <div class="step-desc">Institution &amp; admin info</div>
             </div>
+=======
+            <div class="step-info"><div class="step-name">Personal Details</div><div class="step-desc" id="sidebar-step2-desc">Institution &amp; admin info</div></div>
+>>>>>>> Stashed changes
           </div>
           <div class="progress-step" id="sidebar-step-3">
             <div class="step-circle pending" id="circle-3">3</div>
-            <div class="step-info">
-              <div class="step-name">Verify Email</div>
-              <div class="step-desc">Confirm your identity</div>
-            </div>
+            <div class="step-info"><div class="step-name">Verify Email</div><div class="step-desc">Confirm your identity</div></div>
           </div>
           <div class="progress-step" id="sidebar-step-4">
             <div class="step-circle pending" id="circle-4">✓</div>
-            <div class="step-info">
-              <div class="step-name">Dashboard Ready</div>
-              <div class="step-desc">Account activated!</div>
-            </div>
+            <div class="step-info"><div class="step-name">Dashboard Ready</div><div class="step-desc">Account activated!</div></div>
           </div>
         </div>
 
@@ -217,10 +225,16 @@
       </div>
     </aside>
 
+<<<<<<< Updated upstream
     <!-- RIGHT PANEL -->
     <main class="right-panel">
 
       <!-- STAGE 2 – TPO DETAILS -->
+=======
+    <main class="right-panel">
+
+      <!-- STAGE 2 -->
+>>>>>>> Stashed changes
       <div class="form-stage active" id="stage-2-tpo">
         <div class="stage-num">Stage 02 / 04</div>
         <h1 class="stage-title">TPO / Admin <span class="shimmer-text">Details</span></h1>
@@ -248,8 +262,7 @@
             <div class="form-group">
               <label>Password <span>*</span></label>
               <div class="pwd-wrap">
-                <input type="password" id="t-pwd" placeholder="Create a strong password"
-                  oninput="checkPwd(this,'tpb','t-pwd-label');clearErr(this)" />
+                <input type="password" id="t-pwd" placeholder="Create a strong password" oninput="checkPwd(this,'tpb','t-pwd-label');clearErr(this)" />
                 <button type="button" class="show-pwd" onclick="togglePwd('t-pwd',this)">👁</button>
               </div>
               <div class="pwd-strength">
@@ -303,6 +316,12 @@
             </div>
 
             <div class="form-group">
+              <label>College Code <span>*</span></label>
+              <input type="text" id="t-code" placeholder="e.g. IITB001" oninput="clearErr(this)" />
+              <span class="error-msg" id="err-t-code">Please enter a valid college code (min 4 chars).</span>
+            </div>
+
+            <div class="form-group">
               <label>NAAC Accreditation</label>
               <select id="t-accreditation">
                 <option value="">Select grade</option>
@@ -325,12 +344,22 @@
 
           <div class="form-nav">
             <button class="btn-prev" onclick="window.location.href='Signup.html'">← Back</button>
+<<<<<<< Updated upstream
             <button class="btn-next" id="btn-send-otp" onclick="goNext(2)">Save &amp; Continue →</button>
+=======
+            <button type="button" class="btn-next" id="stage2-btn"
+              style="background:#7c3aed;box-shadow:0 4px 14px rgba(124,58,237,.3);"
+              onclick="goNext(2, this)">Save &amp; Continue →</button>
+>>>>>>> Stashed changes
           </div>
         </form>
       </div>
 
+<<<<<<< Updated upstream
       <!-- STAGE 3 – EMAIL VERIFICATION -->
+=======
+      <!-- STAGE 3 -->
+>>>>>>> Stashed changes
       <div class="form-stage" id="stage-3">
         <div class="stage-num">Stage 03 / 04</div>
         <h1 class="stage-title">Verify Your <span class="shimmer-text">Email</span></h1>
@@ -342,6 +371,7 @@
           <p style="font-size:14px;color:var(--sub);font-weight:500;">Sending OTP to your email…</p>
         </div>
 
+<<<<<<< Updated upstream
         <!-- OTP Entry -->
         <div id="otp-entry-state" style="display:none;">
 
@@ -374,6 +404,23 @@
             </div>
 
             <div id="otp-error" style="display:none;color:#ef4444;font-size:13px;margin-bottom:16px;"></div>
+=======
+        <div class="verify-center">
+          <div class="email-illustration">📧</div>
+          <div class="verify-email-display" id="verify-email-show">you@example.com</div>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:28px;">Check your inbox (and spam folder just in case)</p>
+
+          <div class="otp-row">
+            <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,0)" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+            <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,1)" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+            <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,2)" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+            <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,3)" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+            <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,4)" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+            <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,5)" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+          </div>
+
+          <div id="otp-error" style="display:none;color:#ef4444;font-size:13px;margin-bottom:16px;">Incorrect OTP. Please try again.</div>
+>>>>>>> Stashed changes
 
             <div class="resend-row">
               Didn't receive it?
@@ -392,10 +439,17 @@
         </div>
       </div>
 
+<<<<<<< Updated upstream
       <!-- STAGE 4 – SUCCESS -->
       <div class="form-stage" id="stage-4">
         <div class="success-wrap">
           <div class="success-circle">✓</div>
+=======
+      <!-- STAGE 4 -->
+      <div class="form-stage" id="stage-4">
+        <div class="success-wrap">
+          <div class="success-circle" id="success-icon">✓</div>
+>>>>>>> Stashed changes
           <h1 class="success-title">TPO Account Activated! 🛡️</h1>
           <p class="success-sub">Your placement office dashboard is ready. Manage drives, students, and companies from one place.</p>
           <div class="success-items">
@@ -404,7 +458,11 @@
             <div class="success-item"><span class="success-item-icon">👥</span><span>Monitor student profiles and application status</span></div>
             <div class="success-item"><span class="success-item-icon">📈</span><span>Access analytics and placement reports</span></div>
           </div>
+<<<<<<< Updated upstream
           <a href="TPOlogin.html" class="btn-dashboard">Go to TPO Dashboard →</a>
+=======
+          <a href="Login.html" class="btn-dashboard">Go to TPO Dashboard →</a>
+>>>>>>> Stashed changes
           <p style="margin-top:16px;font-size:13px;color:var(--muted);">You'll receive a welcome email with next steps shortly.</p>
         </div>
       </div>
@@ -414,4 +472,8 @@
 
 <script src="../js/tposignup.js"></script>
 </body>
+<<<<<<< Updated upstream
 </html>
+=======
+</html>
+>>>>>>> Stashed changes
