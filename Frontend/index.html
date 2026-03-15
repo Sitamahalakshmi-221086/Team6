@@ -5,72 +5,128 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CampusPlace – Campus Placement Management Portal</title>
+  <meta name="description" content="CampusPlace is a premium campus recruitment platform connecting students with top companies through smart skill matching and real-time tracking." />
   <link
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Sans:wght@300;400;500;600&family=Satisfy&display=swap"
     rel="stylesheet" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap"
-    rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
 
-  <!-- ── NAVBAR ── -->
+  <!-- ══ NAVBAR ══ -->
   <nav>
     <div class="nav-inner">
+
+      <!-- LOGO -->
       <a href="#" class="logo">
-        <div class="logo-icon">🎓</div>
-        <span class="logo-text">Campus<span>Place</span></span>
+        <div class="logo-mark">
+          <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#1a4fd6" />
+                <stop offset="100%" stop-color="#0f3ab8" />
+              </linearGradient>
+            </defs>
+            <!-- Rounded square bg -->
+            <rect width="48" height="48" rx="11" fill="url(#bg)" />
+            <!-- Inner subtle shine -->
+            <rect x="1" y="1" width="46" height="23" rx="10" fill="rgba(255,255,255,0.06)" />
+
+            <!-- ── MORTARBOARD CAP ── -->
+            <!-- Hat cylinder: short & wide, sitting at y=21 -->
+            <path d="M16.5 21 L16.5 26.5 Q16.5 29.5 24 29.5 Q31.5 29.5 31.5 26.5 L31.5 21 Z" fill="white" />
+            <!-- Board top face: diamond -->
+            <polygon points="24,11.5 39.5,19 24,26.5 8.5,19" fill="white" />
+            <!-- Board left underside shadow -->
+            <polygon points="8.5,19 8.5,22 24,29.5 24,26.5" fill="rgba(255,255,255,0.42)" />
+            <!-- Board right underside shadow -->
+            <polygon points="39.5,19 39.5,22 24,29.5 24,26.5" fill="rgba(255,255,255,0.58)" />
+
+            <!-- Tassel cord: from right tip, curves down -->
+            <path d="M39.5 19 Q43 19 43 23 L43 29.5" stroke="white" stroke-width="1.5" fill="none"
+              stroke-linecap="round" stroke-linejoin="round" />
+            <!-- Knot bead -->
+            <circle cx="43" cy="29.5" r="2" fill="white" />
+            <!-- Fringe strands -->
+            <line x1="41.1" y1="31.2" x2="40" y2="36.5" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+            <line x1="42.3" y1="31.4" x2="41.8" y2="37" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+            <line x1="43.6" y1="31.4" x2="44" y2="37" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+            <line x1="44.8" y1="31.2" x2="46" y2="36.5" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+            <!-- Fringe tie band -->
+            <path d="M40 36 Q43 37 46 36" stroke="rgba(255,255,255,0.55)" stroke-width="1.1" fill="none"
+              stroke-linecap="round" />
+          </svg>
+        </div>
+        <div class="logo-text-group">
+          <div class="logo-wordmark">
+            <span class="logo-campus">Campus</span><span class="logo-sep">.</span><span class="logo-place">Place</span>
+          </div>
+          <div class="logo-tagline">Placement Portal</div>
+        </div>
       </a>
+
       <div class="nav-links">
         <a href="#how" class="nav-link">How It Works</a>
         <a href="#features" class="nav-link">Features</a>
         <a href="#roles" class="nav-link">For You</a>
-        <a href="#contact" class="nav-link">Contact</a>
+        <a href="pages/ContactUs.html" class="nav-link">Contact</a>
       </div>
+
       <div class="nav-actions">
         <a href="pages/Login.html" class="btn-secondary">Log In</a>
-        <a href="pages/Signup.html" class="btn-primary">Join Now →</a>
+        <a href="pages/Signup.html" class="btn-primary">Join Free →</a>
       </div>
     </div>
   </nav>
 
-  <!-- ── HERO ── -->
+  <!-- ══ HERO ══ -->
   <section class="hero">
-    <div class="hero-blob-1"></div>
-    <div class="hero-blob-2"></div>
-    <div class="hero-inner">
+    <div class="hero-blob hero-blob-1"></div>
+    <div class="hero-blob hero-blob-2"></div>
+    <!-- light blue moving orbs -->
+    <div class="hero-light hero-light-1"></div>
+    <div class="hero-light hero-light-2"></div>
+    <div class="hero-light hero-light-3"></div>
+    <!-- subtle vertical light rays -->
+    <div class="hero-ray hero-ray-1"></div>
+    <div class="hero-ray hero-ray-2"></div>
+    <div class="hero-ray hero-ray-3"></div>
+    <div class="hero-ray hero-ray-4"></div>
+    <div class="hero-inner floating">
       <div class="hero-badge fade-up-1">
-        <span class="hero-badge-dot"></span>
+        <span class="badge-dot"></span>
         Built for university students &amp; recruiters
       </div>
       <h1 class="fade-up-2">
-        Your Campus. <span class="shimmer-text">Your Career.</span><br />One Smart Platform.
+        Your Campus.<br /><span class="shimmer-text">Your Career.</span><br />One Smart Platform.
       </h1>
       <p class="hero-sub fade-up-3">
         A centralized placement portal connecting students, companies, and TPO — with smart skill matching, real-time
         tracking, and seamless recruitment workflows.
       </p>
       <div class="hero-btns fade-up-3">
-        <a href="pages/StudentSignup.html" class="btn-primary" style="padding:13px 28px;font-size:15px;">Join as Student →</a>
-        <a href="pages/Companysignup.html" class="btn-secondary" style="padding:11px 24px;font-size:15px;">Post a Job</a>
-        <a href="pages/TPOsignup.html" class="btn-secondary" style="padding:11px 24px;font-size:15px;">TPO Login</a>
+        <a href="pages/StudentSignup.html" class="btn-primary">Join as Student →</a>
+        <a href="pages/Companysignup.html" class="btn-secondary">Post a Job</a>
+        <a href="pages/TPOsignup.html" class="btn-secondary tpo-btn">TPO Login</a>
       </div>
       <div class="hero-stats fade-up-4">
-        <div>
+        <div class="hero-stat">
           <div class="hero-stat-val">3,200+</div>
           <div class="hero-stat-lbl">Active Students</div>
         </div>
-        <div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
           <div class="hero-stat-val">120+</div>
           <div class="hero-stat-lbl">Partner Companies</div>
         </div>
-        <div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
           <div class="hero-stat-val">94%</div>
           <div class="hero-stat-lbl">Placement Rate</div>
         </div>
-        <div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
           <div class="hero-stat-val">4.9★</div>
           <div class="hero-stat-lbl">Avg Rating</div>
         </div>
@@ -78,7 +134,46 @@
     </div>
   </section>
 
-  <!-- ── HOW IT WORKS ── -->
+  <!-- ══ ABOUT ══ -->
+  <section class="about-section" id="about">
+    <div class="about-inner">
+      <div class="about-left">
+        <div class="section-label">Why CampusPlace</div>
+        <h2>From Campus to Career,<br />Without the Stress</h2>
+        <p style="margin-top:16px;">We manage, connect, and maximise your career opportunities through smart campus
+          placement — so you can focus on what matters most.</p>
+        <a href="pages/Signup.html" class="btn-primary" style="margin-top:30px;display:inline-flex;">Get Started Free
+          →</a>
+      </div>
+      <div class="about-right">
+        <div class="about-card">
+          <div class="about-card-icon">🎯</div>
+          <div class="about-card-title">Smart Matching</div>
+          <p class="about-card-desc">Auto-matched jobs by skills, branch &amp; CGPA surfaced on every login — no manual
+            searching.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon">⚡</div>
+          <div class="about-card-title">Zero Hassle</div>
+          <p class="about-card-desc">No missed drives, no paper forms. Applications, test links, and shortlists — all in
+            one place.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon">🔒</div>
+          <div class="about-card-title">Full Control</div>
+          <p class="about-card-desc">Your profile is protected and visible only to verified companies with TPO oversight
+            at every step.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon">🚀</div>
+          <div class="about-card-title">Start in Minutes</div>
+          <p class="about-card-desc">4-step onboarding. Get matched to jobs within 30 minutes of signing up.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ HOW IT WORKS ══ -->
   <section class="how-section" id="how">
     <div style="max-width:1100px;margin:0 auto;">
       <div class="section-head">
@@ -88,24 +183,24 @@
       </div>
       <div class="how-grid">
         <div class="how-card">
-          <div class="how-icon" style="background:rgba(37,99,235,.1);">🎓</div>
-          <div class="how-step" style="color:#2563eb;">Step 01</div>
+          <div class="how-icon" style="background:rgba(23,89,214,0.1);">🎓</div>
+          <div class="how-step" style="color:var(--primary);">Step 01</div>
           <div class="how-title">Create Your Profile</div>
           <p class="how-desc">Register in 4 smart steps. Upload your resume, add skills, and set your preferences to get
             started.</p>
-          <div class="how-connector" style="background:#2563eb;">›</div>
+          <div class="how-connector" style="background:var(--primary);">›</div>
         </div>
         <div class="how-card">
-          <div class="how-icon" style="background:rgba(8,145,178,.1);">🎯</div>
-          <div class="how-step" style="color:#0891b2;">Step 02</div>
+          <div class="how-icon" style="background:rgba(10,173,160,0.12);">🎯</div>
+          <div class="how-step" style="color:var(--teal);">Step 02</div>
           <div class="how-title">Get Matched to Jobs</div>
-          <p class="how-desc">Our skill-based engine surfaces jobs that fit your branch, CGPA, and expertise —
+          <p class="how-desc">Our skill-based engine surfaces roles that fit your branch, CGPA, and expertise —
             automatically on login.</p>
-          <div class="how-connector" style="background:#0891b2;">›</div>
+          <div class="how-connector" style="background:var(--teal);">›</div>
         </div>
         <div class="how-card">
-          <div class="how-icon" style="background:rgba(5,150,105,.1);">📋</div>
-          <div class="how-step" style="color:#059669;">Step 03</div>
+          <div class="how-icon" style="background:rgba(23,89,214,0.08);">📋</div>
+          <div class="how-step" style="color:var(--primary);">Step 03</div>
           <div class="how-title">Apply &amp; Track</div>
           <p class="how-desc">Apply with one click. Track your status from Applied → Shortlisted → Selected in real
             time.</p>
@@ -114,46 +209,48 @@
     </div>
   </section>
 
-  <!-- ── STATUS PIPELINE ── -->
+  <!-- ══ STATUS PIPELINE ══ -->
   <section class="status-section">
     <div class="status-inner">
       <div class="section-head" style="margin-bottom:0;">
         <div class="section-label">Application Status</div>
-        <h2 class="section-title" style="font-size:1.8rem;">Track Every Step in Real Time</h2>
+        <h2 class="section-title" style="font-size:1.65rem;">Track Every Step in Real Time</h2>
       </div>
       <div class="pipeline">
         <span class="status-pill"
-          style="background:rgba(100,116,139,.1);color:#64748b;border:1px solid rgba(100,116,139,.3);">
-          <span style="width:7px;height:7px;border-radius:50%;background:#64748b;display:inline-block;"></span>Applied
+          style="background:rgba(100,116,139,.09);color:#64748b;border:1px solid rgba(100,116,139,.22);">
+          <span style="width:7px;height:7px;border-radius:50%;background:#94a3b8;display:inline-block;"></span>Applied
         </span>
         <span class="pipe-arrow">›</span>
         <span class="status-pill"
-          style="background:rgba(8,145,178,.1);color:#0891b2;border:1px solid rgba(8,145,178,.3);">
-          <span style="width:7px;height:7px;border-radius:50%;background:#0891b2;display:inline-block;"></span>Under
+          style="background:rgba(10,173,160,.09);color:#0aada0;border:1px solid rgba(10,173,160,.22);">
+          <span style="width:7px;height:7px;border-radius:50%;background:#0aada0;display:inline-block;"></span>Under
           Review
         </span>
         <span class="pipe-arrow">›</span>
         <span class="status-pill"
-          style="background:rgba(217,119,6,.1);color:#d97706;border:1px solid rgba(217,119,6,.3);">
+          style="background:rgba(217,119,6,.09);color:#d97706;border:1px solid rgba(217,119,6,.22);">
           <span
             style="width:7px;height:7px;border-radius:50%;background:#d97706;display:inline-block;"></span>Shortlisted
         </span>
         <span class="pipe-arrow">›</span>
         <span class="status-pill"
-          style="background:rgba(37,99,235,.1);color:#2563eb;border:1px solid rgba(37,99,235,.3);">
-          <span style="width:7px;height:7px;border-radius:50%;background:#2563eb;display:inline-block;"></span>Interview
+          style="background:rgba(23,89,214,.09);color:var(--primary);border:1px solid rgba(23,89,214,.22);">
+          <span
+            style="width:7px;height:7px;border-radius:50%;background:var(--primary);display:inline-block;"></span>Interview
           Scheduled
         </span>
         <span class="pipe-arrow">›</span>
         <span class="status-pill"
-          style="background:rgba(5,150,105,.1);color:#059669;border:1px solid rgba(5,150,105,.3);">
-          <span style="width:7px;height:7px;border-radius:50%;background:#059669;display:inline-block;"></span>Selected
+          style="background:rgba(34,197,94,.09);color:#16a34a;border:1px solid rgba(34,197,94,.22);">
+          <span style="width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block;"></span>Selected
+          ✓
         </span>
       </div>
     </div>
   </section>
 
-  <!-- ── FEATURES ── -->
+  <!-- ══ FEATURES ══ -->
   <section class="features-section" id="features">
     <div style="max-width:1100px;margin:0 auto;">
       <div class="section-head">
@@ -194,18 +291,18 @@
         <div class="feature-card">
           <div class="feature-icon">🔒</div>
           <div class="feature-title">Controlled Access</div>
-          <p class="feature-desc">Role-based auth with email verification. TPO accounts are managed only by Admin for
+          <p class="feature-desc">Role-based auth with email verification. TPO accounts managed only by Admin for
             security.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── STATS ── -->
+  <!-- ══ STATS ══ -->
   <section class="stats-section">
     <div style="max-width:1100px;margin:0 auto;text-align:center;">
-      <h2 class="section-title">Numbers That Speak</h2>
-      <p class="section-sub">Real impact. Real placements.</p>
+      <div class="section-label">By the Numbers</div>
+      <h2 class="section-title">Real Impact. Real Placements.</h2>
     </div>
     <div class="stats-grid">
       <div class="stat-card">
@@ -227,7 +324,7 @@
     </div>
   </section>
 
-  <!-- ── ROLES ── -->
+  <!-- ══ ROLES ══ -->
   <section class="roles-section" id="roles">
     <div style="max-width:1100px;margin:0 auto;">
       <div class="section-head">
@@ -235,56 +332,47 @@
         <h2 class="section-title">Three Roles, One Platform</h2>
       </div>
       <div class="roles-grid">
-
         <!-- Student -->
-        <div class="role-card" style="border:1px solid rgba(37,99,235,.2);"
-          onmouseenter="this.style.boxShadow='0 16px 48px rgba(37,99,235,.15)'"
-          onmouseleave="this.style.boxShadow='none'">
-          <div class="role-header" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);">
+        <div class="role-card" style="border-color:rgba(23,89,214,.16);">
+          <div class="role-header" style="background:linear-gradient(135deg,#ddeaf8,#c8daf4);">
             <div class="role-emoji">🎓</div>
             <div class="role-name">Student</div>
           </div>
           <div class="role-body">
             <ul class="role-list">
-              <li><span class="role-check" style="color:#2563eb;">✓</span>Smart-matched job recommendations</li>
-              <li><span class="role-check" style="color:#2563eb;">✓</span>One-click apply &amp; real-time tracking</li>
-              <li><span class="role-check" style="color:#2563eb;">✓</span>Resume &amp; profile management</li>
-              <li><span class="role-check" style="color:#2563eb;">✓</span>Online test access from dashboard</li>
+              <li><span class="role-check" style="color:var(--primary);">✓</span>Smart-matched job recommendations</li>
+              <li><span class="role-check" style="color:var(--primary);">✓</span>One-click apply &amp; real-time
+                tracking</li>
+              <li><span class="role-check" style="color:var(--primary);">✓</span>Resume &amp; profile management</li>
+              <li><span class="role-check" style="color:var(--primary);">✓</span>Online test access from dashboard</li>
             </ul>
-           <a href="pages/StudentSignup.html" class="btn-primary" style="background:#2563eb; padding:12px 25px; color:white; text-decoration:none; display:inline-block;">
-  Join as Student 
-</a>
+            <a href="pages/StudentSignup.html" class="btn-primary" style="padding:11px 22px;font-size:13.5px;">Join as
+              Student →</a>
           </div>
         </div>
-
         <!-- Company -->
-        <div class="role-card" style="border:1px solid rgba(5,150,105,.2);"
-          onmouseenter="this.style.boxShadow='0 16px 48px rgba(5,150,105,.15)'"
-          onmouseleave="this.style.boxShadow='none'">
-          <div class="role-header" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);">
+        <div class="role-card" style="border-color:rgba(10,173,160,.16);">
+          <div class="role-header" style="background:linear-gradient(135deg,#d0f2ee,#b8e8e2);">
             <div class="role-emoji">🏢</div>
             <div class="role-name">Company</div>
           </div>
           <div class="role-body">
             <ul class="role-list">
-              <li><span class="role-check" style="color:#059669;">✓</span>Post jobs with PDF description</li>
-              <li><span class="role-check" style="color:#059669;">✓</span>Filter students by CGPA &amp; skills</li>
-              <li><span class="role-check" style="color:#059669;">✓</span>Shortlist &amp; schedule interviews</li>
-              <li><span class="role-check" style="color:#059669;">✓</span>Online or offline exam integration</li>
+              <li><span class="role-check" style="color:var(--teal);">✓</span>Post jobs with PDF description</li>
+              <li><span class="role-check" style="color:var(--teal);">✓</span>Filter students by CGPA &amp; skills</li>
+              <li><span class="role-check" style="color:var(--teal);">✓</span>Shortlist &amp; schedule interviews</li>
+              <li><span class="role-check" style="color:var(--teal);">✓</span>Online or offline exam integration</li>
             </ul>
-              <a href="pages/Companysignup.html" class="btn-secondary" style="background:#059669; padding:12px 25px; color:white; text-decoration:none; display:inline-block;">
-  Post a Job 
-</a>
+            <a href="pages/Companysignup.html" class="btn-primary"
+              style="background:var(--teal);box-shadow:0 4px 18px rgba(10,173,160,0.28);padding:11px 22px;font-size:13.5px;">Post
+              a Job →</a>
           </div>
         </div>
-
         <!-- TPO -->
-        <div class="role-card" style="border:1px solid rgba(124,58,237,.2);"
-          onmouseenter="this.style.boxShadow='0 16px 48px rgba(124,58,237,.15)'"
-          onmouseleave="this.style.boxShadow='none'">
-          <div class="role-header" style="background:linear-gradient(135deg,#faf5ff,#ede9fe);">
+        <div class="role-card" style="border-color:rgba(124,58,237,.18);">
+          <div class="role-header" style="background:linear-gradient(135deg,#ede9fe,#ddd6fe);">
             <div class="role-emoji">🛡️</div>
-            <div class="role-name">TPO / Admin</div>
+            <div class="role-name" style="color:#4c1d95;">TPO / Admin</div>
           </div>
           <div class="role-body">
             <ul class="role-list">
@@ -293,39 +381,70 @@
               <li><span class="role-check" style="color:#7c3aed;">✓</span>Generate placement reports</li>
               <li><span class="role-check" style="color:#7c3aed;">✓</span>Manage student &amp; company data</li>
             </ul>
-       <a href="pages/TPOsignup.html" class="btn-secondary" style="background:#7c3aed; padding:12px 25px; color:white; text-decoration:none; display:inline-block;">
-  Join as TPO / Admin 
-</a>
+            <a href="pages/TPOsignup.html" class="btn-primary"
+              style="background:#7c3aed;box-shadow:0 4px 18px rgba(124,58,237,0.3);padding:11px 22px;font-size:13.5px;">TPO
+              / Admin Login →</a>
           </div>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- ── CTA ── -->
+  <!-- ══ CTA ══ -->
   <section class="cta-section" id="contact">
     <div class="cta-inner">
       <div class="cta-badge">🚀 Smart placements start here</div>
       <h2 class="cta-title">Ready to Transform<br />Campus Recruitment?</h2>
-      <p class="cta-sub">
-        Join thousands of students and top companies already using CampusPlace to make smarter hiring decisions.
-      </p>
+      <p class="cta-sub">Join thousands of students and top companies already using CampusPlace to make smarter hiring
+        decisions.</p>
       <div class="cta-btns">
-        <a href="pages/Signup.html" class="btn-white">Get Started Free →</a>
-        <a href="#" class="btn-ghost">View Demo</a>
+        <a href="pages/Signup.html" class="btn-white-solid">Get Started Free →</a>
+        <a href="#" class="btn-outline-white">View Demo</a>
       </div>
     </div>
   </section>
 
-  <!-- ── FOOTER ── -->
+  <!-- ══ FOOTER ══ -->
   <footer>
     <div class="footer-inner">
       <div class="footer-top">
         <div class="footer-logo">
           <div class="footer-logo-row">
-            <div class="footer-logo-icon">🎓</div>
-            <span class="footer-logo-text">Campus<span>Place</span></span>
+            <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"
+              style="flex-shrink:0">
+              <defs>
+                <linearGradient id="fbg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#1a4fd6" />
+                  <stop offset="100%" stop-color="#0f3ab8" />
+                </linearGradient>
+              </defs>
+              <rect width="48" height="48" rx="11" fill="url(#fbg)" />
+              <rect x="1" y="1" width="46" height="23" rx="10" fill="rgba(255,255,255,0.06)" />
+              <path d="M16.5 21 L16.5 26.5 Q16.5 29.5 24 29.5 Q31.5 29.5 31.5 26.5 L31.5 21 Z" fill="white" />
+              <polygon points="24,11.5 39.5,19 24,26.5 8.5,19" fill="white" />
+              <polygon points="8.5,19 8.5,22 24,29.5 24,26.5" fill="rgba(255,255,255,0.42)" />
+              <polygon points="39.5,19 39.5,22 24,29.5 24,26.5" fill="rgba(255,255,255,0.58)" />
+              <path d="M39.5 19 Q43 19 43 23 L43 29.5" stroke="white" stroke-width="1.5" fill="none"
+                stroke-linecap="round" />
+              <circle cx="43" cy="29.5" r="2" fill="white" />
+              <line x1="41.1" y1="31.2" x2="40" y2="36.5" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <line x1="42.3" y1="31.4" x2="41.8" y2="37" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <line x1="43.6" y1="31.4" x2="44" y2="37" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <line x1="44.8" y1="31.2" x2="46" y2="36.5" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <path d="M40 36 Q43 37 46 36" stroke="rgba(255,255,255,0.55)" stroke-width="1.1" fill="none"
+                stroke-linecap="round" />
+            </svg>
+            <div style="display:flex;flex-direction:column;gap:3px;">
+              <div style="display:flex;align-items:baseline;gap:2px;line-height:1;">
+                <span
+                  style="font-family:'Satisfy',cursive;font-weight:400;font-size:1.3rem;color:#c8d8f4;letter-spacing:0.01em;">Campus</span><span
+                  style="font-family:'Playfair Display',serif;font-weight:700;font-size:1.05rem;color:#3ecfc3;">.</span><span
+                  style="font-family:'Playfair Display',serif;font-weight:800;font-size:1.25rem;color:#3ecfc3;letter-spacing:-0.01em;">Place</span>
+              </div>
+              <div
+                style="font-family:'DM Sans',sans-serif;font-size:9px;color:#2e4460;letter-spacing:0.18em;text-transform:uppercase;">
+                Placement Portal</div>
+            </div>
           </div>
           <p class="footer-desc">A centralized placement portal for smarter campus recruitment, connecting students and
             companies seamlessly.</p>
@@ -335,89 +454,83 @@
             <div class="footer-col-title">Platform</div>
             <a href="#" class="footer-link">Browse Jobs</a>
             <a href="#" class="footer-link">Post a Job</a>
-            <a href="#" class="footer-link">How It Works</a>
-            <a href="#" class="footer-link">Features</a>
+            <a href="#how" class="footer-link">How It Works</a>
+            <a href="#features" class="footer-link">Features</a>
           </div>
           <div>
             <div class="footer-col-title">Users</div>
             <a href="pages/StudentSignup.html" class="footer-link">Students</a>
             <a href="pages/Companysignup.html" class="footer-link">Companies</a>
             <a href="pages/TPOsignup.html" class="footer-link">TPO / Admin</a>
-            <a href="#" class="footer-link">Contact Us</a>
+            <a href="pages/ContactUs.html" class="footer-link">Contact Us</a>
           </div>
         </div>
       </div>
       <div class="footer-bottom">
         <span>© 2026 CampusPlace. All rights reserved.</span>
-        <span>Built for campus recruitment excellence.</span>
+        <span style="color:#3a506a;">Built for campus recruitment excellence.</span>
       </div>
     </div>
   </footer>
 
   <script>
-    // Navbar shadow & blur on scroll
+    // Navbar scroll shadow
     const nav = document.querySelector('nav');
     window.addEventListener('scroll', () => {
       if (window.scrollY > 20) {
-        nav.style.background = 'rgba(255,255,255,0.85)';
-        nav.style.boxShadow = '0 10px 30px rgba(0,0,0,0.08)';
-        nav.style.backdropFilter = 'blur(16px)';
+        nav.style.background = 'rgba(238,244,249,0.97)';
+        nav.style.boxShadow = '0 6px 24px rgba(23,89,214,0.07)';
       } else {
-        nav.style.background = 'rgba(255,255,255,0.97)';
+        nav.style.background = 'rgba(238,244,249,0.9)';
         nav.style.boxShadow = 'none';
-        nav.style.backdropFilter = 'blur(12px)';
       }
     });
 
-    // Reveal Animations on Scroll
-    const revealOptions = { threshold: 0.15, rootMargin: "0px 0px -50px 0px" };
-    const revealObserver = new IntersectionObserver((entries, observer) => {
+    // Scroll-reveal
+    const observer = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.style.animationPlayState = 'running';
           entry.target.style.opacity = '1';
-          observer.unobserve(entry.target);
+          obs.unobserve(entry.target);
         }
       });
-    }, revealOptions);
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
-    document.querySelectorAll('.how-card, .feature-card, .role-card, .section-head, .pipeline').forEach((el, i) => {
+    document.querySelectorAll(
+      '.how-card,.feature-card,.role-card,.about-card,.section-head,.pipeline,.stat-card'
+    ).forEach((el, i) => {
       el.style.opacity = '0';
       el.style.willChange = 'transform, opacity';
-      const delay = (i % 3) * 0.1;
-      el.style.animation = `fadeUp 0.6s ${delay}s cubic-bezier(0.16, 1, 0.3, 1) forwards`;
+      const delay = (i % 4) * 0.09;
+      el.style.animation = `fadeUp 0.6s ${delay}s cubic-bezier(0.16,1,0.3,1) forwards`;
       el.style.animationPlayState = 'paused';
-      revealObserver.observe(el);
+      observer.observe(el);
     });
 
-    // Animated count-up on scroll into view
+    // Count-up
     function animateCount(el, target, suffix, duration, decimal) {
       let start = null;
-      const step = (timestamp) => {
-        if (!start) start = timestamp;
-        const progress = Math.min((timestamp - start) / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        const val = decimal
-          ? (eased * target).toFixed(1)
-          : Math.floor(eased * target).toLocaleString();
-        el.textContent = val + suffix;
-        if (progress < 1) requestAnimationFrame(step);
+      const step = ts => {
+        if (!start) start = ts;
+        const p = Math.min((ts - start) / duration, 1);
+        const e = 1 - Math.pow(1 - p, 3);
+        el.textContent = (decimal ? (e * target).toFixed(1) : Math.floor(e * target).toLocaleString()) + suffix;
+        if (p < 1) requestAnimationFrame(step);
       };
       requestAnimationFrame(step);
     }
 
-    const statsSection = document.querySelector('.stats-section');
     let counted = false;
-    const statObserver = new IntersectionObserver(([entry]) => {
+    new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !counted) {
         counted = true;
-        animateCount(document.getElementById('stat1'), 3200, '+', 2000, false);
-        animateCount(document.getElementById('stat2'), 120, '+', 2000, false);
-        animateCount(document.getElementById('stat3'), 94, '%', 2000, false);
-        animateCount(document.getElementById('stat4'), 4.9, '★', 2000, true);
+        animateCount(document.getElementById('stat1'), 3200, '+', 1800, false);
+        animateCount(document.getElementById('stat2'), 120, '+', 1800, false);
+        animateCount(document.getElementById('stat3'), 94, '%', 1800, false);
+        animateCount(document.getElementById('stat4'), 4.9, '★', 1800, true);
       }
-    }, { threshold: 0.3 });
-    if (statsSection) statObserver.observe(statsSection);
+    }, { threshold: 0.3 }).observe(document.querySelector('.stats-section'));
   </script>
 </body>
 

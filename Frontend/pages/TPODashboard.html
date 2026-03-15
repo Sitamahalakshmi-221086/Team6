@@ -3,12 +3,15 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>CampusPlace – TPO Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap"
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,800&family=DM+Sans:wght@300;400;500;600;700&family=Satisfy&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="../css/loginstyle.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <link rel="stylesheet" href="../css/tpodashboard.css">
+  <script src="../js/tpo.js" defer></script>
 </head>
 
 <body>
@@ -16,34 +19,37 @@
   <!-- ══ TOAST ══ -->
   <div id="toast">Saved!</div>
 
-  <!-- ══ NOTIFICATION PANEL ══ -->
+  <!-- ══ NOTIF PANEL ══ -->
   <div class="notif-panel" id="notif-panel">
-    <div class="notif-h"><span>Notifications</span><button onclick="toggleNotif()">✕</button></div>
-    <div class="notif-row"><span class="n-dot u"></span>
+    <div class="notif-hdr">
+      <span class="notif-hdr-title">Notifications</span>
+      <span style="font-size:12px;color:var(--P);font-weight:600;cursor:pointer;">Mark all read</span>
+    </div>
+    <div class="notif-item unread"><span class="n-dot u"></span>
       <div>
         <div class="n-text"><strong>Microsoft</strong> requested a campus drive for Apr 5.</div>
         <div class="n-time">20 min ago</div>
       </div>
     </div>
-    <div class="notif-row"><span class="n-dot u"></span>
+    <div class="notif-item unread"><span class="n-dot u"></span>
       <div>
         <div class="n-text"><strong>Arjun Sharma</strong> submitted a new resume update.</div>
         <div class="n-time">1 hour ago</div>
       </div>
     </div>
-    <div class="notif-row"><span class="n-dot u"></span>
+    <div class="notif-item unread"><span class="n-dot u"></span>
       <div>
         <div class="n-text"><strong>4 students</strong> approved for TCS drive on Mar 22.</div>
         <div class="n-time">3 hours ago</div>
       </div>
     </div>
-    <div class="notif-row"><span class="n-dot r2"></span>
+    <div class="notif-item"><span class="n-dot r"></span>
       <div>
         <div class="n-text">Placement report for Feb 2025 is due.</div>
         <div class="n-time">Yesterday</div>
       </div>
     </div>
-    <div class="notif-row"><span class="n-dot r2"></span>
+    <div class="notif-item"><span class="n-dot r"></span>
       <div>
         <div class="n-text">Infosys confirmed drive at your college for Mar 18.</div>
         <div class="n-time">Yesterday</div>
@@ -52,36 +58,31 @@
   </div>
 
   <!-- ══ POST NOTICE MODAL ══ -->
-  <div class="overlay" id="notice-modal" onclick="closeOverlay(event,'notice-modal')">
+  <div class="overlay" id="notice-modal" onclick="if(event.target===this)closeModal('notice-modal')">
     <div class="modal">
       <button class="modal-close" onclick="closeModal('notice-modal')">✕</button>
       <div class="modal-title">Post a Notice</div>
       <div class="modal-sub">Notices are visible to all students on the portal.</div>
-      <div class="fg"><label>Notice Title *</label><input id="n-title"
-          placeholder="e.g. Microsoft Drive – Eligibility Update" /></div>
-      <div class="fg"><label>Category</label>
-        <select>
+      <div class="fg"><label>Notice Title *</label><input placeholder="e.g. Microsoft Drive – Eligibility Update" />
+      </div>
+      <div class="fg"><label>Category</label><select>
           <option>General</option>
           <option>Company Drive</option>
           <option>Exam / Test</option>
           <option>Interview</option>
           <option>Offer / Selection</option>
-        </select>
-      </div>
-      <div class="fg"><label>Visible To</label>
-        <select>
+        </select></div>
+      <div class="fg"><label>Visible To</label><select>
           <option>All Students</option>
           <option>CSE Only</option>
           <option>Shortlisted Students</option>
-        </select>
-      </div>
-      <div class="fg"><label>Message *</label><textarea id="n-body" placeholder="Write the full notice content here…"
+        </select></div>
+      <div class="fg"><label>Message *</label><textarea placeholder="Write the full notice content here…"
           style="min-height:100px;"></textarea></div>
       <div class="fg"><label>Attachment (optional)</label><input type="file" style="padding:6px;" /></div>
       <div style="display:flex;gap:8px;margin-top:4px;">
-        <button class="btn lg"
-          onclick="closeModal('notice-modal');showToast('Notice posted to all students.')"><!-- [BACKEND_NEEDED]: Logic to save and broadcast notice -->
-          <svg viewBox="0 0 24 24">
+        <button class="btn lg" onclick="closeModal('notice-modal');showToast('Notice posted to all students.')">
+          <svg viewBox="0 0 24 24" width="18" height="18">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
             <path d="M13.73 21a2 2 0 0 1-3.46 0" />
           </svg>
@@ -93,7 +94,7 @@
   </div>
 
   <!-- ══ SCHEDULE DRIVE MODAL ══ -->
-  <div class="overlay" id="drive-modal" onclick="closeOverlay(event,'drive-modal')">
+  <div class="overlay" id="drive-modal" onclick="if(event.target===this)closeModal('drive-modal')">
     <div class="modal">
       <button class="modal-close" onclick="closeModal('drive-modal')">✕</button>
       <div class="modal-title">Schedule Campus Drive</div>
@@ -122,8 +123,8 @@
       </div>
       <div style="display:flex;gap:8px;margin-top:4px;">
         <button class="btn lg"
-          onclick="closeModal('drive-modal');showToast('Drive scheduled and notified to students.')"><!-- [BACKEND_NEEDED]: Logic to save drive and notify students -->
-          <svg viewBox="0 0 24 24">
+          onclick="closeModal('drive-modal');showToast('Drive scheduled and notified to students.')">
+          <svg viewBox="0 0 24 24" width="18" height="18">
             <path d="M5 13l4 4L19 7" />
           </svg>
           Schedule Drive
@@ -133,38 +134,34 @@
     </div>
   </div>
 
-  <!-- ══ SIDEBAR ══ -->
+  <!-- ════ SIDEBAR ════ -->
   <aside class="sidebar" id="sidebar">
-    <!-- Logo = toggle button -->
     <div class="sb-logo" onclick="toggleSidebar()" title="Toggle sidebar">
-      <div class="sb-logo-mark">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 2L2 7l10 5 10-5-10-5z" />
-          <path d="M2 17l10 5 10-5" />
-          <path d="M2 12l10 5 10-5" />
-        </svg>
-
+      <svg class="sb-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="48" height="48" rx="11" fill="url(#tlg)" />
+        <defs>
+          <linearGradient id="tlg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#4c1d95" />
+            <stop offset="1" stop-color="#7c3aed" />
+          </linearGradient>
+        </defs>
+        <polygon points="24,11.5 39.5,19 24,26.5 8.5,19" fill="white" />
+        <polygon points="8.5,19 8.5,22 24,29.5 24,26.5" fill="white" opacity=".42" />
+        <polygon points="39.5,19 39.5,22 24,29.5 24,26.5" fill="white" opacity=".58" />
+        <path d="M16.5 21 L16.5 26.5 Q16.5 29.5 24 29.5 Q31.5 29.5 31.5 26.5 L31.5 21 Z" fill="white" />
+        <path d="M39.5 19 Q43 19 43 23 L43 29.5" stroke="white" stroke-width="1.5" fill="none" />
+        <circle cx="43" cy="29.5" r="2" fill="white" />
+      </svg>
+      <div class="sb-wm">
+        <span class="sb-wc">Campus</span><span class="sb-dot">.</span><span class="sb-wp">Place</span>
       </div>
-      <span class="sb-logo-name">Campus<span>Place</span></span>
     </div>
 
-    <!-- User strip -->
     <div class="sb-user">
       <div class="tpo-av">
-        <svg viewBox="0 0 24 24">
-          <path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z" />
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
           <path d="M6 12v5c3 3 9 3 12 0v-5" />
-        </svg>-->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#1a3c8f"
-          stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="5" r="3" fill="#1a3c8f" />
-          <path d="M7 22 Q7 14 12 13 Q17 14 17 22" fill="#1a3c8f" stroke="#1a3c8f" />
-          <path d="M12 13 L10.5 16 L12 15 L13.5 16 L12 13" fill="#f5c842" stroke="none" />
-          <path d="M12 13 L9 16" stroke="white" stroke-width="1" />
-          <path d="M12 13 L15 16" stroke="white" stroke-width="1" />
-          <rect x="15" y="15" width="5" height="4" rx="0.8" fill="#8B6914" />
-          <path d="M16.5 15 v-1 a1 1 0 0 1 2 0 v1" stroke="#8B6914" stroke-width="1" fill="none" />
-          <line x1="15" y1="17" x2="20" y2="17" stroke="#c8960c" stroke-width="0.8" />
         </svg>
       </div>
       <div>
@@ -174,132 +171,144 @@
     </div>
 
     <nav class="sb-nav">
-      <div class="sb-section-label">Overview</div>
+      <div class="sb-sec">Overview</div>
       <button class="nl on" onclick="go('home',this)">
-        <svg class="ic" viewBox="0 0 24 24">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-          <polyline points="9 22 9 12 15 12 15 22" />
-        </svg>
-        <span class="sb-text">Dashboard</span>
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+          </svg></span>
+        <span class="sb-label">Dashboard</span>
       </button>
       <button class="nl" onclick="go('students',this)">
-        <svg class="ic" viewBox="0 0 24 24">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg>
-        <span class="sb-text">Students</span>
-        <span class="nb i">320</span>
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg></span>
+        <span class="sb-label">Students</span>
+        <span class="sb-badge purple">320</span>
       </button>
       <button class="nl" onclick="go('companies',this)">
-        <svg class="ic" viewBox="0 0 24 24">
-          <rect x="2" y="7" width="20" height="14" rx="2" />
-          <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-        </svg>
-        <span class="sb-text">Companies</span>
-        <span class="nb">3</span>
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24">
+            <rect x="2" y="7" width="20" height="14" rx="2" />
+            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+          </svg></span>
+        <span class="sb-label">Companies</span>
+        <span class="sb-badge">3</span>
       </button>
       <button class="nl" onclick="go('drives',this)">
-        <svg class="ic" viewBox="0 0 24 24">
-          <rect x="3" y="4" width="18" height="18" rx="2" />
-          <line x1="16" y1="2" x2="16" y2="6" />
-          <line x1="8" y1="2" x2="8" y2="6" />
-          <line x1="3" y1="10" x2="21" y2="10" />
-        </svg>
-        <span class="sb-text">Campus Drives</span>
-      </button>
-      <button class="nl" onclick="go('placements',this)">
-        <svg class="ic" viewBox="0 0 24 24">
-          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-        </svg>
-        <span class="sb-text">Placements</span>
-      </button>
-
-      <div class="sb-section-label">Manage</div>
-      <button class="nl" onclick="go('notices',this)">
-        <svg class="ic" viewBox="0 0 24 24">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-        </svg>
-        <span class="sb-text">Notices</span>
-        <span class="nb">2</span>
-      </button>
-      <button class="nl" onclick="go('reports',this)">
-        <svg class="ic" viewBox="0 0 24 24">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-          <polyline points="14 2 14 8 20 8" />
-          <line x1="16" y1="13" x2="8" y2="13" />
-          <line x1="16" y1="17" x2="8" y2="17" />
-          <polyline points="10 9 9 9 8 9" />
-        </svg>
-        <span class="sb-text">Reports</span>
-      </button>
-      <button class="nl" onclick="go('profile',this)">
-        <svg class="ic" viewBox="0 0 24 24">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-          <circle cx="12" cy="7" r="4" />
-        </svg>
-        <span class="sb-text">My Profile</span>
-      </button>
-      <button class="nl" onclick="go('settings',this)">
-        <svg class="ic" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="3" />
-          <path
-            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-        </svg>
-        <span class="sb-text">Settings</span>
-      </button>
-    </nav>
-
-    <div class="sb-foot">
-      <button class="nl" style="color:var(--red);" onclick="logout()">
-        <svg class="ic" viewBox="0 0 24 24">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-          <polyline points="16 17 21 12 16 7" />
-          <line x1="21" y1="12" x2="9" y2="12" />
-        </svg>
-        <span class="sb-text">Log Out</span>
-      </button>
-    </div>
-  </aside>
-
-  <!-- ══ MAIN ══ -->
-  <div class="main" id="main-content">
-
-    <header class="topbar">
-      <span class="tb-title" id="tb-title">Dashboard</span>
-      <div class="tb-right">
-        <button class="btn sm" onclick="openModal('drive-modal')" style="padding:6px 14px;font-size:12.5px;">
-          <svg viewBox="0 0 24 24">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24">
             <rect x="3" y="4" width="18" height="18" rx="2" />
             <line x1="16" y1="2" x2="16" y2="6" />
             <line x1="8" y1="2" x2="8" y2="6" />
             <line x1="3" y1="10" x2="21" y2="10" />
+          </svg></span>
+        <span class="sb-label">Campus Drives</span>
+      </button>
+      <button class="nl" onclick="go('placements',this)">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg></span>
+        <span class="sb-label">Placements</span>
+      </button>
+
+      <div class="sb-sec">Manage</div>
+      <button class="nl" onclick="go('analytics',this)">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24">
+            <line x1="18" y1="20" x2="18" y2="10" />
+            <line x1="12" y1="20" x2="12" y2="4" />
+            <line x1="6" y1="20" x2="6" y2="14" />
+          </svg></span>
+        <span class="sb-label">Analytics</span>
+      </button>
+      <button class="nl" onclick="go('notices',this)">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg></span>
+        <span class="sb-label">Notices</span>
+        <span class="sb-badge purple">2</span>
+      </button>
+      <button class="nl" onclick="go('reports',this)">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
+          </svg></span>
+        <span class="sb-label">Reports</span>
+      </button>
+
+      <div class="sb-sec">Account</div>
+      <button class="nl" onclick="go('profile',this)">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg></span>
+        <span class="sb-label">My Profile</span>
+      </button>
+      <button class="nl" onclick="go('settings',this)">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg></span>
+        <span class="sb-label">Settings</span>
+      </button>
+    </nav>
+
+    <div class="sb-foot">
+      <button class="nl" style="color:var(--R);" onclick="logout()">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg></span>
+        <span class="sb-label">Log Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ════ MAIN ════ -->
+  <div class="main" id="main-content">
+    <header class="topbar">
+      <div class="tb-left">
+        <button class="tb-toggle" onclick="toggleSidebar()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+        <span class="tb-title" id="tb-title">Dashboard</span>
+      </div>
+      <div class="tb-right">
+        <div class="tb-search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--txmu)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input placeholder="Search students, companies, drives…" oninput="globalSearch(this.value)" />
+        </div>
+        <button class="btn sm" onclick="openModal('drive-modal')">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
           </svg>
           Schedule Drive
         </button>
-        <button class="btn sm sec" onclick="openModal('notice-modal')" style="padding:6px 14px;font-size:12.5px;">
-          <svg viewBox="0 0 24 24">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-          </svg>
-          Post Notice
-        </button>
         <div class="icon-btn" onclick="toggleNotif()">
-          <svg viewBox="0 0 24 24">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
             <path d="M13.73 21a2 2 0 0 1-3.46 0" />
           </svg>
           <span class="rdot"></span>
         </div>
-        <div class="tb-chip" onclick="go('profile',document.querySelector('[onclick*=profile]'))" title="My Profile">
-          <div class="tb-chip-av">
-            <svg viewBox="0 0 24 24">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-              <circle cx="12" cy="7" r="4" />
-            </svg>
-          </div>
+        <div class="icon-btn" onclick="toggleDarkMode()" id="top-dark-toggle">
+          <svg id="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </div>
+        <div class="tb-chip" onclick="go('profile',document.querySelector('.nl[onclick*=profile]'))">
+          <div class="tb-av">RK</div>
           <span id="tb-name">Dr. Ramesh</span>
         </div>
       </div>
@@ -309,218 +318,300 @@
 
       <!-- ══════════ HOME ══════════ -->
       <div class="page on" id="pg-home">
-        <div class="banner">
-          <div>
-            <h2 id="greet-msg">Good morning, Dr. Ramesh Kumar</h2>
-            <p>3 company requests pending · 2 drives this week · 18 students placed this month.</p>
+        <div class="greet-banner">
+          <div style="flex:1;">
+            <div class="greet-hi" id="greet-msg">Good morning, Dr. Ramesh 👋</div>
+            <div class="greet-sub">High activity today — <strong>3 company requests</strong> pending and 1 mega drive scheduled.</div>
+            <div class="tpo-focus-card">
+              <div class="tfc-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                  <line x1="12" y1="9" x2="12" y2="13"/>
+                  <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+              </div>
+              <div class="tfc-info">
+                <div class="tfc-top">Next Major Event</div>
+                <div class="tfc-main"><strong>TCS Prime</strong> Recruitment Drive</div>
+                <div class="tfc-sub">Mar 18 · 320 students eligible. Please finalize hall allocations.</div>
+              </div>
+              <button class="btn sm" onclick="go('companies',document.querySelector('.nl[onclick*=companies]'))" style="margin-left:auto;background:#fff;color:var(--P);">Review Details</button>
+            </div>
           </div>
-          <div class="banner-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z" />
-              <path d="M6 12v5c3 3 9 3 12 0v-5" />
-            </svg> -->
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="none"
-              stroke="#1a3c8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="5" r="3" fill="#1a3c8f" />
-              <path d="M7 22 Q7 14 12 13 Q17 14 17 22" fill="#1a3c8f" stroke="#1a3c8f" />
-              <path d="M12 13 L10.5 16 L12 15 L13.5 16 L12 13" fill="#f5c842" stroke="none" />
-              <path d="M12 13 L9 16" stroke="white" stroke-width="1" />
-              <path d="M12 13 L15 16" stroke="white" stroke-width="1" />
-              <rect x="15" y="15" width="5" height="4" rx="0.8" fill="#8B6914" />
-              <path d="M16.5 15 v-1 a1 1 0 0 1 2 0 v1" stroke="#8B6914" stroke-width="1" fill="none" />
-              <line x1="15" y1="17" x2="20" y2="17" stroke="#c8960c" stroke-width="0.8" />
-            </svg>
+          <div class="greet-right">
+            <div class="greet-stat">
+              <div class="greet-stat-val">320</div>
+              <div class="greet-stat-lbl">Students</div>
+            </div>
+            <div class="greet-stat">
+              <div class="greet-stat-val">3</div>
+              <div class="greet-stat-lbl">Requests</div>
+            </div>
+            <div class="greet-stat">
+              <div class="greet-stat-val">Mar 18</div>
+              <div class="greet-stat-lbl">Next Drive</div>
+            </div>
           </div>
         </div>
 
-        <div class="stats">
-          <div class="stat">
-            <div class="stat-icon i"><svg viewBox="0 0 24 24">
+        <div class="stats-row">
+          <div class="stat-card" onclick="go('students',document.querySelector('.nl[onclick*=students]'))">
+            <div class="stat-icon" style="background:var(--PL);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--P)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                 <circle cx="9" cy="7" r="4" />
-              </svg></div>
-            <div class="stat-body">
-              <div class="stat-l">Total Students</div>
-              <div class="stat-v">320</div>
-              <div class="stat-n i">Final year: 84</div>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </div>
+            <div class="stat-val" style="color:var(--P);">320</div>
+            <div class="stat-lbl">Total Students</div>
+            <div class="stat-note" style="color:var(--P);">
+              <svg viewBox="0 0 24 24" width="12" height="12">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              Final year: 84
             </div>
           </div>
-          <div class="stat">
-            <div class="stat-icon g"><svg viewBox="0 0 24 24">
+          <div class="stat-card" onclick="go('placements',document.querySelector('.nl[onclick*=placements]'))">
+            <div class="stat-icon" style="background:var(--GL);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--G)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-              </svg></div>
-            <div class="stat-body">
-              <div class="stat-l">Placed This Year</div>
-              <div class="stat-v">138</div>
-              <div class="stat-n g">43% placement rate</div>
+              </svg>
+            </div>
+            <div class="stat-val" style="color:var(--G);">138</div>
+            <div class="stat-lbl">Placed This Year</div>
+            <div class="stat-note" style="color:var(--G);">
+              <svg viewBox="0 0 24 24" width="12" height="12">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                <polyline points="17 6 23 6 23 12" />
+              </svg>
+              43% rate · ↑8% YoY
             </div>
           </div>
-          <div class="stat">
-            <div class="stat-icon a"><svg viewBox="0 0 24 24">
+          <div class="stat-card" onclick="go('drives',document.querySelector('.nl[onclick*=drives]'))">
+            <div class="stat-icon" style="background:var(--AL);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--A)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="4" width="18" height="18" rx="2" />
                 <line x1="16" y1="2" x2="16" y2="6" />
                 <line x1="8" y1="2" x2="8" y2="6" />
                 <line x1="3" y1="10" x2="21" y2="10" />
-              </svg></div>
-            <div class="stat-body">
-              <div class="stat-l">Drives This Month</div>
-              <div class="stat-v">4</div>
-              <div class="stat-n a">Next: Mar 18</div>
+              </svg>
+            </div>
+            <div class="stat-val" style="color:var(--A);">4</div>
+            <div class="stat-lbl">Drives This Month</div>
+            <div class="stat-note" style="color:var(--A);">
+              <svg viewBox="0 0 24 24" width="12" height="12">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              Next: Mar 18
             </div>
           </div>
-          <div class="stat">
-            <div class="stat-icon r"><svg viewBox="0 0 24 24">
+          <div class="stat-card" onclick="go('companies',document.querySelector('.nl[onclick*=companies]'))">
+            <div class="stat-icon" style="background:var(--TL);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--T)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="7" width="20" height="14" rx="2" />
                 <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-              </svg></div>
-            <div class="stat-body">
-              <div class="stat-l">Company Requests</div>
-              <div class="stat-v">3</div>
-              <div class="stat-n a">Awaiting approval</div>
+              </svg>
+            </div>
+            <div class="stat-val" style="color:var(--T);">3</div>
+            <div class="stat-lbl">Company Requests</div>
+            <div class="stat-note" style="color:var(--T);">
+              <svg viewBox="0 0 24 24" width="12" height="12">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              Awaiting approval
             </div>
           </div>
         </div>
 
-        <div class="cols">
+        <div class="g-2">
           <div>
-            <!-- Company Requests -->
-            <div class="block">
-              <div class="bh">
-                <span class="bt"><svg viewBox="0 0 24 24">
-                    <rect x="2" y="7" width="20" height="14" rx="2" />
-                    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-                  </svg>Pending Company Requests</span>
-                <button class="va" onclick="go('companies',document.querySelector('[onclick*=companies]'))">View all
-                  →</button>
+            <div class="sec-hd">
+              <div class="sec-title">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--P)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10" />
+                  <line x1="12" y1="20" x2="12" y2="4" />
+                  <line x1="6" y1="20" x2="6" y2="14" />
+                </svg>
+                Monthly Progress
               </div>
-              <div class="req-card">
-                <div class="req-top"><span class="req-co">Microsoft India</span><span
-                    class="pill pending">Pending</span></div>
-                <div class="req-meta">Drive request · Apr 5 · Roles: SDE, SDE-2 · ₹18–25 LPA · CSE, IT · CGPA ≥ 7.5
+              <button class="sec-link" onclick="go('analytics',document.querySelector('.nl[onclick*=analytics]'))">Analytics →</button>
+            </div>
+            <div class="card" style="margin-bottom:20px;">
+              <div style="display:flex;gap:14px;margin-bottom:12px;">
+                <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--txmu);"><span style="width:9px;height:9px;border-radius:2px;background:var(--P);"></span>Placed</div>
+                <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--txmu);"><span style="width:9px;height:9px;border-radius:2px;background:var(--T);"></span>In Process</div>
+              </div>
+              <div style="height:180px;"><canvas id="chart-home-progress"></canvas></div>
+            </div>
+
+            <!-- Placement status bars -->
+            <div class="sec-hd">
+              <div class="sec-title">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--G)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+                Batch Status
+              </div>
+            </div>
+            <div class="card" style="padding:16px 18px;margin-bottom:20px;">
+              <div class="prog-row"><span>Placed</span><span style="font-weight:700;color:var(--G);">138 / 320</span></div>
+              <div class="prog-bar">
+                <div class="prog-fill" style="width:43%;background:linear-gradient(90deg,var(--G),#4ade80);"></div>
+              </div>
+              <div class="prog-row"><span>In Process</span><span style="font-weight:700;color:var(--A);">46 / 320</span></div>
+              <div class="prog-bar">
+                <div class="prog-fill" style="width:14%;background:linear-gradient(90deg,var(--A),#fbbf24);"></div>
+              </div>
+              <div class="prog-row"><span>Not Applied</span><span style="font-weight:700;color:var(--txmu);">136 / 320</span></div>
+              <div class="prog-bar">
+                <div class="prog-fill" style="width:43%;background:#c4b5fd;"></div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;border-top:1px solid var(--brs);padding-top:12px;">
+                <div style="text-align:center;">
+                  <div style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:900;color:var(--txm);">₹13L</div>
+                  <div style="font-size:11px;color:var(--txmu);font-weight:600;text-transform:uppercase;">Avg Package</div>
                 </div>
-                <div class="req-actions"><button class="btn sm green"
-                    onclick="showToast('Microsoft drive approved.')"><!-- [BACKEND_NEEDED]: Logic to approve drive request -->Approve</button><button
-                    class="btn sm red">Decline</button><button class="btn sm sec">View Details</button></div>
-              </div>
-              <div class="req-card">
-                <div class="req-top"><span class="req-co">Amazon Dev Centre</span><span
-                    class="pill pending">Pending</span></div>
-                <div class="req-meta">Job post approval · Data Analyst · ₹18 LPA · CSE, IT, EEE</div>
-                <div class="req-actions"><button class="btn sm green"
-                    onclick="showToast('Amazon job post approved.')">Approve</button><button
-                    class="btn sm red">Decline</button><button class="btn sm sec">View Details</button></div>
-              </div>
-              <div class="req-card">
-                <div class="req-top"><span class="req-co">Wipro Technologies</span><span
-                    class="pill pending">Pending</span></div>
-                <div class="req-meta">Drive request · Apr 12 · Systems Engineer · ₹10 LPA · All branches</div>
-                <div class="req-actions"><button class="btn sm green"
-                    onclick="showToast('Wipro drive approved.')">Approve</button><button
-                    class="btn sm red">Decline</button><button class="btn sm sec">View Details</button></div>
+                <div style="text-align:center;">
+                  <div style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:900;color:var(--G);">₹25L</div>
+                  <div style="font-size:11px;color:var(--txmu);font-weight:600;text-transform:uppercase;">Highest</div>
+                </div>
+                <div style="text-align:center;">
+                  <div style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:900;color:var(--P);">43%</div>
+                  <div style="font-size:11px;color:var(--txmu);font-weight:600;text-transform:uppercase;">Rate</div>
+                </div>
               </div>
             </div>
 
-            <!-- Upcoming Drives -->
-            <div class="block">
-              <div class="bh">
-                <span class="bt"><svg viewBox="0 0 24 24">
-                    <rect x="3" y="4" width="18" height="18" rx="2" />
-                    <line x1="16" y1="2" x2="16" y2="6" />
-                    <line x1="8" y1="2" x2="8" y2="6" />
-                    <line x1="3" y1="10" x2="21" y2="10" />
-                  </svg>Upcoming Drives</span>
-                <button class="va" onclick="go('drives',document.querySelector('[onclick*=drives]'))">View all
-                  →</button>
+            <!-- Company requests -->
+            <div class="sec-hd">
+              <div class="sec-title">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--R)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="7" width="20" height="14" rx="2" />
+                  <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                </svg>
+                Company Requests
               </div>
-              <div class="drive-row">
-                <div class="date-box">
-                  <div class="date-d">18</div>
-                  <div class="date-m">Mar</div>
+              <button class="sec-link" onclick="go('companies',document.querySelector('.nl[onclick*=companies]'))">View All →</button>
+            </div>
+            <div class="card" style="padding:0;">
+              <div class="req-card">
+                <div class="req-top"><span class="req-co">Microsoft India</span><span class="pill pending">Pending</span></div>
+                <div class="req-meta">Drive request · Apr 5 · 18–25 LPA · CSE, IT</div>
+                <div class="req-actions">
+                  <button class="btn sm green" onclick="showToast('Microsoft drive approved.')">Approve</button>
+                  <button class="btn sm red">Decline</button>
+                  <button class="btn sm sec">Details</button>
                 </div>
-                <div class="drive-info">
-                  <div class="drive-name">Infosys Technologies</div>
-                  <div class="drive-meta">10:00 AM · CSE Block Hall · 120 students eligible</div>
-                </div><span class="pill confirmed">Confirmed</span>
               </div>
-              <div class="drive-row">
-                <div class="date-box">
-                  <div class="date-d">22</div>
-                  <div class="date-m">Mar</div>
+              <div class="req-card">
+                <div class="req-top"><span class="req-co">Amazon Centre</span><span class="pill pending">Pending</span></div>
+                <div class="req-meta">Job approval · Data Analyst · 18 LPA · CSE, IT</div>
+                <div class="req-actions">
+                  <button class="btn sm green" onclick="showToast('Amazon approved.')">Approve</button>
+                  <button class="btn sm red">Decline</button>
+                  <button class="btn sm sec">Details</button>
                 </div>
-                <div class="drive-info">
-                  <div class="drive-name">TCS Mass Hiring</div>
-                  <div class="drive-meta">9:00 AM · Main Auditorium · All branches</div>
-                </div><span class="pill confirmed">Confirmed</span>
               </div>
-              <div class="drive-row">
-                <div class="date-box">
-                  <div class="date-d">28</div>
-                  <div class="date-m">Mar</div>
+              <div class="req-card">
+                <div class="req-top"><span class="req-co">Wipro Tech</span><span class="pill pending">Pending</span></div>
+                <div class="req-meta">Drive request · Apr 12 · 10 LPA · All branches</div>
+                <div class="req-actions">
+                  <button class="btn sm green" onclick="showToast('Wipro approved.')">Approve</button>
+                  <button class="btn sm red">Decline</button>
+                  <button class="btn sm sec">Details</button>
                 </div>
-                <div class="drive-info">
-                  <div class="drive-name">Wipro Campus Connect</div>
-                  <div class="drive-meta">Online · Zoom · CSE, IT, ECE</div>
-                </div><span class="pill pending">Pending</span>
               </div>
             </div>
           </div>
 
           <!-- Right col -->
           <div>
-            <div class="block" style="margin-bottom:14px;">
-              <div class="bh"><span class="bt"><svg viewBox="0 0 24 24">
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                  </svg>Placement Overview</span></div>
-              <div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px;">
-                <div style="display:flex;justify-content:space-between;font-size:13px;"><span
-                    style="color:var(--sub);">Placed</span><span style="font-weight:600;color:var(--green);">138</span>
+            <div class="sec-hd">
+              <div class="sec-title">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--A)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                Upcoming Drives
+              </div>
+              <button class="sec-link" onclick="go('drives',document.querySelector('.nl[onclick*=drives]'))">View All →</button>
+            </div>
+            <div class="card" style="padding:0;margin-bottom:20px;">
+              <div class="drive-row">
+                <div class="dr-date"><div class="dr-dd">18</div><div class="dr-dm">Mar</div></div>
+                <div class="dr-info">
+                  <div class="dr-name">Infosys Technologies</div>
+                  <div class="dr-meta">10:00 AM · Blok Hall A · 120 eligible</div>
                 </div>
-                <div style="height:5px;background:#e5e7eb;border-radius:100px;overflow:hidden;margin-top:-6px;">
-                  <div
-                    style="height:100%;width:43%;background:linear-gradient(90deg,var(--green),#4ade80);border-radius:100px;">
-                  </div>
+                <span class="pill active">Confirmed</span>
+              </div>
+              <div class="drive-row">
+                <div class="dr-date"><div class="dr-dd">22</div><div class="dr-dm">Mar</div></div>
+                <div class="dr-info">
+                  <div class="dr-name">TCS Prime Drive</div>
+                  <div class="dr-meta">9:00 AM · Auditorium · All eligible</div>
                 </div>
-                <div style="display:flex;justify-content:space-between;font-size:13px;"><span
-                    style="color:var(--sub);">In Process</span><span
-                    style="font-weight:600;color:var(--amber);">46</span></div>
-                <div style="height:5px;background:#e5e7eb;border-radius:100px;overflow:hidden;margin-top:-6px;">
-                  <div
-                    style="height:100%;width:14%;background:linear-gradient(90deg,var(--amber),#fbbf24);border-radius:100px;">
-                  </div>
+                <span class="pill active">Confirmed</span>
+              </div>
+              <div class="drive-row">
+                <div class="dr-date"><div class="dr-dd">28</div><div class="dr-dm">Mar</div></div>
+                <div class="dr-info">
+                  <div class="dr-name">Wipro Connect</div>
+                  <div class="dr-meta">Online · Zoom · CSE, IT</div>
                 </div>
-                <div style="display:flex;justify-content:space-between;font-size:13px;"><span
-                    style="color:var(--sub);">Not Yet Applied</span><span
-                    style="font-weight:600;color:var(--sub);">136</span></div>
-                <div style="height:5px;background:#e5e7eb;border-radius:100px;overflow:hidden;margin-top:-6px;">
-                  <div style="height:100%;width:43%;background:#d1d5db;border-radius:100px;"></div>
-                </div>
+                <span class="pill pending">Pending</span>
               </div>
             </div>
 
-            <div class="block">
-              <div class="bh"><span class="bt"><svg viewBox="0 0 24 24">
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                  </svg>Recent Activity</span></div>
-              <div class="act-row"><span class="act-dot i"></span>
+            <div class="sec-hd">
+              <div class="sec-title">
+                <svg viewBox="0 0 24 24" width="18" height="18" style="color:var(--B);">
+                  <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+                  <path d="M22 12A10 10 0 0 0 12 2v10z" />
+                </svg>
+                Branch Distribution
+              </div>
+            </div>
+            <div class="card" style="margin-bottom:18px;">
+              <div style="height:140px;"><canvas id="chart-home-branch"></canvas></div>
+            </div>
+
+            <div class="sec-hd">
+              <div class="sec-title">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--T)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+                Recent Activity
+              </div>
+            </div>
+            <div class="card" style="padding:0;">
+              <div class="notif-item">
+                <div class="n-dot" style="background:var(--P);"></div>
                 <div>
-                  <div class="act-text"><strong>Microsoft</strong> submitted a new drive request.</div>
-                  <div class="act-time">20 min ago</div>
+                  <div class="n-text"><strong>Microsoft</strong> submitted a new request.</div>
+                  <div class="n-time">20 min ago</div>
                 </div>
               </div>
-              <div class="act-row"><span class="act-dot g"></span>
+              <div class="act-row"><span class="act-dot" style="background:var(--G);"></span>
                 <div>
                   <div class="act-text"><strong>Sneha Rao</strong> accepted offer from TCS.</div>
                   <div class="act-time">2 hours ago</div>
                 </div>
               </div>
-              <div class="act-row"><span class="act-dot a"></span>
+              <div class="act-row"><span class="act-dot" style="background:var(--A);"></span>
                 <div>
                   <div class="act-text">Infosys drive registration closed — <strong>120 registered</strong>.</div>
                   <div class="act-time">Yesterday</div>
                 </div>
               </div>
-              <div class="act-row"><span class="act-dot i"></span>
+              <div class="act-row"><span class="act-dot" style="background:var(--P);"></span>
                 <div>
                   <div class="act-text">Placement report for Feb generated.</div>
                   <div class="act-time">Yesterday</div>
@@ -529,23 +620,29 @@
             </div>
           </div>
         </div>
-      </div>
+      </div><!-- /pg-home -->
 
       <!-- ══════════ STUDENTS ══════════ -->
       <div class="page" id="pg-students">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-          <span class="sec-h" style="margin:0;">Student Management</span>
-          <div style="display:flex;gap:8px;">
-            <input
-              style="padding:7px 12px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;outline:none;width:200px;"
-              placeholder="Search students…" onfocus="this.style.borderColor='var(--ind)'"
-              onblur="this.style.borderColor='var(--border)'" />
-            <select
-              style="padding:7px 12px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;outline:none;background:var(--white);">
+        <div class="sec-hd">
+          <div class="sec-title">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--P)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+            Student Management
+          </div>
+          <div style="display:flex;gap:10px;">
+            <div class="tb-search" style="min-width:240px;margin:0;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--txl)" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input placeholder="Search roll no, name..." />
+            </div>
+            <select class="btn sm sec" style="padding-right:30px;">
               <option>All Branches</option>
               <option>CSE</option>
               <option>IT</option>
-              <option>ECE</option>
             </select>
           </div>
         </div>
@@ -556,148 +653,152 @@
           <button class="tab" onclick="swtab('st','unplaced',this)">Not Applied (136)</button>
         </div>
         <div class="tab-panel on" id="st-all">
-          <div class="block">
-            <div class="tr-head g5"><span>Student</span><span>Branch ·
+          <div class="card" style="padding:0;">
+            <div class="tbl-head g5"><span>Student</span><span>Branch ·
                 Year</span><span>CGPA</span><span>Status</span><span>Action</span></div>
-            <div class="tr g5">
+            <div class="tbl-row g5">
               <div>
-                <div class="tr-name">Arjun Sharma</div>
-                <div class="tr-sub">Roll: 21CSE045</div>
-              </div><span style="font-size:12.5px;color:var(--sub);">CSE · 3rd Year</span><span
+                <div class="tbl-name">Arjun Sharma</div>
+                <div class="tbl-sub">Roll: 21CSE045</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">CSE · 3rd Year</span><span
                 style="font-weight:600;">8.5</span><span class="pill active">In Process</span><button
                 class="btn sm sec">View</button>
             </div>
-            <div class="tr g5">
+            <div class="tbl-row g5">
               <div>
-                <div class="tr-name">Riya Sharma</div>
-                <div class="tr-sub">Roll: 21CSE061</div>
-              </div><span style="font-size:12.5px;color:var(--sub);">CSE · 3rd Year</span><span
+                <div class="tbl-name">Riya Sharma</div>
+                <div class="tbl-sub">Roll: 21CSE061</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">CSE · 3rd Year</span><span
                 style="font-weight:600;">8.9</span><span class="pill active">In Process</span><button
                 class="btn sm sec">View</button>
             </div>
-            <div class="tr g5">
+            <div class="tbl-row g5">
               <div>
-                <div class="tr-name">Sneha Rao</div>
-                <div class="tr-sub">Roll: 21CSE082</div>
-              </div><span style="font-size:12.5px;color:var(--sub);">CSE · 3rd Year</span><span
+                <div class="tbl-name">Sneha Rao</div>
+                <div class="tbl-sub">Roll: 21CSE082</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">CSE · 3rd Year</span><span
                 style="font-weight:600;">8.5</span><span class="pill placed">Placed – TCS</span><button
                 class="btn sm sec">View</button>
             </div>
-            <div class="tr g5">
+            <div class="tbl-row g5">
               <div>
-                <div class="tr-name">Vikram Reddy</div>
-                <div class="tr-sub">Roll: 21ECE014</div>
-              </div><span style="font-size:12.5px;color:var(--sub);">ECE · 3rd Year</span><span
+                <div class="tbl-name">Vikram Reddy</div>
+                <div class="tbl-sub">Roll: 21ECE014</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">ECE · 3rd Year</span><span
                 style="font-weight:600;">7.6</span><span class="pill active">In Process</span><button
                 class="btn sm sec">View</button>
             </div>
-            <div class="tr g5">
+            <div class="tbl-row g5">
               <div>
-                <div class="tr-name">Priya Menon</div>
-                <div class="tr-sub">Roll: 21CSE033</div>
-              </div><span style="font-size:12.5px;color:var(--sub);">CSE · 3rd Year</span><span
+                <div class="tbl-name">Priya Menon</div>
+                <div class="tbl-sub">Roll: 21CSE033</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">CSE · 3rd Year</span><span
                 style="font-weight:600;">9.1</span><span class="pill placed">Placed – Infosys</span><button
                 class="btn sm sec">View</button>
             </div>
-            <div class="tr g5">
+            <div class="tbl-row g5">
               <div>
-                <div class="tr-name">Karan Patel</div>
-                <div class="tr-sub">Roll: 21IT022</div>
-              </div><span style="font-size:12.5px;color:var(--sub);">IT · 3rd Year</span><span
+                <div class="tbl-name">Karan Patel</div>
+                <div class="tbl-sub">Roll: 21IT022</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">IT · 3rd Year</span><span
                 style="font-weight:600;">7.8</span><span class="pill closed">Not Applied</span><button
                 class="btn sm sec">View</button>
             </div>
           </div>
         </div>
         <div class="tab-panel" id="st-placed">
-          <div class="block">
-            <div class="tr-head g4"><span>Student</span><span>Branch · CGPA</span><span>Placed
+          <div class="card" style="padding:0;">
+            <div class="tbl-head g4"><span>Student</span><span>Branch · CGPA</span><span>Placed
                 At</span><span>Package</span></div>
-            <div class="tr g4">
+            <div class="tbl-row g4">
               <div>
-                <div class="tr-name">Sneha Rao</div>
-                <div class="tr-sub">Roll: 21CSE082</div>
-              </div><span style="font-size:12.5px;color:var(--sub);">CSE · 8.5</span><span
-                style="font-size:13px;font-weight:600;">TCS</span><span
-                style="font-size:13px;font-weight:600;color:var(--green);">₹10 LPA</span>
+                <div class="tbl-name">Sneha Rao</div>
+                <div class="tbl-sub">Roll: 21CSE082</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">CSE · 8.5</span><span
+                style="font-weight:600;">TCS</span><span style="font-weight:700;color:var(--G);">₹10 LPA</span>
             </div>
-            <div class="tr g4">
+            <div class="tbl-row g4">
               <div>
-                <div class="tr-name">Priya Menon</div>
-                <div class="tr-sub">Roll: 21CSE033</div>
-              </div><span style="font-size:12.5px;color:var(--sub);">CSE · 9.1</span><span
-                style="font-size:13px;font-weight:600;">Infosys</span><span
-                style="font-size:13px;font-weight:600;color:var(--green);">₹16 LPA</span>
+                <div class="tbl-name">Priya Menon</div>
+                <div class="tbl-sub">Roll: 21CSE033</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">CSE · 9.1</span><span
+                style="font-weight:600;">Infosys</span><span style="font-weight:700;color:var(--G);">₹16 LPA</span>
             </div>
-            <div class="tr g4">
+            <div class="tbl-row g4">
               <div>
-                <div class="tr-name">Lakshmi V</div>
-                <div class="tr-sub">Roll: 21CSE055</div>
-              </div><span style="font-size:12.5px;color:var(--sub);">CSE · 8.0</span><span
-                style="font-size:13px;font-weight:600;">Wipro</span><span
-                style="font-size:13px;font-weight:600;color:var(--green);">₹12 LPA</span>
+                <div class="tbl-name">Lakshmi V</div>
+                <div class="tbl-sub">Roll: 21CSE055</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">CSE · 8.0</span><span
+                style="font-weight:600;">Wipro</span><span style="font-weight:700;color:var(--G);">₹12 LPA</span>
             </div>
           </div>
         </div>
         <div class="tab-panel" id="st-active">
-          <div class="block">
-            <div class="tr-head g4"><span>Student</span><span>Branch · CGPA</span><span>Applied
+          <div class="card" style="padding:0;">
+            <div class="tbl-head g4"><span>Student</span><span>Branch · CGPA</span><span>Applied
                 To</span><span>Status</span></div>
-            <div class="tr g4">
+            <div class="tbl-row g4">
               <div>
-                <div class="tr-name">Arjun Sharma</div>
-                <div class="tr-sub">Roll: 21CSE045</div>
-              </div><span style="font-size:12.5px;color:var(--sub);">CSE · 8.5</span><span
-                style="font-size:13px;">Microsoft, Amazon</span><span class="pill short">Shortlisted</span>
+                <div class="tbl-name">Arjun Sharma</div>
+                <div class="tbl-sub">Roll: 21CSE045</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">CSE · 8.5</span><span>Microsoft,
+                Amazon</span><span class="pill short">Shortlisted</span>
             </div>
-            <div class="tr g4">
+            <div class="tbl-row g4">
               <div>
-                <div class="tr-name">Riya Sharma</div>
-                <div class="tr-sub">Roll: 21CSE061</div>
-              </div><span style="font-size:12.5px;color:var(--sub);">CSE · 8.9</span><span
-                style="font-size:13px;">Infosys, TCS</span><span class="pill interview">Interview</span>
+                <div class="tbl-name">Riya Sharma</div>
+                <div class="tbl-sub">Roll: 21CSE061</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">CSE · 8.9</span><span>Infosys, TCS</span><span
+                class="pill interview">Interview</span>
             </div>
-            <div class="tr g4">
+            <div class="tbl-row g4">
               <div>
-                <div class="tr-name">Vikram Reddy</div>
-                <div class="tr-sub">Roll: 21ECE014</div>
-              </div><span style="font-size:12.5px;color:var(--sub);">ECE · 7.6</span><span
-                style="font-size:13px;">Wipro</span><span class="pill new">Applied</span>
+                <div class="tbl-name">Vikram Reddy</div>
+                <div class="tbl-sub">Roll: 21ECE014</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">ECE · 7.6</span><span>Wipro</span><span
+                class="pill new">Applied</span>
             </div>
           </div>
         </div>
         <div class="tab-panel" id="st-unplaced">
-          <div class="block">
-            <div class="tr-head g3"><span>Student</span><span>Branch · CGPA</span><span>Action</span></div>
-            <div class="tr g3">
+          <div class="card" style="padding:0;">
+            <div class="tbl-head g3"><span>Student</span><span>Branch · CGPA</span><span>Action</span></div>
+            <div class="tbl-row g3">
               <div>
-                <div class="tr-name">Karan Patel</div>
-                <div class="tr-sub">Roll: 21IT022</div>
-              </div><span style="font-size:12.5px;color:var(--sub);">IT · 7.8</span><button class="btn sm"
-                onclick="showToast('Reminder sent to Karan Patel.')"><!-- [BACKEND_NEEDED]: Logic to send reminder notification -->Send
-                Reminder</button>
+                <div class="tbl-name">Karan Patel</div>
+                <div class="tbl-sub">Roll: 21IT022</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">IT · 7.8</span><button class="btn sm"
+                onclick="showToast('Reminder sent to Karan Patel.')">Send Reminder</button>
             </div>
-            <div class="tr g3">
+            <div class="tbl-row g3">
               <div>
-                <div class="tr-name">Raj Mehta</div>
-                <div class="tr-sub">Roll: 21MECH08</div>
-              </div><span style="font-size:12.5px;color:var(--sub);">Mech · 6.9</span><button class="btn sm"
+                <div class="tbl-name">Raj Mehta</div>
+                <div class="tbl-sub">Roll: 21MECH08</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">Mech · 6.9</span><button class="btn sm"
                 onclick="showToast('Reminder sent to Raj Mehta.')">Send Reminder</button>
             </div>
           </div>
         </div>
-      </div>
+      </div><!-- /pg-students -->
 
       <!-- ══════════ COMPANIES ══════════ -->
       <div class="page" id="pg-companies">
-        <div class="sec-h">Company Management</div>
+        <div class="sec-hd">
+          <div class="sec-title">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--P)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="7" width="20" height="14" rx="2" />
+              <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+            </svg>
+            Company Management
+          </div>
+        </div>
         <div class="tabs">
-          <button class="tab on" onclick="swtab('ct','requests',this)">Requests (3)</button>
-          <button class="tab" onclick="swtab('ct','approved',this)">Approved</button>
+          <button class="tab on" onclick="swtab('ct','requests',this)">Requests <span class="tab-badge">3</span></button>
+          <button class="tab" onclick="swtab('ct','approved',this)">Active Partners</button>
           <button class="tab" onclick="swtab('ct','history',this)">Past Recruiters</button>
         </div>
         <div class="tab-panel on" id="ct-requests">
-          <div class="block">
+          <div class="card" style="padding:0;">
             <div class="req-card">
               <div class="req-top"><span class="req-co">Microsoft India</span><span class="pill pending">Pending</span>
               </div>
@@ -726,541 +827,721 @@
           </div>
         </div>
         <div class="tab-panel" id="ct-approved">
-          <div class="block">
-            <div class="tr-head g4"><span>Company</span><span>Roles</span><span>Drive Date</span><span>Status</span>
+          <div class="card" style="padding:0;">
+            <div class="tbl-head g4"><span>Company</span><span>Roles</span><span>Drive Date</span><span>Status</span>
             </div>
-            <div class="tr g4">
+            <div class="tbl-row g4">
               <div>
-                <div class="tr-name">Infosys Technologies</div>
-                <div class="tr-sub">hr@infosys.com</div>
-              </div><span style="font-size:12.5px;color:var(--sub);">SDE, Systems Engineer</span><span
-                style="font-size:12.5px;">Mar 18</span><span class="pill confirmed">Confirmed</span>
+                <div class="tbl-name">Infosys Technologies</div>
+                <div class="tbl-sub">hr@infosys.com</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">SDE, Systems Engineer</span><span>Mar
+                18</span><span class="pill confirmed">Confirmed</span>
             </div>
-            <div class="tr g4">
+            <div class="tbl-row g4">
               <div>
-                <div class="tr-name">TCS</div>
-                <div class="tr-sub">campus@tcs.com</div>
-              </div><span style="font-size:12.5px;color:var(--sub);">Ninja, Digital, Prime</span><span
-                style="font-size:12.5px;">Mar 22</span><span class="pill confirmed">Confirmed</span>
+                <div class="tbl-name">TCS</div>
+                <div class="tbl-sub">campus@tcs.com</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">Ninja, Digital, Prime</span><span>Mar
+                22</span><span class="pill confirmed">Confirmed</span>
             </div>
           </div>
         </div>
         <div class="tab-panel" id="ct-history">
-          <div class="block">
-            <div class="tr-head g4"><span>Company</span><span>Visited</span><span>Students Hired</span><span>Avg
+          <div class="card" style="padding:0;">
+            <div class="tbl-head g4"><span>Company</span><span>Visited</span><span>Students Hired</span><span>Avg
                 Package</span></div>
-            <div class="tr g4">
+            <div class="tbl-row g4">
               <div>
-                <div class="tr-name">Wipro</div>
-              </div><span style="font-size:12.5px;color:var(--sub);">Feb 2025</span><span
-                style="font-weight:600;">8</span><span style="font-weight:600;color:var(--green);">₹12 LPA</span>
+                <div class="tbl-name">Wipro</div>
+              </div><span style="color:var(--txmu);">Feb 2025</span><span style="font-weight:600;">8</span><span
+                style="font-weight:700;color:var(--G);">₹12 LPA</span>
             </div>
-            <div class="tr g4">
+            <div class="tbl-row g4">
               <div>
-                <div class="tr-name">HCL Technologies</div>
-              </div><span style="font-size:12.5px;color:var(--sub);">Jan 2025</span><span
-                style="font-weight:600;">5</span><span style="font-weight:600;color:var(--green);">₹10 LPA</span>
+                <div class="tbl-name">HCL Technologies</div>
+              </div><span style="color:var(--txmu);">Jan 2025</span><span style="font-weight:600;">5</span><span
+                style="font-weight:700;color:var(--G);">₹10 LPA</span>
             </div>
-            <div class="tr g4">
+            <div class="tbl-row g4">
               <div>
-                <div class="tr-name">Cognizant</div>
-              </div><span style="font-size:12.5px;color:var(--sub);">Dec 2024</span><span
-                style="font-weight:600;">12</span><span style="font-weight:600;color:var(--green);">₹9 LPA</span>
+                <div class="tbl-name">Cognizant</div>
+              </div><span style="color:var(--txmu);">Dec 2024</span><span style="font-weight:600;">12</span><span
+                style="font-weight:700;color:var(--G);">₹9 LPA</span>
             </div>
           </div>
         </div>
-      </div>
+      </div><!-- /pg-companies -->
 
       <!-- ══════════ CAMPUS DRIVES ══════════ -->
       <div class="page" id="pg-drives">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-          <span class="sec-h" style="margin:0;">Campus Drives</span>
+        <div class="sec-hd">
+          <div class="sec-title">
+            <svg viewBox="0 0 24 24" width="20" height="20" style="color:var(--P);">
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+            Campus Drives Management
+          </div>
           <button class="btn" onclick="openModal('drive-modal')">
-            <svg viewBox="0 0 24 24">
+            <svg width="16" height="16" viewBox="0 0 24 24">
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
-            Schedule Drive
+            Schedule New Drive
           </button>
         </div>
-        <div class="block">
-          <div class="bh"><span class="bt">Upcoming Drives</span></div>
-          <div class="drive-row">
-            <div class="date-box">
-              <div class="date-d">18</div>
-              <div class="date-m">Mar</div>
+
+        <div class="drive-stats">
+          <div class="ds-card">
+            <div class="ds-icon" style="background:var(--PL);color:var(--P);">🚀</div>
+            <div class="ds-info">
+              <div class="ds-val">03</div>
+              <div class="ds-lbl">Upcoming Drives</div>
             </div>
-            <div class="drive-info">
-              <div class="drive-name">Infosys Technologies</div>
-              <div class="drive-meta">10:00 AM · CSE Block Hall · 120 eligible · SDE, Systems Engineer · ₹12 LPA</div>
+          </div>
+          <div class="ds-card">
+            <div class="ds-icon" style="background:var(--GL);color:var(--G);">📈</div>
+            <div class="ds-info">
+              <div class="ds-val">94%</div>
+              <div class="ds-lbl">Participation</div>
+            </div>
+          </div>
+          <div class="ds-card">
+            <div class="ds-icon" style="background:var(--TL);color:var(--T);">💰</div>
+            <div class="ds-info">
+              <div class="ds-val">₹12.5L</div>
+              <div class="ds-lbl">Avg. Package</div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="padding:0;margin-bottom:16px;">
+          <div
+            style="padding:11px 16px;border-bottom:1px solid var(--brs);font-size:11px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.06em;background:var(--bgs);">
+            Upcoming Drives</div>
+          <div class="drive-row" style="position: relative; border-left: 4px solid var(--P);">
+            <div style="position: absolute; top: 12px; left: -10px;"><span class="pill" style="background:var(--P); color:#fff; font-size: 8px; padding: 1px 4px; box-shadow: 0 0 8px var(--P);">LIVE</span></div>
+            <div class="dr-date">
+              <div class="dr-dd">18</div>
+              <div class="dr-dm">Mar</div>
+            </div>
+            <div class="dr-info">
+              <div class="dr-name">Infosys Technologies</div>
+              <div class="dr-meta">10:00 AM · CSE Block Hall · 120 eligible · SDE, Systems Engineer · ₹12 LPA</div>
             </div>
             <div style="display:flex;gap:7px;"><span class="pill confirmed">Confirmed</span><button class="btn sm sec"
                 onclick="showToast('Drive details sent to students.')">Notify</button></div>
           </div>
           <div class="drive-row">
-            <div class="date-box">
-              <div class="date-d">22</div>
-              <div class="date-m">Mar</div>
+            <div class="dr-date">
+              <div class="dr-dd">22</div>
+              <div class="dr-dm">Mar</div>
             </div>
-            <div class="drive-info">
-              <div class="drive-name">TCS Mass Hiring</div>
-              <div class="drive-meta">9:00 AM · Main Auditorium · All branches · Multiple roles · ₹10–14 LPA</div>
+            <div class="dr-info">
+              <div class="dr-name">TCS Mass Hiring</div>
+              <div class="dr-meta">9:00 AM · Main Auditorium · All branches · Multiple roles · ₹10–14 LPA</div>
             </div>
             <div style="display:flex;gap:7px;"><span class="pill confirmed">Confirmed</span><button class="btn sm sec"
                 onclick="showToast('Drive details sent to students.')">Notify</button></div>
           </div>
           <div class="drive-row">
-            <div class="date-box">
-              <div class="date-d">28</div>
-              <div class="date-m">Mar</div>
+            <div class="dr-date">
+              <div class="dr-dd">28</div>
+              <div class="dr-dm">Mar</div>
             </div>
-            <div class="drive-info">
-              <div class="drive-name">Wipro Campus Connect</div>
-              <div class="drive-meta">Online · Zoom · CSE, IT, ECE · Systems Engineer</div>
+            <div class="dr-info">
+              <div class="dr-name">Wipro Campus Connect</div>
+              <div class="dr-meta">Online · Zoom · CSE, IT, ECE · Systems Engineer</div>
             </div>
             <div style="display:flex;gap:7px;"><span class="pill pending">Pending</span><button class="btn sm"
                 onclick="showToast('Wipro drive confirmed.')">Confirm</button></div>
           </div>
         </div>
-        <div class="block">
-          <div class="bh"><span class="bt">Completed Drives</span></div>
+        <div class="card" style="padding:0;">
+          <div
+            style="padding:11px 16px;border-bottom:1px solid var(--brs);font-size:11px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.06em;background:var(--bgs);">
+            Completed Drives</div>
           <div class="drive-row">
-            <div class="date-box" style="background:#f3f4f6;">
-              <div class="date-d" style="color:var(--sub);">10</div>
-              <div class="date-m" style="color:var(--sub);">Mar</div>
+            <div class="dr-date" style="background:var(--bgs);">
+              <div class="dr-dd" style="color:var(--txmu);">10</div>
+              <div class="dr-dm" style="color:var(--txmu);">Mar</div>
             </div>
-            <div class="drive-info">
-              <div class="drive-name">HCL Technologies</div>
-              <div class="drive-meta">Completed · 95 attended · 5 selected · ₹10 LPA</div>
+            <div class="dr-info">
+              <div class="dr-name">HCL Technologies</div>
+              <div class="dr-meta">Completed · 95 attended · 5 selected · ₹10 LPA</div>
             </div><button class="btn sm sec" onclick="showToast('Report downloaded.')">Report</button>
           </div>
           <div class="drive-row">
-            <div class="date-box" style="background:#f3f4f6;">
-              <div class="date-d" style="color:var(--sub);">28</div>
-              <div class="date-m" style="color:var(--sub);">Feb</div>
+            <div class="dr-date" style="background:var(--bgs);">
+              <div class="dr-dd" style="color:var(--txmu);">28</div>
+              <div class="dr-dm" style="color:var(--txmu);">Feb</div>
             </div>
-            <div class="drive-info">
-              <div class="drive-name">Cognizant</div>
-              <div class="drive-meta">Completed · 110 attended · 12 selected · ₹9 LPA</div>
+            <div class="dr-info">
+              <div class="dr-name">Cognizant</div>
+              <div class="dr-meta">Completed · 110 attended · 12 selected · ₹9 LPA</div>
             </div><button class="btn sm sec" onclick="showToast('Report downloaded.')">Report</button>
           </div>
         </div>
-      </div>
+      </div><!-- /pg-drives -->
 
       <!-- ══════════ PLACEMENTS ══════════ -->
       <div class="page" id="pg-placements">
-        <div class="sec-h">Placement Records</div>
-        <div class="stats" style="grid-template-columns:repeat(4,1fr);">
-          <div class="stat">
-            <div class="stat-icon g"><svg viewBox="0 0 24 24">
+        <div class="page-hd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--P)"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg>Placement Records</div>
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--GL);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--G)"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M5 13l4 4L19 7" />
               </svg></div>
-            <div class="stat-body">
-              <div class="stat-l">Total Placed</div>
-              <div class="stat-v">138</div>
-              <div class="stat-n g">This academic year</div>
-            </div>
+            <div class="stat-val" style="color:var(--G);">138</div>
+            <div class="stat-lbl">Total Placed</div>
+            <div class="stat-note up"><svg viewBox="0 0 24 24">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                <polyline points="17 6 23 6 23 12" />
+              </svg>This academic year</div>
           </div>
-          <div class="stat">
-            <div class="stat-icon i"><svg viewBox="0 0 24 24">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--PL);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--P)"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="12" y1="1" x2="12" y2="23" />
                 <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
               </svg></div>
-            <div class="stat-body">
-              <div class="stat-l">Avg Package</div>
-              <div class="stat-v">₹13L</div>
-              <div class="stat-n i">Highest: ₹25 LPA</div>
-            </div>
+            <div class="stat-val" style="color:var(--P);">₹13L</div>
+            <div class="stat-lbl">Avg Package</div>
+            <div class="stat-note purple"><svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>Highest: ₹25 LPA</div>
           </div>
-          <div class="stat">
-            <div class="stat-icon a"><svg viewBox="0 0 24 24">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--AL);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--A)"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="7" width="20" height="14" rx="2" />
                 <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
               </svg></div>
-            <div class="stat-body">
-              <div class="stat-l">Companies Visited</div>
-              <div class="stat-v">14</div>
-              <div class="stat-n s">This year</div>
-            </div>
+            <div class="stat-val" style="color:var(--A);">14</div>
+            <div class="stat-lbl">Companies Visited</div>
+            <div class="stat-note info"><svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>This year</div>
           </div>
-          <div class="stat">
-            <div class="stat-icon c"><svg viewBox="0 0 24 24">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--TL);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--T)"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                 <circle cx="9" cy="7" r="4" />
               </svg></div>
-            <div class="stat-body">
-              <div class="stat-l">Placement Rate</div>
-              <div class="stat-v">43%</div>
-              <div class="stat-n g">Up 8% vs last year</div>
+            <div class="stat-val" style="color:var(--T);">43%</div>
+            <div class="stat-lbl">Placement Rate</div>
+            <div class="stat-note up"><svg viewBox="0 0 24 24">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                <polyline points="17 6 23 6 23 12" />
+              </svg>Up 8% vs last year</div>
+          </div>
+        </div>
+        <div class="card" style="padding:0;">
+          <div
+            style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--brs);">
+            <span style="font-size:13px;font-weight:600;">Recent Placement Records</span><button class="btn sm"
+              onclick="showToast('Report exported.')">Export CSV</button></div>
+          <div class="tbl-head g5">
+            <span>Student</span><span>Branch</span><span>Company</span><span>Role</span><span>Package</span></div>
+          <div class="tbl-row g5">
+            <div>
+              <div class="tbl-name">Sneha Rao</div>
+            </div><span style="color:var(--txmu);">CSE</span><span style="font-weight:600;">TCS</span><span>Data
+              Analyst</span><span style="font-weight:700;color:var(--G);">₹10 LPA</span>
+          </div>
+          <div class="tbl-row g5">
+            <div>
+              <div class="tbl-name">Priya Menon</div>
+            </div><span style="color:var(--txmu);">CSE</span><span style="font-weight:600;">Infosys</span><span>Systems
+              Engineer</span><span style="font-weight:700;color:var(--G);">₹16 LPA</span>
+          </div>
+          <div class="tbl-row g5">
+            <div>
+              <div class="tbl-name">Lakshmi V</div>
+            </div><span style="color:var(--txmu);">CSE</span><span style="font-weight:600;">Wipro</span><span>Frontend
+              Developer</span><span style="font-weight:700;color:var(--G);">₹12 LPA</span>
+          </div>
+          <div class="tbl-row g5">
+            <div>
+              <div class="tbl-name">Arun Nair</div>
+            </div><span style="color:var(--txmu);">IT</span><span style="font-weight:600;">HCL</span><span>Software
+              Engineer</span><span style="font-weight:700;color:var(--G);">₹10 LPA</span>
+          </div>
+        </div>
+      </div><!-- /pg-placements -->
+
+      <!-- ══════════ ANALYTICS ══════════ -->
+      <div class="page" id="pg-analytics">
+        <div class="df-jsb mb-18">
+          <div class="page-hd" style="margin:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="var(--P)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10" />
+              <line x1="12" y1="20" x2="12" y2="4" />
+              <line x1="6" y1="20" x2="6" y2="14" />
+            </svg>Placement Analytics</div>
+          <select id="analytics-year" onchange="renderAnalytics()"
+            style="background:var(--bgs);border:1px solid var(--br);border-radius:var(--rs);padding:7px 12px;font-size:13px;color:var(--tx);outline:none;">
+            <option value="2023">Batch 2023</option>
+            <option value="2024">Batch 2024</option>
+            <option value="2025" selected>Batch 2025 (Live)</option>
+          </select>
+        </div>
+
+        <!-- Summary stat cards -->
+        <div class="stats-row" style="margin-bottom:22px;">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--PL);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--P)"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              </svg></div>
+            <div class="stat-val" style="color:var(--P);">320</div>
+            <div class="stat-lbl">Eligible Students</div>
+            <div class="stat-note purple"><svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>Final year: 84</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--GL);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--G)"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="6" />
+                <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+              </svg></div>
+            <div class="stat-val" style="color:var(--G);">138</div>
+            <div class="stat-lbl">Students Placed</div>
+            <div class="stat-note up"><svg viewBox="0 0 24 24">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                <polyline points="17 6 23 6 23 12" />
+              </svg>+8% vs Batch 2024</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--AL);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--A)"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="1" x2="12" y2="23" />
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg></div>
+            <div class="stat-val" style="color:var(--A);">₹18.4L</div>
+            <div class="stat-lbl">Avg Package</div>
+            <div class="stat-note up"><svg viewBox="0 0 24 24">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                <polyline points="17 6 23 6 23 12" />
+              </svg>+₹3.2L vs last batch</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--TL);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--T)"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2" />
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+              </svg></div>
+            <div class="stat-val" style="color:var(--T);">14</div>
+            <div class="stat-lbl">Companies Visited</div>
+            <div class="stat-note up"><svg viewBox="0 0 24 24">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                <polyline points="17 6 23 6 23 12" />
+              </svg>+3 from last year</div>
+          </div>
+        </div>
+
+        <!-- Charts row 1 -->
+        <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:18px;margin-bottom:18px;">
+          <div class="chart-card">
+            <div class="chart-title">Monthly Placement Trend</div>
+            <div class="chart-sub">Students placed per month — Batch 2025</div>
+            <div style="display:flex;gap:14px;margin-bottom:12px;">
+              <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--txmu);"><span
+                  style="width:9px;height:9px;border-radius:2px;background:#7c3aed;display:inline-block;"></span>Placed
+              </div>
+              <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--txmu);"><span
+                  style="width:9px;height:9px;border-radius:2px;background:#0aada0;display:inline-block;"></span>In
+                Process</div>
+            </div>
+            <div style="position:relative;height:210px;"><canvas id="chart-a-trend"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Branch-wise Placement Rate</div>
+            <div class="chart-sub">% of students placed by branch</div>
+            <div style="position:relative;height:250px;"><canvas id="chart-a-branch"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Charts row 2 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;">
+          <div class="chart-card">
+            <div class="chart-title">Package Distribution</div>
+            <div class="chart-sub">Students by salary bracket (LPA)</div>
+            <div style="display:flex;align-items:center;gap:18px;">
+              <div style="position:relative;width:160px;height:160px;flex-shrink:0;">
+                <canvas id="chart-a-pkg"></canvas>
+                <div
+                  style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
+                  <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:800;color:var(--P);">138
+                  </div>
+                  <div style="font-size:10px;color:var(--txmu);">placed</div>
+                </div>
+              </div>
+              <div style="flex:1;" id="pkg-legend-a"></div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Top Recruiting Companies</div>
+            <div class="chart-sub">Students hired per company this year</div>
+            <div style="position:relative;height:180px;"><canvas id="chart-a-companies"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Charts row 3 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+          <div class="chart-card">
+            <div class="chart-title">Year-over-Year Placement Rate</div>
+            <div class="chart-sub">College rate vs industry benchmark (%)</div>
+            <div style="position:relative;height:200px;"><canvas id="chart-a-yoy"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Role Category Breakdown</div>
+            <div class="chart-sub">Types of roles students were placed in</div>
+            <div style="display:flex;align-items:center;gap:20px;">
+              <div style="position:relative;height:180px;width:180px;flex-shrink:0;"><canvas
+                  id="chart-a-roles"></canvas></div>
+              <div id="roles-legend-a" style="flex:1;font-size:12px;line-height:2;"></div>
             </div>
           </div>
         </div>
-        <div class="block">
-          <div class="bh"><span class="bt">Recent Placement Records</span><button class="btn sm"
-              onclick="showToast('Report exported.')">Export CSV</button></div>
-          <div class="tr-head g5">
-            <span>Student</span><span>Branch</span><span>Company</span><span>Role</span><span>Package</span>
-          </div>
-          <div class="tr g5">
-            <div>
-              <div class="tr-name">Sneha Rao</div>
-            </div><span style="font-size:12.5px;color:var(--sub);">CSE</span><span
-              style="font-weight:600;">TCS</span><span style="font-size:12.5px;">Data Analyst</span><span
-              style="font-weight:600;color:var(--green);">₹10 LPA</span>
-          </div>
-          <div class="tr g5">
-            <div>
-              <div class="tr-name">Priya Menon</div>
-            </div><span style="font-size:12.5px;color:var(--sub);">CSE</span><span
-              style="font-weight:600;">Infosys</span><span style="font-size:12.5px;">Systems Engineer</span><span
-              style="font-weight:600;color:var(--green);">₹16 LPA</span>
-          </div>
-          <div class="tr g5">
-            <div>
-              <div class="tr-name">Lakshmi V</div>
-            </div><span style="font-size:12.5px;color:var(--sub);">CSE</span><span
-              style="font-weight:600;">Wipro</span><span style="font-size:12.5px;">Frontend Developer</span><span
-              style="font-weight:600;color:var(--green);">₹12 LPA</span>
-          </div>
-          <div class="tr g5">
-            <div>
-              <div class="tr-name">Arun Nair</div>
-            </div><span style="font-size:12.5px;color:var(--sub);">IT</span><span
-              style="font-weight:600;">HCL</span><span style="font-size:12.5px;">Software Engineer</span><span
-              style="font-weight:600;color:var(--green);">₹10 LPA</span>
-          </div>
-        </div>
-      </div>
+      </div><!-- /pg-analytics -->
 
       <!-- ══════════ NOTICES ══════════ -->
       <div class="page" id="pg-notices">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-          <span class="sec-h" style="margin:0;">Notices Board</span>
-          <button class="btn" onclick="openModal('notice-modal')">
-            <svg viewBox="0 0 24 24">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+          <div class="page-hd" style="margin:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="var(--P)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+            </svg>Notice Board</div>
+          <button class="btn" onclick="openModal('notice-modal')"><svg viewBox="0 0 24 24">
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-            Post Notice
-          </button>
+            </svg>Post Notice</button>
         </div>
-        <div class="block">
-          <div class="bh"><span class="bt">Active Notices</span></div>
-          <div class="notice-row"><span class="notice-dot i"></span>
+        <div class="card" style="padding:0;margin-bottom:16px;">
+          <div
+            style="padding:11px 16px;border-bottom:1px solid var(--brs);font-size:11px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.06em;background:var(--bgs);">
+            Active Notices</div>
+          <div class="notice-row"><span class="notice-dot" style="background:var(--P);"></span>
             <div style="flex:1;">
               <div style="font-size:13.5px;font-weight:600;margin-bottom:3px;">Infosys Drive – Reporting Instructions
               </div>
               <div class="notice-body">All shortlisted CSE and IT students must report to Seminar Hall A by 9:30 AM on
-                Mar 18 with their college ID and printed hall ticket.</div>
+                Mar 18 with college ID and printed hall ticket.</div>
               <div class="notice-time">Posted today · Visible to: Shortlisted Students</div>
             </div><button class="btn sm red" onclick="showToast('Notice removed.')">Remove</button>
           </div>
-          <div class="notice-row"><span class="notice-dot a"></span>
+          <div class="notice-row"><span class="notice-dot" style="background:var(--A);"></span>
             <div style="flex:1;">
               <div style="font-size:13.5px;font-weight:600;margin-bottom:3px;">TCS NQT Registration Deadline – Mar 20
               </div>
               <div class="notice-body">Students interested in TCS Mass Hiring must register through the portal before
-                March 20. Minimum CGPA 6.0 required. All branches eligible.</div>
+                March 20. Minimum CGPA 6.0. All branches eligible.</div>
               <div class="notice-time">Posted yesterday · Visible to: All Students</div>
             </div><button class="btn sm red" onclick="showToast('Notice removed.')">Remove</button>
           </div>
-          <div class="notice-row"><span class="notice-dot g"></span>
+          <div class="notice-row"><span class="notice-dot" style="background:var(--G);"></span>
             <div style="flex:1;">
               <div style="font-size:13.5px;font-weight:600;margin-bottom:3px;">Placement Orientation – Mar 16, 11 AM
               </div>
               <div class="notice-body">Mandatory placement orientation for all final year students. Venue: Main
-                Auditorium. Tips on resume writing, interview preparation, and portal usage.</div>
+                Auditorium. Resume writing, interview tips, portal usage.</div>
               <div class="notice-time">Posted 2 days ago · Visible to: All Students</div>
             </div><button class="btn sm red" onclick="showToast('Notice removed.')">Remove</button>
           </div>
         </div>
-        <div class="block">
-          <div class="bh"><span class="bt">Past Notices</span></div>
+        <div class="card" style="padding:0;">
+          <div
+            style="padding:11px 16px;border-bottom:1px solid var(--brs);font-size:11px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.06em;background:var(--bgs);">
+            Past Notices</div>
           <div class="notice-row"><span class="notice-dot" style="background:#d1d5db;"></span>
             <div>
               <div style="font-size:13.5px;font-weight:600;margin-bottom:2px;">Wipro WILP Results Announced</div>
-              <div class="notice-body" style="color:var(--sub);">Results for Wipro WILP test held on Feb 20 have been
+              <div class="notice-body" style="color:var(--txmu);">Results for Wipro WILP test held on Feb 20 have been
                 published. Check your email for individual results.</div>
               <div class="notice-time">Posted Mar 1 · Archived</div>
             </div>
           </div>
         </div>
-      </div>
+      </div><!-- /pg-notices -->
 
       <!-- ══════════ REPORTS ══════════ -->
       <div class="page" id="pg-reports">
-        <div class="sec-h">Placement Reports</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-          <div class="form-card">
-            <div class="form-title"><svg viewBox="0 0 24 24">
+        <div class="page-hd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--P)"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
+          </svg>Placement Reports</div>
+        <div class="g-2">
+          <div class="db">
+            <div class="db-title"><svg viewBox="0 0 24 24">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                 <polyline points="14 2 14 8 20 8" />
               </svg>Generate Report</div>
-            <div class="fg"><label>Report Type</label>
-              <select>
+            <div class="fg"><label>Report Type</label><select>
                 <option>Monthly Placement Summary</option>
                 <option>Company-wise Report</option>
                 <option>Branch-wise Report</option>
                 <option>Annual Placement Report</option>
-              </select>
-            </div>
+              </select></div>
             <div class="fg"><label>From Date</label><input type="date" /></div>
             <div class="fg"><label>To Date</label><input type="date" /></div>
-            <div class="fg"><label>Branch Filter</label>
-              <select>
+            <div class="fg"><label>Branch Filter</label><select>
                 <option>All Branches</option>
                 <option>CSE</option>
                 <option>IT</option>
                 <option>ECE</option>
-              </select>
-            </div>
-            <button class="btn lg" onclick="showToast('Report generated and downloaded.')">
-              <svg viewBox="0 0 24 24">
+              </select></div>
+            <button class="btn lg" onclick="showToast('Report generated and downloaded.')"><svg viewBox="0 0 24 24">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="7 10 12 15 17 10" />
                 <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-              Download Report
-            </button>
+              </svg>Download Report</button>
           </div>
-          <div class="form-card">
-            <div class="form-title"><svg viewBox="0 0 24 24">
+          <div class="db">
+            <div class="db-title"><svg viewBox="0 0 24 24">
                 <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
               </svg>Quick Stats – 2024–25</div>
-            <div style="display:flex;flex-direction:column;gap:10px;">
-              <div
-                style="display:flex;justify-content:space-between;padding:9px 12px;background:var(--bg);border-radius:7px;font-size:13px;">
-                <span>Total Students Eligible</span><span style="font-weight:700;">320</span>
-              </div>
-              <div
-                style="display:flex;justify-content:space-between;padding:9px 12px;background:var(--bg);border-radius:7px;font-size:13px;">
-                <span>Total Placed</span><span style="font-weight:700;color:var(--green);">138</span>
-              </div>
-              <div
-                style="display:flex;justify-content:space-between;padding:9px 12px;background:var(--bg);border-radius:7px;font-size:13px;">
-                <span>Placement Rate</span><span style="font-weight:700;color:var(--ind-dark);">43.1%</span>
-              </div>
-              <div
-                style="display:flex;justify-content:space-between;padding:9px 12px;background:var(--bg);border-radius:7px;font-size:13px;">
-                <span>Highest Package</span><span style="font-weight:700;color:var(--green);">₹25 LPA</span>
-              </div>
-              <div
-                style="display:flex;justify-content:space-between;padding:9px 12px;background:var(--bg);border-radius:7px;font-size:13px;">
-                <span>Average Package</span><span style="font-weight:700;">₹13 LPA</span>
-              </div>
-              <div
-                style="display:flex;justify-content:space-between;padding:9px 12px;background:var(--bg);border-radius:7px;font-size:13px;">
-                <span>Companies Participated</span><span style="font-weight:700;">14</span>
-              </div>
+            <div class="flex-col">
+              <div class="info-row"><span>Total Students Eligible</span><span>320</span></div>
+              <div class="info-row"><span>Total Placed</span><span>138</span></div>
+              <div class="info-row"><span>Placement Rate</span><span>43.1%</span></div>
+              <div class="info-row"><span>Highest Package</span><span>₹25 LPA</span></div>
+              <div class="info-row"><span>Average Package</span><span>₹13 LPA</span></div>
+              <div class="info-row"><span>Companies Participated</span><span>14</span></div>
             </div>
           </div>
         </div>
-      </div>
+      </div><!-- /pg-reports -->
 
       <!-- ══════════ PROFILE ══════════ -->
       <div class="page" id="pg-profile">
-        <div class="profile-card-hdr">
-          <div class="profile-banner-st">
-            <button class="edit-prof-btn" onclick="toggleEdit()">
-              <i data-lucide="edit-3"></i> Edit Profile
-            </button>
+        <div class="tph">
+          <div class="tph-banner" style="background: linear-gradient(135deg, var(--PD) 0%, var(--P) 50%, #702af0 100%); position: relative; overflow: hidden;">
+            <div style="position: absolute; inset: 0; opacity: 0.1; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 20px 20px;"></div>
           </div>
-          <div class="profile-av-row">
-            <div class="profile-big-av">
-              <!-- <svg viewBox="0 0 24 24">
-                <path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z" />
-                <path d="M6 12v5c3 3 9 3 12 0v-5" />
-              </svg> -->
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="none"
-                stroke="#1a3c8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="5" r="3" fill="#1a3c8f" />
-                <path d="M7 22 Q7 14 12 13 Q17 14 17 22" fill="#1a3c8f" stroke="#1a3c8f" />
-                <path d="M12 13 L10.5 16 L12 15 L13.5 16 L12 13" fill="#f5c842" stroke="none" />
-                <path d="M12 13 L9 16" stroke="white" stroke-width="1" />
-                <path d="M12 13 L15 16" stroke="white" stroke-width="1" />
-                <rect x="15" y="15" width="5" height="4" rx="0.8" fill="#8B6914" />
-                <path d="M16.5 15 v-1 a1 1 0 0 1 2 0 v1" stroke="#8B6914" stroke-width="1" fill="none" />
-                <line x1="15" y1="17" x2="20" y2="17" stroke="#c8960c" stroke-width="0.8" />
-              </svg>
-            </div>
-            <div class="profile-info">
-              <div class="profile-name" id="pg-name">Dr. Ramesh Kumar</div>
-              <div class="profile-sub" id="pg-sub">ramesh@jntu.ac.in · JNTU Hyderabad</div>
-            </div>
-            <div class="profile-badges">
-              <span class="p-badge i">TPO</span>
-              <span class="p-badge g">Verified</span>
-              <span class="p-badge a">Hyderabad</span>
-            </div>
-          </div>
-        </div>
-
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-          <div class="form-card">
-            <div class="form-title"><svg viewBox="0 0 24 24">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>Personal Details</div>
-            <div id="pf-view">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                <div>
-                  <div
-                    style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">
-                    Full Name</div>
-                  <div style="font-size:13.5px;font-weight:500;">Dr. Ramesh Kumar</div>
-                </div>
-                <div>
-                  <div
-                    style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">
-                    Designation</div>
-                  <div style="font-size:13.5px;font-weight:500;">Training & Placement Officer</div>
-                </div>
-                <div>
-                  <div
-                    style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">
-                    College</div>
-                  <div style="font-size:13.5px;font-weight:500;">JNTU Hyderabad</div>
-                </div>
-                <div>
-                  <div
-                    style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">
-                    Department</div>
-                  <div style="font-size:13.5px;font-weight:500;">T&P Cell</div>
-                </div>
-                <div>
-                  <div
-                    style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">
-                    Phone</div>
-                  <div style="font-size:13.5px;font-weight:500;">+91 98765 43210</div>
-                </div>
-                <div>
-                  <div
-                    style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">
-                    Email</div>
-                  <div style="font-size:13.5px;font-weight:500;">ramesh@jntu.ac.in</div>
-                </div>
-                <div>
-                  <div
-                    style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">
-                    Location</div>
-                  <div style="font-size:13.5px;font-weight:500;">Hyderabad, Telangana</div>
-                </div>
-                <div>
-                  <div
-                    style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">
-                    TPO Code</div>
-                  <div style="font-size:13.5px;font-weight:500;">JNTU-TPO-2024</div>
-                </div>
-              </div>
-              <button class="btn sec" style="margin-top:16px;" onclick="togglePfEdit()">
-                <svg viewBox="0 0 24 24"
-                  style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+          <div class="tph-body">
+            <div class="tph-av-wrap" style="transform: translateY(-10px);">
+              <div class="tph-av" style="border-width: 5px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
+                <svg viewBox="0 0 24 24" stroke-width="2.2" style="width: 42px; height: 42px;">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                  <path d="M6 12v5c3 3 9 3 12 0v-5" />
                 </svg>
-                Edit Profile
+              </div>
+            </div>
+            <div class="tph-info">
+              <div class="tph-name">Dr. Ramesh Kumar</div>
+              <div class="tph-role" style="display: flex; align-items: center; gap: 6px;">
+                <span class="pill active" style="font-size: 9px; padding: 1px 6px;">Official</span>
+                Training & Placement Officer · JNTU Hyderabad
+              </div>
+            </div>
+            <div class="tph-actions">
+              <button class="btn sec" onclick="go('settings',document.querySelector('.nl[onclick*=settings]'))">
+                <svg width="15" height="15" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                Edit Settings
               </button>
             </div>
-            <div id="pf-edit" style="display:none;">
-              <div class="form-grid">
-                <div class="fg"><label>Full Name</label><input value="Dr. Ramesh Kumar" /></div>
-                <div class="fg"><label>Designation</label><input value="Training & Placement Officer" /></div>
-                <div class="fg"><label>College</label><input value="JNTU Hyderabad" /></div>
-                <div class="fg"><label>Department</label><input value="T&P Cell" /></div>
-                <div class="fg"><label>Phone</label><input value="+91 98765 43210" /></div>
-                <div class="fg"><label>Location</label><input value="Hyderabad, Telangana" /></div>
-                <div class="fg full"><label>Official Email</label><input value="ramesh@jntu.ac.in" /></div>
+          </div>
+          <div class="tph-stats" style="margin: 0 20px 20px; border-top: 1px solid var(--brs); padding-top: 16px;">
+            <div class="tph-stat">
+              <div class="tph-stat-val">320</div>
+              <div class="tph-stat-lbl">Students</div>
+            </div>
+            <div class="tph-stat">
+              <div class="tph-stat-val">138</div>
+              <div class="tph-stat-lbl">Placed</div>
+            </div>
+            <div class="tph-stat">
+              <div class="tph-stat-val" style="color:var(--G);">₹25L</div>
+              <div class="tph-stat-lbl">High Pkg</div>
+            </div>
+            <div class="tph-stat">
+              <div class="tph-stat-val" style="color:var(--T);">43%</div>
+              <div class="tph-stat-lbl">Rate</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-grid" style="gap:24px;">
+          <div class="flex-col" style="gap:20px;">
+            <div class="pf-action-card">
+              <h4>TPO Action Center</h4>
+              <p>You have 3 pending approvals and 1 unread policy update from the University.</p>
+              <button class="btn sm" onclick="showToast('Action center opened.')">View All Tasks</button>
+              <svg class="bg-icon" viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            
+            <div class="db">
+              <div class="db-title"><svg viewBox="0 0 24 24">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>Personal Details</div>
+              <div id="pf-view">
+                <div class="dg">
+                  <div class="df"><label>Full Name</label><p>Dr. Ramesh Kumar</p></div>
+                  <div class="df"><label>Designation</label><p>Training & Placement Officer</p></div>
+                  <div class="df"><label>College</label><p>JNTU Hyderabad</p></div>
+                  <div class="df"><label>Department</label><p>T&P Cell</p></div>
+                  <div class="df"><label>Phone</label><p>+91 98765 43210</p></div>
+                  <div class="df"><label>Location</label><p>Hyderabad, Telangana</p></div>
+                  <div class="df"><label>Email</label><p>ramesh@jntu.ac.in</p></div>
+                  <div class="df"><label>TPO Code</label><p>JNTU-TPO-2024</p></div>
+                </div>
+                <button class="btn sec" style="margin-top:16px;" onclick="togglePfEdit()">
+                  <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                  </svg>Edit Profile</button>
               </div>
-              <div style="display:flex;gap:8px;margin-top:4px;">
-                <button class="btn lg" onclick="togglePfEdit();showToast('Profile updated.')">Save Changes</button>
-                <button class="btn sec lg" onclick="togglePfEdit()">Cancel</button>
+              <div id="pf-edit" style="display:none;">
+                <div class="form-grid">
+                  <div class="fg"><label>Full Name</label><input value="Dr. Ramesh Kumar" /></div>
+                  <div class="fg"><label>Designation</label><input value="Training & Placement Officer" /></div>
+                  <div class="fg"><label>College</label><input value="JNTU Hyderabad" /></div>
+                  <div class="fg"><label>Department</label><input value="T&P Cell" /></div>
+                  <div class="fg"><label>Phone</label><input value="+91 98765 43210" /></div>
+                  <div class="fg"><label>Location</label><input value="Hyderabad, Telangana" /></div>
+                  <div class="fg full"><label>Official Email</label><input value="ramesh@jntu.ac.in" /></div>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:12px;">
+                  <button class="btn lg" onclick="togglePfEdit();showToast('Profile updated.')">Save Changes</button>
+                  <button class="btn sec lg" onclick="togglePfEdit()">Cancel</button>
+                </div>
+              </div>
+            </div>
+            <div class="db">
+              <div class="db-title">
+                <svg viewBox="0 0 24 24" width="16" height="16" style="color:var(--P);">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+                Placement Pipeline
+              </div>
+              <div style="position:relative;height:220px;"><canvas id="chart-profile-pipe"></canvas></div>
+            </div>
+
+            <div class="db">
+              <div class="db-title"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path></svg>Major Partner Companies</div>
+              <div class="partner-logos">
+                <div class="partner-logo">Google</div>
+                <div class="partner-logo">Microsoft</div>
+                <div class="partner-logo">Amazon</div>
+                <div class="partner-logo">TCS</div>
+                <div class="partner-logo">Wipro</div>
+                <div class="partner-logo">Infosys</div>
               </div>
             </div>
           </div>
 
-          <div>
-            <div class="form-card" style="margin-bottom:14px;">
-              <div class="form-title"><svg viewBox="0 0 24 24">
-                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                </svg>Cell Statistics</div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;">
-                  <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--ind-dark);">320
-                  </div>
-                  <div style="font-size:11.5px;color:var(--sub);margin-top:2px;">Total Students</div>
-                </div>
-                <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;">
-                  <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--green);">138
-                  </div>
-                  <div style="font-size:11.5px;color:var(--sub);margin-top:2px;">Placed</div>
-                </div>
-                <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;">
-                  <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--amber);">14
-                  </div>
-                  <div style="font-size:11.5px;color:var(--sub);margin-top:2px;">Companies</div>
-                </div>
-                <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;">
-                  <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--ind-dark);">43%
-                  </div>
-                  <div style="font-size:11.5px;color:var(--sub);margin-top:2px;">Placement Rate</div>
-                </div>
-              </div>
-            </div>
-            <div class="form-card">
-              <div class="form-title"><svg viewBox="0 0 24 24">
+          <div class="flex-col" style="gap:20px;">
+            <div class="db">
+              <div class="db-title"><svg viewBox="0 0 24 24">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>College Info</div>
-              <div style="display:flex;flex-direction:column;gap:8px;">
-                <div
-                  style="display:flex;justify-content:space-between;padding:8px 11px;background:var(--bg);border-radius:7px;font-size:13px;">
-                  <span style="color:var(--sub);">NAAC Grade</span><span style="font-weight:600;">A++</span>
+              <div class="flex-col">
+                <div class="info-row"><span>NAAC Grade</span><span>A++</span></div>
+                <div class="info-row"><span>Established</span><span>1965</span></div>
+                <div class="info-row"><span>Total Batches</span><span>4 (2021–2025)</span></div>
+                <div class="info-row"><span>Portal Code</span><span>JNTU-TPO-2024</span></div>
+              </div>
+            </div>
+            
+            <div class="db">
+              <div class="db-title"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Cell Achievements</div>
+              <div class="ach-list">
+                <div class="ach-item">🏆 <strong>98%</strong> Placements in 2024</div>
+                <div class="ach-item">🤝 <strong>50+</strong> Fortune 500 Partners</div>
+                <div class="ach-item">⭐ <strong>A++</strong> NAAC Rating Maintained</div>
+              </div>
+            </div>
+
+            <div class="db">
+              <div class="db-title"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>Placement Support Team</div>
+              <div class="team-list">
+                <div class="team-item">
+                  <div class="team-av">SK</div>
+                  <div class="team-info"><b>Sanjay Kumar</b><span>Asst. TPO</span></div>
                 </div>
-                <div
-                  style="display:flex;justify-content:space-between;padding:8px 11px;background:var(--bg);border-radius:7px;font-size:13px;">
-                  <span style="color:var(--sub);">Established</span><span style="font-weight:600;">1965</span>
-                </div>
-                <div
-                  style="display:flex;justify-content:space-between;padding:8px 11px;background:var(--bg);border-radius:7px;font-size:13px;">
-                  <span style="color:var(--sub);">Total Batches</span><span style="font-weight:600;">4
-                    (2021–2025)</span>
-                </div>
-                <div
-                  style="display:flex;justify-content:space-between;padding:8px 11px;background:var(--bg);border-radius:7px;font-size:13px;">
-                  <span style="color:var(--sub);">Portal Code</span><span style="font-weight:600;">JNTU-TPO-2024</span>
+                <div class="team-item">
+                  <div class="team-av" style="background:var(--TL);">AN</div>
+                  <div class="team-info"><b>Anita Nayak</b><span>Coordination Hub</span></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </div><!-- /pg-profile -->
 
       <!-- ══════════ SETTINGS ══════════ -->
       <div class="page" id="pg-settings">
-        <div class="sec-h">Settings</div>
-        <div class="settings-card">
-          <div class="sr"><span>Email Notifications</span><span class="sv">On</span></div>
-          <div class="sr"><span>New Company Request Alerts</span><span class="sv">On</span></div>
-          <div class="sr"><span>Auto-notify Students on Drives</span><span class="sv">On</span></div>
-          <div class="sr"><span>Portal Visibility</span><span class="sv">Public</span></div>
-          <div class="sr"><span>Account Email</span><span style="font-size:12.5px;color:var(--sub);"
-              id="set-email">ramesh@jntu.ac.in</span></div>
-          <div class="sr"><span>Password</span><button class="btn sm sec"
-              onclick="showToast('Password reset email sent.')">Change Password</button></div>
-        </div>
-        <button class="logout-btn" onclick="logout()">
-          <svg viewBox="0 0 24 24">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-            <polyline points="16 17 21 12 16 7" />
-            <line x1="21" y1="12" x2="9" y2="12" />
+        <div class="page-hd">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
           </svg>
-          Log Out
-        </button>
-      </div>
+          Settings & Configuration
+        </div>
 
+        <div style="max-width: 580px;">
+          <div class="sb-sec" style="padding-left:0; margin-bottom:8px;">General Preferences</div>
+          <div class="settings-card" style="margin-bottom:24px;">
+            <div class="sr"><span>Email & SMS Notifications</span><label class="toggle"><input type="checkbox" checked /><span class="slider"></span></label></div>
+            <div class="sr"><span>Dark Mode</span><label class="toggle"><input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode(this)" /><span class="slider"></span></label></div>
+            <div class="sr"><span>Account Email</span><span style="font-size:12.5px;color:var(--txmu);">ramesh@jntu.ac.in</span></div>
+            <div class="sr"><span>Password</span><button class="btn sm sec" onclick="showToast('Password reset email sent.')">Change Password</button></div>
+          </div>
+
+          <div class="sb-sec" style="padding-left:0; margin-bottom:8px;">Portal Configuration</div>
+          <div class="settings-card" style="margin-bottom:24px;">
+            <div class="sr"><span>New Company Registration</span><label class="toggle"><input type="checkbox" checked /><span class="slider"></span></label></div>
+            <div class="sr"><span>Student Self-Registration</span><label class="toggle"><input type="checkbox" checked /><span class="slider"></span></label></div>
+            <div class="sr"><span>Auto-notify Students on Drives</span><label class="toggle"><input type="checkbox" checked /><span class="slider"></span></label></div>
+            <div class="sr"><span>Show NAAC Grade to Companies</span><label class="toggle"><input type="checkbox" checked /><span class="slider"></span></label></div>
+          </div>
+
+          <div class="sb-sec" style="padding-left:0; margin-bottom:8px;">System Links</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:32px;">
+            <button class="btn sec lg" onclick="go('drives',document.querySelector('.nl[onclick*=drives]'))" style="justify-content:flex-start;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+              Campus Drives
+            </button>
+            <button class="btn sec lg" onclick="go('reports',document.querySelector('.nl[onclick*=reports]'))" style="justify-content:flex-start;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /></svg>
+              System Reports
+            </button>
+          </div>
+
+          <button class="logout-btn" onclick="logout()" style="width:100%; justify-content:center;">
+            <svg viewBox="0 0 24 24" width="18" height="18">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            Log Out of Portal
+          </button>
+        </div>
+      </div><!-- /pg-settings -->
     </div><!-- /body -->
   </div><!-- /main -->
 
-  <script src="../js/tpo.js"></script>
 </body>
 
 </html>
