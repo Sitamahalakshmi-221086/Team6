@@ -1,7 +1,7 @@
 {
   "name": "team6",
   "version": "1.0.0",
-  "description": "HEAD # Placement Management System Developed by Team6 Team 6 Team project  92e3a128d8303c77348081cd1873fded7f5147f8",
+  "description": "Placement Management System Developed by Team 6",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
