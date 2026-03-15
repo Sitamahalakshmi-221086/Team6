@@ -7,12 +7,55 @@ let currentStage = 2;
     const DEMO_OTP = '123456';
 
     /* ── NAVIGATION ── */
-    function goNext(from) {
+    async function goNext(from, event) {
+      if (event) event.preventDefault();
       if (from === 2) {
         if (!validateStage2()) return;
-        document.getElementById('verify-email-show').textContent = document.getElementById('s-email').value;
-        goTo(3);
-        startResendTimer();
+        
+        const btn = document.querySelector('.btn-next');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner"></span> Saving...';
+        btn.disabled = true;
+
+        try {
+          const formData = new FormData();
+          formData.append('fullName', document.getElementById('s-name').value);
+          formData.append('email', document.getElementById('s-email').value);
+          formData.append('password', document.getElementById('s-pwd').value);
+          formData.append('phone', document.getElementById('s-phone').value);
+          formData.append('branch', document.getElementById('s-branch').value);
+          formData.append('year', document.getElementById('s-year').value);
+          formData.append('cgpa', document.getElementById('s-cgpa').value);
+          formData.append('rollNumber', document.getElementById('s-roll').value);
+          formData.append('linkedin', document.getElementById('s-linkedin').value);
+          formData.append('skills', JSON.stringify(skills));
+          
+          const resumeFile = document.getElementById('resume-input').files[0];
+          if (resumeFile) {
+            formData.append('resume', resumeFile);
+          }
+
+          const response = await fetch('http://localhost:5001/api/students/signup', {
+            method: 'POST',
+            body: formData
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            document.getElementById('verify-email-show').textContent = document.getElementById('s-email').value;
+            goTo(3);
+            startResendTimer();
+          } else {
+            alert('Error: ' + (result.message || 'Signup failed'));
+          }
+        } catch (error) {
+          console.error('Signup Error:', error);
+          alert('Could not connect to server. Please ensure the backend is running.');
+        } finally {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        }
       }
     }
 =======

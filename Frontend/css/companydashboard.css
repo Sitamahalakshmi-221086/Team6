@@ -1448,6 +1448,12 @@ textarea {
   align-items: flex-end;
   gap: 16px;
   margin-top: -39px;
+/* <<<<<<< HEAD
+  margin-top: -45px;
+  position: relative;
+  z-index: 2;
+=======
+>>>>>>> database */
 }
 
 .profile-big-av {
@@ -1506,7 +1512,24 @@ textarea {
   align-items: center;
   gap: 4px;
 }
+/* <<<<<<< HEAD */
+.p-badge.t { background: #ccfbf1; color: var(--teal-dark); }
+.p-badge.g { background: #dcfce7; color: var(--green); }
+.p-badge.a { background: #fef9c3; color: var(--amber); }
 
+/* ══ RESPONSIVE ══ */
+@media (max-width: 960px) {
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .cols { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 680px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0 !important; }
+}
+/* ======= */
+
+/* >>>>>>> database */
 .p-badge.t {
   background: #ccfbf1;
   color: var(--teal-dark);
@@ -1542,3 +1565,8 @@ textarea {
     margin-left: 0 !important;
   }
 }
+/* <<<<<<< HEAD
+
+=======
+}
+>>>>>>> database */

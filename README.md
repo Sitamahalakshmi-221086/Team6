@@ -1,6 +1,6 @@
 # CampusPlace – Campus Placement Management Portal
 
-> **"Your Campus. Your Career. One Smart Platform."**
+**"Your Campus. Your Career. One Smart Platform."**
 
 CampusPlace is a centralized, modern placement management portal designed to streamline the recruitment process. It connects university students, companies, and the Training and Placement Office (TPO) with smart tools, real-time tracking, and a seamless digital experience.
 

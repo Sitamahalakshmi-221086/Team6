@@ -1,4 +1,10 @@
+// ─── AUTH CHECK ───
+if (sessionStorage.getItem('isLoggedIn') !== 'true' || sessionStorage.getItem('userRole') !== 'student') {
+  window.location.href = 'Login.html';
+}
+
 // ─── JOB DATA ───
+
     // [BACKEND_NEEDED]: Replace this hardcoded array with a fetch call to the backend (e.g., GET /api/jobs)
     const JOBS = [
       { id: 1, logo: 'briefcase', logoColor: 'var(--blue)', title: 'Software Engineer Intern', company: 'Microsoft India', loc: 'Hyderabad · Hybrid', type: 'Full Time', ctc: '₹12 LPA', dl: 'Mar 20', cgpa: '7.0', branch: 'CSE, IT, ECE', desc: 'Work on scalable web applications using React and Node.js. Contribute to real products used by millions globally.', skills: ['React', 'Node.js', 'JavaScript'], reco: true, intern: false },
@@ -16,29 +22,120 @@
 
     // ─── INIT ───
     window.addEventListener('DOMContentLoaded', () => {
-      const name = sessionStorage.getItem('cp_student_name') || 'Arjun Sharma';
-      const email = sessionStorage.getItem('cp_student_email') || 'arjun@college.edu';
+      const name = sessionStorage.getItem('studentName') || 'Student';
+      const email = sessionStorage.getItem('studentEmail') || 'student@college.edu';
       const first = name.split(' ')[0];
       const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
 
       ['sb-av', 'home-av', 'pg-av', 'tb-av'].forEach(id => { const e = document.getElementById(id); if (e) e.textContent = initials; });
       ['sb-name', 'home-name', 'pg-name', 'pv-fname'].forEach(id => { const e = document.getElementById(id); if (e) e.textContent = name; });
       ['pg-email', 'set-email'].forEach(id => { const e = document.getElementById(id); if (e) e.textContent = email; });
-      document.getElementById('tb-name').textContent = first;
+      
+      // Academic & Personal
+      const branch = sessionStorage.getItem('studentBranch') || '';
+      const year = sessionStorage.getItem('studentYear') || '';
+      const cgpa = sessionStorage.getItem('studentCGPA') || '';
+      const roll = sessionStorage.getItem('studentRoll') || '';
+      const phone = sessionStorage.getItem('studentPhone') || '';
+      const linkedin = sessionStorage.getItem('studentLinkedin') || '';
+      const github = sessionStorage.getItem('studentGithub') || '';
+      const location = sessionStorage.getItem('studentLocation') || '';
+      const skillsArr = JSON.parse(sessionStorage.getItem('studentSkills') || '[]');
 
-      const h = new Date().getHours();
-      const g = h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
-      document.getElementById('greet-msg').innerHTML = `Good ${g}, ${first} <i data-lucide="smile" style="width:18px;height:18px;vertical-align:text-bottom;"></i>`;
+      const brYrEl = document.getElementById('pg-branch-year');
+      if (brYrEl) brYrEl.innerHTML = `<i data-lucide="graduation-cap"></i> ${branch} · ${year}`;
+      
+      const cgpaTag = document.getElementById('pg-cgpa-tag');
+      if (cgpaTag) cgpaTag.textContent = `CGPA ${cgpa}`;
+
+      const rollTag = document.getElementById('pg-roll-tag');
+      if (rollTag) rollTag.textContent = `Roll No: ${roll}`;
+
+      const pvRoll = document.getElementById('pv-roll');
+      if (pvRoll) pvRoll.textContent = roll;
+
+      const pvBranch = document.getElementById('pv-branch');
+      if (pvBranch) pvBranch.textContent = branch;
+
+      const pvYear = document.getElementById('pv-year');
+      if (pvYear) pvYear.textContent = year;
+
+      const pvCgpa = document.getElementById('pv-cgpa');
+      if (pvCgpa) pvCgpa.textContent = `${cgpa} / 10`;
+
+      const pvPhone = document.getElementById('pv-phone');
+      if (pvPhone) pvPhone.textContent = phone;
+
+      const pvLinkedin = document.getElementById('pv-linkedin');
+      if (pvLinkedin) pvLinkedin.textContent = linkedin || 'Not added';
+
+      const pvGithub = document.getElementById('pv-github');
+      if (pvGithub) pvGithub.textContent = github || 'Not added';
+
+      const pvLoc = document.getElementById('pv-loc');
+      if (pvLoc) pvLoc.textContent = location || 'Not added';
+
+      const skillWrap = document.getElementById('pv-skills');
+      if (skillWrap && skillsArr.length > 0) {
+        skillWrap.innerHTML = '';
+        skillsArr.forEach(s => {
+          const span = document.createElement('span');
+          span.className = 'skill-tag';
+          span.style.cursor = 'default';
+          span.textContent = s;
+          skillWrap.appendChild(span);
+        });
+      }
+
+      // Populate Edit Fields
+      const editName = document.getElementById('edit-name');
+      if (editName) editName.value = name;
+      const editPhone = document.getElementById('edit-phone');
+      if (editPhone) editPhone.value = phone;
+      const editRoll = document.getElementById('edit-roll');
+      if (editRoll) editRoll.value = roll;
+      const editCgpa = document.getElementById('edit-cgpa');
+      if (editCgpa) editCgpa.value = cgpa;
+      const editBranch = document.getElementById('edit-branch');
+      if (editBranch) editBranch.value = branch;
+      const editYear = document.getElementById('edit-year');
+      if (editYear) editYear.value = year;
+      const editLinkedin = document.getElementById('edit-linkedin');
+      if (editLinkedin) editLinkedin.value = linkedin;
+      const editGithub = document.getElementById('edit-github');
+      if (editGithub) editGithub.value = github;
+      const editLoc = document.getElementById('edit-loc');
+      if (editLoc) editLoc.value = location;
+      const editSkills = document.getElementById('edit-skills');
+      if (editSkills) editSkills.value = skillsArr.join(', ');
+
+      const tbNameEl = document.getElementById('tb-name');
+      if (tbNameEl) tbNameEl.textContent = first;
+
+      const greetEl = document.getElementById('greet-msg');
+      if (greetEl) {
+        const h = new Date().getHours();
+        const g = h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
+        greetEl.innerHTML = `Good ${g}, ${first} <i data-lucide="smile" style="width:18px;height:18px;vertical-align:text-bottom;"></i>`;
+      }
 
       renderJobsAll();
       renderRecoJobs();
       renderInternships();
       renderHomeReco();
+      
+      lucide.createIcons();
     });
 
     // ─── NAV ───
     const TITLES = { home: 'Home', jobs: 'Job Listings', applications: 'My Applications', drives: 'Campus Drives', tests: 'Tests & Exams', resume: 'Resume Builder', resources: 'Prep Resources', profile: 'My Profile', settings: 'Settings' };
     function go(id, btn) {
+      // If resume is clicked, open the standalone resume builder page
+      //this is extra code added by me
+      if (id === 'resume') {
+      window.location.href = 'resume-builder.html'; // same pages folder
+      return;
+     }
       document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
       document.querySelectorAll('.nl').forEach(n => n.classList.remove('on'));
       document.getElementById('pg-' + id).classList.add('on');
@@ -190,6 +287,7 @@
       document.getElementById('pv-exp').textContent = g('rb-exp') || '-';
       document.getElementById('pv-cert').textContent = g('rb-cert') || '-';
     }
+
 
     // ─── SIDEBAR TOGGLE ───
     let sidebarOpen = true;
