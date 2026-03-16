@@ -41,6 +41,11 @@ const studentSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  college: {
+    type: String,
+    trim: true,
+    required: [true, 'Please provide your college name']
+  },
   linkedin: {
     type: String,
     trim: true

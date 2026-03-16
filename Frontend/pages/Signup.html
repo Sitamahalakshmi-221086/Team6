@@ -6,108 +6,164 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CampusPlace – Sign Up</title>
   <link
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=DM+Sans:wght@300;400;500;600;700&family=Satisfy&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="../css/signupstyle.css">
 </head>
 
 <body>
 
-  <div class="env-strip" id="env-strip"></div>
+  <div id="accent-strip"></div>
 
   <div class="page-wrap">
 
-    <!-- LEFT PANEL -->
-    <aside class="left-panel" id="left-panel">
-      <div class="left-content">
-        <a href="../index.html" class="logo">
-          <div class="logo-icon">🎓</div>
-          <span class="logo-text">Campus<span class="logo-accent" id="logo-accent">Place</span></span>
+    <!-- ══════════════════════
+     LEFT PANEL
+══════════════════════ -->
+    <aside id="left-panel">
+      <div class="lp-glow"></div>
+      <div class="lp-blob lb1"></div>
+      <div class="lp-blob lb2"></div>
+      <div class="lp-inner">
+
+        <!-- Logo -->
+        <a href="../index.html" class="lp-logo">
+          <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="48" height="48" rx="11" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.28)"
+              stroke-width="1" />
+            <rect x="1" y="1" width="46" height="23" rx="10" fill="rgba(255,255,255,0.06)" />
+            <polygon points="24,11.5 39.5,19 24,26.5 8.5,19" fill="white" />
+            <polygon points="8.5,19 8.5,22 24,29.5 24,26.5" fill="white" opacity=".42" />
+            <polygon points="39.5,19 39.5,22 24,29.5 24,26.5" fill="white" opacity=".58" />
+            <path d="M16.5 21 L16.5 26.5 Q16.5 29.5 24 29.5 Q31.5 29.5 31.5 26.5 L31.5 21 Z" fill="white" />
+            <path d="M39.5 19 Q43 19 43 23 L43 29.5" stroke="white" stroke-width="1.5" fill="none"
+              stroke-linecap="round" />
+            <circle cx="43" cy="29.5" r="2" fill="white" />
+            <line x1="41.1" y1="31.2" x2="40" y2="36.5" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+            <line x1="42.3" y1="31.4" x2="41.8" y2="37" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+            <line x1="43.6" y1="31.4" x2="44" y2="37" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+            <line x1="44.8" y1="31.2" x2="46" y2="36.5" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+            <path d="M40 36 Q43 37 46 36" stroke="rgba(255,255,255,0.55)" stroke-width="1.1" fill="none"
+              stroke-linecap="round" />
+          </svg>
+          <div class="lp-brand">
+            <div class="lp-wm">
+              <span class="lp-campus">Campus</span><span class="lp-dot">.</span><span class="lp-place">Place</span>
+            </div>
+            <div class="lp-tag">Placement Portal</div>
+          </div>
         </a>
 
-        <div class="left-badge"><span class="left-badge-dot"></span> <span id="badge-label">Registration</span></div>
-
-        <h2 class="left-title">
-          <span id="ph1">Start Your</span><br />
-          <span class="left-title-accent" id="ph2">Placement</span><br />
-          <span id="ph3">Journey</span>
+        <!-- Badge + Hero -->
+        <div class="lp-badge"><span class="badge-dot"></span><span id="badge-lbl">Registration</span></div>
+        <h2 class="lp-title">
+          <span id="lp-l1">Start Your</span>
+          <span class="lp-accent" id="lp-l2">Placement</span>
+          <span id="lp-l3">Journey</span>
         </h2>
-        <p class="left-sub" id="panel-sub">Create your profile in 4 quick steps and get matched with top companies
-          visiting your campus.</p>
+        <p class="lp-sub" id="lp-sub">Create your profile in 4 quick steps and get matched with top companies visiting
+          your campus.</p>
 
-        <div class="progress-steps">
-          <div class="progress-step active-step" id="sidebar-step-1">
-            <div class="step-circle active student" id="circle-1">1</div>
-            <div class="step-info">
+        <!-- Steps -->
+        <div class="steps-label">Registration Steps</div>
+        <div class="steps">
+
+          <div class="step-row is-active" id="sr-1">
+            <div class="step-col">
+              <div class="step-num is-active" id="sn-1">1</div>
+              <div class="step-vline"></div>
+            </div>
+            <div class="step-body">
               <div class="step-name">Select Role</div>
               <div class="step-desc">Choose your user type</div>
             </div>
           </div>
-          <div class="progress-step" id="sidebar-step-2">
-            <div class="step-circle pending" id="circle-2">2</div>
-            <div class="step-info">
-              <div class="step-name" id="step2-name">Personal Details</div>
-              <div class="step-desc" id="step2-desc">Academic &amp; contact info</div>
+
+          <div class="step-row" id="sr-2">
+            <div class="step-col">
+              <div class="step-num" id="sn-2">2</div>
+              <div class="step-vline"></div>
+            </div>
+            <div class="step-body">
+              <div class="step-name" id="s2-name">Personal Details</div>
+              <div class="step-desc" id="s2-desc">Academic &amp; contact info</div>
             </div>
           </div>
-          <div class="progress-step" id="sidebar-step-3">
-            <div class="step-circle pending" id="circle-3">3</div>
-            <div class="step-info">
+
+          <div class="step-row" id="sr-3">
+            <div class="step-col">
+              <div class="step-num" id="sn-3">3</div>
+              <div class="step-vline"></div>
+            </div>
+            <div class="step-body">
               <div class="step-name">Verify Email</div>
               <div class="step-desc">Confirm your identity</div>
             </div>
           </div>
-          <div class="progress-step" id="sidebar-step-4">
-            <div class="step-circle pending" id="circle-4">✓</div>
-            <div class="step-info">
+
+          <div class="step-row" id="sr-4">
+            <div class="step-col">
+              <div class="step-num" id="sn-4">✓</div>
+            </div>
+            <div class="step-body">
               <div class="step-name">Dashboard Ready</div>
               <div class="step-desc">Account activated!</div>
             </div>
           </div>
+
+        </div><!-- /steps -->
+
+        <!-- Clock -->
+        <div class="lp-clock">
+          <div class="lp-time" id="lp-time">--:-- --</div>
+          <div class="lp-date" id="lp-date">Loading…</div>
         </div>
 
-        <div style="margin-top:auto;padding-top:32px;">
-          <div class="progress-bar-wrap">
-            <div class="progress-bar-fill" id="progress-bar" style="width:25%;"></div>
+        <!-- Progress -->
+        <div class="lp-prog">
+          <div class="lp-prog-meta">
+            <span class="lp-prog-lbl" id="prog-lbl">Step 1 of 4</span>
+            <span class="lp-prog-pct" id="prog-pct">25%</span>
           </div>
-          <div class="progress-label">
-            <span id="progress-step-label">Step 1 of 4</span>
-            <span class="progress-pct" id="progress-pct">25%</span>
+          <div class="lp-prog-track">
+            <div class="lp-prog-fill" id="prog-fill" style="width:25%"></div>
           </div>
         </div>
-      </div>
+
+      </div><!-- /lp-inner -->
     </aside>
 
-    <!-- RIGHT PANEL -->
-    <main class="right-panel">
-      <div class="form-stage active" id="stage-1">
-        <div class="stage-header">
-          <div class="stage-num">Stage 01 / 04</div>
-          <h1 class="stage-title">Who are you <span class="shimmer-text">joining as?</span></h1>
-          <p class="stage-sub">Select your role to get a personalized registration experience.</p>
-        </div>
+    <!-- ══════════════════════
+     RIGHT PANEL
+══════════════════════ -->
+    <main id="right-panel">
+
+      <!-- STAGE 1: Role Selection -->
+      <div class="stage active" id="stage-1">
+        <div class="s-badge">Stage 01 / 04</div>
+        <h1 class="s-title">Who are you <span class="shimmer-text">joining as?</span></h1>
+        <p class="s-sub">Select your role to get a personalised registration experience.</p>
 
         <div class="role-grid">
-          <div class="role-card" id="card-student" onclick="selectRole('student')">
-            <div class="role-card-icon">🎓</div>
-            <div class="role-card-title">Student</div>
-            <div class="role-card-sub">Apply for jobs &amp; track placements</div>
+          <div class="role-card" id="rc-student" onclick="pickRole('student')">
+            <div class="role-icon">🎓</div>
+            <div class="role-name">Student</div>
+            <div class="role-desc">Apply for jobs &amp; track placements</div>
           </div>
-          <div class="role-card" id="card-company" onclick="selectRole('company')">
-            <div class="role-card-icon">🏢</div>
-            <div class="role-card-title">Company</div>
-            <div class="role-card-sub">Post jobs &amp; hire campus talent</div>
+          <div class="role-card" id="rc-company" onclick="pickRole('company')">
+            <div class="role-icon">🏢</div>
+            <div class="role-name">Company</div>
+            <div class="role-desc">Post jobs &amp; hire campus talent</div>
           </div>
-          <div class="role-card" id="card-tpo" onclick="selectRole('tpo')">
-            <div class="role-card-icon">🛡️</div>
-            <div class="role-card-title">TPO / Admin</div>
-            <div class="role-card-sub">Manage placements &amp; drives</div>
+          <div class="role-card" id="rc-tpo" onclick="pickRole('tpo')">
+            <div class="role-icon">🛡️</div>
+            <div class="role-name">TPO / Admin</div>
+            <div class="role-desc">Manage placements &amp; drives</div>
           </div>
         </div>
 
-        <!-- TPO warning -->
-        <div class="tpo-warning" id="tpo-warning">
-          <span class="tpo-warn-icon">⚠️</span>
+        <div class="tpo-warn" id="tpo-warn">
+          <span style="font-size:18px;flex-shrink:0">⚠️</span>
           <div>
             <div class="tpo-warn-title">TPO accounts are admin-controlled</div>
             <div class="tpo-warn-body">New TPO registrations cannot be created through public signup. Please contact
@@ -115,23 +171,814 @@
           </div>
         </div>
 
-        <div id="role-error" style="display:none;font-size:12px;color:#ef4444;margin-bottom:16px;">Please select a role
-          to continue.</div>
+        <div id="role-err" style="display:none;font-size:12px;color:var(--R);font-weight:600;margin-bottom:14px;">Please
+          select a role to continue.</div>
 
-        <div class="form-nav justify-end">
-          <button class="btn-next default" id="continue-btn" onclick="goNext()">Continue →</button>
+        <div class="form-nav end">
+          <button type="button" class="btn-next off shimmer-btn" id="btn-continue" onclick="goStage2()">Continue →</button>
         </div>
-
         <div class="divider">
           <hr /><span>or</span>
           <hr />
         </div>
-        <div class="already">Already have an account? <a href="Login.html" id="signin-link">Sign in here</a></div>
+        <div class="already">Already have an account? <a href="Login.html">Sign in here</a></div>
       </div>
-    </main>
-  </div>
 
-  <script src="../js/signup.js"></script>
+      <!-- STAGE 2: Details -->
+      <div class="stage" id="stage-2">
+        <div class="s-badge">Stage 02 / 04</div>
+        <h1 class="s-title" id="s2-title">Your <span class="shimmer-text">Profile Details</span></h1>
+        <p class="s-sub" id="s2-sub">Fill in your information so companies and TPOs can find you.</p>
+
+        <!-- STUDENT FIELDS -->
+        <div id="f-student">
+          <div class="sec-head">Personal Information</div>
+          <div class="form-grid">
+            <div class="fg"><label>Full Name <span class="req">*</span></label><input type="text" id="s-name"
+                placeholder="Arjun Sharma" />
+              <div class="err-msg" id="e-s-name">Required</div>
+            </div>
+            <div class="fg"><label>Roll Number <span class="req">*</span></label><input type="text" id="s-roll"
+                placeholder="21CSE045" />
+              <div class="err-msg" id="e-s-roll">Required</div>
+            </div>
+            <div class="fg"><label>Email Address <span class="req">*</span></label><input type="email" id="s-email"
+                placeholder="arjun@college.edu" />
+              <div class="err-msg" id="e-s-email">Enter a valid email</div>
+            </div>
+            <div class="fg"><label>Phone Number</label><input type="tel" id="s-phone" placeholder="+91 98765 43210" />
+            </div>
+          </div>
+          <div class="sec-head">Academic Details</div>
+          <div class="form-grid">
+            <div class="fg"><label>Branch / Department <span class="req">*</span></label>
+              <select id="s-branch">
+                <option value="">Select branch…</option>
+                <option>Computer Science (CSE)</option>
+                <option>Information Technology (IT)</option>
+                <option>Electronics &amp; Communication (ECE)</option>
+                <option>Electrical Engineering (EEE)</option>
+                <option>Mechanical Engineering</option>
+                <option>Civil Engineering</option>
+              </select>
+              <div class="err-msg" id="e-s-branch">Required</div>
+            </div>
+            <div class="fg"><label>Current Year <span class="req">*</span></label>
+              <select id="s-year">
+                <option value="">Select year…</option>
+                <option>1st Year</option>
+                <option>2nd Year</option>
+                <option>3rd Year</option>
+                <option>4th Year / Final</option>
+              </select>
+              <div class="err-msg" id="e-s-year">Required</div>
+            </div>
+            <div class="fg">
+              <label>CGPA</label>
+              <input type="number" id="s-cgpa" placeholder="8.5" min="0" max="10" step="0.1"
+                oninput="updateCgpa(this.value)" />
+              <div class="cgpa-track">
+                <div class="cgpa-fill" id="cgpa-fill" style="width:0%"></div>
+              </div>
+              <div class="cgpa-hint" id="cgpa-hint">Enter your current CGPA out of 10</div>
+            </div>
+            <div class="fg"><label>College Name <span class="req">*</span></label><input type="text" id="s-college"
+                placeholder="JNTU Hyderabad" />
+              <div class="err-msg" id="e-s-college">Required</div>
+            </div>
+          </div>
+          <div class="sec-head">Skills &amp; Resume</div>
+          <div class="form-grid">
+            <div class="fg full">
+              <label>Technical Skills</label>
+              <div class="skills-wrap" id="skills-wrap" onclick="document.getElementById('skill-inp').focus()">
+                <input class="skills-inp" id="skill-inp" placeholder="Type a skill and press Enter…"
+                  onkeydown="addSkill(event)" />
+              </div>
+              <div class="skills-hint">Press Enter or comma — e.g. React, Python, SQL</div>
+            </div>
+            <div class="fg full">
+              <label>Upload Resume</label>
+              <div class="upload-zone" id="upload-zone">
+                <input type="file" accept=".pdf,.doc,.docx" id="resume-file" onchange="handleUpload(this)" />
+                <div class="upload-icon">📄</div>
+                <div class="upload-title">Drop your resume here or <span
+                    style="color:var(--P);font-weight:600">browse</span></div>
+                <div class="upload-sub">PDF, DOC, DOCX · Max 5 MB</div>
+              </div>
+              <div class="upload-done" id="upload-done">
+                <span>✅</span><span class="upload-done-name" id="upload-done-name">resume.pdf</span>
+              </div>
+            </div>
+          </div>
+          <div class="sec-head">Security</div>
+          <div class="form-grid">
+            <div class="fg">
+              <label>Password <span class="req">*</span></label>
+              <div class="pwd-wrap">
+                <input type="password" id="s-pwd" placeholder="Min. 8 characters" oninput="checkPwd('s','spb')" />
+                <button type="button" class="show-pwd" onclick="togglePwd('s-pwd',this)">👁️</button>
+              </div>
+              <div class="pwd-bars">
+                <div class="pwd-bar" id="spb1"></div>
+                <div class="pwd-bar" id="spb2"></div>
+                <div class="pwd-bar" id="spb3"></div>
+                <div class="pwd-bar" id="spb4"></div>
+              </div>
+              <div class="pwd-lbl" id="s-pwd-lbl"></div>
+              <div class="err-msg" id="e-s-pwd">Min. 8 characters required</div>
+            </div>
+            <div class="fg">
+              <label>Confirm Password <span class="req">*</span></label>
+              <div class="pwd-wrap">
+                <input type="password" id="s-cpwd" placeholder="Re-enter password" />
+                <button type="button" class="show-pwd" onclick="togglePwd('s-cpwd',this)">👁️</button>
+              </div>
+              <div class="err-msg" id="e-s-cpwd">Passwords don't match</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COMPANY FIELDS -->
+        <div id="f-company" style="display:none">
+          <div class="sec-head">Company Information</div>
+          <div class="form-grid">
+            <div class="fg"><label>Company Name <span class="req">*</span></label><input type="text" id="c-name"
+                placeholder="e.g. Infosys Technologies" />
+              <div class="err-msg" id="e-c-name">Required</div>
+            </div>
+            <div class="fg"><label>Industry <span class="req">*</span></label>
+              <select id="c-industry">
+                <option value="">Select industry…</option>
+                <option>IT Services &amp; Consulting</option>
+                <option>Product / Software</option>
+                <option>Finance &amp; Banking</option>
+                <option>E-Commerce</option>
+                <option>Manufacturing</option>
+                <option>Healthcare</option>
+                <option>Other</option>
+              </select>
+              <div class="err-msg" id="e-c-industry">Required</div>
+            </div>
+            <div class="fg"><label>Company Size</label>
+              <select id="c-size">
+                <option value="">Select size…</option>
+                <option>1–50</option>
+                <option>51–200</option>
+                <option>201–1000</option>
+                <option>1001–10,000</option>
+                <option>10,000+</option>
+              </select>
+            </div>
+            <div class="fg"><label>Headquarters</label><input type="text" id="c-hq"
+                placeholder="e.g. Bangalore, Karnataka" /></div>
+            <div class="fg"><label>HR Contact Email <span class="req">*</span></label><input type="email" id="c-email"
+                placeholder="hr@company.com" />
+              <div class="err-msg" id="e-c-email">Enter a valid email</div>
+            </div>
+            <div class="fg"><label>Official Website</label><input type="text" id="c-web"
+                placeholder="www.company.com" /></div>
+            <div class="fg full"><label>About the Company</label><textarea id="c-about"
+                placeholder="Brief description of your company, culture and what makes you a great employer…"></textarea>
+            </div>
+          </div>
+          <div class="sec-head">Security</div>
+          <div class="form-grid">
+            <div class="fg">
+              <label>Password <span class="req">*</span></label>
+              <div class="pwd-wrap">
+                <input type="password" id="c-pwd" placeholder="Min. 8 characters" oninput="checkPwd('c','cpb')" />
+                <button type="button" class="show-pwd" onclick="togglePwd('c-pwd',this)">👁️</button>
+              </div>
+              <div class="pwd-bars">
+                <div class="pwd-bar" id="cpb1"></div>
+                <div class="pwd-bar" id="cpb2"></div>
+                <div class="pwd-bar" id="cpb3"></div>
+                <div class="pwd-bar" id="cpb4"></div>
+              </div>
+              <div class="pwd-lbl" id="c-pwd-lbl"></div>
+              <div class="err-msg" id="e-c-pwd">Min. 8 characters required</div>
+            </div>
+            <div class="fg">
+              <label>Confirm Password <span class="req">*</span></label>
+              <div class="pwd-wrap">
+                <input type="password" id="c-cpwd" placeholder="Re-enter password" />
+                <button type="button" class="show-pwd" onclick="togglePwd('c-cpwd',this)">👁️</button>
+              </div>
+              <div class="err-msg" id="e-c-cpwd">Passwords don't match</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-nav">
+          <button type="button" class="btn-prev" onclick="showStage(1)">← Back</button>
+          <button type="button" class="btn-next shimmer-btn" id="btn-to3" onclick="goStage3()">
+            <span id="btn-to3-lbl">Next: Verify Email</span>
+            <div class="spinner" id="sp2"></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- STAGE 3: OTP -->
+      <div class="stage" id="stage-3">
+        <div class="s-badge">Stage 03 / 04</div>
+        <h1 class="s-title">Verify Your <span class="shimmer-text">Email</span></h1>
+        <p class="s-sub">We've sent a 6-digit code to your email address. Enter it below to confirm your identity.</p>
+        <div class="verify-center">
+          <span class="email-illus">📬</span>
+          <div class="verify-email" id="verify-email">you@college.edu</div>
+          <div class="verify-note">Check your inbox (and spam folder). The code expires in <strong>10 minutes</strong>.
+          </div>
+          <div class="otp-row">
+            <input class="otp-box" maxlength="1" id="o1" oninput="otpFill(this)"
+              onkeydown="otpKey(event,this,null,'o2')" />
+            <input class="otp-box" maxlength="1" id="o2" oninput="otpFill(this)"
+              onkeydown="otpKey(event,this,'o1','o3')" />
+            <input class="otp-box" maxlength="1" id="o3" oninput="otpFill(this)"
+              onkeydown="otpKey(event,this,'o2','o4')" />
+            <input class="otp-box" maxlength="1" id="o4" oninput="otpFill(this)"
+              onkeydown="otpKey(event,this,'o3','o5')" />
+            <input class="otp-box" maxlength="1" id="o5" oninput="otpFill(this)"
+              onkeydown="otpKey(event,this,'o4','o6')" />
+            <input class="otp-box" maxlength="1" id="o6" oninput="otpFill(this)"
+              onkeydown="otpKey(event,this,'o5',null)" />
+          </div>
+          <div id="otp-err" style="display:none;font-size:12.5px;color:var(--R);font-weight:600;margin-bottom:14px;">
+            Incorrect code. Please try again.</div>
+          <div class="resend-row">
+            <span class="timer-badge" id="timer-badge">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              Resend in <span id="timer-count">60</span>s
+            </span>
+            <span id="resend-show" style="display:none">Didn't get it? <button type="button" class="resend-btn"
+                onclick="resendOTP()">Resend code</button></span>
+          </div>
+        </div>
+        <div class="form-nav">
+          <button type="button" class="btn-prev" onclick="showStage(2)">← Back</button>
+          <button type="button" class="btn-next shimmer-btn" id="btn-verify" onclick="verifyOTP()">
+            <span id="btn-verify-lbl">Verify &amp; Continue</span>
+            <div class="spinner" id="sp3"></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- STAGE 4: Success -->
+      <div class="stage" id="stage-4">
+        <div class="success-wrap">
+          <div class="success-circle">🎉</div>
+          <h1 class="success-title">Welcome to <span class="shimmer-text">CampusPlace!</span></h1>
+          <p class="success-sub" id="success-sub">Your account is ready. You're all set to explore placement
+            opportunities.</p>
+          <div class="success-items" id="success-items">
+            <div class="success-item">
+              <div class="success-ico">✓</div>
+              <div>Complete your profile to increase visibility to recruiters.</div>
+            </div>
+            <div class="success-item">
+              <div class="success-ico">✓</div>
+              <div>Upload your resume and add your technical skills.</div>
+            </div>
+            <div class="success-item">
+              <div class="success-ico">✓</div>
+              <div>Browse open job listings and campus drive schedules.</div>
+            </div>
+          </div>
+          <a href="studentdashboard.html" class="btn-dashboard shimmer-btn" id="btn-dashboard">Go to Dashboard →</a>
+        </div>
+      </div>
+
+    </main>
+  </div><!-- /page-wrap -->
+
+  <script>
+    // ─────────────────────────────────
+    //  CONFIG
+    // ─────────────────────────────────
+    var SERVER_URL = 'http://127.0.0.1:5000';
+
+    // ─────────────────────────────────
+    //  STATE
+    // ─────────────────────────────────
+    var role = null;
+    var timerInt = null;
+    window._currentOtp = null;
+    window._pendingFormData = null;
+
+    // ─────────────────────────────────
+    //  pickRole
+    // ─────────────────────────────────
+    function pickRole(r) {
+      role = r;
+      document.getElementById('rc-student').className = 'role-card';
+      document.getElementById('rc-company').className = 'role-card';
+      document.getElementById('rc-tpo').className = 'role-card';
+      document.getElementById('rc-' + r).className = 'role-card sel-' + r;
+      document.getElementById('left-panel').className = 'role-' + r;
+      document.getElementById('accent-strip').className = 'role-' + r;
+      document.getElementById('tpo-warn').className = (r === 'tpo') ? 'tpo-warn show' : 'tpo-warn';
+      document.getElementById('btn-continue').className = 'btn-next';
+      document.getElementById('role-err').style.display = 'none';
+      var TITLES = {
+        student: ['Start Your', 'Placement', 'Journey'],
+        company: ['Connect with', 'Campus', 'Talent'],
+        tpo: ['Manage', 'Placements', 'Smarter']
+      };
+      var SUBS = {
+        student: 'Create your profile in 4 quick steps and get matched with top companies visiting your campus.',
+        company: 'Register your company in 4 steps and start posting jobs to hundreds of qualified students.',
+        tpo: 'Set up your TPO account to manage campus drives, student data, and company relations.'
+      };
+      var S2N = { student: 'Academic Details', company: 'Company Info', tpo: 'Office Details' };
+      var S2D = { student: 'Branch, CGPA & resume', company: 'Industry & HR contact', tpo: 'College & designation' };
+      document.getElementById('lp-l1').textContent = TITLES[r][0];
+      document.getElementById('lp-l2').textContent = TITLES[r][1];
+      document.getElementById('lp-l3').textContent = TITLES[r][2];
+      document.getElementById('lp-sub').textContent = SUBS[r];
+      document.getElementById('s2-name').textContent = S2N[r];
+      document.getElementById('s2-desc').textContent = S2D[r];
+      var sn1 = document.getElementById('sn-1');
+      sn1.className = 'step-num is-active' + (r === 'company' ? ' c-company' : r === 'tpo' ? ' c-tpo' : '');
+    }
+
+    // ─────────────────────────────────
+    //  STAGE NAVIGATION
+    // ─────────────────────────────────
+    function showStage(n) {
+      document.querySelectorAll('.stage').forEach(function (s) { s.classList.remove('active'); });
+      document.getElementById('stage-' + n).classList.add('active');
+      updateProgress(n);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Redirect to dedicated signup page per role (keeps existing project structure)
+    function goStage2() {
+      if (!role) { document.getElementById('role-err').style.display = 'block'; return; }
+      var routes = {
+        student: 'StudentSignup.html',
+        company: 'Companysignup.html',
+        tpo: 'TPOsignup.html'
+      };
+      if (routes[role]) {
+        window.location.href = routes[role];
+      }
+    }
+
+    function goStage3() {
+      if (!validate2()) return;
+      var email = (role === 'student')
+        ? document.getElementById('s-email').value
+        : document.getElementById('c-email').value;
+      // ✔ Collect form data into memory (no DB write yet)
+      if (role === 'student') {
+        var resumeFile = document.getElementById('resume-file');
+        window._pendingFormData = {
+          role: 'student',
+          fullName:   document.getElementById('s-name').value,
+          email:      document.getElementById('s-email').value,
+          password:   document.getElementById('s-pwd').value,
+          phone:      (document.getElementById('s-phone') || {}).value || '',
+          branch:     document.getElementById('s-branch').value,
+          year:       document.getElementById('s-year').value,
+          cgpa:       document.getElementById('s-cgpa').value,
+          college:    document.getElementById('s-college').value,
+          rollNumber: document.getElementById('s-roll').value,
+          resumeFile: resumeFile && resumeFile.files[0] ? resumeFile.files[0] : null
+        };
+        // Collect skills tags
+        var skillTags = document.querySelectorAll('#skills-wrap .skill-tag');
+        var skills = [];
+        skillTags.forEach(function(tag) {
+          var btn = tag.querySelector('button');
+          var text = tag.textContent.replace(btn ? btn.textContent : '', '').trim();
+          if (text) skills.push(text);
+        });
+        window._pendingFormData.skills = skills;
+      } else if (role === 'company') {
+        window._pendingFormData = {
+          role: 'company',
+          companyName: document.getElementById('c-name').value,
+          email:       document.getElementById('c-email').value,
+          password:    document.getElementById('c-pwd').value,
+          industry:    document.getElementById('c-industry').value,
+          companySize: (document.getElementById('c-size') || {}).value || '',
+          headquarters: (document.getElementById('c-hq') || {}).value || '',
+          website:     (document.getElementById('c-web') || {}).value || '',
+          description: (document.getElementById('c-about') || {}).value || ''
+        };
+      }
+
+      // ✔ Generate real OTP and send via backend
+      var generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+      window._currentOtp = generatedOtp;
+
+      var sp = document.getElementById('sp2');
+      var lbl = document.getElementById('btn-to3-lbl');
+      var btn = document.getElementById('btn-to3');
+      sp.style.display = 'block'; lbl.textContent = 'Sending code…'; btn.disabled = true;
+
+      var recipientEmail = window._pendingFormData.email;
+      var recipientName  = window._pendingFormData.fullName || window._pendingFormData.companyName || 'User';
+      document.getElementById('verify-email').textContent = recipientEmail;
+
+      fetch(SERVER_URL + '/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: recipientEmail, name: recipientName, otp: generatedOtp })
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(result) {
+        sp.style.display = 'none'; lbl.textContent = 'Next: Verify Email'; btn.disabled = false;
+        if (result.success) {
+          console.log('✅ OTP sent to', recipientEmail);
+          showStage(3);
+          startTimer();
+        } else {
+          alert('Failed to send OTP. Please check your email address and try again.\n\nServer said: ' + (result.message || 'Unknown error'));
+        }
+      })
+      .catch(function(err) {
+        sp.style.display = 'none'; lbl.textContent = 'Next: Verify Email'; btn.disabled = false;
+        console.error('❌ OTP send error:', err);
+        if (err instanceof TypeError) {
+          alert('Could not connect to the backend server.\n\nMake sure the backend is running at ' + SERVER_URL + ' and try again.');
+        } else {
+          alert('Failed to send OTP. Please check your network and try again.');
+        }
+      });
+    }
+
+    function goStage4(studentId) {
+      var SUBS = {
+        student: 'Your student account is ready. Explore job listings, track applications, and never miss a campus drive.',
+        company: 'Your company account is verified. Start posting jobs and scheduling campus drives immediately.'
+      };
+      document.getElementById('success-sub').textContent = SUBS[role] || SUBS.student;
+      if (role === 'company') {
+        document.getElementById('success-items').innerHTML =
+          ['Complete your company profile and verify your domain.',
+            'Post your first job opening to reach hundreds of students.',
+            'Schedule a campus drive with your partner colleges.']
+            .map(function (t) { return '<div class="success-item"><div class="success-ico">✓</div><div>' + t + '</div></div>'; }).join('');
+        document.getElementById('btn-dashboard').href = 'CompanyDashboard.html';
+      } else {
+        document.getElementById('btn-dashboard').href = 'StudentDashboard.html';
+      }
+      showStage(4);
+      // Auto-redirect after 3 seconds
+      var dest = (role === 'company') ? 'CompanyDashboard.html' : 'StudentDashboard.html';
+      setTimeout(function() { window.location.href = dest; }, 3000);
+    }
+
+    // ─────────────────────────────────
+    //  PROGRESS
+    // ─────────────────────────────────
+    function updateProgress(n) {
+      var pcts = { 1: 25, 2: 50, 3: 75, 4: 100 };
+      document.getElementById('prog-fill').style.width = pcts[n] + '%';
+      document.getElementById('prog-pct').textContent = pcts[n] + '%';
+      document.getElementById('prog-lbl').textContent = 'Step ' + n + ' of 4';
+
+      [1, 2, 3, 4].forEach(function (i) {
+        var row = document.getElementById('sr-' + i);
+        var num = document.getElementById('sn-' + i);
+        row.className = 'step-row';
+        num.className = 'step-num';
+        if (i < n) {
+          row.className = 'step-row is-done';
+          num.className = 'step-num is-done';
+          num.textContent = '✓';
+        } else if (i === n) {
+          row.className = 'step-row is-active';
+          num.className = 'step-num is-active' +
+            (role === 'company' ? ' c-company' : role === 'tpo' ? ' c-tpo' : '');
+          num.textContent = (i < 4) ? i : '✓';
+        } else {
+          num.textContent = (i < 4) ? i : '✓';
+        }
+      });
+
+      // re-apply theme
+      if (role) {
+        document.getElementById('left-panel').className = 'role-' + role;
+        document.getElementById('accent-strip').className = 'role-' + role;
+      }
+    }
+
+    // ─────────────────────────────────
+    //  VALIDATION
+    // ─────────────────────────────────
+    function markErr(id, msg) {
+      var el = document.getElementById(id); if (!el) return;
+      el.classList.add('err');
+      var em = document.getElementById('e-' + id);
+      if (em) { if (msg) em.textContent = msg; em.classList.add('show'); }
+    }
+    function clearErr(id) {
+      var el = document.getElementById(id); if (!el) return;
+      el.classList.remove('err');
+      var em = document.getElementById('e-' + id);
+      if (em) em.classList.remove('show');
+    }
+    function validate2() {
+      var ok = true;
+      if (role === 'student') {
+        ['s-name', 's-roll', 's-email', 's-branch', 's-year', 's-college'].forEach(function (f) {
+          clearErr(f);
+          if (!document.getElementById(f).value.trim()) { markErr(f, 'Required'); ok = false; }
+        });
+        var em = document.getElementById('s-email');
+        if (em.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value)) { markErr('s-email', 'Enter a valid email'); ok = false; }
+        clearErr('s-pwd'); clearErr('s-cpwd');
+        var pw = document.getElementById('s-pwd').value;
+        if (pw.length < 8) { markErr('s-pwd', 'Min. 8 characters required'); ok = false; }
+        else if (pw !== document.getElementById('s-cpwd').value) { markErr('s-cpwd', "Passwords don't match"); ok = false; }
+      } else if (role === 'company') {
+        ['c-name', 'c-industry', 'c-email'].forEach(function (f) {
+          clearErr(f);
+          if (!document.getElementById(f).value.trim()) { markErr(f, 'Required'); ok = false; }
+        });
+        var cem = document.getElementById('c-email');
+        if (cem.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cem.value)) { markErr('c-email', 'Enter a valid email'); ok = false; }
+        clearErr('c-pwd'); clearErr('c-cpwd');
+        var cpw = document.getElementById('c-pwd').value;
+        if (cpw.length < 8) { markErr('c-pwd', 'Min. 8 characters required'); ok = false; }
+        else if (cpw !== document.getElementById('c-cpwd').value) { markErr('c-cpwd', "Passwords don't match"); ok = false; }
+      }
+      return ok;
+    }
+
+    // ─────────────────────────────────
+    //  PASSWORD STRENGTH
+    // ─────────────────────────────────
+    function checkPwd(prefix, barPfx) {
+      var val = document.getElementById(prefix + '-pwd').value;
+      var bars = [1, 2, 3, 4].map(function (i) { return document.getElementById(barPfx + i); });
+      var lbl = document.getElementById(prefix + '-pwd-lbl');
+      if (!val) { bars.forEach(function (b) { b.className = 'pwd-bar'; }); if (lbl) lbl.textContent = ''; return; }
+      var score = 0;
+      if (val.length >= 8) score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+      var cls = ['', 'lv1', 'lv1', 'lv2', 'lv3', 'lv4'];
+      var name = ['', 'Weak', 'Weak', 'Fair', 'Good', 'Strong'];
+      var col = ['', 'var(--R)', 'var(--R)', 'var(--A)', 'var(--P)', 'var(--G)'];
+      var c = (score === 4) ? 'lv4' : cls[score];
+      bars.forEach(function (b, i) { b.className = 'pwd-bar' + (i < score ? ' ' + c : ''); });
+      if (lbl) { lbl.textContent = name[score] || ''; lbl.style.color = col[score] || ''; }
+    }
+    function togglePwd(id, btn) {
+      var inp = document.getElementById(id);
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+      btn.textContent = inp.type === 'password' ? '👁️' : '🙈';
+    }
+
+    // ─────────────────────────────────
+    //  CGPA
+    // ─────────────────────────────────
+    function updateCgpa(val) {
+      var v = parseFloat(val);
+      var fill = document.getElementById('cgpa-fill');
+      var hint = document.getElementById('cgpa-hint');
+      if (isNaN(v) || v < 0) { fill.style.width = '0%'; hint.textContent = 'Enter your current CGPA out of 10'; return; }
+      v = Math.min(v, 10);
+      fill.style.width = (v / 10 * 100) + '%';
+      var lbls = ['', 'Very Low', 'Low', 'Below Average', 'Average', 'Average', 'Good', 'Good', 'Very Good', 'Excellent', 'Outstanding'];
+      hint.textContent = v.toFixed(1) + ' / 10 — ' + (lbls[Math.floor(v)] || '');
+    }
+
+    // ─────────────────────────────────
+    //  SKILLS
+    // ─────────────────────────────────
+    function addSkill(e) {
+      if (e.key !== 'Enter' && e.key !== ',') return;
+      e.preventDefault();
+      var inp = document.getElementById('skill-inp');
+      var val = inp.value.trim().replace(/,$/, '');
+      if (!val) return;
+      var tag = document.createElement('span');
+      tag.className = 'skill-tag';
+      tag.innerHTML = val + '<button type="button" onclick="this.closest(\'.skill-tag\').remove()">×</button>';
+      document.getElementById('skills-wrap').insertBefore(tag, inp);
+      inp.value = '';
+    }
+
+    // ─────────────────────────────────
+    //  UPLOAD
+    // ─────────────────────────────────
+    function handleUpload(input) {
+      var file = input.files[0]; if (!file) return;
+      document.getElementById('upload-done-name').textContent = file.name;
+      document.getElementById('upload-done').classList.add('show');
+      document.getElementById('upload-zone').style.borderColor = 'var(--G)';
+    }
+
+    // ─────────────────────────────────
+    //  OTP
+    // ─────────────────────────────────
+    function otpFill(el) { el.classList.toggle('filled', el.value.length > 0); }
+    function otpKey(e, el, prevId, nextId) {
+      if (el.value && nextId) document.getElementById(nextId).focus();
+      if (!el.value && prevId && e.key === 'Backspace') document.getElementById(prevId).focus();
+    }
+    function startTimer() {
+      var count = 60;
+      document.getElementById('timer-count').textContent = count;
+      document.getElementById('timer-badge').style.display = 'inline-flex';
+      document.getElementById('resend-show').style.display = 'none';
+      clearInterval(timerInt);
+      timerInt = setInterval(function () {
+        count--;
+        document.getElementById('timer-count').textContent = count;
+        if (count <= 0) {
+          clearInterval(timerInt);
+          document.getElementById('timer-badge').style.display = 'none';
+          document.getElementById('resend-show').style.display = 'inline';
+        }
+      }, 1000);
+    }
+    // ✔ resendOTP: generates new OTP and calls the backend
+    function resendOTP() {
+      [1, 2, 3, 4, 5, 6].forEach(function (i) { var el = document.getElementById('o' + i); el.value = ''; el.classList.remove('filled'); });
+      document.getElementById('otp-err').style.display = 'none';
+
+      if (!window._pendingFormData) {
+        alert('Session expired. Please go back and fill the form again.');
+        showStage(2);
+        return;
+      }
+
+      var newOtp = Math.floor(100000 + Math.random() * 900000).toString();
+      window._currentOtp = newOtp;
+      var name = window._pendingFormData.fullName || window._pendingFormData.companyName || 'User';
+      var email = window._pendingFormData.email;
+
+      fetch(SERVER_URL + '/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, name: name, otp: newOtp })
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(result) {
+        if (result.success) {
+          console.log('✅ OTP resent to', email);
+          var toast = document.createElement('div');
+          toast.textContent = '✅ OTP resent to ' + email;
+          Object.assign(toast.style, { position:'fixed', bottom:'32px', left:'50%', transform:'translateX(-50%)', background:'#059669', color:'#fff', padding:'10px 24px', borderRadius:'100px', fontSize:'14px', fontWeight:'600', zIndex:'9999', boxShadow:'0 4px 16px rgba(5,150,105,.4)' });
+          document.body.appendChild(toast);
+          setTimeout(function() { toast.remove(); }, 2500);
+        } else {
+          console.warn('⚠️ Resend failed:', result.message);
+        }
+      })
+      .catch(function(err) { console.error('❌ Resend error:', err); });
+
+      startTimer();
+    }
+    // ✔ verifyOTP: validates the real OTP, then saves user to the DB
+    function verifyOTP() {
+      var code = [1, 2, 3, 4, 5, 6].map(function (i) { return document.getElementById('o' + i).value; }).join('');
+      var errEl = document.getElementById('otp-err');
+      var sp = document.getElementById('sp3');
+      var lbl = document.getElementById('btn-verify-lbl');
+      var btn = document.getElementById('btn-verify');
+
+      errEl.style.display = 'none';
+
+      if (code.length < 6) {
+        errEl.textContent = 'Please enter all 6 digits.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      // ✔ Check OTP against the one we generated
+      if (!window._currentOtp || code !== window._currentOtp) {
+        errEl.textContent = 'Incorrect OTP. Please check your email and try again.';
+        errEl.style.display = 'block';
+        [1, 2, 3, 4, 5, 6].forEach(function(i) {
+          var el = document.getElementById('o' + i);
+          el.value = ''; el.style.borderColor = '#ef4444';
+        });
+        setTimeout(function() {
+          [1, 2, 3, 4, 5, 6].forEach(function(i) { document.getElementById('o' + i).style.borderColor = ''; });
+        }, 1200);
+        document.getElementById('o1').focus();
+        return;
+      }
+
+      // ✔ OTP correct → show spinner and save user to DB
+      sp.style.display = 'block'; lbl.textContent = 'Saving…'; btn.disabled = true;
+
+      var data = window._pendingFormData;
+
+      var savePromise;
+      if (data.role === 'student') {
+        // Student signup uses FormData (supports file upload)
+        var formData = new FormData();
+        formData.append('fullName',   data.fullName);
+        formData.append('email',      data.email);
+        formData.append('password',   data.password);
+        formData.append('phone',      data.phone || '');
+        formData.append('branch',     data.branch);
+        formData.append('year',       data.year);
+        formData.append('cgpa',       data.cgpa || '0');
+        formData.append('college',    data.college);
+        formData.append('rollNumber', data.rollNumber || '');
+        formData.append('skills',     JSON.stringify(data.skills || []));
+        if (data.resumeFile) { formData.append('resume', data.resumeFile); }
+        savePromise = fetch(SERVER_URL + '/api/students/signup', { method: 'POST', body: formData });
+      } else {
+        // Company signup uses JSON
+        savePromise = fetch(SERVER_URL + '/api/companies/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            companyName: data.companyName, email: data.email, password: data.password,
+            industry: data.industry, companySize: data.companySize,
+            headquarters: data.headquarters, website: data.website, description: data.description,
+            isVerified: true
+          })
+        });
+      }
+
+      savePromise
+        .then(function(res) { return res.json(); })
+        .then(function(result) {
+          sp.style.display = 'none'; lbl.textContent = 'Verify & Continue'; btn.disabled = false;
+          if (result.success) {
+            // Persist session data for Dashboard
+            sessionStorage.setItem('isLoggedIn', 'true');
+            sessionStorage.setItem('userRole', data.role);
+            if (data.role === 'student') {
+              sessionStorage.setItem('studentName',  data.fullName);
+              sessionStorage.setItem('studentEmail', data.email);
+              sessionStorage.setItem('studentId',    result.studentId || '');
+            } else {
+              sessionStorage.setItem('companyName',  data.companyName);
+              sessionStorage.setItem('companyEmail', data.email);
+              sessionStorage.setItem('companyId',    result.companyId || '');
+            }
+            clearInterval(timerInt);
+            window._currentOtp = null;
+            window._pendingFormData = null;
+            goStage4(result.studentId || result.companyId);
+          } else {
+            errEl.textContent = 'OTP verified but registration failed: ' + (result.message || 'Unknown error');
+            errEl.style.display = 'block';
+          }
+        })
+        .catch(function(err) {
+          sp.style.display = 'none'; lbl.textContent = 'Verify & Continue'; btn.disabled = false;
+          console.error('❌ Registration error:', err);
+          errEl.textContent = 'Server error during registration. Make sure the backend is running.';
+          errEl.style.display = 'block';
+        });
+    }
+
+    // ─────────────────────────────────
+    //  REAL-TIME CLOCK
+    // ─────────────────────────────────
+    function tickClock() {
+      var now = new Date(), h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+      var ampm = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12;
+      var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      document.getElementById('lp-time').textContent =
+        h + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0') + ' ' + ampm;
+      document.getElementById('lp-date').textContent =
+        DAYS[now.getDay()] + ', ' + MONTHS[now.getMonth()] + ' ' + now.getDate() + ' ' + now.getFullYear();
+    }
+    tickClock();
+    setInterval(tickClock, 1000);
+
+    // ─────────────────────────────────
+    //  AUTO-CLEAR ERRORS + DRAG-DROP
+    // ─────────────────────────────────
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('input,select').forEach(function (el) {
+        el.addEventListener('input', function () {
+          this.classList.remove('err');
+          var em = document.getElementById('e-' + this.id);
+          if (em) em.classList.remove('show');
+        });
+      });
+      var uz = document.getElementById('upload-zone');
+      if (uz) {
+        uz.addEventListener('dragover', function (e) { e.preventDefault(); this.classList.add('drag'); });
+        uz.addEventListener('dragleave', function () { this.classList.remove('drag'); });
+        uz.addEventListener('drop', function (e) {
+          e.preventDefault(); this.classList.remove('drag');
+          var f = e.dataTransfer.files[0];
+          if (f) { document.getElementById('upload-done-name').textContent = f.name; document.getElementById('upload-done').classList.add('show'); }
+        });
+      }
+    });
+  </script>
 </body>
 
 </html>

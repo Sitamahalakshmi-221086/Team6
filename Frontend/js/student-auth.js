@@ -17,19 +17,19 @@ async function doLogin(role, event) {
 
   let ok = true;
   errBox.style.display = 'none';
-  emailEl.classList.remove('error');
-  pwdEl.classList.remove('error');
+  emailEl.classList.remove('err');
+  pwdEl.classList.remove('err');
 
   // Validate email
   if (!emailEl.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value)) {
-    emailEl.classList.add('error');
+    emailEl.classList.add('err');
     const emailErr = document.getElementById('err-' + emailMap[role]);
     if (emailErr) emailErr.classList.add('show');
     ok = false;
   }
   // Validate password
   if (!pwdEl.value) {
-    pwdEl.classList.add('error');
+    pwdEl.classList.add('err');
     const pwdErr = document.getElementById('err-' + pwdMap[role]);
     if (pwdErr) pwdErr.classList.add('show');
     ok = false;
@@ -45,26 +45,43 @@ async function doLogin(role, event) {
   try {
     console.log(`Attempting login for ${role}: ${emailEl.value}`);
     
-    const response = await fetch('http://localhost:5001/api/students/login', {
+    const response = await fetch('http://127.0.0.1:5000/api/students/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        email: emailEl.value,
+        email: emailEl.value.trim(),
         password: pwdEl.value
       })
     });
 
+    if (!response.ok) throw new Error('Server error');
     const result = await response.json();
     console.log('Login result:', result);
 
     if (result.success) {
-      // Store student data in session
+      const student = result.student || {};
+      const fullName = student.fullName || '';
+      const email = student.email || emailEl.value.trim();
+      const id = student.id || student._id || student.studentId;
+
+      // Store session (persist across refresh)
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('userRole', role);
+      localStorage.setItem('userName', fullName);
+      localStorage.setItem('userEmail', email);
+      if (id) localStorage.setItem('userId', String(id));
+
+      // Legacy keys used in dashboards
+      localStorage.setItem('studentName', fullName);
+      localStorage.setItem('studentEmail', email);
+
+      // Back-compat
       sessionStorage.setItem('isLoggedIn', 'true');
-      sessionStorage.setItem('userRole', role); // Use the role passed in
-      sessionStorage.setItem('studentName', result.student.fullName);
-      sessionStorage.setItem('studentEmail', result.student.email);
+      sessionStorage.setItem('userRole', role);
+      sessionStorage.setItem('studentName', fullName);
+      sessionStorage.setItem('studentEmail', email);
       
       showSuccess(role, emailEl.value);
     } else {
@@ -73,7 +90,7 @@ async function doLogin(role, event) {
     }
   } catch (error) {
     console.error('Login Error:', error);
-    errBox.textContent = '❌ Could not connect to server. Please check if the backend is running.';
+    errBox.textContent = '❌ Login failed. Please try again.';
     errBox.style.display = 'block';
   } finally {
     spinner.style.display = 'none';
@@ -110,6 +127,8 @@ function showSuccess(role, email) {
     successCta.textContent = ctas[role];
     if (role === 'student') {
       successCta.href = 'StudentDashboard.html';
+      successCta.classList.remove('company', 'tpo');
+      successCta.classList.add('student');
       // Redirect automatically
       setTimeout(() => {
         window.location.href = 'StudentDashboard.html';
@@ -163,7 +182,7 @@ function togglePwd(id, btn) {
 }
 
 function clearErr(el) {
-  el.classList.remove('error');
+  el.classList.remove('err');
   const errEl = document.getElementById('err-' + el.id);
   if (errEl) errEl.classList.remove('show');
 }

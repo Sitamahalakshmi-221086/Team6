@@ -915,6 +915,19 @@
             <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34" />
             <polygon points="18 2 22 6 12 16 8 16 8 12 18 2" />
           </svg>Resume Builder</div>
+        
+        <div style="background:linear-gradient(90deg, var(--PD), var(--P)); border-radius:var(--rs); padding:20px; margin-bottom:20px; color:#fff; display:flex; align-items:center; justify-content:space-between; gap:20px; box-shadow:var(--sh2);">
+          <div style="flex:1;">
+            <div style="font-family:'Playfair Display', serif; font-size:1.4rem; font-weight:800; margin-bottom:5px;">Premium Resume Builder</div>
+            <div style="font-size:13px; opacity:0.9; margin-bottom:12px;">Create a professional, ATS-friendly resume with 24+ premium templates designed by recruiters.</div>
+            <div style="display:flex; gap:12px;">
+              <div style="display:flex; align-items:center; gap:5px; font-size:11px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> ATS Optimized</div>
+              <div style="display:flex; align-items:center; gap:5px; font-size:11px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> One-Click Download</div>
+            </div>
+          </div>
+          <a href="resume-builder.html" class="btn lg" style="background:#fff; color:var(--P); font-weight:700; border:none; box-shadow:0 4px 15px rgba(0,0,0,0.1);">Launch Builder →</a>
+        </div>
+
         <div class="rb-steps">
           <button class="rb-step on" id="rs0" onclick="rbGo(0)">1. Personal</button>
           <button class="rb-step" id="rs1" onclick="rbGo(1)">2. Education</button>
@@ -1525,6 +1538,18 @@
         </div>
       </div>
 
+      <!-- ═══════════════════ RESUME BUILDER ═══════════════════ -->
+      <div class="page" id="pg-resume">
+        <div class="page-hd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round">
+            <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34" />
+            <polygon points="18 2 22 6 12 16 8 16 8 12 18 2" />
+          </svg>Resume Builder</div>
+        <div class="db" style="height: calc(100vh - 180px); padding: 0; overflow: hidden; border-radius: 12px; background: #fff;">
+          <iframe src="resume-builder.html" style="width: 100%; height: 100%; border: none;"></iframe>
+        </div>
+      </div>
+
       <!-- ═══════════════════ SETTINGS ═══════════════════ -->
       <div class="page" id="pg-settings">
         <div class="page-hd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -1996,7 +2021,27 @@
     window.addEventListener('DOMContentLoaded', () => {
       const h = new Date().getHours();
       const greet = document.getElementById('greet-msg');
-      if (greet) greet.innerHTML = (h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening') + ', Arjun \u{1F44B}';
+
+      // Read from session storage (set by signup or login)
+      const studentName = sessionStorage.getItem('studentName') || 'Student';
+      const firstName = studentName.split(' ')[0];
+      const initials = studentName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+
+      if (greet) greet.innerHTML = (h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening') + `, ${firstName} 👋`;
+
+      // Update sidebar user name + avatar
+      const sbName = document.getElementById('sb-name');
+      const sbAv = document.getElementById('sb-av');
+      const tbName = document.getElementById('tb-name');
+      const tbAv = document.getElementById('tb-av');
+      const homePwName = document.getElementById('home-pw-name');
+      const homePwAv = document.getElementById('home-pw-av');
+      if (sbName) sbName.textContent = studentName;
+      if (sbAv) sbAv.textContent = initials;
+      if (tbName) tbName.textContent = firstName;
+      if (tbAv) tbAv.textContent = initials;
+      if (homePwName) homePwName.textContent = studentName;
+      if (homePwAv) homePwAv.textContent = initials;
 
       initDarkMode();
 

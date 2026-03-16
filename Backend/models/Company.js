@@ -21,7 +21,7 @@ const companySchema = new mongoose.Schema({
   },
   contactPerson: {
     type: String,
-    required: [true, 'Please provide a contact person name'],
+    required: false,
     trim: true
   },
   phone: {
@@ -34,16 +34,20 @@ const companySchema = new mongoose.Schema({
   },
   companySize: {
     type: String,
-    enum: ['', '1–50 employees', '51–200 employees', '201–1000 employees', '1001–5000 employees', '5000+ employees'],
+    enum: ['', '1–50 employees', '51–200 employees', '201–1000 employees', '1001–5000 employees', '5000+ employees', '10,000+'],
     default: ''
   },
   website: {
     type: String,
     trim: true
   },
+  headquarters: {
+    type: String,
+    trim: true
+  },
   address: {
     type: String,
-    required: [true, 'Please provide the company address'],
+    required: false,
     trim: true
   },
   hiringRoles: {

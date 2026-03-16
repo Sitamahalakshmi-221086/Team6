@@ -13,12 +13,14 @@ const studentSignup = async (req, res) => {
       year,
       cgpa,
       rollNumber,
+      college,
       linkedin,
       skills // Expecting an array or stringified array from frontend
     } = req.body;
 
     // Check if student already exists
-    const existingStudent = await Student.findOne({ email });
+    const normalizedEmail = email.trim().toLowerCase();
+    const existingStudent = await Student.findOne({ email: normalizedEmail });
     if (existingStudent) {
       return res.status(400).json({ success: false, message: 'Email already registered' });
     }
@@ -30,15 +32,17 @@ const studentSignup = async (req, res) => {
     // Prepare student data
     const studentData = {
       fullName,
-      email,
+      email: normalizedEmail,
       password: hashedPassword,
       phone,
       branch,
       year,
       cgpa,
       rollNumber,
+      college,
       linkedin,
-      skills: Array.isArray(skills) ? skills : (skills ? JSON.parse(skills) : [])
+      skills: Array.isArray(skills) ? skills : (skills ? JSON.parse(skills) : []),
+      isVerified: true
     };
 
     // If file uploaded via Multer
@@ -66,21 +70,42 @@ const studentSignup = async (req, res) => {
 const studentLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    // 1. Find student and include password field (which is select: false by default)
-    const student = await Student.findOne({ email }).select('+password');
+    // 1. Find student and include password field
+    const normalizedEmail = email.trim().toLowerCase();
+    const student = await Student.findOne({ email: normalizedEmail }).select('+password');
 
     if (!student) {
       return res.status(401).json({ success: false, message: 'Invalid email or password' });
     }
 
-    // 2. Check password
-    const isMatch = await bcrypt.compare(password, student.password);
+    // 2. Allow login for verified students OR legacy users (no isVerified field set)
+    if (student.isVerified === false) {
+      return res.status(403).json({ success: false, message: 'Account not verified. Please complete the signup process.' });
+    }
+
+    // 3. Check password (bcrypt match first)
+    let isMatch = false;
+    try {
+      isMatch = await bcrypt.compare(password, student.password);
+    } catch (bcryptErr) {
+      // password field may not be a valid bcrypt hash (legacy plain-text user)
+      isMatch = false;
+    }
+
+    // 3b. Fallback: plain-text comparison for legacy accounts (pre-bcrypt migration)
+    if (!isMatch && student.password === password) {
+      // Re-hash and save the correct hash so future logins work normally
+      const salt = await bcrypt.genSalt(10);
+      student.password = await bcrypt.hash(password, salt);
+      await student.save();
+      isMatch = true;
+    }
+
     if (!isMatch) {
       return res.status(401).json({ success: false, message: 'Invalid email or password' });
     }
 
-    // 3. Success (For a real app, generate JWT here)
+    // 4. Success
     res.status(200).json({
       success: true,
       message: 'Login successful',

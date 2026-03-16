@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CampusPlace – TPO Log In</title>
   <link
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=DM+Sans:wght@300;400;500;600;700&family=Satisfy&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="../css/loginstyle.css" />
   <link rel="stylesheet" href="../css/tpologin.css" />
@@ -14,22 +14,46 @@
 
 <body>
 
+  <div class="env-strip role-tpo"></div>
+
   <div class="page-wrap">
 
     <!-- ── LEFT PANEL ── -->
-    <aside class="left-panel">
+    <aside class="left-panel role-tpo">
       <div class="left-content">
-        <a href="../index.html" class="logo"
-          style="margin-bottom: 40px; display: inline-flex; align-items: center; gap: 10px; text-decoration: none;">
-          <div class="logo-icon"
-            style="width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #1e3a8a, #2563eb); display: flex; align-items: center; justify-content: center; font-size: 17px; box-shadow: 0 4px 10px rgba(0,0,0,.2);">
-            🎓</div>
-          <span class="logo-text"
-            style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.25rem; color: #fff; letter-spacing: -0.02em;">Campus<span
-              style="color: #67e8f9;">Place</span></span>
+        <a href="../index.html" class="logo">
+          <div class="logo-icon">
+            <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="logo-bg-tpo" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#3b0764" />
+                  <stop offset="100%" stop-color="#7c3aed" />
+                </linearGradient>
+              </defs>
+              <rect width="48" height="48" rx="11" fill="url(#logo-bg-tpo)" />
+              <rect x="1" y="1" width="46" height="23" rx="10" fill="rgba(255,255,255,0.06)" />
+              <polygon points="24,11.5 39.5,19 24,26.5 8.5,19" fill="white" />
+              <polygon points="8.5,19 8.5,22 24,29.5 24,26.5" fill="rgba(255,255,255,0.42)" />
+              <polygon points="39.5,19 39.5,22 24,29.5 24,26.5" fill="rgba(255,255,255,0.58)" />
+              <path d="M16.5 21 L16.5 26.5 Q16.5 29.5 24 29.5 Q31.5 29.5 31.5 26.5 L31.5 21 Z" fill="white" />
+              <path d="M39.5 19 Q43 19 43 23 L43 29.5" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" />
+              <circle cx="43" cy="29.5" r="2" fill="white" />
+              <line x1="41.1" y1="31.2" x2="40" y2="36.5" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <line x1="42.3" y1="31.4" x2="41.8" y2="37" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <line x1="43.6" y1="31.4" x2="44" y2="37" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <line x1="44.8" y1="31.2" x2="46" y2="36.5" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <path d="M40 36 Q43 37 46 36" stroke="rgba(255,255,255,0.55)" stroke-width="1.1" fill="none" stroke-linecap="round" />
+            </svg>
+          </div>
+          <div class="logo-brand">
+            <div class="logo-wordmark">
+              <span class="logo-campus">Campus</span><span class="logo-sep">.</span><span class="logo-place">Place</span>
+            </div>
+            <div class="logo-tagline">Placement Portal</div>
+          </div>
         </a>
         <div class="left-badge"><span class="left-badge-dot"></span> Welcome Back</div>
-        <h2 class="left-title">Log Back<br />Into Your<br /><span style="color:#67e8f9;">Dashboard</span></h2>
+        <h2 class="left-title">Log Back<br />Into Your<br /><span class="left-title-accent">Dashboard</span></h2>
         <p class="left-sub">Access your personalised placement portal. Pick your role and sign in to continue.</p>
 
         <div class="role-info-list" style="pointer-events: none;">
@@ -112,7 +136,7 @@
             ❌ Invalid credentials. Contact your admin if the problem persists.
           </div>
 
-          <button class="btn-login tpo" onclick="doLogin('tpo')">
+          <button type="button" class="btn-login tpo ripple-btn" onclick="doLogin('tpo', event)">
             <span class="spinner" id="spin-tpo"></span>
             Sign In to TPO Dashboard →
           </button>
@@ -138,138 +162,7 @@
     </main>
   </div>
 
-  <script>
-    /* ── DO LOGIN ── */
-    function doLogin(role) {
-      const emailMap = { tpo: 'tl-email' };
-      const pwdMap = { tpo: 'tl-pwd' };
-      const collegeMap = { tpo: 'tl-college' };
-
-      const emailEl = document.getElementById(emailMap[role]);
-      const pwdEl = document.getElementById(pwdMap[role]);
-      const collegeEl = document.getElementById(collegeMap[role]);
-      const errBox = document.getElementById('login-err-' + role);
-      const spinner = document.getElementById('spin-' + role);
-
-      let ok = true;
-      errBox.style.display = 'none';
-
-      // Validate email
-      if (!emailEl.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value)) {
-        emailEl.classList.add('error');
-        document.getElementById('err-' + emailMap[role]).classList.add('show');
-        ok = false;
-      }
-      // Validate college
-      if (!collegeEl.value) {
-        collegeEl.classList.add('error');
-        document.getElementById('err-' + collegeMap[role]).classList.add('show');
-        ok = false;
-      }
-      // Validate password
-      if (!pwdEl.value) {
-        pwdEl.classList.add('error');
-        document.getElementById('err-' + pwdMap[role]).classList.add('show');
-        ok = false;
-      }
-      if (!ok) return;
-
-      // Simulate login
-      spinner.style.display = 'block';
-      spinner.parentElement.disabled = true;
-
-      setTimeout(() => {
-        spinner.style.display = 'none';
-        spinner.parentElement.disabled = false;
-
-        // Demo: treat any input as success (swap to fail to test error state)
-        const isSuccess = true;
-
-        if (isSuccess) {
-          showSuccess(role, emailEl.value);
-        } else {
-          errBox.style.display = 'block';
-        }
-      }, 1200);
-    }
-
-    /* ── SUCCESS ── */
-    function showSuccess(role, email) {
-      document.getElementById('stage-2-' + role).classList.remove('active');
-      document.getElementById('stage-3').classList.add('active');
-
-      const titles = {
-        tpo: 'Welcome Back! 🛡️',
-      };
-      const subs = {
-        tpo: `Signed in as ${email}. Redirecting to your TPO dashboard…`,
-      };
-      const ctas = {
-        tpo: 'Go to TPO Dashboard →',
-      };
-
-      document.getElementById('success-title').textContent = titles[role];
-      document.getElementById('success-sub').textContent = subs[role];
-      const successCta = document.getElementById('success-cta');
-      successCta.textContent = ctas[role];
-
-
-      if (role === 'tpo') {
-        successCta.href = 'TPODashboard.html';
-
-        // redirect automatically for better UX
-        setTimeout(() => {
-          window.location.href = 'TPODashboard.html';
-        }, 1500)
-      } else {
-        successCta.href = '#';
-      }
-
-
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    /* ── FORGOT PASSWORD ── */
-    function showForgot(role) {
-      const panel = document.getElementById('forgot-' + role);
-      panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function sendReset(btn) {
-      const input = btn.previousElementSibling;
-      if (!input.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)) {
-        input.style.borderColor = '#ef4444';
-        setTimeout(() => input.style.borderColor = '', 1500);
-        return;
-      }
-      btn.textContent = 'Sending…';
-      btn.disabled = true;
-      setTimeout(() => {
-        btn.textContent = '✅ Reset link sent!';
-        btn.style.background = '#059669';
-        setTimeout(() => {
-          btn.textContent = 'Send Reset Link';
-          btn.style.background = '';
-          btn.disabled = false;
-          input.value = '';
-        }, 3000);
-      }, 1000);
-    }
-
-    /* ── HELPERS ── */
-    function togglePwd(id, btn) {
-      const inp = document.getElementById(id);
-      if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
-      else { inp.type = 'password'; btn.textContent = '👁'; }
-    }
-
-    function clearErr(el) {
-      el.classList.remove('error');
-      const errEl = document.getElementById('err-' + el.id);
-      if (errEl) errEl.classList.remove('show');
-    }
-  </script>
+  <script src="../js/tpo-login.js"></script>
 </body>
 
 </html>

@@ -5,7 +5,8 @@ const tpoSignup = async (req, res) => {
   try {
     const { fullName, email, password, phone, college, designation, department, location, collegeCode, accreditation, about } = req.body;
 
-    const existingTPO = await TPO.findOne({ email });
+    const normalizedEmail = email.trim().toLowerCase();
+    const existingTPO = await TPO.findOne({ email: normalizedEmail });
     if (existingTPO) {
       return res.status(400).json({ success: false, message: 'Email already registered' });
     }
@@ -14,7 +15,7 @@ const tpoSignup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const newTPO = await TPO.create({
-      fullName, email, password: hashedPassword, phone, college, designation,
+      fullName, email: normalizedEmail, password: hashedPassword, phone, college, designation,
       department: department || '', location, collegeCode,
       accreditation: accreditation || '', about: about || ''
     });
@@ -29,7 +30,8 @@ const tpoSignup = async (req, res) => {
 const tpoLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const tpo = await TPO.findOne({ email }).select('+password');
+    const normalizedEmail = email.trim().toLowerCase();
+    const tpo = await TPO.findOne({ email: normalizedEmail }).select('+password');
     if (!tpo) return res.status(401).json({ success: false, message: 'Invalid email or password' });
 
     const isMatch = await bcrypt.compare(password, tpo.password);

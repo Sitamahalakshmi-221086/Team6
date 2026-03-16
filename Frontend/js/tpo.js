@@ -20,11 +20,31 @@ const baseChartOptions = {
 
 // ── INIT ──
 window.addEventListener('DOMContentLoaded', () => {
+    // Auth gate
+    const isLoggedIn = (localStorage.getItem('isLoggedIn') || sessionStorage.getItem('isLoggedIn')) === 'true';
+    const role = localStorage.getItem('userRole') || sessionStorage.getItem('userRole');
+    if (!isLoggedIn || role !== 'tpo') {
+        window.location.href = 'Login.html';
+        return;
+    }
+
     // Session Greeting
     const h = new Date().getHours();
     const g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
     const greetMsg = document.getElementById('greet-msg');
-    if (greetMsg) greetMsg.textContent = `${g}, Dr. Ramesh Kumar 👋`;
+    const storedName = localStorage.getItem('tpoName') || sessionStorage.getItem('tpoName') || localStorage.getItem('userName') || 'TPO / Admin';
+    const storedCollege = localStorage.getItem('tpoCollege') || sessionStorage.getItem('tpoCollege') || 'Your Institution';
+    
+    if (greetMsg) greetMsg.textContent = `${g}, ${storedName} 👋`;
+    
+    // Update sidebar and topbar names
+    const sbName = document.getElementById('sb-uname');
+    const tbName = document.getElementById('tb-name');
+    const sbDept = document.querySelector('.sb-udept');
+    
+    if (sbName) sbName.textContent = storedName;
+    if (tbName) tbName.textContent = storedName.split(' ')[0]; // Just first name
+    if (sbDept) sbDept.textContent = `TPO · ${storedCollege}`;
 
     initDarkMode();
     lucide.createIcons();
@@ -79,6 +99,7 @@ function showToast(msg) {
 function logout() {
     if (confirm('Log out of CampusPlace?')) {
         sessionStorage.clear();
+        localStorage.clear();
         window.location.href = 'Login.html';
     }
 }
