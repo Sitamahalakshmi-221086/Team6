@@ -11,3 +11,58 @@
 .logo-accent, .left-title span { color: #5eead4 !important; }
 .btn-next { background: #0d9488; box-shadow: 0 4px 14px rgba(13, 148, 136, .3); }
 .btn-next:hover { background: #0f766e; }
+
+
+.oauth-buttons {
+  margin-bottom: 0;
+}
+.oauth-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 13px 20px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1.5px solid #e2e8f0;
+  font-family: inherit;
+  background: #ffffff;
+  color: #1e293b;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  letter-spacing: 0.01em;
+}
+.oauth-btn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  transform: translateY(-1px);
+}
+.oauth-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+/* ── Divider ── */
+.oauth-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 22px 0;
+}
+.oauth-divider-line {
+  flex: 1;
+  height: 1px;
+  background: #e2e8f0;
+}
+.oauth-divider-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: #94a3b8;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}

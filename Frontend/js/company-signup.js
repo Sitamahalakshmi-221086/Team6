@@ -281,3 +281,11 @@ function showToast(msg, bg = '#059669') {
   document.body.appendChild(t);
   setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(10px)'; setTimeout(() => t.remove(), 400); }, 3000);
 }
+
+// ── OAuth ──
+function oauthSignup(provider) {
+  const btn = document.querySelector('.oauth-' + provider);
+  if (btn) btn.classList.add('loading');
+  sessionStorage.setItem('oauthRole', 'company');
+  window.location.href = API_BASE + '/auth/' + provider + '?role=company';
+}

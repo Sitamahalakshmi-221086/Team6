@@ -5,6 +5,7 @@ const nodemailer = require('nodemailer');
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 const connectDB = require('./config/db');
+const oauthRoutes = require('./passport-oauth');  // ← ADDED
 
 // Connect to MongoDB
 connectDB();
@@ -13,7 +14,10 @@ const app = express();
 
 // Middleware
 app.use(morgan('dev'));
-app.use(cors());
+app.use(cors({                                    // ← UPDATED
+  origin: process.env.CLIENT_ORIGIN,
+  credentials: true
+}));
 app.use(express.json());
 app.use((req, res, next) => {
   if (req.method === 'POST') {
@@ -21,10 +25,10 @@ app.use((req, res, next) => {
   }
   next();
 });
-app.use(express.urlencoded({ extended: true })); // Parse form data
-app.use('/uploads', express.static('uploads')); // Static folder for resumes
+app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static('uploads'));
 
-// Email Transporter (using credentials from .env)
+// Email Transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -37,6 +41,7 @@ const transporter = nodemailer.createTransport({
 app.use('/api/students', require('./routes/studentRoutes'));
 app.use('/api/companies', require('./routes/companyRoutes'));
 app.use('/api/tpo', require('./routes/tpoRoutes'));
+app.use(oauthRoutes);                             // ← ADDED
 
 // OTP Email Route
 app.post("/send-email", async (req, res) => {
@@ -68,7 +73,6 @@ app.post("/send-email", async (req, res) => {
 
   } catch (err) {
     console.error("❌ Mail error:", err.message);
-    // If mail fails, we still return a response
     res.status(500).json({ success: false, message: "Email sending failed. Please check GMAIL_USER and GMAIL_PASS in .env" });
   }
 });
