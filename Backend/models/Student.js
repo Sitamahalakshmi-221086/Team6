@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const studentSchema = new mongoose.Schema({
   fullName: {
     type: String,
-    required: [true, 'Please provide your full name'],
+    required: function() { return !this.isOAuth; },
     trim: true
   },
   email: {
@@ -15,25 +15,25 @@ const studentSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'Please provide a password'],
+    required: function() { return !this.isOAuth; },
     minlength: 8,
-    select: false // Don't return password by default
+    select: false
   },
   phone: {
     type: String,
-    required: [true, 'Please provide your phone number']
+    required: function() { return !this.isOAuth; },
   },
   branch: {
     type: String,
-    required: [true, 'Please select your branch']
+    required: function() { return !this.isOAuth; },
   },
   year: {
     type: String,
-    required: [true, 'Please select your year of study']
+    required: function() { return !this.isOAuth; },
   },
   cgpa: {
     type: Number,
-    required: [true, 'Please provide your CGPA'],
+    required: function() { return !this.isOAuth; },
     min: 0,
     max: 10
   },
@@ -44,7 +44,7 @@ const studentSchema = new mongoose.Schema({
   college: {
     type: String,
     trim: true,
-    required: [true, 'Please provide your college name']
+    required: function() { return !this.isOAuth; },
   },
   linkedin: {
     type: String,
@@ -71,6 +71,25 @@ const studentSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+
+  // ── OAuth fields ──
+  isOAuth: {
+    type: Boolean,
+    default: false
+  },
+  oauthProvider: {
+    type: String,
+    default: null
+  },
+  oauthId: {
+    type: String,
+    default: null
+  },
+  avatarUrl: {
+    type: String,
+    default: ''
+  },
+
   createdAt: {
     type: Date,
     default: Date.now
@@ -81,5 +100,4 @@ const studentSchema = new mongoose.Schema({
 });
 
 const Student = mongoose.model('Student', studentSchema);
-
 module.exports = Student;
