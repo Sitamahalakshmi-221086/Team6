@@ -12,6 +12,6 @@ const tpoSchema = new mongoose.Schema({
   collegeCode:   { type: String, required: true },
   accreditation: { type: String, default: '' },
   about:         { type: String, default: '' },
-}, { timestamps: true });
+}, { timestamps: true, collection: 'admins' });
 
-module.exports = mongoose.model('TPO', tpoSchema);
+module.exports = mongoose.model('Admin', tpoSchema);
