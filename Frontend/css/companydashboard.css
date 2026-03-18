@@ -1581,12 +1581,9 @@
   align-items: flex-end;
   gap: 16px;
   margin-top: -39px;
-/* <<<<<<< HEAD
   margin-top: -45px;
   position: relative;
   z-index: 2;
-=======
->>>>>>> database */
 }
 
 .profile-big-av {
@@ -1649,7 +1646,6 @@
   align-items: center;
   gap: 4px;
 }
-/* <<<<<<< HEAD */
 .p-badge.t { background: #ccfbf1; color: var(--teal-dark); }
 .p-badge.g { background: #dcfce7; color: var(--green); }
 .p-badge.a { background: #fef9c3; color: var(--amber); }
@@ -1664,9 +1660,6 @@
   .sidebar { display: none; }
   .main { margin-left: 0 !important; }
 }
-/* ======= */
-
-/* >>>>>>> database */
 .p-badge.t {
   background: #ccfbf1;
   color: var(--teal-dark);
@@ -1702,8 +1695,5 @@
     margin-left: 0 !important;
   }
 }
-/* <<<<<<< HEAD
 
-=======
 }
->>>>>>> database */

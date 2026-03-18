@@ -3241,7 +3241,6 @@
   </div>
 
   <script>
-<<<<<<< HEAD
     // ── INIT ──
     window.addEventListener('DOMContentLoaded', () => {
       const email = sessionStorage.getItem('cp_company_email') || 'hr@infosys.com';
@@ -3273,42 +3272,6 @@
       home: 'Dashboard', jobs: 'Job Postings', candidates: 'Applicants',
       drives: 'Campus Drives', profile: 'Company Profile', settings: 'Settings'
     };
-=======
-    const TITLES = { home: 'Dashboard', jobs: 'Job Postings', candidates: 'Applicants', drives: 'Campus Drives', profile: 'Company Profile', stats: 'Analytics', settings: 'Settings' };
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const h = new Date().getHours();
-      const g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
-      document.getElementById('greet-msg').textContent = `${g}, Infosys Technologies 👋`;
-      initDarkMode();
-      setTimeout(renderCharts, 100);
-    });
-
-    function toggleDarkMode(el) {
-      if (!el) {
-        el = document.getElementById('dark-mode-toggle');
-        el.checked = !el.checked;
-      }
-      document.body.classList.toggle('dark', el.checked);
-      localStorage.setItem('cp_dark_mode', el.checked);
-      const icon = document.getElementById('theme-icon');
-      if (el.checked) {
-        icon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line>';
-      } else {
-        icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
-      }
-    }
-    function initDarkMode() {
-      const darkPref = localStorage.getItem('cp_dark_mode') === 'true';
-      const el = document.getElementById('dark-mode-toggle');
-      if (el) el.checked = darkPref;
-      document.body.classList.toggle('dark', darkPref);
-      const icon = document.getElementById('theme-icon');
-      if (darkPref && icon) {
-        icon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line>';
-      }
-    }
->>>>>>> UI
 
     function go(id, btn) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
@@ -3317,7 +3280,6 @@
       if (btn) btn.classList.add('on');
       document.getElementById('tb-title').textContent = TITLES[id] || id;
       document.getElementById('notif-panel').classList.remove('on');
-<<<<<<< HEAD
     }
 
     // ── TABS ──
@@ -3326,38 +3288,6 @@
       at: ['all', 'new', 'short', 'interview', 'hired']
     };
 
-=======
-      if (id === 'profile' && !profileChartDone) setTimeout(renderProfileChart, 80);
-      if (id === 'stats' && !statsChartsDone) setTimeout(renderStatsCharts, 80);
-    }
-
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('col');
-      document.getElementById('main-content').classList.toggle('exp');
-    }
-
-    function toggleNotif() {
-      document.getElementById('notif-panel').classList.toggle('on');
-    }
-
-    document.addEventListener('click', e => {
-      const panel = document.getElementById('notif-panel');
-      if (panel.classList.contains('on') && !panel.contains(e.target) && !e.target.closest('[onclick*=toggleNotif]')) panel.classList.remove('on');
-      const modal = document.getElementById('post-modal');
-      if (modal.classList.contains('on') && e.target === modal) modal.classList.remove('on');
-    });
-
-    function closeOverlay(e, id) { if (e.target === document.getElementById(id)) document.getElementById(id).classList.remove('on'); }
-
-    function toggleCpEdit() {
-      const v = document.getElementById('cp-view'), e = document.getElementById('cp-edit');
-      const editing = e.style.display !== 'none';
-      v.style.display = editing ? 'block' : 'none';
-      e.style.display = editing ? 'none' : 'block';
-    }
-
-    const tabGroups = { jt: ['active', 'closed', 'draft'], at: ['all', 'new', 'short', 'interview', 'hired'] };
->>>>>>> UI
     function swtab(group, id, btn) {
       tabGroups[group].forEach(t => document.getElementById(`${group}-${t}`).classList.remove('on'));
       btn.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
@@ -3365,7 +3295,6 @@
       btn.classList.add('on');
     }
 
-<<<<<<< HEAD
     // ── NOTIF ──
     function toggleNotif() {
       document.getElementById('notif-panel').classList.toggle('on');
@@ -3437,225 +3366,6 @@
     function logout() {
       sessionStorage.clear();
       window.location.href = 'Login.html';
-=======
-    function addTagTo(wrapId, inputId, e) {
-      if (e.key !== 'Enter' && e.key !== ',') return; e.preventDefault();
-      const inp = document.getElementById(inputId);
-      const v = inp.value.trim().replace(',', ''); if (!v) return;
-      const t = document.createElement('span'); t.className = 'tag';
-      t.innerHTML = `${v}<button onclick="removeTag(this)">×</button>`;
-      document.getElementById(wrapId).insertBefore(t, inp); inp.value = '';
-    }
-    function removeTag(btn) { btn.closest('.tag').remove(); }
-
-    function showToast(msg) {
-      const t = document.getElementById('toast'); t.textContent = msg; t.style.display = 'block';
-      setTimeout(() => { t.style.display = 'none'; }, 3000);
-    }
-
-    function logout() { if (confirm('Log out of CampusPlace?')) alert('Logged out.'); }
-
-    /* ── CHARTS ── */
-    const P = '#15803d', T = '#0aada0', G = '#16a34a', A = '#d97706', R = '#dc2626', PU = '#7c3aed';
-    const grid = 'rgba(21,128,61,0.07)', tick = { color: '#4a7060', font: { size: 11 } };
-
-    function renderCharts() {
-      // Funnel chart
-      new Chart(document.getElementById('chart-funnel'), {
-        type: 'bar',
-        data: {
-          labels: ['Applied', 'Reviewed', 'Shortlisted', 'Interview', 'Hired'],
-          datasets: [{
-            data: [24, 18, 9, 4, 3],
-            backgroundColor: [P + 'cc', T + 'cc', A + 'cc', G + 'cc', PU + 'cc'],
-            borderRadius: 8, borderSkipped: false
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: {
-            x: { grid: { color: grid }, ticks: tick },
-            y: { grid: { color: grid }, ticks: tick, beginAtZero: true }
-          }
-        }
-      });
-
-      // Monthly trend
-      new Chart(document.getElementById('chart-trend'), {
-        type: 'bar',
-        data: {
-          labels: ['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
-          datasets: [
-            { label: 'Applications', data: [8, 15, 22, 12, 18, 24, 10], backgroundColor: P + 'bb', borderRadius: 5, borderSkipped: false },
-            { label: 'Hired', data: [1, 2, 3, 1, 2, 3, 1], backgroundColor: T + 'bb', borderRadius: 5, borderSkipped: false }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { x: { grid: { color: grid }, ticks: tick }, y: { grid: { color: grid }, ticks: tick, beginAtZero: true } }
-        }
-      });
-
-      // Branch donut
-      new Chart(document.getElementById('chart-branch'), {
-        type: 'doughnut',
-        data: {
-          labels: ['CSE', 'IT', 'ECE', 'EEE', 'Others'],
-          datasets: [{ data: [11, 6, 4, 2, 1], backgroundColor: [P, T, G, A, PU], borderWidth: 3, borderColor: '#fff', hoverOffset: 5 }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { position: 'right', labels: { font: { size: 11 }, color: '#4a7060', boxWidth: 10, padding: 10 } } },
-          cutout: '60%'
-        }
-      });
-    }
-
-    let profileChartDone = false;
-    function renderProfileChart() {
-      if (profileChartDone) return; profileChartDone = true;
-      new Chart(document.getElementById('chart-profile-pipe'), {
-        type: 'bar',
-        data: {
-          labels: ['Applied', 'Reviewed', 'Shortlisted', 'Interview', 'Hired'],
-          datasets: [{
-            data: [24, 18, 9, 4, 3],
-            backgroundColor: [P + 'cc', T + 'cc', A + 'cc', G + 'cc', PU + 'cc'],
-            borderRadius: 7, borderSkipped: false
-          }]
-        },
-        options: {
-          indexAxis: 'y',
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: {
-            x: { grid: { color: grid }, ticks: tick, beginAtZero: true },
-            y: { grid: { display: false }, ticks: tick }
-          }
-        }
-      });
-    }
-
-    let statsChartsDone = false;
-    function renderStatsCharts() {
-      if (statsChartsDone) {
-        ['chart-s-trend', 'chart-s-funnel', 'chart-s-branch', 'chart-s-college', 'chart-s-jobs', 'chart-s-offers'].forEach(id => {
-          const c = Chart.getChart(document.getElementById(id)); if (c) c.destroy();
-        });
-        statsChartsDone = false;
-      }
-      statsChartsDone = true;
-
-      // ── Monthly trend (line + bar combo) ──
-      new Chart(document.getElementById('chart-s-trend'), {
-        type: 'bar',
-        data: {
-          labels: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
-          datasets: [
-            { type: 'bar', label: 'Applications', data: [18, 22, 14, 28, 31, 24], backgroundColor: P + 'bb', borderRadius: 6, borderSkipped: false, order: 2 },
-            { type: 'line', label: 'Shortlisted', data: [6, 8, 5, 10, 11, 9], borderColor: T, backgroundColor: 'transparent', tension: .4, pointRadius: 4, pointBackgroundColor: T, borderWidth: 2.5, order: 1 },
-            { type: 'line', label: 'Hired', data: [1, 2, 1, 3, 3, 2], borderColor: G, backgroundColor: 'transparent', tension: .4, pointRadius: 4, pointBackgroundColor: G, borderWidth: 2.5, order: 1, borderDash: [5, 4] }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { x: { grid: { color: grid }, ticks: tick }, y: { grid: { color: grid }, ticks: tick, beginAtZero: true } }
-        }
-      });
-
-      // ── Hiring funnel (horizontal bar) ──
-      new Chart(document.getElementById('chart-s-funnel'), {
-        type: 'bar',
-        data: {
-          labels: ['Applied', 'Reviewed', 'Shortlisted', 'Interviewed', 'Offered', 'Hired'],
-          datasets: [{
-            data: [109, 84, 38, 16, 12, 10],
-            backgroundColor: [P + 'cc', T + 'cc', A + 'cc', '#7c3aedcc', G + 'cc', G],
-            borderRadius: 7, borderSkipped: false
-          }]
-        },
-        options: {
-          indexAxis: 'y',
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + ctx.raw + ' candidates' } } },
-          scales: {
-            x: { grid: { color: grid }, ticks: tick, beginAtZero: true },
-            y: { grid: { display: false }, ticks: tick }
-          }
-        }
-      });
-
-      // ── Branch donut ──
-      const branchData = { labels: ['CSE', 'IT', 'ECE', 'EEE', 'Mech', 'Others'], vals: [48, 26, 17, 8, 6, 4] };
-      const bColors = [P, T, G, A, PU, R + '99'];
-      new Chart(document.getElementById('chart-s-branch'), {
-        type: 'doughnut',
-        data: { labels: branchData.labels, datasets: [{ data: branchData.vals, backgroundColor: bColors, borderWidth: 3, borderColor: '#fff', hoverOffset: 5 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, cutout: '60%' }
-      });
-      const bl = document.getElementById('branch-legend');
-      if (bl) bl.innerHTML = branchData.labels.map((l, i) => `<div style="display:flex;justify-content:space-between;align-items:center;padding:3px 0;"><div style="display:flex;align-items:center;gap:7px;"><span style="width:9px;height:9px;border-radius:2px;background:${bColors[i]};display:inline-block;"></span><span style="font-size:12px;color:var(--txmu);">${l}</span></div><span style="font-size:12px;font-weight:700;">${branchData.vals[i]}</span></div>`).join('');
-
-      // ── College bar ──
-      new Chart(document.getElementById('chart-s-college'), {
-        type: 'bar',
-        data: {
-          labels: ['JNTU Hyd', 'Osmania', 'IIT Hyd', 'NIT Wgl', 'CBIT', 'VIT'],
-          datasets: [{ data: [32, 24, 18, 14, 12, 9], backgroundColor: [P, T, G, A, PU, R].map(c => c + 'bb'), borderRadius: 7, borderSkipped: false }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { x: { grid: { color: grid }, ticks: { ...tick, maxRotation: 30 } }, y: { grid: { color: grid }, ticks: tick, beginAtZero: true } }
-        }
-      });
-
-      // ── Job post performance ──
-      new Chart(document.getElementById('chart-s-jobs'), {
-        type: 'bar',
-        data: {
-          labels: ['Frontend Dev', 'Data Analyst', 'Cloud Engr', 'Backend Engr', 'React Intern'],
-          datasets: [{
-            label: 'Applications',
-            data: [11, 8, 5, 0, 0],
-            backgroundColor: [P + 'dd', T + 'dd', G + 'dd', A + 'dd', PU + 'dd'],
-            borderRadius: 7, borderSkipped: false
-          }]
-        },
-        options: {
-          indexAxis: 'y',
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: {
-            x: { grid: { color: grid }, ticks: tick, beginAtZero: true },
-            y: { grid: { display: false }, ticks: { ...tick, font: { size: 11 } } }
-          }
-        }
-      });
-
-      // ── Offer acceptance stacked bar ──
-      new Chart(document.getElementById('chart-s-offers'), {
-        type: 'bar',
-        data: {
-          labels: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
-          datasets: [
-            { label: 'Accepted', data: [1, 2, 1, 3, 3, 2], backgroundColor: G + 'cc', borderRadius: 5, borderSkipped: false },
-            { label: 'Declined', data: [0, 0, 1, 0, 1, 0], backgroundColor: R + 'bb', borderRadius: 5, borderSkipped: false }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: {
-            x: { grid: { color: grid }, ticks: tick, stacked: true },
-            y: { grid: { color: grid }, ticks: tick, beginAtZero: true, stacked: true }
-          }
-        }
-      });
->>>>>>> UI
     }
   </script>
 </body>
