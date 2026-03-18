@@ -1,69 +1,8 @@
 let currentStage = 2;
-<<<<<<< Updated upstream
-    let skills = [];
-    let hiringRoles = [];
-    let selectedRole = 'student';
-    let resendTimer = null;
-    const DEMO_OTP = '123456';
-
-    /* ── NAVIGATION ── */
-    async function goNext(from, event) {
-      if (event) event.preventDefault();
-      if (from === 2) {
-        if (!validateStage2()) return;
-        
-        const btn = document.querySelector('.btn-next');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<span class="spinner"></span> Saving...';
-        btn.disabled = true;
-
-        try {
-          const formData = new FormData();
-          formData.append('fullName', document.getElementById('s-name').value);
-          formData.append('email', document.getElementById('s-email').value);
-          formData.append('password', document.getElementById('s-pwd').value);
-          formData.append('phone', document.getElementById('s-phone').value);
-          formData.append('branch', document.getElementById('s-branch').value);
-          formData.append('year', document.getElementById('s-year').value);
-          formData.append('cgpa', document.getElementById('s-cgpa').value);
-          formData.append('rollNumber', document.getElementById('s-roll').value);
-          formData.append('linkedin', document.getElementById('s-linkedin').value);
-          formData.append('skills', JSON.stringify(skills));
-          
-          const resumeFile = document.getElementById('resume-input').files[0];
-          if (resumeFile) {
-            formData.append('resume', resumeFile);
-          }
-
-          const response = await fetch('http://localhost:5001/api/students/signup', {
-            method: 'POST',
-            body: formData
-          });
-
-          const result = await response.json();
-
-          if (result.success) {
-            document.getElementById('verify-email-show').textContent = document.getElementById('s-email').value;
-            goTo(3);
-            startResendTimer();
-          } else {
-            alert('Error: ' + (result.message || 'Signup failed'));
-          }
-        } catch (error) {
-          console.error('Signup Error:', error);
-          alert('Could not connect to server. Please ensure the backend is running.');
-        } finally {
-          btn.innerHTML = originalText;
-          btn.disabled = false;
-        }
-      }
-    }
-=======
 let skills = [];
 let hiringRoles = [];
 let selectedRole = 'student';
 let resendTimer = null;
->>>>>>> Stashed changes
 
 // ── CONFIG ──
 const SERVER_URL = 'http://localhost:5001';
@@ -146,27 +85,36 @@ function goTo(stage) {
 
   currentStage = stage;
 
-  document.getElementById('stage-' + (stage === 2 ? '2-student' : stage)).classList.add('active');
+  const nextEl = document.getElementById('stage-' + (stage === 2 ? '2-student' : stage));
+  if (nextEl) nextEl.classList.add('active');
 
   updateSidebar(stage);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 /* ── BACK BUTTON from stage 3 goes to stage 2 ── */
-document.querySelector('#stage-3 .btn-prev').onclick = function () {
-  currentStage = 3;
-  goTo(2);
-};
+const stage3Prev = document.querySelector('#stage-3 .btn-prev');
+if (stage3Prev) {
+  stage3Prev.onclick = function () {
+    goTo(2);
+  };
+}
 
 function updateSidebar(stage) {
   const pcts = ['25%', '50%', '75%', '100%'];
-  document.getElementById('progress-bar').style.width = pcts[stage - 1];
-  document.getElementById('progress-pct').textContent = pcts[stage - 1];
-  document.getElementById('progress-step-label').textContent = 'Step ' + stage + ' of 4';
+  const pBar = document.getElementById('progress-bar');
+  const pPct = document.getElementById('progress-pct');
+  const pLabel = document.getElementById('progress-step-label');
+
+  if (pBar) pBar.style.width = pcts[stage - 1];
+  if (pPct) pPct.textContent = pcts[stage - 1];
+  if (pLabel) pLabel.textContent = 'Step ' + stage + ' of 4';
 
   for (let i = 1; i <= 4; i++) {
     const circle = document.getElementById('circle-' + i);
     const step = document.getElementById('sidebar-step-' + i);
+    if (!circle || !step) continue;
+
     step.classList.remove('active-step', 'done-step');
     if (i < stage) {
       circle.className = 'step-circle done';
@@ -196,8 +144,19 @@ function validateStage2() {
     { id: 's-cgpa',   err: 'err-s-cgpa',   test: v => v !== '' && +v >= 0 && +v <= 10 },
   ];
   checks.forEach(c => runCheck(c, () => ok = false));
-  if (skills.length === 0) { document.getElementById('err-s-skills').classList.add('show'); ok = false; }
-  if (!document.getElementById('resume-input').files[0]) { document.getElementById('err-s-resume').classList.add('show'); ok = false; }
+  
+  if (skills.length === 0) { 
+    const skillErr = document.getElementById('err-s-skills');
+    if (skillErr) skillErr.classList.add('show'); 
+    ok = false; 
+  }
+  
+  const resumeInput = document.getElementById('resume-input');
+  if (resumeInput && !resumeInput.files[0]) { 
+    const resumeErr = document.getElementById('err-s-resume');
+    if (resumeErr) resumeErr.classList.add('show'); 
+    ok = false; 
+  }
 
   if (!ok) document.querySelector('.error')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   return ok;
@@ -221,23 +180,32 @@ function checkPwd(input, prefix, labelId) {
   const v = input.value;
   const bars = [1, 2, 3, 4].map(i => document.getElementById(prefix + i));
   const lbl = document.getElementById(labelId);
+  if (!bars[0]) return;
   bars.forEach(b => { if (b) b.className = 'pwd-bar'; });
-  if (!v) { lbl.textContent = 'Enter a password'; lbl.style.color = '#94a3b8'; return; }
+  if (!v) { if (lbl) { lbl.textContent = 'Enter a password'; lbl.style.color = '#94a3b8'; } return; }
+  
   let score = 0;
   if (v.length >= 8) score++;
   if (/[A-Z]/.test(v)) score++;
   if (/[0-9]/.test(v)) score++;
   if (/[^A-Za-z0-9]/.test(v)) score++;
+  
   const cls = score <= 1 ? 'weak' : score <= 2 ? 'fair' : 'strong';
   const texts = ['', 'Weak', 'Fair', 'Good', 'Strong'];
   const colors = ['', '#ef4444', '#f59e0b', '#22c55e', '#22c55e'];
-  for (let i = 0; i < score; i++) bars[i].classList.add(cls);
-  lbl.textContent = texts[score] || '';
-  lbl.style.color = colors[score];
+  
+  for (let i = 0; i < score; i++) {
+    if (bars[i]) bars[i].classList.add(cls);
+  }
+  if (lbl) {
+    lbl.textContent = texts[score] || '';
+    lbl.style.color = colors[score];
+  }
 }
 
 function togglePwd(id, btn) {
   const inp = document.getElementById(id);
+  if (!inp) return;
   if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
   else { inp.type = 'password'; btn.textContent = '👁'; }
 }
@@ -247,6 +215,8 @@ function updateCgpa(input) {
   const v = parseFloat(input.value);
   const fill = document.getElementById('cgpa-fill');
   const hint = document.getElementById('cgpa-hint');
+  if (!fill || !hint) return;
+  
   if (!isNaN(v) && v >= 0 && v <= 10) {
     fill.style.width = (v / 10 * 100) + '%';
     hint.textContent = v >= 8 ? '🌟 Excellent!' : v >= 6 ? '👍 Good' : v >= 4 ? 'Average' : 'Below average';
@@ -261,18 +231,21 @@ function addSkill(e) {
   if (e.key !== 'Enter' && e.key !== ',') return;
   e.preventDefault();
   const input = document.getElementById('skill-input');
+  if (!input) return;
   const val = input.value.trim().replace(/,$/, '');
   if (!val || skills.includes(val)) { input.value = ''; return; }
   skills.push(val);
   renderSkills();
   input.value = '';
-  document.getElementById('err-s-skills').classList.remove('show');
+  const skillErr = document.getElementById('err-s-skills');
+  if (skillErr) skillErr.classList.remove('show');
 }
 
 function removeSkillTag(s) { skills = skills.filter(x => x !== s); renderSkills(); }
 
 function renderSkills() {
   const wrap = document.getElementById('skills-wrap');
+  if (!wrap) return;
   wrap.querySelectorAll('.skill-tag').forEach(t => t.remove());
   skills.forEach(s => {
     const tag = document.createElement('span');
@@ -286,30 +259,44 @@ function renderSkills() {
 function handleFile(input) {
   const file = input.files[0];
   if (!file) return;
-  document.getElementById('upload-name').textContent = file.name;
-  document.getElementById('upload-done').classList.add('show');
-  document.getElementById('upload-zone').style.opacity = '.5';
-  document.getElementById('err-s-resume').classList.remove('show');
+  const fileNameEl = document.getElementById('upload-name');
+  const uploadDoneEl = document.getElementById('upload-done');
+  const zoneEl = document.getElementById('upload-zone');
+  const resumeErrEl = document.getElementById('err-s-resume');
+  
+  if (fileNameEl) fileNameEl.textContent = file.name;
+  if (uploadDoneEl) uploadDoneEl.classList.add('show');
+  if (zoneEl) zoneEl.style.opacity = '.5';
+  if (resumeErrEl) resumeErrEl.classList.remove('show');
 }
 
 function removeFile() {
-  document.getElementById('resume-input').value = '';
-  document.getElementById('upload-done').classList.remove('show');
-  document.getElementById('upload-zone').style.opacity = '1';
+  const input = document.getElementById('resume-input');
+  const uploadDoneEl = document.getElementById('upload-done');
+  const zoneEl = document.getElementById('upload-zone');
+  
+  if (input) input.value = '';
+  if (uploadDoneEl) uploadDoneEl.classList.remove('show');
+  if (zoneEl) zoneEl.style.opacity = '1';
 }
 
 const zone = document.getElementById('upload-zone');
-zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
-zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-zone.addEventListener('drop', e => {
-  e.preventDefault(); zone.classList.remove('drag-over');
-  const file = e.dataTransfer.files[0];
-  if (file) {
-    const dt = new DataTransfer(); dt.items.add(file);
-    document.getElementById('resume-input').files = dt.files;
-    handleFile(document.getElementById('resume-input'));
-  }
-});
+if (zone) {
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault(); zone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      const dt = new DataTransfer(); dt.items.add(file);
+      const input = document.getElementById('resume-input');
+      if (input) {
+        input.files = dt.files;
+        handleFile(input);
+      }
+    }
+  });
+}
 
 /* ── OTP ── */
 const otpInputs = document.querySelectorAll('.otp-input');
@@ -325,6 +312,7 @@ async function verifyOtp() {
   const errEl = document.getElementById('otp-error');
   const verifyBtn = document.querySelector('#stage-3 .btn-next');
 
+  if (!errEl) return;
   errEl.style.display = 'none';
 
   if (otp.length < 6) {
@@ -397,17 +385,22 @@ async function verifyOtp() {
 /* ── RESEND TIMER ── */
 function startResendTimer() {
   let t = 30;
-  document.getElementById('resend-btn').style.display = 'none';
-  document.getElementById('timer-badge').style.display = 'inline-flex';
-  document.getElementById('timer-count').textContent = t;
+  const btn = document.getElementById('resend-btn');
+  const badge = document.getElementById('timer-badge');
+  const count = document.getElementById('timer-count');
+  
+  if (btn) btn.style.display = 'none';
+  if (badge) badge.style.display = 'inline-flex';
+  if (count) count.textContent = t;
+  
   clearInterval(resendTimer);
   resendTimer = setInterval(() => {
     t--;
-    document.getElementById('timer-count').textContent = t;
+    if (count) count.textContent = t;
     if (t <= 0) {
       clearInterval(resendTimer);
-      document.getElementById('resend-btn').style.display = 'inline';
-      document.getElementById('timer-badge').style.display = 'none';
+      if (btn) btn.style.display = 'inline';
+      if (badge) badge.style.display = 'none';
     }
   }, 1000);
 }
