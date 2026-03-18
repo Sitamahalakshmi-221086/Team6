@@ -1,7 +1,7 @@
 // ── INIT ──
     window.addEventListener('DOMContentLoaded', () => {
-      const email = sessionStorage.getItem('cp_company_email') || 'hr@infosys.com';
-      const co = sessionStorage.getItem('cp_company_name') || 'Infosys Technologies';
+      const email = sessionStorage.getItem('companyEmail') || sessionStorage.getItem('cp_company_email') || 'hr@company.com';
+      const co = sessionStorage.getItem('companyName') || sessionStorage.getItem('cp_company_name') || 'Your Company';
       const short = co.split(' ')[0];
 
       document.getElementById('sb-uname').textContent = co;

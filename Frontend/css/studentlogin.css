@@ -5,13 +5,3 @@
     border: 1px solid #bfdbfe;
     color: #1d4ed8;
 }
-
-.btn-login.student {
-    background: var(--blue);
-    box-shadow: 0 4px 14px rgba(30, 58, 138, .3);
-}
-
-.btn-login.student:hover {
-    background: var(--blue2);
-    box-shadow: 0 8px 20px rgba(30, 58, 138, .4);
-}

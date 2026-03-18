@@ -1,7 +1,6 @@
 const Student = require('../models/Student');
 const bcrypt = require('bcryptjs');
 
-<<<<<<< HEAD
 // Helper to handle Multer file info if present
 const studentSignup = async (req, res) => {
   try {
@@ -19,30 +18,29 @@ const studentSignup = async (req, res) => {
     } = req.body;
 
     // Check if student already exists
-=======
 const studentSignup = async (req, res) => {
   try {
     const { fullName, email, password, phone, branch, year, cgpa, rollNumber, linkedin, skills } = req.body;
 
->>>>>>> UI
+
     const existingStudent = await Student.findOne({ email });
     if (existingStudent) {
       return res.status(400).json({ success: false, message: 'Email already registered' });
     }
 
-<<<<<<< HEAD
+
     // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Prepare student data
     const studentData = {
-=======
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const newStudent = await Student.create({
->>>>>>> UI
+
       fullName,
       email,
       password: hashedPassword,
@@ -51,7 +49,7 @@ const studentSignup = async (req, res) => {
       year,
       cgpa,
       rollNumber,
-<<<<<<< HEAD
+
       linkedin,
       skills: Array.isArray(skills) ? skills : (skills ? JSON.parse(skills) : [])
     };
@@ -74,7 +72,6 @@ const studentSignup = async (req, res) => {
     });
   } catch (error) {
     console.error('Signup Error:', error);
-=======
       linkedin: linkedin || '',
       skills: skills ? JSON.parse(skills) : [],
       resume: req.file ? req.file.path : ''
@@ -83,7 +80,7 @@ const studentSignup = async (req, res) => {
     res.status(201).json({ success: true, message: 'Student registered successfully', studentId: newStudent._id });
   } catch (error) {
     console.error('Student Signup Error:', error);
->>>>>>> UI
+
     res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
   }
 };
@@ -92,7 +89,7 @@ const studentLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-<<<<<<< HEAD
+
     // 1. Find student and include password field (which is select: false by default)
     const student = await Student.findOne({ email }).select('+password');
 
@@ -129,7 +126,7 @@ const studentLogin = async (req, res) => {
 
   } catch (error) {
     console.error('Login Error:', error);
-=======
+
     const student = await Student.findOne({ email }).select('+password');
     if (!student) return res.status(401).json({ success: false, message: 'Invalid email or password' });
 
@@ -143,16 +140,15 @@ const studentLogin = async (req, res) => {
     });
   } catch (error) {
     console.error('Student Login Error:', error);
->>>>>>> UI
+
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
 
-<<<<<<< HEAD
+ 
 module.exports = {
   studentSignup,
   studentLogin
 };
-=======
 module.exports = { studentSignup, studentLogin };
->>>>>>> UI
+

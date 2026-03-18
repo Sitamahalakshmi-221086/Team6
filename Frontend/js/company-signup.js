@@ -1,527 +1,291 @@
+/* STATE */
 let currentStage = 2;
-<<<<<<< Updated upstream
-    let skills = [];
-    let hiringRoles = [];
-    let selectedRole = 'company';
-    let resendTimer = null;
-    const DEMO_OTP = '123456';
-
-    /* ── NAVIGATION ── */
-    function goNext(from) {
-      if (from === 2) {
-        if (!validateStage2()) return;
-        document.getElementById('verify-email-show').textContent = document.getElementById('c-email').value;
-        goTo(3);
-        startResendTimer();
-      }
-    }
-=======
-let hiringRoles = [];
+let roles = [];
 let resendTimer = null;
+let generatedOtp = '';
+let otpExpiry = null;
+const OTP_TTL_MS = 10 * 60 * 1000;
+const API_BASE = 'http://127.0.0.1:5000';
 
-// ── CONFIG ──
-const SERVER_URL = 'http://localhost:5001';
-
-// Store pending company data and OTP in memory
-// DB is only written AFTER OTP is verified
-window._currentOtp = null;
-window._pendingCompanyData = null;
-
-/* ── NAVIGATION ── */
-async function goNext(from, event) {
-  if (event) event.preventDefault();
-
-  if (from === 2) {
-    if (!validateStage2()) return;
-
-    const signupBtn = event.target;
-    const originalText = signupBtn.textContent;
-    signupBtn.disabled = true;
-    signupBtn.textContent = 'Sending OTP...';
-
-    const companyData = {
-      companyName: document.getElementById('c-name').value,
-      email: document.getElementById('c-email').value,
-      password: document.getElementById('c-pwd').value,
-      contactPerson: document.getElementById('c-contact').value,
-      phone: document.getElementById('c-phone').value,
-      industry: document.getElementById('c-industry').value,
-      companySize: document.getElementById('c-size').value,
-      website: document.getElementById('c-website').value,
-      address: document.getElementById('c-address').value,
-      hiringRoles: hiringRoles,
-      description: document.getElementById('c-desc').value
-    };
-
-    try {
-      // Step 1: Generate OTP and send email ONLY (no DB save yet)
-      const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-      window._currentOtp = generatedOtp;
-
-      // Store company data in memory to save after OTP verified
-      window._pendingCompanyData = companyData;
-
-      const emailResponse = await fetch(`${SERVER_URL}/send-email`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: companyData.email,
-          name: companyData.contactPerson,
-          otp: generatedOtp
-        })
-      });
-
-      const emailResult = await emailResponse.json();
-
-      if (!emailResult.success) {
-        alert('Failed to send OTP email. Please check your email and try again.');
-        return;
-      }
-
-      // Step 2: Move to OTP page (data NOT saved to DB yet)
-      document.getElementById('verify-email-show').textContent = companyData.email;
-      goTo(3);
-      startResendTimer();
-
-    } catch (error) {
-      console.error('Error sending OTP:', error);
-      alert('Could not connect to the server. Please try again later.');
-    } finally {
-      signupBtn.disabled = false;
-      signupBtn.textContent = originalText;
-    }
-  }
+function generateOtp() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
+function setSession({ role, name, email, id }) {
+  localStorage.setItem('isLoggedIn', 'true');
+  localStorage.setItem('userRole', role);
+  localStorage.setItem('userName', name || '');
+  localStorage.setItem('userEmail', email || '');
+  if (id) localStorage.setItem('userId', String(id));
+
+  // Legacy keys used by existing dashboards
+  localStorage.setItem('companyName', name || '');
+  localStorage.setItem('companyEmail', email || '');
+
+  // Back-compat
+  sessionStorage.setItem('isLoggedIn', 'true');
+  sessionStorage.setItem('userRole', role);
+  sessionStorage.setItem('companyName', name || '');
+  sessionStorage.setItem('companyEmail', email || '');
+}
+
+/* NAVIGATION */
 function goTo(stage) {
-  const curEl = document.getElementById('stage-' + (currentStage === 2 ? '2-company' : currentStage));
-  if (curEl) curEl.classList.remove('active');
->>>>>>> Stashed changes
-
-    function goTo(stage) {
-      // Hide current stage
-      const curEl = document.getElementById('stage-' + (currentStage === 2 ? '2-company' : currentStage));
-      if (curEl) curEl.classList.remove('active');
-
-      currentStage = stage;
-
-      document.getElementById('stage-' + (stage === 2 ? '2-company' : stage)).classList.add('active');
-
-<<<<<<< Updated upstream
-      updateSidebar(stage);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    /* ── BACK BUTTON from stage 3 goes to the right stage-2 ── */
-    document.querySelector('#stage-3 .btn-prev').onclick = function () {
-      currentStage = 3;
-      goTo(2);
-    };
-
-    function updateSidebar(stage) {
-      const pcts = ['25%', '50%', '75%', '100%'];
-      document.getElementById('progress-bar').style.width = pcts[stage - 1];
-      document.getElementById('progress-pct').textContent = pcts[stage - 1];
-      document.getElementById('progress-step-label').textContent = 'Step ' + stage + ' of 4';
-
-      for (let i = 1; i <= 4; i++) {
-        const circle = document.getElementById('circle-' + i);
-        const step = document.getElementById('sidebar-step-' + i);
-        step.classList.remove('active-step', 'done-step');
-        if (i < stage) {
-          circle.className = 'step-circle done';
-          circle.textContent = '✓';
-          step.classList.add('done-step');
-        } else if (i === stage) {
-          circle.className = 'step-circle active';
-          circle.textContent = i === 4 ? '✓' : i;
-          step.classList.add('active-step');
-        } else {
-          circle.className = 'step-circle pending';
-          circle.textContent = i === 4 ? '✓' : i;
-        }
-      }
-=======
-/* ── BACK BUTTON from stage 3 goes to stage 2 ── */
-const stage3Prev = document.querySelector('#stage-3 .btn-prev');
-if (stage3Prev) {
-  stage3Prev.onclick = function () {
-    goTo(2);
-  };
+  const curId = 'stage-' + currentStage + (currentStage === 2 ? '-company' : '');
+  const el = document.getElementById(curId);
+  if (el) el.classList.remove('active');
+  
+  currentStage = stage;
+  const newId = 'stage-' + stage + (stage === 2 ? '-company' : '');
+  const newEl = document.getElementById(newId);
+  if (newEl) newEl.classList.add('active');
+  
+  updateSidebar(stage);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function updateSidebar(stage) {
   const pcts = ['25%', '50%', '75%', '100%'];
-  const pBar = document.getElementById('progress-bar');
-  const pPct = document.getElementById('progress-pct');
-  const pLabel = document.getElementById('progress-step-label');
-
-  if (pBar) pBar.style.width = pcts[stage - 1];
-  if (pPct) pPct.textContent = pcts[stage - 1];
-  if (pLabel) pLabel.textContent = 'Step ' + stage + ' of 4';
+  const fill = document.getElementById('prog-fill');
+  const pct = document.getElementById('prog-pct');
+  const lbl = document.getElementById('prog-lbl');
+  
+  if (fill) fill.style.width = pcts[stage - 1];
+  if (pct) pct.textContent = pcts[stage - 1];
+  if (lbl) lbl.textContent = 'Step ' + stage + ' of 4';
 
   for (let i = 1; i <= 4; i++) {
-    const circle = document.getElementById('circle-' + i);
-    const step = document.getElementById('sidebar-step-' + i);
-    if (!circle || !step) continue;
-
-    step.classList.remove('active-step', 'done-step');
+    const num = document.getElementById('sn-' + i);
+    const row = document.getElementById('sr-' + i);
+    if (!num || !row) continue;
+    
+    row.classList.remove('is-active', 'is-done');
+    num.classList.remove('is-active', 'is-done');
+    
     if (i < stage) {
-      circle.className = 'step-circle done';
-      circle.textContent = '✓';
-      step.classList.add('done-step');
+      row.classList.add('is-done');
+      num.classList.add('is-done');
+      num.textContent = '✓';
     } else if (i === stage) {
-      circle.className = 'step-circle active';
-      circle.textContent = i === 4 ? '✓' : i;
-      step.classList.add('active-step');
+      row.classList.add('is-active');
+      num.classList.add('is-active');
+      num.textContent = (i === 4 || i === 1) ? '✓' : i;
     } else {
-      circle.className = 'step-circle pending';
-      circle.textContent = i === 4 ? '✓' : i;
->>>>>>> Stashed changes
+      num.textContent = (i === 4 || i === 1) ? '✓' : i;
     }
+  }
+}
 
-<<<<<<< Updated upstream
-    /* ── VALIDATION ── */
-    function validateStage2() {
-      let ok = true;
-      let checks = [
-        { id: 'c-name', err: 'err-c-name', test: v => v.trim().length >= 2 },
-        { id: 'c-email', err: 'err-c-email', test: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
-        { id: 'c-pwd', err: 'err-c-pwd', test: v => v.length >= 8 },
-        { id: 'c-contact', err: 'err-c-contact', test: v => v.trim().length >= 2 },
-        { id: 'c-phone', err: 'err-c-phone', test: v => v.replace(/\D/g, '').length >= 10 },
-        { id: 'c-industry', err: 'err-c-industry', test: v => v !== '' },
-        { id: 'c-address', err: 'err-c-address', test: v => v.trim().length >= 3 },
-      ];
-      checks.forEach(c => runCheck(c, () => ok = false));
-      if (hiringRoles.length === 0) { document.getElementById('err-c-roles').classList.add('show'); ok = false; }
-
-      if (!ok) document.querySelector('.error')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      return ok;
-=======
-/* ── VALIDATION ── */
+/* VALIDATION */
 function validateStage2() {
   let ok = true;
-  let checks = [
-    { id: 'c-name',     err: 'err-c-name',     test: v => v.trim().length >= 2 },
-    { id: 'c-email',    err: 'err-c-email',    test: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
-    { id: 'c-pwd',      err: 'err-c-pwd',      test: v => v.length >= 8 },
-    { id: 'c-contact',  err: 'err-c-contact',  test: v => v.trim().length >= 2 },
-    { id: 'c-phone',    err: 'err-c-phone',    test: v => v.replace(/\D/g, '').length >= 10 },
+  const checks = [
+    { id: 'c-name', err: 'err-c-name', test: v => v.trim().length >= 2 },
+    { id: 'c-email', err: 'err-c-email', test: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+    { id: 'c-contact', err: 'err-c-contact', test: v => v.trim().length >= 2 },
+    { id: 'c-phone', err: 'err-c-phone', test: v => v.replace(/\D/g, '').length >= 10 },
     { id: 'c-industry', err: 'err-c-industry', test: v => v !== '' },
-    { id: 'c-address',  err: 'err-c-address',  test: v => v.trim().length >= 3 },
+    { id: 'c-hq', err: 'err-c-hq', test: v => v.trim().length >= 2 },
+    { id: 'c-pwd', err: 'err-c-pwd', test: v => v.length >= 8 }
   ];
 
   checks.forEach(c => {
     const el = document.getElementById(c.id);
-    const errEl = document.getElementById(c.err);
-    if (!el || !errEl) return;
+    const err = document.getElementById(c.err);
     if (!c.test(el.value)) {
       el.classList.add('error');
-      errEl.classList.add('show');
+      err.classList.add('show');
       ok = false;
->>>>>>> Stashed changes
     }
+  });
 
-<<<<<<< Updated upstream
-    function runCheck(c, fail) {
-      const el = document.getElementById(c.id);
-      const errEl = document.getElementById(c.err);
-      if (!el || !errEl) return;
-      if (!c.test(el.value)) { el.classList.add('error'); errEl.classList.add('show'); fail(); }
-    }
-=======
-  const rolesErr = document.getElementById('err-c-roles');
-  if (hiringRoles.length === 0) {
-    if (rolesErr) rolesErr.classList.add('show');
+  if (roles.length === 0) {
+    document.getElementById('err-c-roles').classList.add('show');
     ok = false;
   }
->>>>>>> Stashed changes
 
-    function clearErr(el) {
-      el.classList.remove('error');
-      const errEl = document.getElementById('err-' + el.id);
-      if (errEl) errEl.classList.remove('show');
-    }
-
-    /* ── PASSWORD ── */
-    function checkPwd(input, prefix, labelId) {
-      const v = input.value;
-      const bars = [1, 2, 3, 4].map(i => document.getElementById(prefix + i));
-      const lbl = document.getElementById(labelId);
-      bars.forEach(b => { if (b) b.className = 'pwd-bar'; });
-      if (!v) { lbl.textContent = 'Enter a password'; lbl.style.color = '#94a3b8'; return; }
-      let score = 0;
-      if (v.length >= 8) score++;
-      if (/[A-Z]/.test(v)) score++;
-      if (/[0-9]/.test(v)) score++;
-      if (/[^A-Za-z0-9]/.test(v)) score++;
-      const cls = score <= 1 ? 'weak' : score <= 2 ? 'fair' : 'strong';
-      const texts = ['', 'Weak', 'Fair', 'Good', 'Strong'];
-      const colors = ['', '#ef4444', '#f59e0b', '#22c55e', '#22c55e'];
-      for (let i = 0; i < score; i++) bars[i].classList.add(cls);
-      lbl.textContent = texts[score] || '';
-      lbl.style.color = colors[score];
-    }
-
-<<<<<<< Updated upstream
-    function togglePwd(id, btn) {
-      const inp = document.getElementById(id);
-      if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
-      else { inp.type = 'password'; btn.textContent = '👁'; }
-    }
-=======
-/* ── PASSWORD ── */
-function checkPwd(input, prefix, labelId) {
-  const v = input.value;
-  const bars = [1, 2, 3, 4].map(i => document.getElementById(prefix + i));
-  const lbl = document.getElementById(labelId);
-  bars.forEach(b => { if (b) b.className = 'pwd-bar'; });
-  if (!v) { if (lbl) { lbl.textContent = 'Enter a password'; lbl.style.color = '#94a3b8'; } return; }
-
-  let score = 0;
-  if (v.length >= 8) score++;
-  if (/[A-Z]/.test(v)) score++;
-  if (/[0-9]/.test(v)) score++;
-  if (/[^A-Za-z0-9]/.test(v)) score++;
-
-  const cls = score <= 1 ? 'weak' : score <= 2 ? 'fair' : 'strong';
-  const texts = ['', 'Weak', 'Fair', 'Good', 'Strong'];
-  const colors = ['', '#ef4444', '#f59e0b', '#22c55e', '#22c55e'];
-
-  for (let i = 0; i < score; i++) {
-    if (bars[i]) bars[i].classList.add(cls);
-  }
-  if (lbl) {
-    lbl.textContent = texts[score] || '';
-    lbl.style.color = colors[score];
-  }
+  return ok;
 }
->>>>>>> Stashed changes
 
+function clearErr(el) {
+  el.classList.remove('error');
+  const err = document.getElementById('err-' + el.id);
+  if (err) err.classList.remove('show');
+}
 
-    /* ── HIRING ROLES ── */
-    function addRole(e) {
-      if (e.key !== 'Enter' && e.key !== ',') return;
-      e.preventDefault();
-      const input = document.getElementById('role-input');
-      const val = input.value.trim().replace(/,$/, '');
-      if (!val || hiringRoles.includes(val)) { input.value = ''; return; }
-      hiringRoles.push(val);
-      renderRoles();
-      input.value = '';
-      document.getElementById('err-c-roles').classList.remove('show');
-    }
+/* OTP HELPERS */
+async function goNext(stage, e) {
+  if (e) e.preventDefault();
+  if (stage === 2) {
+    if (!validateStage2()) return;
+    
+    const email = document.getElementById('c-email').value;
+    const name = document.getElementById('c-name').value;
+    document.getElementById('verify-email-show').textContent = email;
 
-<<<<<<< Updated upstream
-    function removeRoleTag(s) { hiringRoles = hiringRoles.filter(x => x !== s); renderRoles(); }
+    const nextBtn = document.querySelector('#stage-2-company .btn-next');
+    if (nextBtn) { nextBtn.disabled = true; nextBtn.style.opacity = '0.85'; }
 
-    function renderRoles() {
-      const wrap = document.getElementById('roles-wrap');
-      wrap.querySelectorAll('.skill-tag').forEach(t => t.remove());
-      hiringRoles.forEach(s => {
-        const tag = document.createElement('span');
-        tag.className = 'skill-tag';
-        tag.style.cssText = 'background:#f0fdf4;border-color:#bbf7d0;color:#059669;';
-        tag.innerHTML = s + '<button onclick="removeRoleTag(\'' + s + '\')">×</button>';
-        wrap.insertBefore(tag, document.getElementById('role-input'));
+    try {
+      generatedOtp = generateOtp();
+      otpExpiry = Date.now() + OTP_TTL_MS;
+
+      const resp = await fetch(`${API_BASE}/send-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, name, otp: generatedOtp })
       });
+      if (!resp.ok) throw new Error('Server error while sending OTP');
+      const data = await resp.json();
+      if (!data?.success) throw new Error(data?.message || 'OTP email failed');
+
+      showToast('✅ OTP sent to your email');
+      goTo(3);
+      startResendTimer();
+    } catch (err) {
+      console.error(err);
+      showToast('⚠️ Could not send OTP email. Please try again.', '#ef4444');
+    } finally {
+      if (nextBtn) { nextBtn.disabled = false; nextBtn.style.opacity = ''; }
     }
-=======
-function removeRoleTag(s) {
-  hiringRoles = hiringRoles.filter(x => x !== s);
-  renderRoles();
+  }
 }
->>>>>>> Stashed changes
 
-    /* ── OTP ── */
-    const otpInputs = document.querySelectorAll('.otp-input');
+function showOtpLoading(show) {
+  const s = document.getElementById('otp-sending-state');
+  const e = document.getElementById('otp-entry-state');
+  if (s) s.style.display = show ? 'block' : 'none';
+  if (e) e.style.display = show ? 'none' : 'block';
+}
 
-<<<<<<< Updated upstream
-    function otpMove(el, idx) {
-      if (el.value && idx < 5) otpInputs[idx + 1].focus();
-      if (event.key === 'Backspace' && !el.value && idx > 0) otpInputs[idx - 1].focus();
+function startResendTimer() {
+  let count = 30;
+  document.getElementById('timer-badge').style.display = 'inline-flex';
+  document.getElementById('resend-btn').style.display = 'none';
+  
+  clearInterval(resendTimer);
+  resendTimer = setInterval(() => {
+    count--;
+    const el = document.getElementById('timer-count');
+    if (el) el.textContent = count;
+    if (count <= 0) {
+      clearInterval(resendTimer);
+      document.getElementById('timer-badge').style.display = 'none';
+      document.getElementById('resend-btn').style.display = 'inline';
     }
+  }, 1000);
+}
 
-    function verifyOtp() {
-      const otp = Array.from(otpInputs).map(i => i.value).join('');
-      const spinner = document.getElementById('verify-spinner');
-      const errEl = document.getElementById('otp-error');
-      errEl.style.display = 'none';
-      if (otp.length < 6) { errEl.textContent = 'Please enter all 6 digits.'; errEl.style.display = 'block'; return; }
-      spinner.style.display = 'block';
-      // [BACKEND_NEEDED]: Replace this demo timeout and check with real API call (e.g., POST /api/auth/company/verify-otp)
-      setTimeout(() => {
-        spinner.style.display = 'none';
-        if (otp === DEMO_OTP) {
-          goTo(4);
-        } else {
-          errEl.textContent = 'Incorrect OTP. Try: 123456 (demo)';
-          errEl.style.display = 'block';
-          otpInputs.forEach(i => { i.value = ''; i.style.borderColor = '#ef4444'; });
-          otpInputs[0].focus();
-          setTimeout(() => otpInputs.forEach(i => i.style.borderColor = ''), 1200);
-        }
-      }, 1000);
-    }
-
-    /* ── RESEND TIMER ── */
-    function startResendTimer() {
-      let t = 30;
-      document.getElementById('resend-btn').style.display = 'none';
-      document.getElementById('timer-badge').style.display = 'inline-flex';
-      document.getElementById('timer-count').textContent = t;
-=======
-/* ── OTP ── */
 const otpInputs = document.querySelectorAll('.otp-input');
-
 function otpMove(el, idx) {
   if (el.value && idx < 5) otpInputs[idx + 1].focus();
-  if (event.key === 'Backspace' && !el.value && idx > 0) otpInputs[idx - 1].focus();
+  const ev = window.event;
+  if (ev && ev.key === 'Backspace' && !el.value && idx > 0) otpInputs[idx - 1].focus();
+}
+
+function resendOtp() {
+  goNext(2);
 }
 
 async function verifyOtp() {
   const otp = Array.from(otpInputs).map(i => i.value).join('');
+  if (otp.length < 6) return;
+
   const spinner = document.getElementById('verify-spinner');
-  const errEl = document.getElementById('otp-error');
-  const verifyBtn = document.querySelector('#stage-3 .btn-next');
-
-  if (!errEl) return;
-  errEl.style.display = 'none';
-
-  if (otp.length < 6) {
-    errEl.textContent = 'Please enter all 6 digits.';
-    errEl.style.display = 'block';
-    return;
-  }
-
-  if (spinner) spinner.style.display = 'inline-block';
-  if (verifyBtn) verifyBtn.disabled = true;
-
-  // ── Check OTP first ──
-  if (!window._currentOtp || otp !== window._currentOtp) {
-    if (spinner) spinner.style.display = 'none';
-    if (verifyBtn) verifyBtn.disabled = false;
-    errEl.textContent = 'Incorrect OTP. Please check your email and try again.';
-    errEl.style.display = 'block';
-    otpInputs.forEach(i => { i.value = ''; i.style.borderColor = '#ef4444'; });
-    otpInputs[0].focus();
-    setTimeout(() => otpInputs.forEach(i => i.style.borderColor = ''), 1200);
-    return;
-  }
-
-  // ── OTP correct → NOW save company to DB ──
+  spinner.style.display = 'inline-block';
+  
   try {
-    const response = await fetch(`${SERVER_URL}/api/companies/signup`, {
+    const body = {
+      companyName: document.getElementById('c-name').value,
+      email: document.getElementById('c-email').value,
+      password: document.getElementById('c-pwd').value,
+      hrContact: document.getElementById('c-contact').value,
+      phone: document.getElementById('c-phone').value,
+      industry: document.getElementById('c-industry').value,
+      companySize: document.getElementById('c-size').value,
+      website: document.getElementById('c-website').value,
+      headquarters: document.getElementById('c-hq').value,
+      hiringRoles: roles,
+      description: document.getElementById('c-desc').value,
+      otp: otp
+    };
+
+    const resp = await fetch(`${API_BASE}/api/companies/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(window._pendingCompanyData)
+      body: JSON.stringify(body)
     });
+    
+    if (!resp.ok) throw new Error('Server error');
+    const res = await resp.json();
+    if (res?.success) {
+      const company = res.company || {};
+      const companyName = company.companyName || body.companyName;
+      const email = company.email || body.email;
+      const id = company.id || company._id || company.companyId;
 
-    const result = await response.json();
-
-    if (result.success) {
-      window._currentOtp = null;
-      window._pendingCompanyData = null;
+      setSession({ role: 'company', name: companyName, email, id });
+      
+      showToast('🎉 Company Registered Successfully!');
       goTo(4);
+      setTimeout(() => window.location.href = 'CompanyDashboard.html', 900);
     } else {
-      errEl.textContent = 'OTP verified but registration failed: ' + result.message;
-      errEl.style.display = 'block';
+      document.getElementById('otp-error').style.display = 'block';
+      document.getElementById('otp-error').textContent = res.message || 'Invalid OTP';
     }
-
-  } catch (error) {
-    console.error('Registration after OTP error:', error);
-    errEl.textContent = 'Server error. Please try again.';
-    errEl.style.display = 'block';
-  } finally {
-    if (spinner) spinner.style.display = 'none';
-    if (verifyBtn) verifyBtn.disabled = false;
-  }
-}
-
-function startResendTimer() {
-  let t = 30;
-  const resendBtn = document.getElementById('resend-btn');
-  const tBadge = document.getElementById('timer-badge');
-  const tCount = document.getElementById('timer-count');
-
-  if (resendBtn) resendBtn.style.display = 'none';
-  if (tBadge) tBadge.style.display = 'inline-flex';
-  if (tCount) tCount.textContent = t;
-
-  clearInterval(resendTimer);
-  resendTimer = setInterval(() => {
-    t--;
-    if (tCount) tCount.textContent = t;
-    if (t <= 0) {
->>>>>>> Stashed changes
-      clearInterval(resendTimer);
-      resendTimer = setInterval(() => {
-        t--;
-        document.getElementById('timer-count').textContent = t;
-        if (t <= 0) {
-          clearInterval(resendTimer);
-          document.getElementById('resend-btn').style.display = 'inline';
-          document.getElementById('timer-badge').style.display = 'none';
-        }
-      }, 1000);
-    }
-
-<<<<<<< Updated upstream
-    function resendOtp() {
-      // [BACKEND_NEEDED]: Replace this logic with real API call (e.g., POST /api/auth/company/resend-otp)
-      otpInputs.forEach(i => i.value = '');
-      otpInputs[0].focus();
-      startResendTimer();
-      const toast = document.createElement('div');
-      toast.textContent = '✅ OTP resent!';
-      Object.assign(toast.style, {
-        position: 'fixed', bottom: '32px', left: '50%', transform: 'translateX(-50%)',
-        background: '#059669', color: '#fff', padding: '10px 24px', borderRadius: '100px',
-        fontSize: '14px', fontWeight: '600', zIndex: '9999',
-        boxShadow: '0 4px 16px rgba(5,150,105,.4)'
-      });
-      document.body.appendChild(toast);
-      setTimeout(() => toast.remove(), 2500);
-    }
-=======
-async function resendOtp() {
-  if (!window._pendingCompanyData) {
-    alert('Session expired. Please go back and fill the form again.');
-    goTo(2);
-    return;
-  }
-
-  const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
-  window._currentOtp = newOtp;
-
-  otpInputs.forEach(i => i.value = '');
-  otpInputs[0].focus();
-  startResendTimer();
-
-  try {
-    await fetch(`${SERVER_URL}/send-email`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: window._pendingCompanyData.email,
-        name: window._pendingCompanyData.contactPerson,
-        otp: newOtp
-      })
-    });
   } catch (err) {
-    console.error('Resend OTP error:', err);
+    console.error(err);
+    showToast('❌ Server error during signup', '#ef4444');
+  } finally {
+    spinner.style.display = 'none';
   }
-
-  const toast = document.createElement('div');
-  toast.textContent = '✅ OTP resent to your email!';
-  Object.assign(toast.style, {
-    position: 'fixed', bottom: '32px', left: '50%', transform: 'translateX(-50%)',
-    background: '#059669', color: '#fff', padding: '10px 24px', borderRadius: '100px',
-    fontSize: '14px', fontWeight: '600', zIndex: '9999',
-    boxShadow: '0 4px 16px rgba(5,150,105,.4)'
-  });
-  document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 2500);
 }
->>>>>>> Stashed changes
+
+/* ROLES */
+function addRole(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const val = e.target.value.trim();
+    if (val && !roles.includes(val)) {
+      roles.push(val);
+      renderRoles();
+    }
+    e.target.value = '';
+    const err = document.getElementById('err-c-roles');
+    if (err) err.classList.remove('show');
+  }
+}
+
+function renderRoles() {
+  const wrap = document.getElementById('roles-wrap');
+  const inp = document.getElementById('role-input');
+  wrap.querySelectorAll('.skill-tag').forEach(t => t.remove());
+  roles.forEach(s => {
+    const tag = document.createElement('span');
+    tag.className = 'skill-tag';
+    tag.innerHTML = `${s}<span onclick="removeRole('${s}')">×</span>`;
+    wrap.insertBefore(tag, inp);
+  });
+}
+
+function removeRole(s) {
+  roles = roles.filter(k => k !== s);
+  renderRoles();
+}
+
+/* UTILS */
+function showToast(msg, bg = '#059669') {
+  const t = document.createElement('div');
+  t.style.cssText = `position:fixed;bottom:24px;right:24px;background:${bg};color:white;padding:12px 24px;border-radius:8px;box-shadow:0 8px 16px rgba(0,0,0,0.1);z-index:9999;transition:all 0.4s ease;`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(10px)'; setTimeout(() => t.remove(), 400); }, 3000);
+}
+
+// ── OAuth ──
+function oauthSignup(provider) {
+  const btn = document.querySelector('.oauth-' + provider);
+  if (btn) btn.classList.add('loading');
+  sessionStorage.setItem('oauthRole', 'company');
+  window.location.href = API_BASE + '/auth/' + provider + '?role=company';
+}

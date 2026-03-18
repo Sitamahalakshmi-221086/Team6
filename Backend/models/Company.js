@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 
 const companySchema = new mongoose.Schema({
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> UI
   companyName: {
     type: String,
     required: [true, 'Please provide the company name'],
@@ -22,7 +25,11 @@ const companySchema = new mongoose.Schema({
   },
   contactPerson: {
     type: String,
+<<<<<<< HEAD
     required: [true, 'Please provide a contact person name'],
+=======
+    required: false,
+>>>>>>> UI
     trim: true
   },
   phone: {
@@ -35,16 +42,30 @@ const companySchema = new mongoose.Schema({
   },
   companySize: {
     type: String,
+<<<<<<< HEAD
     enum: ['', '1–50 employees', '51–200 employees', '201–1000 employees', '1001–5000 employees', '5000+ employees'],
+=======
+    enum: ['', '1–50 employees', '51–200 employees', '201–1000 employees', '1001–5000 employees', '5000+ employees', '10,000+'],
+>>>>>>> UI
     default: ''
   },
   website: {
     type: String,
     trim: true
   },
+<<<<<<< HEAD
   address: {
     type: String,
     required: [true, 'Please provide the company address'],
+=======
+  headquarters: {
+    type: String,
+    trim: true
+  },
+  address: {
+    type: String,
+    required: false,
+>>>>>>> UI
     trim: true
   },
   hiringRoles: {
@@ -71,6 +92,7 @@ const companySchema = new mongoose.Schema({
 const Company = mongoose.model('Company', companySchema);
 
 module.exports = Company;
+<<<<<<< HEAD
 =======
   companyName:   { type: String, required: true, trim: true },
   email:         { type: String, required: true, unique: true, lowercase: true, trim: true },
@@ -86,4 +108,6 @@ module.exports = Company;
 }, { timestamps: true });
 
 module.exports = mongoose.model('Company', companySchema);
+>>>>>>> UI
+=======
 >>>>>>> UI

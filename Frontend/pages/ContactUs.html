@@ -1,658 +1,2037 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CampusPlace – Contact Us</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Sans:wght@300;400;500;600&family=Satisfy&display=swap"
+    rel="stylesheet" />
   <style>
     :root {
-      --primary: #2563eb; --primary-dark: #1e3a8a; --secondary: #0891b2;
-      --green: #059669; --amber: #d97706; --bg: #f8fafc;
-      --surface: #ffffff; --border: #e2e8f0; --text: #0f172a; --sub: #64748b;
-      --sw: 240px;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
-
-    @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:none; } }
-    @keyframes shimmer { 0%{background-position:-200% center} 100%{background-position:200% center} }
-    @keyframes blobSpin { from{transform:rotate(0deg) scale(1)} 50%{transform:rotate(180deg) scale(1.1)} to{transform:rotate(360deg) scale(1)} }
-    @keyframes pulseDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(1.4)} }
-    @keyframes slideIn { from{opacity:0;transform:translateX(-16px)} to{opacity:1;transform:none} }
-
-    .fu1{opacity:0;animation:fadeUp .8s .1s cubic-bezier(.16,1,.3,1) forwards}
-    .fu2{opacity:0;animation:fadeUp .8s .25s cubic-bezier(.16,1,.3,1) forwards}
-    .fu3{opacity:0;animation:fadeUp .8s .4s cubic-bezier(.16,1,.3,1) forwards}
-
-    .shimmer {
-      background:linear-gradient(90deg,var(--primary-dark) 0%,var(--primary) 40%,var(--secondary) 60%,var(--primary-dark) 100%);
-      background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-      background-clip:text; animation:shimmer 4s linear infinite;
+      --bg: #eef4f9;
+      --bg-soft: #f5f9fc;
+      --bg-card: #daeaf4;
+      --bg-card2: #cce8e4;
+      --primary: #1759d6;
+      --primary-dark: #0b2e7a;
+      --primary-mid: #2668e8;
+      --teal: #0aada0;
+      --teal-dark: #097a70;
+      --teal-light: #3ecfc3;
+      --text-main: #060f1e;
+      --text-mid: #1a3050;
+      --text-muted: #4a6070;
+      --text-light: #7a96a8;
+      --white: #ffffff;
+      --radius: 20px;
+      --radius-sm: 12px;
+      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+      --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* NAV */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(22px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200% center
+      }
+
+      100% {
+        background-position: 200% center
+      }
+    }
+
+    @keyframes blobSpin {
+      from {
+        transform: rotate(0deg) scale(1)
+      }
+
+      50% {
+        transform: rotate(180deg) scale(1.1)
+      }
+
+      to {
+        transform: rotate(360deg) scale(1)
+      }
+    }
+
+    @keyframes blobDrift {
+      0% {
+        transform: translate(0, 0) rotate(0deg)
+      }
+
+      33% {
+        transform: translate(30px, -20px) rotate(120deg)
+      }
+
+      66% {
+        transform: translate(-20px, 30px) rotate(240deg)
+      }
+
+      100% {
+        transform: translate(0, 0) rotate(360deg)
+      }
+    }
+
+    @keyframes pulseDot {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1)
+      }
+
+      50% {
+        opacity: .6;
+        transform: scale(1.4)
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-16px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-6px)
+      }
+    }
+
+    @keyframes lightMove {
+
+      0%,
+      100% {
+        transform: translate(0, 0)
+      }
+
+      50% {
+        transform: translate(30px, -20px)
+      }
+    }
+
+    /* ─── NAV ─── */
     nav {
-      position:sticky; top:0; z-index:100;
-      background:rgba(255,255,255,.97); backdrop-filter:blur(12px);
-      border-bottom:1px solid var(--border); padding:0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(238, 244, 249, 0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(23, 89, 214, 0.1);
+      padding: 0 48px;
+      transition: var(--transition);
     }
+
     .nav-inner {
-      max-width:1400px; margin:0 auto;
-      display:flex; align-items:center; justify-content:space-between; height:64px;
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      height: 66px;
     }
-    .nav-left { display:flex; align-items:center; gap:12px; }
-    .hamburger {
-      display:flex; align-items:center; justify-content:center;
-      width:36px; height:36px; border-radius:8px;
-      background:none; border:none; cursor:pointer; color:var(--sub);
-      transition:background .15s, color .15s; flex-shrink:0;
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
     }
-    .hamburger:hover { background:#f1f5f9; color:var(--text); }
-    .hamburger svg { width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; }
-    .logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
-    .logo-icon {
-      width:36px; height:36px; border-radius:10px;
-      background:linear-gradient(135deg,#1e3a8a,#2563eb);
-      display:flex; align-items:center; justify-content:center;
-      font-size:17px; box-shadow:0 4px 10px rgba(37,99,235,.3);
+
+    .logo-mark {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
     }
-    .logo-text {
-      font-family:'Syne',sans-serif; font-weight:800; font-size:1.3rem;
-      color:#0f172a; letter-spacing:-.04em;
+
+    .logo-text-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
     }
-    .logo-text span { color:#2563eb; }
-    .nav-links { display:flex; align-items:center; gap:28px; }
+
+    .logo-wordmark {
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+      line-height: 1;
+    }
+
+    .logo-campus {
+      font-family: 'Satisfy', cursive;
+      font-weight: 400;
+      font-size: 1.25rem;
+      color: var(--primary-dark);
+      letter-spacing: 0.01em;
+    }
+
+    .logo-sep {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--teal);
+      line-height: 1;
+    }
+
+    .logo-place {
+      font-family: 'Playfair Display', serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: var(--teal);
+      letter-spacing: -0.01em;
+    }
+
+    .logo-tagline {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 9px;
+      font-weight: 500;
+      color: var(--text-light);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      justify-self: center;
+    }
+
     .nav-link {
-      color:#475569; text-decoration:none; font-size:14px; font-weight:500;
-      padding:6px 2px; position:relative; transition:color .2s;
+      color: var(--text-mid);
+      text-decoration: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14.5px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      position: relative;
+      padding: 4px 0;
+      transition: color .2s;
     }
-    .nav-link::after { content:''; position:absolute; bottom:0; left:0; width:0; height:2px; background:#2563eb; border-radius:2px; transition:width .2s; }
-    .nav-link:hover { color:#1e3a8a; }
-    .nav-link:hover::after { width:100%; }
-    .nav-link.active { color:#1e3a8a; font-weight:600; }
-    .nav-link.active::after { width:100%; }
 
-    /* PAGE LAYOUT */
-    .page-wrap { display:flex; min-height:calc(100vh - 64px); }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--teal));
+      border-radius: 2px;
+      transition: width .25s var(--ease);
+    }
 
-    /* SIDEBAR */
+    .nav-link:hover {
+      color: var(--primary);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .nav-link.active {
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+
+    .nav-link.active::after {
+      width: 100%;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-self: end;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 11px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 18px rgba(23, 89, 214, 0.28);
+      letter-spacing: 0.01em;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 8px 26px rgba(23, 89, 214, 0.38);
+    }
+
+    .btn-secondary {
+      background: rgba(23, 89, 214, 0.06);
+      color: var(--primary-dark);
+      border: 1.5px solid rgba(23, 89, 214, 0.18);
+      border-radius: var(--radius-sm);
+      padding: 10px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(23, 89, 214, 0.11);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    /* ─── PAGE LAYOUT ─── */
+    .page-wrap {
+      display: flex;
+      min-height: calc(100vh - 66px);
+    }
+
+    /* ─── SIDEBAR ─── */
     .sidebar {
-      width:var(--sw); flex-shrink:0;
-      background:var(--surface); border-right:1px solid var(--border);
-      padding:24px 0; position:sticky; top:64px;
-      height:calc(100vh - 64px); overflow-y:auto;
-      transition:width .3s ease, padding .3s ease, border .3s ease;
-      animation:slideIn .4s ease both;
+      width: 240px;
+      flex-shrink: 0;
+      background: var(--white);
+      border-right: 1px solid rgba(23, 89, 214, 0.08);
+      padding: 24px 0;
+      position: sticky;
+      top: 66px;
+      height: calc(100vh - 66px);
+      overflow-y: auto;
+      transition: width .3s ease, padding .3s ease;
+      animation: slideIn .4s ease both;
+      box-shadow: 2px 0 12px rgba(23, 89, 214, 0.04);
     }
-    .sidebar.collapsed { width:0; padding:0; border-right:none; overflow:hidden; }
-    .sidebar::-webkit-scrollbar { width:4px; }
-    .sidebar::-webkit-scrollbar-thumb { background:#e2e8f0; border-radius:4px; }
 
-    .sb-label {
-      font-size:10px; font-weight:700; color:var(--sub);
-      text-transform:uppercase; letter-spacing:.08em;
-      padding:0 20px 6px; margin-top:10px; white-space:nowrap;
+    .sidebar.collapsed {
+      width: 0;
+      padding: 0;
+      overflow: hidden;
+      border-right: none;
     }
-    .sb-label:first-child { margin-top:0; }
-    .sb-divider { height:1px; background:var(--border); margin:10px 14px; }
+
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: rgba(23, 89, 214, 0.12);
+      border-radius: 4px;
+    }
+
+    .sb-section {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      padding: 12px 18px 5px;
+      white-space: nowrap;
+    }
+
+    .sb-divider {
+      height: 1px;
+      background: rgba(23, 89, 214, 0.07);
+      margin: 8px 14px;
+    }
 
     .sb-btn {
-      display:flex; align-items:center; gap:10px;
-      width:calc(100% - 16px); margin:1px 8px; padding:9px 12px;
-      border-radius:10px; border:1px solid transparent;
-      background:none; cursor:pointer; text-align:left;
-      font-family:'DM Sans',sans-serif; font-size:13.5px; font-weight:500;
-      color:#475569; text-decoration:none;
-      transition:background .15s, color .15s, border-color .15s;
-      white-space:nowrap; position:relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: calc(100% - 16px);
+      margin: 1px 8px;
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid transparent;
+      background: none;
+      cursor: pointer;
+      text-align: left;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: background .15s, color .15s, border-color .15s;
+      white-space: nowrap;
+      position: relative;
     }
-    .sb-btn:hover { background:#f1f5f9; color:var(--text); }
-    .sb-btn.active { background:#eff6ff; color:var(--primary-dark); font-weight:600; border-color:#bfdbfe; }
+
+    .sb-btn:hover {
+      background: rgba(23, 89, 214, 0.05);
+      color: var(--primary-dark);
+    }
+
+    .sb-btn.active {
+      background: linear-gradient(90deg, rgba(23, 89, 214, 0.08), rgba(23, 89, 214, 0.03));
+      color: var(--primary-dark);
+      font-weight: 600;
+      border-color: rgba(23, 89, 214, 0.15);
+    }
+
     .sb-btn.active::before {
-      content:''; position:absolute; left:-8px; top:50%; transform:translateY(-50%);
-      width:3px; height:18px; background:var(--primary); border-radius:2px;
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 18px;
+      background: linear-gradient(180deg, var(--primary), var(--teal));
+      border-radius: 2px;
     }
-    .sb-icon { font-size:15px; flex-shrink:0; width:20px; text-align:center; }
+
+    .sb-icon {
+      font-size: 15px;
+      flex-shrink: 0;
+      width: 20px;
+      text-align: center;
+    }
+
     .sb-badge {
-      margin-left:auto; background:var(--green); color:#fff;
-      font-size:10px; font-weight:700; padding:2px 7px;
-      border-radius:100px; min-width:18px; text-align:center;
+      margin-left: auto;
+      background: var(--teal);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 100px;
+      min-width: 18px;
+      text-align: center;
     }
 
-    /* MAIN */
-    .main { flex:1; min-width:0; }
+    /* ─── MAIN ─── */
+    .main {
+      flex: 1;
+      min-width: 0;
+    }
 
-    /* PANELS */
-    .panel { display:none; }
-    .panel.active { display:block; }
+    /* ─── PANELS ─── */
+    .panel {
+      display: none;
+    }
 
-    /* HERO */
-    .hero {
-      background:linear-gradient(160deg,#f0f7ff 0%,#f8fafc 60%,rgba(240,253,244,.5) 100%);
-      padding:70px 40px 60px; text-align:center; position:relative; overflow:hidden;
+    .panel.active {
+      display: block;
     }
-    .hero::before {
-      content:''; position:absolute; inset:0;
-      background:radial-gradient(circle at 50% 0%,rgba(37,99,235,.05),transparent 70%);
-      pointer-events:none;
+
+    /* ─── SECTION HERO ─── */
+    .contact-hero {
+      background: var(--bg);
+      padding: 80px 48px 64px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
     }
-    .blob1 {
-      position:absolute; top:-10%; right:-5%; width:500px; height:500px;
-      border-radius:40% 60% 70% 30%/40% 50% 60% 50%;
-      background:radial-gradient(circle,rgba(37,99,235,.07),transparent 70%);
-      filter:blur(40px); animation:blobSpin 20s infinite alternate ease-in-out; pointer-events:none;
+
+    .contact-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(23, 89, 214, 0.06), transparent 65%);
+      pointer-events: none;
     }
-    .blob2 {
-      position:absolute; bottom:-10%; left:-5%; width:400px; height:400px;
-      border-radius:60% 40% 30% 70%/50% 50% 40% 60%;
-      background:radial-gradient(circle,rgba(8,145,178,.07),transparent 70%);
-      filter:blur(40px); animation:blobSpin 25s infinite alternate-reverse ease-in-out; pointer-events:none;
+
+    .hero-blob {
+      position: absolute;
+      pointer-events: none;
+      border-radius: 60% 40% 70% 30%/50% 60% 40% 50%;
+      animation: blobDrift 24s infinite ease-in-out;
+      filter: blur(72px);
     }
+
+    .hero-blob-1 {
+      width: 580px;
+      height: 580px;
+      top: -20%;
+      right: -5%;
+      background: radial-gradient(circle, rgba(23, 89, 214, 0.1), transparent 70%);
+    }
+
+    .hero-blob-2 {
+      width: 440px;
+      height: 440px;
+      bottom: -15%;
+      left: -5%;
+      background: radial-gradient(circle, rgba(10, 173, 160, 0.1), transparent 70%);
+      animation-duration: 30s;
+      animation-direction: alternate-reverse;
+    }
+
+    .hero-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
     .hero-badge {
-      display:inline-flex; align-items:center; gap:7px;
-      background:#eff6ff; border:1px solid #bfdbfe; border-radius:100px;
-      padding:6px 16px; font-size:13px; font-weight:600; color:#2563eb; margin-bottom:20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(23, 89, 214, 0.07);
+      border: 1px solid rgba(23, 89, 214, 0.16);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 24px;
+      font-family: 'DM Sans', sans-serif;
+      letter-spacing: 0.02em;
+      opacity: 0;
+      animation: fadeUp .8s .1s cubic-bezier(.16, 1, .3, 1) forwards;
     }
-    .bdot { width:7px; height:7px; border-radius:50%; background:#22c55e; animation:pulseDot 2s ease-in-out infinite; }
-    .hero h1 {
-      font-family:'Syne',sans-serif; font-size:clamp(2rem,4vw,3.2rem);
-      font-weight:800; line-height:1.1; letter-spacing:-.025em; margin-bottom:16px;
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulseDot 2s infinite;
     }
-    .hero p { font-size:1.05rem; color:#475569; font-weight:300; max-width:520px; margin:0 auto; line-height:1.7; }
 
-    /* CONTACT GRID */
-    .cw { padding:48px 40px 60px; display:grid; grid-template-columns:1fr 360px; gap:28px; align-items:start; }
+    .contact-hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 5.5vw, 3.6rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      margin-bottom: 18px;
+      opacity: 0;
+      animation: fadeUp .8s .25s cubic-bezier(.16, 1, .3, 1) forwards;
+    }
 
-    /* FORM CARD */
+    .shimmer-text {
+      background: linear-gradient(90deg, var(--primary-dark), var(--primary) 35%, var(--teal) 65%, var(--primary-dark));
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4.5s linear infinite;
+    }
+
+    .contact-hero p {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.8;
+      font-family: 'DM Sans', sans-serif;
+      opacity: 0;
+      animation: fadeUp .8s .4s cubic-bezier(.16, 1, .3, 1) forwards;
+    }
+
+    /* ─── CONTACT GRID ─── */
+    .contact-wrap {
+      padding: 52px 48px 72px;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 28px;
+      align-items: start;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* ─── FORM CARD ─── */
     .form-card {
-      background:var(--surface); border:1px solid var(--border);
-      border-radius:20px; padding:36px 38px; box-shadow:0 4px 24px rgba(0,0,0,.06);
+      background: var(--white);
+      border: 1px solid rgba(23, 89, 214, 0.1);
+      border-radius: var(--radius);
+      padding: 38px 40px;
+      box-shadow: 0 4px 24px rgba(23, 89, 214, 0.07);
     }
-    .fc-title { font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:800; margin-bottom:6px; letter-spacing:-.02em; }
-    .fc-sub { font-size:13.5px; color:var(--sub); margin-bottom:28px; line-height:1.6; }
-    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-    .fg { display:flex; flex-direction:column; gap:5px; margin-bottom:18px; }
-    .fg label { font-size:11px; font-weight:700; color:var(--sub); text-transform:uppercase; letter-spacing:.06em; }
-    .fg input,.fg select,.fg textarea {
-      padding:10px 14px; border:1.5px solid var(--border); border-radius:10px;
-      font-size:14px; color:var(--text); background:#fff; outline:none;
-      font-family:'DM Sans',sans-serif; transition:border-color .15s, box-shadow .15s;
+
+    .fc-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
     }
-    .fg input:focus,.fg select:focus,.fg textarea:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(37,99,235,.1); }
-    .fg textarea { resize:vertical; min-height:130px; }
-    .char-count { font-size:11px; color:var(--sub); text-align:right; margin-top:3px; }
+
+    .fc-sub {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .fg {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 16px;
+    }
+
+    .fg label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+    }
+
+    .fg input,
+    .fg select,
+    .fg textarea {
+      padding: 10px 14px;
+      border: 1.5px solid rgba(23, 89, 214, 0.15);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      color: var(--text-main);
+      background: var(--bg);
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+      transition: border-color .15s, box-shadow .15s;
+    }
+
+    .fg input:focus,
+    .fg select:focus,
+    .fg textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(23, 89, 214, 0.1);
+      background: #fff;
+    }
+
+    .fg textarea {
+      resize: vertical;
+      min-height: 130px;
+    }
+
+    .char-count {
+      font-size: 11px;
+      color: var(--text-light);
+      text-align: right;
+      margin-top: 3px;
+    }
+
     .btn-submit {
-      width:100%; padding:13px;
-      background:linear-gradient(135deg,var(--primary-dark),var(--primary));
-      color:#fff; border:none; border-radius:12px;
-      font-size:15px; font-weight:600; font-family:'DM Sans',sans-serif;
-      cursor:pointer; transition:all .3s;
-      display:flex; align-items:center; justify-content:center; gap:8px;
-      box-shadow:0 4px 15px rgba(37,99,235,.3);
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 18px rgba(23, 89, 214, 0.3);
+      letter-spacing: 0.01em;
     }
-    .btn-submit:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(37,99,235,.45); }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(23, 89, 214, 0.42);
+    }
+
     .success-msg {
-      display:none; background:#f0fdf4; border:1px solid #86efac;
-      border-radius:12px; padding:16px 20px; margin-top:16px;
-      font-size:13.5px; color:#15803d; font-weight:500; align-items:center; gap:10px;
+      display: none;
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      margin-top: 14px;
+      font-size: 13.5px;
+      color: #15803d;
+      font-weight: 500;
+      align-items: center;
+      gap: 10px;
     }
-    .success-msg.show { display:flex; }
 
-    /* INFO CARDS */
-    .info-col { display:flex; flex-direction:column; gap:16px; }
-    .info-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:22px 24px; box-shadow:0 2px 12px rgba(0,0,0,.04); }
-    .ic-title { font-family:'Syne',sans-serif; font-weight:700; font-size:.9rem; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
-    .ic-title svg { width:16px; height:16px; stroke:var(--primary); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
-    .ci { display:flex; align-items:flex-start; gap:12px; padding:10px 0; border-bottom:1px solid #f1f5f9; }
-    .ci:last-child { border-bottom:none; padding-bottom:0; }
-    .ci-icon { width:34px; height:34px; border-radius:9px; flex-shrink:0; display:grid; place-items:center; font-size:15px; }
-    .ci-icon.blue{background:#eff6ff} .ci-icon.green{background:#f0fdf4} .ci-icon.amber{background:#fffbeb} .ci-icon.cyan{background:#ecfeff}
-    .ci-label { font-size:10.5px; font-weight:700; color:var(--sub); text-transform:uppercase; letter-spacing:.06em; margin-bottom:2px; }
-    .ci-val { font-size:13.5px; font-weight:500; color:var(--text); line-height:1.5; }
-    .ci-val a { color:var(--primary); text-decoration:none; }
-    .ci-val a:hover { text-decoration:underline; }
-    .hrs { display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid #f1f5f9; font-size:13px; }
-    .hrs:last-of-type { border-bottom:none; }
-    .hrs-day { font-weight:500; color:var(--sub); }
-    .hrs-time { font-weight:600; }
-    .status-open { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; color:var(--green); background:#f0fdf4; border:1px solid #86efac; border-radius:100px; padding:2px 9px; margin-top:12px; }
-    .status-closed { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; color:var(--sub); background:#f1f5f9; border-radius:100px; padding:2px 9px; margin-top:12px; }
+    .success-msg.show {
+      display: flex;
+    }
 
-    /* DEPT CARDS */
-    .dept-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; }
+    /* ─── INFO COLUMN ─── */
+    .info-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .info-card {
+      background: var(--white);
+      border: 1px solid rgba(23, 89, 214, 0.09);
+      border-radius: var(--radius-sm);
+      padding: 22px 24px;
+      box-shadow: 0 2px 12px rgba(23, 89, 214, 0.05);
+      transition: var(--transition);
+    }
+
+    .info-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(23, 89, 214, 0.1);
+    }
+
+    .ic-title {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: .9rem;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-main);
+    }
+
+    .ic-title svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--primary);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .ci {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(23, 89, 214, 0.06);
+    }
+
+    .ci:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .ci-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+    }
+
+    .ci-icon.blue {
+      background: rgba(23, 89, 214, 0.07);
+    }
+
+    .ci-icon.green {
+      background: rgba(22, 163, 74, 0.07);
+    }
+
+    .ci-icon.amber {
+      background: rgba(217, 119, 6, 0.07);
+    }
+
+    .ci-icon.teal {
+      background: rgba(10, 173, 160, 0.07);
+    }
+
+    .ci-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: 2px;
+    }
+
+    .ci-val {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    .ci-val a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .ci-val a:hover {
+      text-decoration: underline;
+    }
+
+    .hrs {
+      display: flex;
+      justify-content: space-between;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(23, 89, 214, 0.06);
+      font-size: 13px;
+    }
+
+    .hrs:last-of-type {
+      border-bottom: none;
+    }
+
+    .hrs-day {
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .hrs-time {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .status-open {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #15803d;
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      border-radius: 100px;
+      padding: 3px 10px;
+      margin-top: 12px;
+    }
+
+    .status-closed {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: var(--bg);
+      border: 1px solid rgba(23, 89, 214, 0.12);
+      border-radius: 100px;
+      padding: 3px 10px;
+      margin-top: 12px;
+    }
+
+    /* ─── SECTION SHARED ─── */
+    .sp {
+      padding: 52px 48px 72px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .sp-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .sp-sub {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-bottom: 36px;
+      line-height: 1.7;
+    }
+
+    /* ─── DEPT CARDS ─── */
+    .dept-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
     .dept-card {
-      background:var(--surface); border:1px solid var(--border);
-      border-radius:16px; padding:24px; box-shadow:0 2px 12px rgba(0,0,0,.04); transition:all .2s;
+      background: var(--white);
+      border: 1px solid rgba(23, 89, 214, 0.09);
+      border-radius: var(--radius);
+      padding: 26px;
+      box-shadow: 0 2px 12px rgba(23, 89, 214, 0.05);
+      transition: var(--transition);
     }
-    .dept-card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.1); }
-    .dept-icon { font-size:28px; margin-bottom:12px; }
-    .dept-name { font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; margin-bottom:6px; }
-    .dept-email { font-size:13px; color:var(--primary); margin-bottom:4px; }
-    .dept-email a { color:var(--primary); text-decoration:none; }
-    .dept-email a:hover { text-decoration:underline; }
-    .dept-desc { font-size:13px; color:var(--sub); line-height:1.6; }
 
-    /* FAQ */
-    .faq-item { background:var(--surface); border:1px solid var(--border); border-radius:14px; margin-bottom:12px; overflow:hidden; transition:box-shadow .2s; }
-    .faq-item:hover { box-shadow:0 4px 16px rgba(0,0,0,.07); }
-    .faq-q { padding:18px 22px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; font-weight:600; font-size:14.5px; user-select:none; }
-    .faq-q svg { width:18px; height:18px; stroke:var(--sub); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; transition:transform .3s; flex-shrink:0; }
-    .faq-item.open .faq-q svg { transform:rotate(180deg); }
-    .faq-a { max-height:0; overflow:hidden; transition:max-height .35s ease; font-size:13.5px; color:var(--sub); line-height:1.7; }
-    .faq-a-inner { padding:0 22px 18px; }
-    .faq-item.open .faq-a { max-height:300px; }
+    .dept-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 14px 36px rgba(23, 89, 214, 0.1);
+      border-color: rgba(23, 89, 214, 0.2);
+    }
 
-    /* SOCIAL */
-    .social-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; }
+    .dept-icon {
+      font-size: 26px;
+      margin-bottom: 12px;
+    }
+
+    .dept-name {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+
+    .dept-email {
+      font-size: 13px;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .dept-email a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .dept-email a:hover {
+      text-decoration: underline;
+    }
+
+    .dept-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* ─── FAQ ─── */
+    .faq-item {
+      background: var(--white);
+      border: 1px solid rgba(23, 89, 214, 0.09);
+      border-radius: var(--radius-sm);
+      margin-bottom: 10px;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .faq-item:hover {
+      box-shadow: 0 4px 16px rgba(23, 89, 214, 0.08);
+    }
+
+    .faq-q {
+      padding: 18px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14.5px;
+      user-select: none;
+      color: var(--text-main);
+    }
+
+    .faq-q svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--text-muted);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform .3s;
+      flex-shrink: 0;
+    }
+
+    .faq-item.open .faq-q {
+      color: var(--primary);
+    }
+
+    .faq-item.open .faq-q svg {
+      transform: rotate(180deg);
+      stroke: var(--primary);
+    }
+
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s ease;
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+
+    .faq-a-inner {
+      padding: 0 22px 18px;
+    }
+
+    .faq-item.open .faq-a {
+      max-height: 300px;
+    }
+
+    /* ─── SOCIAL ─── */
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 18px;
+    }
+
     .social-card {
-      background:var(--surface); border:1px solid var(--border);
-      border-radius:16px; padding:28px; display:flex; flex-direction:column;
-      align-items:flex-start; gap:8px; text-decoration:none; transition:all .2s;
-      box-shadow:0 2px 12px rgba(0,0,0,.04);
+      background: var(--white);
+      border: 1px solid rgba(23, 89, 214, 0.09);
+      border-radius: var(--radius);
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      text-decoration: none;
+      transition: var(--transition);
+      box-shadow: 0 2px 12px rgba(23, 89, 214, 0.05);
     }
-    .social-card:hover { transform:translateY(-4px); box-shadow:0 10px 30px rgba(0,0,0,.1); }
-    .social-card.li { border-color:#bfdbfe; background:#eff6ff; }
-    .social-card.tw { border-color:#a5f3fc; background:#ecfeff; }
-    .social-card.ig { border-color:#ddd6fe; background:#fdf4ff; }
-    .s-ico { font-size:32px; }
-    .s-name { font-family:'Syne',sans-serif; font-weight:700; font-size:1.1rem; }
-    .social-card.li .s-name{color:#1e3a8a} .social-card.tw .s-name{color:#0891b2} .social-card.ig .s-name{color:#7c3aed}
-    .s-handle,.s-desc { font-size:13px; color:var(--sub); line-height:1.5; }
 
-    /* MAP */
-    .map-wrap { padding:48px 40px 60px; }
-    .map-box { border-radius:16px; overflow:hidden; border:1px solid var(--border); box-shadow:0 4px 20px rgba(0,0,0,.08); height:420px; position:relative; background:#e9f0f8; }
-    .map-box iframe { width:100%; height:100%; border:none; display:block; }
+    .social-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 14px 36px rgba(23, 89, 214, 0.12);
+    }
+
+    .social-card.li {
+      background: rgba(23, 89, 214, 0.04);
+      border-color: rgba(23, 89, 214, 0.18);
+    }
+
+    .social-card.tw {
+      background: rgba(10, 173, 160, 0.04);
+      border-color: rgba(10, 173, 160, 0.18);
+    }
+
+    .social-card.ig {
+      background: rgba(124, 58, 237, 0.04);
+      border-color: rgba(124, 58, 237, 0.18);
+    }
+
+    .s-ico {
+      font-size: 30px;
+    }
+
+    .s-name {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    .social-card.li .s-name {
+      color: var(--primary-dark);
+    }
+
+    .social-card.tw .s-name {
+      color: var(--teal-dark);
+    }
+
+    .social-card.ig .s-name {
+      color: #7c3aed;
+    }
+
+    .s-handle {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .s-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ─── MAP ─── */
+    .map-wrap {
+      padding: 52px 48px 72px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .map-box {
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid rgba(23, 89, 214, 0.1);
+      box-shadow: 0 4px 24px rgba(23, 89, 214, 0.08);
+      height: 440px;
+      position: relative;
+      background: var(--bg-card);
+    }
+
+    .map-box iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
     .map-badge {
-      position:absolute; bottom:16px; left:16px; background:white;
-      border-radius:10px; padding:10px 14px; box-shadow:0 4px 16px rgba(0,0,0,.12);
-      display:flex; align-items:center; gap:9px; font-size:13px; font-weight:600;
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      background: white;
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, .12);
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-main);
     }
-    .map-badge svg { width:15px; height:15px; stroke:var(--primary); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 
-    /* SECTION PADDING */
-    .sp { padding:48px 40px 60px; }
-    .sp-title { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; letter-spacing:-.02em; margin-bottom:6px; }
-    .sp-sub { color:var(--sub); font-size:14px; margin-bottom:32px; }
+    .map-badge svg {
+      width: 15px;
+      height: 15px;
+      stroke: var(--primary);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
 
-    /* STRIP */
-    .strip { background:linear-gradient(135deg,var(--primary-dark),var(--primary) 60%,var(--secondary)); padding:40px; text-align:center; }
-    .strip h3 { font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:800; color:#fff; margin-bottom:8px; }
-    .strip p { color:#bfdbfe; font-size:14px; margin-bottom:20px; font-weight:300; }
-    .strip-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
-    .btn-white { background:#fff; color:var(--primary-dark); border:none; border-radius:10px; padding:10px 24px; font-size:14px; font-weight:600; font-family:'DM Sans',sans-serif; cursor:pointer; transition:all .2s; text-decoration:none; }
-    .btn-white:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.15); }
-    .btn-ghost { background:rgba(255,255,255,.1); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:10px; padding:10px 24px; font-size:14px; font-weight:600; font-family:'DM Sans',sans-serif; cursor:pointer; transition:all .2s; text-decoration:none; }
-    .btn-ghost:hover { background:rgba(255,255,255,.2); transform:translateY(-2px); }
+    /* ─── CTA STRIP ─── */
+    .cta-strip {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--teal) 100%);
+      padding: 72px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
 
-    /* FOOTER */
-    footer { background:#0f172a; color:#94a3b8; padding:32px 40px; }
-    .footer-inner { max-width:1400px; margin:0 auto; }
-    .footer-bot { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; font-size:13px; border-top:1px solid #1e293b; padding-top:20px; }
-    .fl-row { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
-    .fl-icon { width:30px; height:30px; border-radius:8px; background:linear-gradient(135deg,#1e3a8a,#2563eb); display:flex; align-items:center; justify-content:center; font-size:14px; }
-    .fl-text { font-family:'Syne',sans-serif; font-weight:800; font-size:1.1rem; color:#f1f5f9; letter-spacing:-.04em; }
-    .fl-text span { color:#60a5fa; }
+    .cta-strip::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, .08), transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 255, 255, .06), transparent 40%);
+      animation: blobSpin 20s infinite alternate ease-in-out;
+    }
 
-    /* OVERLAY */
-    .overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:200; }
-    .overlay.open { display:block; }
+    .cta-strip-inner {
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
 
-    @media(max-width:1024px) { .cw { grid-template-columns:1fr; } }
+    .cta-strip-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, .15);
+      border: 1px solid rgba(255, 255, 255, .25);
+      backdrop-filter: blur(8px);
+      border-radius: 100px;
+      padding: 8px 18px;
+      font-size: 13px;
+      color: #e0f2fe;
+      margin-bottom: 22px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .cta-strip h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.7rem, 3.8vw, 2.5rem);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 14px;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+    }
+
+    .cta-strip p {
+      color: rgba(200, 220, 255, 0.88);
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.75;
+      margin-bottom: 36px;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .cta-btns {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-white-solid {
+      background: #fff;
+      color: var(--primary-dark);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 12px 28px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.14);
+    }
+
+    .btn-white-solid:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-outline-white {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1.5px solid rgba(255, 255, 255, 0.28);
+      backdrop-filter: blur(8px);
+      border-radius: var(--radius-sm);
+      padding: 12px 28px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-outline-white:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.55);
+      transform: translateY(-2px);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #040e1c;
+      color: #6a7a96;
+      padding: 56px 40px 32px;
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 36px;
+      margin-bottom: 48px;
+    }
+
+    .footer-logo {
+      max-width: 270px;
+    }
+
+    .footer-logo-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .footer-desc {
+      font-size: 13px;
+      line-height: 1.75;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .footer-cols {
+      display: flex;
+      gap: 56px;
+      flex-wrap: wrap;
+    }
+
+    .footer-col-title {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      color: #b0bcd8;
+      font-size: 11.5px;
+      margin-bottom: 14px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .footer-link {
+      display: block;
+      color: #6a7a96;
+      text-decoration: none;
+      font-size: 13px;
+      margin-bottom: 10px;
+      transition: color .2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .footer-link:hover {
+      color: #7090ff;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #0d1e38;
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 12.5px;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ─── OVERLAY (mobile) ─── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 15, 30, 0.45);
+      z-index: 200;
+    }
+
+    .overlay.open {
+      display: block;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media(max-width:1080px) {
+      .contact-wrap {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media(max-width:900px) {
-      .nav-links { display:none; }
-      .sidebar { position:fixed; left:-260px; top:64px; z-index:300; height:calc(100vh - 64px); width:240px; transition:left .3s ease; box-shadow:none; }
-      .sidebar.open { left:0; box-shadow:4px 0 24px rgba(0,0,0,.12); }
-      .sidebar.collapsed { left:-260px; width:240px; }
-      .page-wrap { display:block; }
+      .nav-links {
+        display: none;
+      }
+
+      .sidebar {
+        position: fixed;
+        left: -260px;
+        top: 66px;
+        z-index: 300;
+        height: calc(100vh - 66px);
+        width: 240px;
+        transition: left .3s ease;
+        box-shadow: none;
+      }
+
+      .sidebar.open {
+        left: 0;
+        box-shadow: 4px 0 24px rgba(23, 89, 214, 0.12);
+      }
+
+      .sidebar.collapsed {
+        left: -260px;
+        width: 240px;
+      }
+
+      .page-wrap {
+        display: block;
+      }
     }
+
     @media(max-width:600px) {
-      .form-row { grid-template-columns:1fr; }
-      .hero { padding:60px 20px 50px; }
-      .cw,.sp,.map-wrap { padding:32px 20px; }
-      .strip { padding:40px 20px; }
+      nav {
+        padding: 0 20px;
+      }
+
+      .contact-hero {
+        padding: 64px 22px 52px;
+      }
+
+      .contact-wrap,
+      .sp,
+      .map-wrap {
+        padding: 36px 22px 56px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-card {
+        padding: 28px 22px;
+      }
+
+      .cta-strip {
+        padding: 56px 22px;
+      }
+
+      footer {
+        padding: 44px 22px 28px;
+      }
+
+      .cta-btns {
+        flex-direction: column;
+        align-items: center;
+      }
     }
-    ::-webkit-scrollbar { width:5px; }
-    ::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:5px; }
+
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(23, 89, 214, 0.18);
+      border-radius: 5px;
+    }
   </style>
 </head>
+
 <body>
 
-<nav id="navbar">
-  <div class="nav-inner">
-    <div class="nav-left">
-      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
-        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
-      <a href="index.html" class="logo">
-        <div class="logo-icon">🎓</div>
-        <span class="logo-text">Campus<span>Place</span></span>
-      </a>
+  <!-- ══ NAVBAR ══ -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <div style="display:flex;align-items:center;gap:10px;justify-self:start;">
+        <button id="hamburger" aria-label="Toggle sidebar"
+          style="width:36px;height:36px;border-radius:9px;background:none;border:1px solid rgba(23,89,214,0.12);display:grid;place-items:center;cursor:pointer;flex-shrink:0;transition:background .15s;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"
+            stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+        <a href="../index.html" class="logo">
+          <div class="logo-mark">
+            <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="nbg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#1a4fd6" />
+                  <stop offset="100%" stop-color="#0f3ab8" />
+                </linearGradient>
+              </defs>
+              <rect width="48" height="48" rx="11" fill="url(#nbg)" />
+              <rect x="1" y="1" width="46" height="23" rx="10" fill="rgba(255,255,255,0.06)" />
+              <path d="M16.5 21 L16.5 26.5 Q16.5 29.5 24 29.5 Q31.5 29.5 31.5 26.5 L31.5 21 Z" fill="white" />
+              <polygon points="24,11.5 39.5,19 24,26.5 8.5,19" fill="white" />
+              <polygon points="8.5,19 8.5,22 24,29.5 24,26.5" fill="rgba(255,255,255,0.42)" />
+              <polygon points="39.5,19 39.5,22 24,29.5 24,26.5" fill="rgba(255,255,255,0.58)" />
+              <path d="M39.5 19 Q43 19 43 23 L43 29.5" stroke="white" stroke-width="1.5" fill="none"
+                stroke-linecap="round" />
+              <circle cx="43" cy="29.5" r="2" fill="white" />
+              <line x1="41.1" y1="31.2" x2="40" y2="36.5" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <line x1="42.3" y1="31.4" x2="41.8" y2="37" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <line x1="43.6" y1="31.4" x2="44" y2="37" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <line x1="44.8" y1="31.2" x2="46" y2="36.5" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <path d="M40 36 Q43 37 46 36" stroke="rgba(255,255,255,0.55)" stroke-width="1.1" fill="none"
+                stroke-linecap="round" />
+            </svg>
+          </div>
+          <div class="logo-text-group">
+            <div class="logo-wordmark">
+              <span class="logo-campus">Campus</span><span class="logo-sep">.</span><span
+                class="logo-place">Place</span>
+            </div>
+            <div class="logo-tagline">Placement Portal</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="nav-links">
+        <a href="../index.html#how" class="nav-link">How It Works</a>
+        <a href="../index.html#features" class="nav-link">Features</a>
+        <a href="../index.html#roles" class="nav-link">For You</a>
+        <a href="ContactUs.html" class="nav-link active">Contact</a>
+      </div>
+
+      <div class="nav-actions">
+        <a href="Login.html" class="btn-secondary">Log In</a>
+        <a href="Signup.html" class="btn-primary">Join Now</a>
+      </div>
     </div>
-    <div class="nav-links">
-      <a href="Frontend/index.html#how" class="nav-link">How It Works</a>
-      <a href="Frontend/index.html#features" class="nav-link">Features</a>
-      <a href="Frontend/index.html#roles" class="nav-link">For You</a>
-      <a href="contact.html" class="nav-link active">Contact</a>
-    </div>
+  </nav>
+
+  <div class="overlay" id="overlay"></div>
+
+  <div class="page-wrap">
+
+    <!-- ══ SIDEBAR ══ -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sb-section">Main</div>
+      <button class="sb-btn active" data-panel="contact"><span class="sb-icon">✉️</span> Contact Us</button>
+      <button class="sb-btn" data-panel="map"><span class="sb-icon">📍</span> Our Location</button>
+      <button class="sb-btn" data-panel="departments"><span class="sb-icon">🏢</span> Departments</button>
+      <div class="sb-divider"></div>
+      <div class="sb-section">Support</div>
+      <button class="sb-btn" data-panel="faq"><span class="sb-icon">❓</span> FAQ <span
+          class="sb-badge">5</span></button>
+      <button class="sb-btn" data-panel="social"><span class="sb-icon">🌐</span> Social Media</button>
+      <div class="sb-divider"></div>
+      <div class="sb-section">Links</div>
+      <a class="sb-btn" href="../index.html"><span class="sb-icon">🏠</span> Home</a>
+      <a class="sb-btn" href="Login.html"><span class="sb-icon">🔑</span> Log In</a>
+      <a class="sb-btn" href="Signup.html"><span class="sb-icon">🚀</span> Join Now</a>
+    </aside>
+
+    <!-- ══ MAIN ══ -->
+    <main class="main">
+
+      <!-- ════ CONTACT PANEL ════ -->
+      <div class="panel active" id="panel-contact">
+        <section class="contact-hero">
+          <div class="hero-blob hero-blob-1"></div>
+          <div class="hero-blob hero-blob-2"></div>
+          <div class="hero-inner">
+            <div class="hero-badge"><span class="badge-dot"></span> We typically respond within 24 hours</div>
+            <h1>Get in <span class="shimmer-text">Touch With Us</span></h1>
+            <p>Have a question, partnership request, or just want to say hello? We'd love to hear from you.</p>
+          </div>
+        </section>
+
+        <div class="contact-wrap">
+          <!-- Form -->
+          <div class="form-card">
+            <div class="fc-title">Send Us a Message</div>
+            <div class="fc-sub">Fill in the form and our team will respond within 1 business day.</div>
+            <div class="form-row">
+              <div class="fg"><label>First Name *</label><input type="text" id="fname" placeholder="e.g. Arjun" /></div>
+              <div class="fg"><label>Last Name *</label><input type="text" id="lname" placeholder="e.g. Sharma" /></div>
+            </div>
+            <div class="form-row">
+              <div class="fg"><label>Email Address *</label><input type="email" id="email"
+                  placeholder="you@college.edu" /></div>
+              <div class="fg"><label>Phone Number</label><input type="tel" id="phone" placeholder="+91 98765 43210" />
+              </div>
+            </div>
+            <div class="fg">
+              <label>You Are *</label>
+              <select id="role">
+                <option value="">Select your role…</option>
+                <option>Student</option>
+                <option>Company / Recruiter</option>
+                <option>TPO / College Admin</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="fg"><label>Subject *</label><input type="text" id="subject"
+                placeholder="e.g. Issue with job application…" /></div>
+            <div class="fg">
+              <label>Message *</label>
+              <textarea id="message" placeholder="Write your message here…" maxlength="1000"></textarea>
+              <div class="char-count"><span id="char-count">0</span> / 1000</div>
+            </div>
+            <button class="btn-submit" id="btn-submit">
+              <svg viewBox="0 0 24 24"
+                style="width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
+              Send Message
+            </button>
+            <div class="success-msg" id="success-msg">
+              ✅ &nbsp; Your message has been sent! We'll get back to you within 24 hours.
+            </div>
+          </div>
+
+          <!-- Info column -->
+          <div class="info-col">
+            <div class="info-card">
+              <div class="ic-title">
+                <svg viewBox="0 0 24 24">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                Official Contact Details
+              </div>
+              <div class="ci">
+                <div class="ci-icon blue">📍</div>
+                <div>
+                  <div class="ci-label">Address</div>
+                  <div class="ci-val">RGUKT Campus, Andhra Pradesh, India</div>
+                </div>
+              </div>
+              <div class="ci">
+                <div class="ci-icon green">📧</div>
+                <div>
+                  <div class="ci-label">Email</div>
+                  <div class="ci-val"><a href="mailto:placement@rgukt.ac.in">placement@rgukt.ac.in</a></div>
+                </div>
+              </div>
+              <div class="ci">
+                <div class="ci-icon amber">📞</div>
+                <div>
+                  <div class="ci-label">Phone</div>
+                  <div class="ci-val"><a href="tel:+919876543210">+91 9876 543 210</a></div>
+                </div>
+              </div>
+              <div class="ci">
+                <div class="ci-icon teal">🕒</div>
+                <div>
+                  <div class="ci-label">Working Hours</div>
+                  <div class="ci-val">Mon – Fri · 9:00 AM – 5:00 PM</div>
+                </div>
+              </div>
+            </div>
+            <div class="info-card">
+              <div class="ic-title">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                Office Hours
+              </div>
+              <div class="hrs"><span class="hrs-day">Monday – Friday</span><span class="hrs-time">9:00 AM – 5:00
+                  PM</span></div>
+              <div class="hrs"><span class="hrs-day">Saturday</span><span class="hrs-time">10:00 AM – 1:00 PM</span>
+              </div>
+              <div class="hrs"><span class="hrs-day">Sunday</span><span class="hrs-time"
+                  style="color:var(--text-muted)">Closed</span></div>
+              <div id="office-status" class="status-open"><span
+                  style="width:6px;height:6px;border-radius:50%;background:#16a34a;display:inline-block"></span>
+                Currently Open</div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-contact -->
+
+      <!-- ════ MAP PANEL ════ -->
+      <div class="panel" id="panel-map">
+        <section class="contact-hero" style="padding:60px 48px 48px">
+          <div class="hero-blob hero-blob-1"></div>
+          <div class="hero-blob hero-blob-2"></div>
+          <div class="hero-inner">
+            <h1>Our <span class="shimmer-text">Location</span></h1>
+            <p>Visit us at the RGUKT Campus in Andhra Pradesh.</p>
+          </div>
+        </section>
+        <div class="map-wrap">
+          <div class="map-box">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3826.123456789!2d79.5499!3d16.4893!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a35e9e3f0000001%3A0x123456789abcdef!2sRGUKT%20-%20IIIT%20Nuzvidu!5e0!3m2!1sen!2sin!4v1600000000000!5m2!1sen!2sin"
+              allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <div class="map-badge">
+              <svg viewBox="0 0 24 24">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              RGUKT Campus, Andhra Pradesh
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-map -->
+
+      <!-- ════ DEPARTMENTS PANEL ════ -->
+      <div class="panel" id="panel-departments">
+        <section class="contact-hero" style="padding:60px 48px 48px">
+          <div class="hero-blob hero-blob-1"></div>
+          <div class="hero-blob hero-blob-2"></div>
+          <div class="hero-inner">
+            <h1><span class="shimmer-text">Department</span> Contacts</h1>
+            <p>Reach the right team directly for faster resolution.</p>
+          </div>
+        </section>
+        <div class="sp">
+          <div class="dept-grid">
+            <div class="dept-card">
+              <div class="dept-icon">🛡️</div>
+              <div class="dept-name">TPO Office</div>
+              <div class="dept-email"><a href="mailto:tpo@rgukt.ac.in">tpo@rgukt.ac.in</a></div>
+              <div class="dept-desc">For placement drives, company coordination, and schedule queries.</div>
+            </div>
+            <div class="dept-card">
+              <div class="dept-icon">🎓</div>
+              <div class="dept-name">Student Support</div>
+              <div class="dept-email"><a href="mailto:students@rgukt.ac.in">students@rgukt.ac.in</a></div>
+              <div class="dept-desc">Help with portal login, profile issues, and application tracking.</div>
+            </div>
+            <div class="dept-card">
+              <div class="dept-icon">🏢</div>
+              <div class="dept-name">Recruiter Queries</div>
+              <div class="dept-email"><a href="mailto:recruiters@rgukt.ac.in">recruiters@rgukt.ac.in</a></div>
+              <div class="dept-desc">For companies looking to post jobs or schedule campus drives.</div>
+            </div>
+            <div class="dept-card">
+              <div class="dept-icon">⚙️</div>
+              <div class="dept-name">Technical Support</div>
+              <div class="dept-email"><a href="mailto:tech@rgukt.ac.in">tech@rgukt.ac.in</a></div>
+              <div class="dept-desc">Report bugs, access issues, or any platform-related problems.</div>
+            </div>
+            <div class="dept-card">
+              <div class="dept-icon">📋</div>
+              <div class="dept-name">Administration</div>
+              <div class="dept-email"><a href="mailto:admin@rgukt.ac.in">admin@rgukt.ac.in</a></div>
+              <div class="dept-desc">General administrative queries and official correspondence.</div>
+            </div>
+            <div class="dept-card">
+              <div class="dept-icon">🤝</div>
+              <div class="dept-name">Partnerships</div>
+              <div class="dept-email"><a href="mailto:partnerships@rgukt.ac.in">partnerships@rgukt.ac.in</a></div>
+              <div class="dept-desc">Interested in collaborating? Reach our partnerships team.</div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-departments -->
+
+      <!-- ════ FAQ PANEL ════ -->
+      <div class="panel" id="panel-faq">
+        <section class="contact-hero" style="padding:60px 48px 48px">
+          <div class="hero-blob hero-blob-1"></div>
+          <div class="hero-blob hero-blob-2"></div>
+          <div class="hero-inner">
+            <h1>Frequently Asked <span class="shimmer-text">Questions</span></h1>
+            <p>Quick answers to common queries about CampusPlace.</p>
+          </div>
+        </section>
+        <div class="sp">
+          <div class="faq-item">
+            <div class="faq-q">How do I register as a student? <svg viewBox="0 0 24 24">
+                <polyline points="6 9 12 15 18 9" />
+              </svg></div>
+            <div class="faq-a">
+              <div class="faq-a-inner">Click "Join Now" and select the Student role. Fill in your college email, student
+                ID, and branch details. Once verified by your TPO, you'll get full access to job listings and placement
+                drives.</div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Can companies post jobs directly? <svg viewBox="0 0 24 24">
+                <polyline points="6 9 12 15 18 9" />
+              </svg></div>
+            <div class="faq-a">
+              <div class="faq-a-inner">Yes! Verified recruiters can post job openings, schedule campus drives, and
+                directly shortlist students. Register as a Company / Recruiter to get started.</div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">What if I forgot my password? <svg viewBox="0 0 24 24">
+                <polyline points="6 9 12 15 18 9" />
+              </svg></div>
+            <div class="faq-a">
+              <div class="faq-a-inner">On the Login page, click "Forgot Password" and enter your registered email.
+                You'll receive a reset link within a few minutes. Check your spam folder if you don't see it.</div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">How long until I get a response? <svg viewBox="0 0 24 24">
+                <polyline points="6 9 12 15 18 9" />
+              </svg></div>
+            <div class="faq-a">
+              <div class="faq-a-inner">Our team typically responds within 24 hours on business days (Monday–Friday, 9
+                AM–5 PM). For urgent matters, call or email the relevant department directly.</div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Is CampusPlace available for all colleges? <svg viewBox="0 0 24 24">
+                <polyline points="6 9 12 15 18 9" />
+              </svg></div>
+            <div class="faq-a">
+              <div class="faq-a-inner">Currently CampusPlace is built for RGUKT campuses in Andhra Pradesh. We're
+                actively expanding. Reach out to our partnerships team to bring CampusPlace to your college.</div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panel-faq -->
+
+      <!-- ════ SOCIAL PANEL ════ -->
+      <div class="panel" id="panel-social">
+        <section class="contact-hero" style="padding:60px 48px 48px">
+          <div class="hero-blob hero-blob-1"></div>
+          <div class="hero-blob hero-blob-2"></div>
+          <div class="hero-inner">
+            <h1>Follow <span class="shimmer-text">CampusPlace</span></h1>
+            <p>Stay updated with placements, announcements, and career tips.</p>
+          </div>
+        </section>
+        <div class="sp">
+          <div class="social-grid">
+            <a href="#" class="social-card li"><span class="s-ico">🔗</span><span class="s-name">LinkedIn</span><span
+                class="s-handle">@CampusPlace</span><span class="s-desc">Placement news, company spotlights, and career
+                tips for students.</span></a>
+            <a href="#" class="social-card tw"><span class="s-ico">🐦</span><span class="s-name">Twitter / X</span><span
+                class="s-handle">@CampusPlace</span><span class="s-desc">Real-time placement alerts and quick career
+                updates.</span></a>
+            <a href="#" class="social-card ig"><span class="s-ico">📸</span><span class="s-name">Instagram</span><span
+                class="s-handle">@campusplace.in</span><span class="s-desc">Campus life, success stories, and
+                behind-the-scenes content.</span></a>
+          </div>
+        </div>
+      </div><!-- /panel-social -->
+
+      <!-- ════ CTA STRIP (all panels) ════ -->
+      <div class="cta-strip">
+        <div class="cta-strip-inner">
+          <div class="cta-strip-badge">✨ Still have questions?</div>
+          <h3>Ready to Get Started?</h3>
+          <p>Browse our FAQ for instant answers or jump straight into the portal — your placement journey starts here.
+          </p>
+          <div class="cta-btns">
+            <button class="btn-white-solid" id="strip-faq-btn">View FAQ →</button>
+            <a href="Signup.html" class="btn-outline-white">Join CampusPlace</a>
+          </div>
+        </div>
+      </div>
+
+    </main>
   </div>
-</nav>
 
-<div class="overlay" id="overlay"></div>
-
-<div class="page-wrap">
-  <aside class="sidebar" id="sidebar">
-    <div class="sb-label">Main</div>
-    <button class="sb-btn active" data-panel="contact"><span class="sb-icon">✉️</span> Contact Us</button>
-    <button class="sb-btn" data-panel="map"><span class="sb-icon">📍</span> Our Location</button>
-    <button class="sb-btn" data-panel="departments"><span class="sb-icon">🏢</span> Departments</button>
-    <div class="sb-divider"></div>
-    <div class="sb-label">Support</div>
-    <button class="sb-btn" data-panel="faq"><span class="sb-icon">❓</span> FAQ <span class="sb-badge">5</span></button>
-    <button class="sb-btn" data-panel="social"><span class="sb-icon">🌐</span> Social Media</button>
-    <div class="sb-divider"></div>
-    <div class="sb-label">Links</div>
-    <a class="sb-btn" href="Frontend/index.html"><span class="sb-icon">🏠</span> Home</a>
-    <a class="sb-btn" href="Login.html"><span class="sb-icon">🔑</span> Log In</a>
-    <a class="sb-btn" href="Signup.html"><span class="sb-icon">🚀</span> Join Now</a>
-  </aside>
-
-  <main class="main">
-
-    <!-- CONTACT PANEL -->
-    <div class="panel active" id="panel-contact">
-      <section class="hero">
-        <div class="blob1"></div><div class="blob2"></div>
-        <div class="hero-badge fu1"><span class="bdot"></span> We typically respond within 24 hours</div>
-        <h1 class="fu2">Get in <span class="shimmer">Touch With Us</span></h1>
-        <p class="fu3">Have a question, partnership request, or just want to say hello? We'd love to hear from you.</p>
-      </section>
-      <div class="cw">
-        <div class="form-card">
-          <div class="fc-title">Send Us a Message</div>
-          <div class="fc-sub">Fill in the form below and our team will respond within 1 business day.</div>
-          <div class="form-row">
-            <div class="fg"><label>First Name *</label><input type="text" id="fname" placeholder="e.g. Arjun" /></div>
-            <div class="fg"><label>Last Name *</label><input type="text" id="lname" placeholder="e.g. Sharma" /></div>
+  <!-- ══ FOOTER ══ -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-logo">
+          <div class="footer-logo-row">
+            <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"
+              style="flex-shrink:0">
+              <defs>
+                <linearGradient id="fbg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#1a4fd6" />
+                  <stop offset="100%" stop-color="#0f3ab8" />
+                </linearGradient>
+              </defs>
+              <rect width="48" height="48" rx="11" fill="url(#fbg)" />
+              <rect x="1" y="1" width="46" height="23" rx="10" fill="rgba(255,255,255,0.06)" />
+              <path d="M16.5 21 L16.5 26.5 Q16.5 29.5 24 29.5 Q31.5 29.5 31.5 26.5 L31.5 21 Z" fill="white" />
+              <polygon points="24,11.5 39.5,19 24,26.5 8.5,19" fill="white" />
+              <polygon points="8.5,19 8.5,22 24,29.5 24,26.5" fill="rgba(255,255,255,0.42)" />
+              <polygon points="39.5,19 39.5,22 24,29.5 24,26.5" fill="rgba(255,255,255,0.58)" />
+              <path d="M39.5 19 Q43 19 43 23 L43 29.5" stroke="white" stroke-width="1.5" fill="none"
+                stroke-linecap="round" />
+              <circle cx="43" cy="29.5" r="2" fill="white" />
+              <line x1="41.1" y1="31.2" x2="40" y2="36.5" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <line x1="42.3" y1="31.4" x2="41.8" y2="37" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <line x1="43.6" y1="31.4" x2="44" y2="37" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <line x1="44.8" y1="31.2" x2="46" y2="36.5" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <path d="M40 36 Q43 37 46 36" stroke="rgba(255,255,255,0.55)" stroke-width="1.1" fill="none"
+                stroke-linecap="round" />
+            </svg>
+            <div style="display:flex;flex-direction:column;gap:3px;">
+              <div style="display:flex;align-items:baseline;gap:2px;line-height:1;">
+                <span
+                  style="font-family:'Satisfy',cursive;font-weight:400;font-size:1.3rem;color:#c8d8f4;letter-spacing:0.01em;">Campus</span><span
+                  style="font-family:'Playfair Display',serif;font-weight:700;font-size:1.05rem;color:#3ecfc3;">.</span><span
+                  style="font-family:'Playfair Display',serif;font-weight:800;font-size:1.25rem;color:#3ecfc3;letter-spacing:-0.01em;">Place</span>
+              </div>
+              <div
+                style="font-family:'DM Sans',sans-serif;font-size:9px;color:#2e4460;letter-spacing:0.18em;text-transform:uppercase;">
+                Placement Portal</div>
+            </div>
           </div>
-          <div class="form-row">
-            <div class="fg"><label>Email Address *</label><input type="email" id="email" placeholder="you@college.edu" /></div>
-            <div class="fg"><label>Phone Number</label><input type="tel" id="phone" placeholder="+91 98765 43210" /></div>
-          </div>
-          <div class="fg">
-            <label>You Are *</label>
-            <select id="role">
-              <option value="">Select your role…</option>
-              <option>Student</option><option>Company / Recruiter</option>
-              <option>TPO / College Admin</option><option>Other</option>
-            </select>
-          </div>
-          <div class="fg"><label>Subject *</label><input type="text" id="subject" placeholder="e.g. Issue with job application…" /></div>
-          <div class="fg"><label>Message *</label><textarea id="message" placeholder="Write your message here…" maxlength="1000"></textarea><div class="char-count"><span id="char-count">0</span> / 1000</div></div>
-          <button class="btn-submit" id="btn-submit">
-            <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            Send Message
-          </button>
-          <div class="success-msg" id="success-msg">✅ &nbsp; Your message has been sent! We'll get back to you within 24 hours.</div>
+          <p class="footer-desc">A centralized placement portal for smarter campus recruitment, connecting students and
+            companies seamlessly.</p>
         </div>
-        <div class="info-col">
-          <div class="info-card">
-            <div class="ic-title"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Official Contact Details</div>
-            <div class="ci"><div class="ci-icon blue">📍</div><div><div class="ci-label">Address</div><div class="ci-val">RGUKT Campus, Andhra Pradesh, India</div></div></div>
-            <div class="ci"><div class="ci-icon green">📧</div><div><div class="ci-label">Email</div><div class="ci-val"><a href="mailto:placement@rgukt.ac.in">placement@rgukt.ac.in</a></div></div></div>
-            <div class="ci"><div class="ci-icon amber">📞</div><div><div class="ci-label">Phone</div><div class="ci-val"><a href="tel:+919876543210">+91 9876 543 210</a></div></div></div>
-            <div class="ci"><div class="ci-icon cyan">🕒</div><div><div class="ci-label">Working Hours</div><div class="ci-val">Mon – Fri · 9:00 AM – 5:00 PM</div></div></div>
+        <div class="footer-cols">
+          <div>
+            <div class="footer-col-title">Platform</div>
+            <a href="../index.html#how" class="footer-link">How It Works</a>
+            <a href="../index.html#features" class="footer-link">Features</a>
+            <a href="../index.html#roles" class="footer-link">For You</a>
+            <a href="ContactUs.html" class="footer-link">Contact</a>
           </div>
-          <div class="info-card">
-            <div class="ic-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Office Hours</div>
-            <div class="hrs"><span class="hrs-day">Monday – Friday</span><span class="hrs-time">9:00 AM – 5:00 PM</span></div>
-            <div class="hrs"><span class="hrs-day">Saturday</span><span class="hrs-time">10:00 AM – 1:00 PM</span></div>
-            <div class="hrs"><span class="hrs-day">Sunday</span><span class="hrs-time" style="color:var(--sub)">Closed</span></div>
-            <div id="office-status" class="status-open"><span style="width:6px;height:6px;border-radius:50%;background:#059669;display:inline-block"></span> Currently Open</div>
+          <div>
+            <div class="footer-col-title">Users</div>
+            <a href="StudentSignup.html" class="footer-link">Students</a>
+            <a href="Companysignup.html" class="footer-link">Companies</a>
+            <a href="TPOsignup.html" class="footer-link">TPO / Admin</a>
+            <a href="ContactUs.html" class="footer-link">Contact Us</a>
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- MAP PANEL -->
-    <div class="panel" id="panel-map">
-      <section class="hero" style="padding:50px 40px 40px">
-        <div class="blob1"></div><div class="blob2"></div>
-        <h1 class="fu2">Our <span class="shimmer">Location</span></h1>
-        <p class="fu3">Visit us at the RGUKT Campus in Andhra Pradesh.</p>
-      </section>
-      <div class="map-wrap">
-        <div class="map-box">
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3826.123456789!2d79.5499!3d16.4893!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a35e9e3f0000001%3A0x123456789abcdef!2sRGUKT%20-%20IIIT%20Nuzvidu!5e0!3m2!1sen!2sin!4v1600000000000!5m2!1sen!2sin" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-          <div class="map-badge"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> RGUKT Campus, Andhra Pradesh</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- DEPARTMENTS PANEL -->
-    <div class="panel" id="panel-departments">
-      <section class="hero" style="padding:50px 40px 40px">
-        <div class="blob1"></div><div class="blob2"></div>
-        <h1 class="fu2"><span class="shimmer">Department</span> Contacts</h1>
-        <p class="fu3">Reach the right team directly for faster resolution.</p>
-      </section>
-      <div class="sp">
-        <div class="dept-grid">
-          <div class="dept-card"><div class="dept-icon">🛡️</div><div class="dept-name">TPO Office</div><div class="dept-email"><a href="mailto:tpo@rgukt.ac.in">tpo@rgukt.ac.in</a></div><div class="dept-desc">For placement drives, company coordination, and schedule queries.</div></div>
-          <div class="dept-card"><div class="dept-icon">🎓</div><div class="dept-name">Student Support</div><div class="dept-email"><a href="mailto:students@rgukt.ac.in">students@rgukt.ac.in</a></div><div class="dept-desc">Help with portal login, profile issues, and application tracking.</div></div>
-          <div class="dept-card"><div class="dept-icon">🏢</div><div class="dept-name">Recruiter Queries</div><div class="dept-email"><a href="mailto:recruiters@rgukt.ac.in">recruiters@rgukt.ac.in</a></div><div class="dept-desc">For companies looking to post jobs or schedule campus drives.</div></div>
-          <div class="dept-card"><div class="dept-icon">⚙️</div><div class="dept-name">Technical Support</div><div class="dept-email"><a href="mailto:tech@rgukt.ac.in">tech@rgukt.ac.in</a></div><div class="dept-desc">Report bugs, access issues, or any platform-related problems.</div></div>
-          <div class="dept-card"><div class="dept-icon">📋</div><div class="dept-name">Administration</div><div class="dept-email"><a href="mailto:admin@rgukt.ac.in">admin@rgukt.ac.in</a></div><div class="dept-desc">General administrative queries and official correspondence.</div></div>
-          <div class="dept-card"><div class="dept-icon">🤝</div><div class="dept-name">Partnerships</div><div class="dept-email"><a href="mailto:partnerships@rgukt.ac.in">partnerships@rgukt.ac.in</a></div><div class="dept-desc">Interested in collaborating? Reach our partnerships team.</div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- FAQ PANEL -->
-    <div class="panel" id="panel-faq">
-      <section class="hero" style="padding:50px 40px 40px">
-        <div class="blob1"></div><div class="blob2"></div>
-        <h1 class="fu2">Frequently Asked <span class="shimmer">Questions</span></h1>
-        <p class="fu3">Quick answers to common queries about CampusPlace.</p>
-      </section>
-      <div class="sp">
-        <div class="faq-item"><div class="faq-q">How do I register as a student? <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-a"><div class="faq-a-inner">Click "Join Now" and select the Student role. Fill in your college email, student ID, and branch details. Once verified by your TPO, you'll get full access to job listings and placement drives.</div></div></div>
-        <div class="faq-item"><div class="faq-q">Can companies post jobs directly? <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-a"><div class="faq-a-inner">Yes! Verified recruiters can post job openings, schedule campus drives, and directly shortlist students. Register as a Company/Recruiter to get started.</div></div></div>
-        <div class="faq-item"><div class="faq-q">What if I forgot my password? <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-a"><div class="faq-a-inner">On the Login page, click "Forgot Password" and enter your registered email. You'll receive a reset link within a few minutes. Check your spam folder if you don't see it.</div></div></div>
-        <div class="faq-item"><div class="faq-q">How long until I get a response? <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-a"><div class="faq-a-inner">Our team typically responds within 24 hours on business days (Monday–Friday, 9 AM–5 PM). For urgent matters, call or email the relevant department directly.</div></div></div>
-        <div class="faq-item"><div class="faq-q">Is CampusPlace available for all colleges? <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-a"><div class="faq-a-inner">Currently CampusPlace is built for RGUKT campuses in Andhra Pradesh. We're actively expanding. Reach out to our partnerships team to bring CampusPlace to your college.</div></div></div>
-      </div>
-    </div>
-
-    <!-- SOCIAL PANEL -->
-    <div class="panel" id="panel-social">
-      <section class="hero" style="padding:50px 40px 40px">
-        <div class="blob1"></div><div class="blob2"></div>
-        <h1 class="fu2">Follow <span class="shimmer">CampusPlace</span></h1>
-        <p class="fu3">Stay updated with placements, announcements, and career tips.</p>
-      </section>
-      <div class="sp">
-        <div class="social-grid">
-          <a href="#" class="social-card li"><span class="s-ico">🔗</span><span class="s-name">LinkedIn</span><span class="s-handle">@CampusPlace</span><span class="s-desc">Placement news, company spotlights, and career tips for students.</span></a>
-          <a href="#" class="social-card tw"><span class="s-ico">🐦</span><span class="s-name">Twitter / X</span><span class="s-handle">@CampusPlace</span><span class="s-desc">Real-time placement alerts and quick career updates.</span></a>
-          <a href="#" class="social-card ig"><span class="s-ico">📸</span><span class="s-name">Instagram</span><span class="s-handle">@campusplace.in</span><span class="s-desc">Campus life, success stories, and behind-the-scenes content.</span></a>
-        </div>
-      </div>
-    </div>
-
-    <div class="strip">
-      <h3>Need Quick Help?</h3>
-      <p>Browse our frequently asked questions for instant answers about the portal.</p>
-      <div class="strip-btns">
-        <button class="btn-white" id="strip-faq-btn">Visit FAQ Page →</button>
-        <a href="Login.html" class="btn-ghost">Go to Dashboard</a>
-      </div>
-    </div>
-
-  </main>
-</div>
-
-<footer>
-  <div class="footer-inner">
-    <div class="footer-bot">
-      <div>
-        <div class="fl-row"><div class="fl-icon">🎓</div><span class="fl-text">Campus<span>Place</span></span></div>
+      <div class="footer-bottom">
         <span>© 2026 CampusPlace. All rights reserved.</span>
+        <span style="color:#3a506a;">Built for campus recruitment excellence.</span>
       </div>
-      <span>Built for campus recruitment excellence.</span>
     </div>
-  </div>
-</footer>
+  </footer>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
 
-  // ── Navbar scroll
-  var nav = document.getElementById('navbar');
-  window.addEventListener('scroll', function () {
-    if (window.scrollY > 20) {
-      nav.style.background = 'rgba(255,255,255,0.85)';
-      nav.style.boxShadow = '0 10px 30px rgba(0,0,0,0.08)';
-    } else {
-      nav.style.background = 'rgba(255,255,255,0.97)';
-      nav.style.boxShadow = 'none';
-    }
-  });
-
-  // ── Sidebar toggle
-  var sidebar = document.getElementById('sidebar');
-  var overlay = document.getElementById('overlay');
-  var hamburger = document.getElementById('hamburger');
-  var sidebarOpen = true;
-
-  hamburger.addEventListener('click', function () {
-    var isMobile = window.innerWidth <= 900;
-    if (isMobile) {
-      sidebar.classList.toggle('open');
-      overlay.classList.toggle('open');
-    } else {
-      sidebarOpen = !sidebarOpen;
-      sidebar.classList.toggle('collapsed', !sidebarOpen);
-    }
-  });
-
-  overlay.addEventListener('click', function () {
-    sidebar.classList.remove('open');
-    overlay.classList.remove('open');
-  });
-
-  // ── Panel switching
-  function switchPanel(id) {
-    document.querySelectorAll('.panel').forEach(function (p) { p.classList.remove('active'); });
-    var panel = document.getElementById('panel-' + id);
-    if (panel) panel.classList.add('active');
-
-    document.querySelectorAll('.sb-btn[data-panel]').forEach(function (b) { b.classList.remove('active'); });
-    var btn = document.querySelector('.sb-btn[data-panel="' + id + '"]');
-    if (btn) btn.classList.add('active');
-
-    sidebar.classList.remove('open');
-    overlay.classList.remove('open');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  document.querySelectorAll('.sb-btn[data-panel]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      switchPanel(this.getAttribute('data-panel'));
-    });
-  });
-
-  var stripFaqBtn = document.getElementById('strip-faq-btn');
-  if (stripFaqBtn) {
-    stripFaqBtn.addEventListener('click', function () { switchPanel('faq'); });
-  }
-
-  // ── FAQ accordion
-  document.querySelectorAll('.faq-item').forEach(function (item) {
-    item.querySelector('.faq-q').addEventListener('click', function () {
-      var isOpen = item.classList.contains('open');
-      document.querySelectorAll('.faq-item').forEach(function (i) { i.classList.remove('open'); });
-      if (!isOpen) item.classList.add('open');
-    });
-  });
-
-  // ── Office hours status
-  var statusEl = document.getElementById('office-status');
-  if (statusEl) {
-    var now = new Date();
-    var day = now.getDay();
-    var hour = now.getHours();
-    var isOpen = (day >= 1 && day <= 5 && hour >= 9 && hour < 17) || (day === 6 && hour >= 10 && hour < 13);
-    if (isOpen) {
-      statusEl.className = 'status-open';
-      statusEl.innerHTML = '<span style="width:6px;height:6px;border-radius:50%;background:#059669;display:inline-block"></span> Currently Open';
-    } else {
-      statusEl.className = 'status-closed';
-      statusEl.textContent = 'Currently Closed';
-    }
-  }
-
-  // ── Char counter
-  var msgEl = document.getElementById('message');
-  var countEl = document.getElementById('char-count');
-  if (msgEl && countEl) {
-    msgEl.addEventListener('input', function () { countEl.textContent = msgEl.value.length; });
-  }
-
-  // ── Clear error on input
-  ['fname','lname','email','subject','message'].forEach(function (id) {
-    var el = document.getElementById(id);
-    if (el) el.addEventListener('input', function () {
-      el.style.borderColor = '';
-      el.style.boxShadow = '';
-    });
-  });
-
-  // ── Form submit
-  var submitBtn = document.getElementById('btn-submit');
-  if (submitBtn) {
-    submitBtn.addEventListener('click', function () {
-      var fname = document.getElementById('fname');
-      var lname = document.getElementById('lname');
-      var email = document.getElementById('email');
-      var subject = document.getElementById('subject');
-      var message = document.getElementById('message');
-      var ok = true;
-
-      [fname, lname, email, subject, message].forEach(function (el) {
-        if (!el.value.trim()) {
-          el.style.borderColor = '#ef4444';
-          el.style.boxShadow = '0 0 0 3px rgba(239,68,68,.15)';
-          ok = false;
+      // ── Navbar scroll shadow (same as index.html)
+      var nav = document.getElementById('navbar');
+      window.addEventListener('scroll', function () {
+        if (window.scrollY > 20) {
+          nav.style.background = 'rgba(238,244,249,0.97)';
+          nav.style.boxShadow = '0 6px 24px rgba(23,89,214,0.07)';
+        } else {
+          nav.style.background = 'rgba(238,244,249,0.9)';
+          nav.style.boxShadow = 'none';
         }
       });
 
-      if (email.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
-        email.style.borderColor = '#ef4444';
-        email.style.boxShadow = '0 0 0 3px rgba(239,68,68,.15)';
-        ok = false;
+      // ── Hamburger toggle
+      var sidebar = document.getElementById('sidebar');
+      var overlay = document.getElementById('overlay');
+      var hamburger = document.getElementById('hamburger');
+      var sidebarOpen = true;
+
+      hamburger.addEventListener('click', function () {
+        var isMobile = window.innerWidth <= 900;
+        if (isMobile) {
+          sidebar.classList.toggle('open');
+          overlay.classList.toggle('open');
+        } else {
+          sidebarOpen = !sidebarOpen;
+          sidebar.classList.toggle('collapsed', !sidebarOpen);
+        }
+      });
+
+      overlay.addEventListener('click', function () {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('open');
+      });
+
+      // ── Panel switching
+      function switchPanel(id) {
+        document.querySelectorAll('.panel').forEach(function (p) { p.classList.remove('active'); });
+        var panel = document.getElementById('panel-' + id);
+        if (panel) panel.classList.add('active');
+
+        document.querySelectorAll('.sb-btn[data-panel]').forEach(function (b) { b.classList.remove('active'); });
+        var btn = document.querySelector('.sb-btn[data-panel="' + id + '"]');
+        if (btn) btn.classList.add('active');
+
+        if (window.innerWidth <= 900) {
+          sidebar.classList.remove('open');
+          overlay.classList.remove('open');
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
-      if (!ok) return;
+      document.querySelectorAll('.sb-btn[data-panel]').forEach(function (btn) {
+        btn.addEventListener('click', function () { switchPanel(this.getAttribute('data-panel')); });
+      });
 
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending…';
+      var stripFaqBtn = document.getElementById('strip-faq-btn');
+      if (stripFaqBtn) { stripFaqBtn.addEventListener('click', function () { switchPanel('faq'); }); }
 
-      setTimeout(function () {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send Message';
-        document.getElementById('success-msg').classList.add('show');
-        [fname, lname, email, subject, message].forEach(function (el) { el.value = ''; });
-        if (countEl) countEl.textContent = '0';
-        document.getElementById('role').value = '';
-        setTimeout(function () { document.getElementById('success-msg').classList.remove('show'); }, 5000);
-      }, 1400);
+      // ── FAQ accordion
+      document.querySelectorAll('.faq-item').forEach(function (item) {
+        item.querySelector('.faq-q').addEventListener('click', function () {
+          var isOpen = item.classList.contains('open');
+          document.querySelectorAll('.faq-item').forEach(function (i) { i.classList.remove('open'); });
+          if (!isOpen) item.classList.add('open');
+        });
+      });
+
+      // ── Office hours live status
+      var statusEl = document.getElementById('office-status');
+      if (statusEl) {
+        var now = new Date(), day = now.getDay(), hour = now.getHours();
+        var isOpen = (day >= 1 && day <= 5 && hour >= 9 && hour < 17) || (day === 6 && hour >= 10 && hour < 13);
+        if (isOpen) {
+          statusEl.className = 'status-open';
+          statusEl.innerHTML = '<span style="width:6px;height:6px;border-radius:50%;background:#16a34a;display:inline-block"></span> Currently Open';
+        } else {
+          statusEl.className = 'status-closed';
+          statusEl.textContent = 'Currently Closed';
+        }
+      }
+
+      // ── Char counter
+      var msgEl = document.getElementById('message');
+      var countEl = document.getElementById('char-count');
+      if (msgEl && countEl) {
+        msgEl.addEventListener('input', function () { countEl.textContent = msgEl.value.length; });
+      }
+
+      // ── Clear validation styles on input
+      ['fname', 'lname', 'email', 'subject', 'message'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener('input', function () {
+          el.style.borderColor = '';
+          el.style.boxShadow = '';
+        });
+      });
+
+      // ── Form submit
+      var submitBtn = document.getElementById('btn-submit');
+      if (submitBtn) {
+        submitBtn.addEventListener('click', function () {
+          var fields = ['fname', 'lname', 'email', 'subject', 'message'];
+          var ok = true;
+
+          fields.forEach(function (id) {
+            var el = document.getElementById(id);
+            if (!el.value.trim()) {
+              el.style.borderColor = '#dc2626';
+              el.style.boxShadow = '0 0 0 3px rgba(220,38,38,.12)';
+              ok = false;
+            }
+          });
+
+          var emailEl = document.getElementById('email');
+          if (emailEl.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value)) {
+            emailEl.style.borderColor = '#dc2626';
+            emailEl.style.boxShadow = '0 0 0 3px rgba(220,38,38,.12)';
+            ok = false;
+          }
+
+          if (!ok) return;
+
+          submitBtn.disabled = true;
+          submitBtn.style.opacity = '.7';
+          submitBtn.textContent = 'Sending…';
+
+          setTimeout(function () {
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+            submitBtn.innerHTML = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send Message';
+            document.getElementById('success-msg').classList.add('show');
+            fields.forEach(function (id) { document.getElementById(id).value = ''; });
+            document.getElementById('role').value = '';
+            if (countEl) countEl.textContent = '0';
+            setTimeout(function () { document.getElementById('success-msg').classList.remove('show'); }, 5000);
+          }, 1400);
+        });
+      }
+
     });
-  }
-
-});
-</script>
+  </script>
 </body>
+
 </html>

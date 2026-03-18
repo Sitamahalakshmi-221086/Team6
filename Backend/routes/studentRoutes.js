@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-<<<<<<< HEAD
 const multer = require('multer');
 const path = require('path');
 const { studentSignup, studentLogin } = require('../controllers/studentController');
@@ -31,7 +30,7 @@ router.post('/login', studentLogin);
 
 module.exports = router;
 
-=======
+
 const { studentSignup, studentLogin } = require('../controllers/studentController');
 const multer = require('multer');
 
@@ -45,4 +44,41 @@ router.post('/signup', upload.single('resume'), studentSignup);
 router.post('/login', studentLogin);
 
 module.exports = router;
->>>>>>> UI
+const mongoose = require('mongoose');
+
+const studentSchema = new mongoose.Schema({
+  fullName: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true
+  },
+  password: {
+    type: String,
+    required: true,
+    select: false
+  },
+  phone: {
+    type: String,
+    required: true
+  },
+  branch: {
+    type: String,
+    required: true
+  },
+  year: {
+    type: String,
+    required: true
+  },
+  cgpa: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 10
+  },

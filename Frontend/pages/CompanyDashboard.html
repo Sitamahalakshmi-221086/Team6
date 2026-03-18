@@ -3,54 +3,1872 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>CampusPlace – Recruiter Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap"
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,800&family=DM+Sans:wght@300;400;500;600;700&family=Satisfy&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="../css/loginstyle.css" />
-  <link rel="stylesheet" href="../css/companydashboard.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    :root {
+      --P: #15803d;
+      --PD: #14532d;
+      --PL: #dcfce7;
+      --T: #0aada0;
+      --TL: #e6f7f6;
+      --TD: #097a70;
+      --G: #16a34a;
+      --GL: #f0fdf4;
+      --A: #d97706;
+      --AL: #fffbeb;
+      --R: #dc2626;
+      --RL: #fef2f2;
+      --PU: #7c3aed;
+      --PUL: #f3f0fd;
+      --bg: #f0fdf4;
+      --bgs: #f7fef9;
+      --sur: #fff;
+      --br: rgba(21, 128, 61, 0.12);
+      --brs: rgba(21, 128, 61, 0.06);
+      --tx: #052e16;
+      --txm: #14532d;
+      --txmu: #4a7060;
+      --txl: #6b9e80;
+      --sw: 248px;
+      --swm: 64px;
+      --r: 14px;
+      --rs: 9px;
+      --sh: 0 2px 8px rgba(21, 128, 61, 0.08);
+      --sh2: 0 6px 24px rgba(21, 128, 61, 0.14);
+      transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* ─── REFINED COMPONENTS ─── */
+    .co-action-card {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--rs);
+      padding: 12px 16px;
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: fadeIn .4s ease both;
+    }
+    .cac-icon { width: 36px; height: 36px; background: #fff; color: var(--P); border-radius: 10px; display: grid; place-items: center; }
+    .cac-top { font-size: 10px; font-weight: 700; text-transform: uppercase; opacity: 0.8; }
+    .cac-sub { font-size: 11px; opacity: 0.7; }
+
+    .hiring-steps { display: flex; flex-direction: column; gap: 8px; }
+    .hstep { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--txm); }
+    .hnum { width: 22px; height: 22px; background: var(--PL); color: var(--P); border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 800; }
+
+    .vibe-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+    .vibe-card { padding: 10px; background: var(--bgs); border: 1px solid var(--brs); border-radius: var(--rs); font-size: 12.5px; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+    body.dark {
+      --bg: #051009;
+      --bgs: #081a10;
+      --sur: #0a1d12;
+      --br: rgba(255, 255, 255, 0.08);
+      --brs: rgba(255, 255, 255, 0.04);
+      --tx: #f0fdf4;
+      --txm: #dcfce7;
+      --txmu: #86efac;
+      --txl: #4ade80;
+      --sh: 0 4px 12px rgba(0, 0, 0, 0.4);
+      --sh2: 0 8px 32px rgba(0, 0, 0, 0.6);
+      --PL: rgba(21, 128, 61, 0.15);
+      --TL: rgba(10, 173, 160, 0.15);
+      --PUL: rgba(124, 58, 237, 0.15);
+      --AL: rgba(217, 119, 6, 0.15);
+      --RL: rgba(220, 38, 38, 0.15);
+      --GL: rgba(22, 163, 74, 0.15);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--tx);
+      display: flex;
+      min-height: 100vh;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button {
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+    }
+
+    input,
+    select,
+    textarea {
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #86efac;
+      border-radius: 4px;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: .5;
+      }
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar {
+      width: var(--sw);
+      background: var(--sur);
+      border-right: 1px solid var(--br);
+      position: fixed;
+      inset: 0 auto 0 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 30;
+      transition: width .22s ease;
+      box-shadow: 2px 0 12px rgba(21, 128, 61, 0.05);
+    }
+
+    .sidebar.col {
+      width: var(--swm);
+    }
+
+    .sidebar.col .sb-label,
+    .sidebar.col .sb-badge,
+    .sidebar.col .sb-uname,
+    .sidebar.col .sb-udept,
+    .sidebar.col .sb-wm,
+    .sidebar.col .sb-sec {
+      display: none;
+    }
+
+    .sidebar.col .sb-logo {
+      padding: 12px 0;
+      justify-content: center;
+    }
+
+    .sidebar.col .sb-user {
+      padding: 10px 0;
+      justify-content: center;
+    }
+
+    .sidebar.col .sb-nav {
+      padding: 8px 6px;
+    }
+
+    .sidebar.col .nl {
+      justify-content: center;
+      padding: 10px 0;
+    }
+
+    .sb-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid var(--br);
+      cursor: pointer;
+      transition: background .15s;
+    }
+
+    .sb-logo:hover {
+      background: var(--PL);
+    }
+
+    .sb-mark {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+
+    .sb-wm {
+      display: flex;
+      align-items: baseline;
+      gap: 0px;
+    }
+
+    .sb-wc {
+      font-family: 'Satisfy', cursive;
+      font-size: 1.35rem;
+      font-weight: 400;
+      color: var(--PD);
+      letter-spacing: -0.01em;
+      text-shadow: 0 1px 0 rgba(20, 83, 45, 0.18);
+    }
+
+    .sb-wp {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 1.15rem;
+      color: var(--T);
+      letter-spacing: -0.02em;
+    }
+
+    .sb-dot {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 1rem;
+      color: var(--T);
+      margin: 0 1px;
+    }
+
+    .sb-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--br);
+      background: var(--bgs);
+    }
+
+    .co-av {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, var(--PD), var(--T));
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .co-av svg {
+      width: 18px;
+      height: 18px;
+      stroke: #fff;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .sb-uname {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .sb-udept {
+      font-size: 11px;
+      color: var(--txmu);
+      margin-top: 1px;
+    }
+
+    .sb-nav {
+      flex: 1;
+      padding: 10px 8px;
+      overflow-y: auto;
+    }
+
+    .sb-sec {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: var(--txl);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      padding: 10px 10px 4px;
+    }
+
+    .nl {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 10px;
+      border-radius: var(--rs);
+      font-size: 13px;
+      color: var(--txmu);
+      font-weight: 500;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      margin-bottom: 2px;
+      transition: background .12s, color .12s;
+      border-left: 3px solid transparent;
+    }
+
+    .nl:hover {
+      background: var(--PL);
+      color: var(--P);
+    }
+
+    .nl.on {
+      background: linear-gradient(90deg, var(--PL), rgba(220, 252, 231, .4));
+      color: var(--P);
+      font-weight: 600;
+      border-left: 3px solid var(--P);
+    }
+
+    .nl .ic {
+      width: 18px;
+      height: 18px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .nl .ic svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .sb-badge {
+      margin-left: auto;
+      background: var(--R);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      border-radius: 10px;
+      padding: 1px 6px;
+    }
+
+    .sb-badge.teal {
+      background: var(--T);
+    }
+
+    .sb-foot {
+      padding: 12px 8px;
+      border-top: 1px solid var(--br);
+    }
+
+    /* ─── MAIN ─── */
+    .main {
+      margin-left: var(--sw);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      transition: margin .22s ease;
+      min-height: 100vh;
+    }
+
+    .main.exp {
+      margin-left: var(--swm);
+    }
+
+    /* ─── TOPBAR ─── */
+    .topbar {
+      height: 58px;
+      background: var(--sur);
+      border-bottom: 1px solid var(--br);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 22px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 1px 8px rgba(21, 128, 61, 0.05);
+    }
+
+    .tb-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .tb-toggle {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      border: 1px solid var(--brs);
+      background: var(--bgs);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: background .12s, border .12s;
+    }
+
+    .tb-toggle:hover {
+      background: var(--PL);
+      border-color: var(--P);
+    }
+
+    .tb-toggle svg {
+      stroke: var(--txmu);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+
+    .tb-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--txm);
+    }
+
+    .tb-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 1px solid var(--brs);
+      background: var(--bgs);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: background .12s, border .12s;
+      position: relative;
+    }
+
+    .icon-btn:hover {
+      background: var(--PL);
+      border-color: var(--P);
+    }
+
+    .icon-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--txmu);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .rdot {
+      position: absolute;
+      top: 7px;
+      right: 7px;
+      width: 7px;
+      height: 7px;
+      background: var(--R);
+      border-radius: 50%;
+      border: 2px solid #fff;
+    }
+
+    .tb-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--PL);
+      border: 1px solid rgba(21, 128, 61, .15);
+      border-radius: 22px;
+      padding: 5px 12px 5px 6px;
+      cursor: pointer;
+      transition: background .12s;
+    }
+
+    .tb-chip:hover {
+      background: #bbf7d0;
+    }
+
+    .tb-av {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--PD), var(--T));
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 9px;
+      color: #fff;
+    }
+
+    /* ─── PAGES ─── */
+    .body {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    .page {
+      display: none;
+      animation: fadeUp .3s ease both;
+    }
+
+    .page.on {
+      display: block;
+    }
+
+    /* ─── CARDS & BLOCKS ─── */
+    .card {
+      background: var(--sur);
+      border: 1px solid var(--br);
+      border-radius: var(--r);
+      box-shadow: var(--sh);
+    }
+
+    .page-hd {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--txm);
+      margin-bottom: 20px;
+    }
+
+    .sec-hd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .sec-title {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--txm);
+    }
+
+    .sec-title svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .sec-link {
+      background: none;
+      border: none;
+      color: var(--P);
+      font-size: 12.5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .sec-link:hover {
+      text-decoration: underline;
+    }
+
+    /* ─── BUTTONS ─── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--P);
+      color: #fff;
+      border: none;
+      border-radius: var(--rs);
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s, transform .1s;
+    }
+
+    .btn:hover {
+      background: #166534;
+    }
+
+    .btn:active {
+      transform: scale(.98);
+    }
+
+    .btn.sec {
+      background: transparent;
+      color: var(--P);
+      border: 1.5px solid var(--P);
+    }
+
+    .btn.sec:hover {
+      background: var(--PL);
+    }
+
+    .btn.teal {
+      background: var(--T);
+    }
+
+    .btn.teal:hover {
+      background: var(--TD);
+    }
+
+    .btn.red {
+      background: var(--R);
+    }
+
+    .btn.red:hover {
+      background: #b91c1c;
+    }
+
+    .btn.sm {
+      padding: 5px 12px;
+      font-size: 12px;
+    }
+
+    .btn.lg {
+      padding: 10px 22px;
+      font-size: 14px;
+    }
+
+    .btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: #fff;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .btn.sec svg {
+      stroke: var(--P);
+    }
+
+    /* ─── PILLS ─── */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 100px;
+      padding: 3px 10px;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+
+    .pill.active {
+      background: var(--TL);
+      color: var(--TD);
+    }
+
+    .pill.new {
+      background: var(--PL);
+      color: var(--P);
+    }
+
+    .pill.review {
+      background: var(--PUL);
+      color: var(--PU);
+    }
+
+    .pill.short {
+      background: var(--AL);
+      color: #92400e;
+    }
+
+    .pill.interview {
+      background: var(--GL);
+      color: var(--G);
+    }
+
+    .pill.hired {
+      background: var(--GL);
+      color: var(--G);
+      border: 1px solid #86efac;
+    }
+
+    .pill.rejected {
+      background: var(--RL);
+      color: var(--R);
+    }
+
+    .pill.pending {
+      background: var(--AL);
+      color: #92400e;
+    }
+
+    .pill.closed {
+      background: #f3f4f6;
+      color: var(--txmu);
+    }
+
+    /* ─── GREET BANNER ─── */
+    .greet-banner {
+      background: linear-gradient(110deg, var(--PD) 0%, var(--P) 55%, var(--T) 100%);
+      border-radius: var(--r);
+      padding: 24px 28px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #fff;
+      box-shadow: var(--sh2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .greet-banner::before {
+      content: '';
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .05);
+      top: -80px;
+      right: 80px;
+      pointer-events: none;
+    }
+
+    .greet-banner::after {
+      content: '';
+      position: absolute;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .04);
+      bottom: -50px;
+      right: 240px;
+      pointer-events: none;
+    }
+
+    .greet-hi {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .greet-sub {
+      font-size: 13px;
+      opacity: .85;
+    }
+
+    .greet-right {
+      display: flex;
+      gap: 14px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .greet-stat {
+      text-align: center;
+      background: rgba(255, 255, 255, .12);
+      border-radius: 10px;
+      padding: 10px 18px;
+      border: 1px solid rgba(255, 255, 255, .15);
+    }
+
+    .greet-stat-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .greet-stat-lbl {
+      font-size: 10.5px;
+      opacity: .75;
+      margin-top: 3px;
+    }
+
+    /* ─── STAT CARDS ─── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: var(--sur);
+      border: 1px solid var(--br);
+      border-radius: var(--r);
+      padding: 16px;
+      transition: transform .15s, box-shadow .15s;
+      cursor: default;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--sh2);
+    }
+
+    .stat-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 10px;
+    }
+
+    .stat-icon svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .stat-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+
+    .stat-lbl {
+      font-size: 12px;
+      color: var(--txmu);
+      margin-bottom: 6px;
+    }
+
+    .stat-note {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11.5px;
+      font-weight: 500;
+    }
+
+    .stat-note svg {
+      width: 11px;
+      height: 11px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.5;
+    }
+
+    .stat-note.up {
+      color: var(--G);
+    }
+
+    .stat-note.warn {
+      color: var(--A);
+    }
+
+    .stat-note.info {
+      color: var(--txmu);
+    }
+
+    .stat-note.teal {
+      color: var(--T);
+    }
+
+    /* ─── DASH GRID ─── */
+    .dash-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 18px;
+    }
+
+    /* ─── TABLE ROWS ─── */
+    .tbl-head {
+      display: grid;
+      padding: 9px 16px;
+      background: var(--bgs);
+      border-bottom: 1px solid var(--br);
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--txmu);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .tbl-row {
+      display: grid;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--brs);
+      align-items: center;
+      transition: background .1s;
+      cursor: pointer;
+    }
+
+    .tbl-row:last-child {
+      border-bottom: none;
+    }
+
+    .tbl-row:hover {
+      background: var(--bgs);
+    }
+
+    .tbl-name {
+      font-size: 13.5px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .tbl-sub {
+      font-size: 11.5px;
+      color: var(--txmu);
+    }
+
+    .cand-grid {
+      grid-template-columns: 2fr 1.2fr 1fr 120px;
+    }
+
+    .job-grid {
+      grid-template-columns: 2fr 90px 80px 75px 130px;
+      gap: 8px;
+    }
+
+    /* ─── CANDIDATE CARD ─── */
+    .cand-card {
+      display: grid;
+      grid-template-columns: 40px 1fr auto;
+      gap: 12px;
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--brs);
+      align-items: center;
+      transition: background .1s;
+      cursor: pointer;
+    }
+
+    .cand-card:last-child {
+      border-bottom: none;
+    }
+
+    .cand-card:hover {
+      background: var(--bgs);
+    }
+
+    .cand-av {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--PD), var(--P));
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 12px;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .cand-name {
+      font-size: 13.5px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .cand-meta {
+      font-size: 11.5px;
+      color: var(--txmu);
+    }
+
+    .cand-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ─── DRIVE ROW ─── */
+    .drive-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--brs);
+    }
+
+    .drive-row:last-child {
+      border-bottom: none;
+    }
+
+    .drive-row:hover {
+      background: var(--bgs);
+    }
+
+    .dr-date {
+      width: 46px;
+      text-align: center;
+      background: var(--PL);
+      border-radius: 10px;
+      padding: 8px 4px;
+      flex-shrink: 0;
+    }
+
+    .dr-dd {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--P);
+      line-height: 1;
+    }
+
+    .dr-dm {
+      font-size: 9.5px;
+      color: var(--P);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-top: 1px;
+    }
+
+    .dr-info {
+      flex: 1;
+    }
+
+    .dr-name {
+      font-size: 13.5px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .dr-meta {
+      font-size: 11.5px;
+      color: var(--txmu);
+    }
+
+    /* ─── ACTIVITY ─── */
+    .act-row {
+      display: flex;
+      gap: 12px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--brs);
+    }
+
+    .act-row:last-child {
+      border-bottom: none;
+    }
+
+    .act-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    .act-text {
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .act-time {
+      font-size: 11px;
+      color: var(--txmu);
+      margin-top: 2px;
+    }
+
+    /* ─── CHART CARD ─── */
+    .chart-card {
+      background: var(--sur);
+      border: 1px solid var(--br);
+      border-radius: var(--r);
+      padding: 18px 20px;
+      box-shadow: var(--sh);
+    }
+
+    .chart-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 2px;
+      color: var(--txm);
+    }
+
+    .chart-sub {
+      font-size: 12px;
+      color: var(--txmu);
+      margin-bottom: 14px;
+    }
+
+    /* ─── TABS ─── */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid var(--br);
+      margin-bottom: 16px;
+    }
+
+    .tab {
+      background: none;
+      border: none;
+      padding: 9px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--txmu);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color .12s, border-color .12s;
+    }
+
+    .tab:hover {
+      color: var(--P);
+    }
+
+    .tab.on {
+      color: var(--P);
+      font-weight: 700;
+      border-bottom-color: var(--P);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.on {
+      display: block;
+    }
+
+    /* ─── FORM ─── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .fg {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .fg.full {
+      grid-column: 1/-1;
+    }
+
+    .fg label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--txmu);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .fg input,
+    .fg select,
+    .fg textarea {
+      background: var(--bgs);
+      border: 1px solid var(--br);
+      border-radius: var(--rs);
+      padding: 9px 12px;
+      font-size: 13px;
+      color: var(--tx);
+      outline: none;
+      transition: border .12s;
+    }
+
+    .fg input:focus,
+    .fg select:focus,
+    .fg textarea:focus {
+      border-color: var(--P);
+      background: #fff;
+    }
+
+    .fg textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .tag-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 8px 10px;
+      border: 1px solid var(--br);
+      border-radius: var(--rs);
+      min-height: 42px;
+      cursor: text;
+      background: var(--bgs);
+      transition: border .15s;
+    }
+
+    .tag-wrap:focus-within {
+      border-color: var(--P);
+    }
+
+    .tag {
+      background: var(--PL);
+      color: var(--P);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .tag button {
+      background: none;
+      border: none;
+      color: var(--P);
+      font-size: 14px;
+      line-height: 1;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .tag-input {
+      border: none;
+      background: none;
+      outline: none;
+      font-size: 13px;
+      min-width: 80px;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .cb-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .cb-item input[type=checkbox] {
+      width: 14px;
+      height: 14px;
+      accent-color: var(--P);
+    }
+
+    /* ─── MODAL ─── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 15, 30, .5);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .overlay.on {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--sur);
+      border-radius: var(--r);
+      width: 100%;
+      max-width: 640px;
+      max-height: 88vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, .2);
+      position: relative;
+      animation: fadeUp .25s ease;
+      padding: 24px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: var(--bg);
+      border: none;
+      border-radius: 8px;
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      color: var(--txmu);
+      font-size: 18px;
+    }
+
+    .modal-close:hover {
+      background: var(--RL);
+      color: var(--R);
+    }
+
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+      padding-right: 32px;
+    }
+
+    .modal-sub {
+      font-size: 12.5px;
+      color: var(--txmu);
+      margin-bottom: 18px;
+    }
+
+    /* ─── NOTIF PANEL ─── */
+    .notif-panel {
+      display: none;
+      position: fixed;
+      top: 62px;
+      right: 20px;
+      width: 310px;
+      background: var(--sur);
+      border: 1px solid var(--br);
+      border-radius: var(--r);
+      box-shadow: 0 8px 30px rgba(21, 128, 61, .12);
+      z-index: 40;
+      overflow: hidden;
+      animation: fadeUp .2s ease both;
+    }
+
+    .notif-panel.on {
+      display: block;
+    }
+
+    .notif-hdr {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--br);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .notif-hdr span {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .notif-hdr button {
+      background: none;
+      border: none;
+      color: var(--txmu);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .notif-item {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--brs);
+      display: flex;
+      gap: 10px;
+      cursor: pointer;
+      transition: background .1s;
+    }
+
+    .notif-item:hover {
+      background: var(--bgs);
+    }
+
+    .notif-item:last-child {
+      border-bottom: none;
+    }
+
+    .notif-item.unread {
+      background: rgba(21, 128, 61, 0.03);
+    }
+
+    .n-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    .n-dot.u {
+      background: var(--T);
+    }
+
+    .n-dot.r {
+      background: #d1d5db;
+    }
+
+    .n-text {
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+
+    .n-time {
+      font-size: 10.5px;
+      color: var(--txmu);
+      margin-top: 2px;
+    }
+
+    /* ─── TOAST ─── */
+    #toast {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: linear-gradient(135deg, var(--PD), var(--T));
+      color: #fff;
+      padding: 11px 20px;
+      border-radius: var(--rs);
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 999;
+      animation: fadeUp .3s ease both;
+      box-shadow: 0 4px 20px rgba(21, 128, 61, .22);
+    }
+
+    /* ─── COMPANY PROFILE HEADER ─── */
+    .cph {
+      background: var(--sur);
+      border: 1px solid var(--br);
+      border-radius: var(--r);
+      overflow: hidden;
+      margin-bottom: 18px;
+      box-shadow: var(--sh);
+    }
+
+    .cph-banner {
+      background: linear-gradient(120deg, var(--PD) 0%, var(--P) 55%, var(--T) 100%);
+      height: 110px;
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+      padding: 14px 18px;
+      overflow: hidden;
+    }
+
+    .cph-blob1 {
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .06);
+      top: -60px;
+      left: -30px;
+      pointer-events: none;
+    }
+
+    .cph-blob2 {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .05);
+      bottom: -50px;
+      right: 80px;
+      pointer-events: none;
+    }
+
+    .cph-edit-btn {
+      background: rgba(255, 255, 255, .18);
+      border: 1px solid rgba(255, 255, 255, .3);
+      color: #fff;
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      backdrop-filter: blur(6px);
+      transition: background .15s;
+      position: relative;
+      z-index: 2;
+    }
+
+    .cph-edit-btn:hover {
+      background: rgba(255, 255, 255, .28);
+    }
+
+    .cph-edit-btn svg {
+      width: 13px;
+      height: 13px;
+      stroke: #fff;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+
+    .cph-av-row {
+      padding: 0 20px;
+      margin-top: -38px;
+      margin-bottom: 0;
+    }
+
+    .cph-av-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .cph-av {
+      width: 72px;
+      height: 72px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--PD), var(--T));
+      display: grid;
+      place-items: center;
+      border: 4px solid #fff;
+      box-shadow: 0 6px 20px rgba(21, 128, 61, .22);
+      position: relative;
+      z-index: 2;
+    }
+
+    .cph-av svg {
+      width: 32px;
+      height: 32px;
+      stroke: #fff;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .cph-av-ring {
+      position: absolute;
+      inset: -5px;
+      border-radius: 18px;
+      border: 2px solid rgba(10, 173, 160, .35);
+      z-index: 1;
+    }
+
+    .cph-nameblock {
+      padding: 10px 20px 16px;
+    }
+
+    .cph-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--txm);
+      margin-bottom: 3px;
+    }
+
+    .cph-email {
+      font-size: 12.5px;
+      color: var(--txmu);
+      margin-bottom: 10px;
+    }
+
+    .cph-tags {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .cph-tag {
+      font-size: 11.5px;
+      font-weight: 600;
+      border-radius: 20px;
+      padding: 4px 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .cph-tag svg {
+      width: 11px;
+      height: 11px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+
+    .cph-tag.teal {
+      background: var(--TL);
+      color: var(--TD);
+    }
+
+    .cph-tag.green {
+      background: var(--GL);
+      color: var(--G);
+    }
+
+    .cph-tag.amber {
+      background: var(--AL);
+      color: #92400e;
+    }
+
+    .cph-body {
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      padding: 16px 20px 20px;
+      border-top: 1px solid var(--brs);
+    }
+
+    .cph-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      flex: 1;
+    }
+
+    .cph-stat {
+      background: var(--bgs);
+      border: 1px solid var(--brs);
+      border-radius: var(--rs);
+      padding: 14px 12px;
+      text-align: center;
+      transition: transform .15s, box-shadow .15s;
+    }
+
+    .cph-stat:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--sh);
+    }
+
+    .cph-stat-ico {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 8px;
+    }
+
+    .cph-stat-ico svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .cph-stat-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+
+    .cph-stat-lbl {
+      font-size: 11.5px;
+      color: var(--txmu);
+    }
+
+    /* ─── DETAIL BLOCK ─── */
+    .db {
+      background: var(--sur);
+      border: 1px solid var(--br);
+      border-radius: var(--r);
+      padding: 18px 20px;
+      margin-bottom: 14px;
+    }
+
+    .db-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--txm);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      border-bottom: 1px solid var(--brs);
+      padding-bottom: 10px;
+    }
+
+    .db-title svg {
+      width: 15px;
+      height: 15px;
+      stroke: var(--P);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .dg {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .df label {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--txmu);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .df p {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    /* ─── SETTINGS ─── */
+    .settings-card {
+      background: var(--sur);
+      border: 1px solid var(--br);
+      border-radius: var(--r);
+      max-width: 460px;
+      overflow: hidden;
+    }
+
+    .sr {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--brs);
+      font-size: 13.5px;
+    }
+
+    .sr:last-child {
+      border-bottom: none;
+    }
+
+    .toggle {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: #d1d5db;
+      border-radius: 100px;
+      transition: .3s;
+    }
+
+    .slider::before {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      left: 3px;
+      bottom: 3px;
+      background: #fff;
+      border-radius: 50%;
+      transition: .3s;
+    }
+
+    .toggle input:checked+.slider {
+      background: var(--P);
+    }
+
+    .toggle input:checked+.slider::before {
+      transform: translateX(18px);
+    }
+
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+      width: 100%;
+      max-width: 460px;
+      padding: 11px;
+      background: var(--RL);
+      border: 1px solid #fecaca;
+      border-radius: var(--rs);
+      color: var(--R);
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .logout-btn svg {
+      width: 15px;
+      height: 15px;
+      stroke: var(--R);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .logout-btn:hover {
+      background: #fee2e2;
+    }
+  </style>
 </head>
 
 <body>
 
-  <!-- ══ NOTIFICATION PANEL ══ -->
+  <!-- ══ NOTIF PANEL ══ -->
   <div class="notif-panel" id="notif-panel">
-    <div class="notif-h">
+    <div class="notif-hdr">
       <span>Notifications</span>
-      <button onclick="toggleNotif()">✕</button>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:11px;color:var(--P);font-weight:600;cursor:pointer;">Mark all read</span>
+        <button onclick="toggleNotif()">✕</button>
+      </div>
     </div>
-    <div class="notif-row"><span class="n-dot u"></span>
+    <div class="notif-item unread"><span class="n-dot u"></span>
       <div>
         <div class="n-text"><strong>Riya Sharma</strong> applied to Frontend Developer role.</div>
         <div class="n-time">10 min ago</div>
       </div>
     </div>
-    <div class="notif-row"><span class="n-dot u"></span>
+    <div class="notif-item unread"><span class="n-dot u"></span>
       <div>
         <div class="n-text">Campus drive at <strong>JNTU Hyderabad</strong> confirmed for Mar 18.</div>
         <div class="n-time">1 hour ago</div>
       </div>
     </div>
-    <div class="notif-row"><span class="n-dot u"></span>
+    <div class="notif-item unread"><span class="n-dot u"></span>
       <div>
         <div class="n-text"><strong>3 new applicants</strong> for Data Analyst role.</div>
         <div class="n-time">3 hours ago</div>
       </div>
     </div>
-    <div class="notif-row"><span class="n-dot r"></span>
+    <div class="notif-item"><span class="n-dot r"></span>
       <div>
         <div class="n-text">Job post "Cloud Engineer" expires in <strong>2 days</strong>.</div>
         <div class="n-time">Yesterday</div>
       </div>
     </div>
-    <div class="notif-row"><span class="n-dot r"></span>
+    <div class="notif-item"><span class="n-dot r"></span>
       <div>
         <div class="n-text">Interview with <strong>Arjun Reddy</strong> confirmed.</div>
         <div class="n-time">Yesterday</div>
       </div>
     </div>
   </div>
-
 
   <!-- ══ POST JOB MODAL ══ -->
   <div class="overlay" id="post-modal" onclick="closeOverlay(event,'post-modal')">
@@ -61,20 +1879,16 @@
       <div class="form-grid">
         <div class="fg"><label>Job Title *</label><input placeholder="e.g. Software Engineer Intern" /></div>
         <div class="fg"><label>Department</label><input placeholder="e.g. Engineering, Analytics" /></div>
-        <div class="fg"><label>Job Type *</label>
-          <select>
+        <div class="fg"><label>Job Type *</label><select>
             <option>Full Time</option>
             <option>Internship</option>
             <option>Part Time</option>
-          </select>
-        </div>
-        <div class="fg"><label>Work Mode</label>
-          <select>
+          </select></div>
+        <div class="fg"><label>Work Mode</label><select>
             <option>On-site</option>
             <option>Hybrid</option>
             <option>Remote</option>
-          </select>
-        </div>
+          </select></div>
         <div class="fg"><label>Location</label><input placeholder="e.g. Bangalore, Hyderabad" /></div>
         <div class="fg"><label>Package / CTC *</label><input placeholder="e.g. ₹12 LPA or ₹25,000/month" /></div>
         <div class="fg"><label>Application Deadline *</label><input type="date" /></div>
@@ -94,34 +1908,30 @@
             <span class="tag">JNTU Hyderabad<button onclick="removeTag(this)">×</button></span>
             <span class="tag">Osmania University<button onclick="removeTag(this)">×</button></span>
             <input class="tag-input" id="college-inp" placeholder="Type college name and press Enter…"
-              onkeydown="addCollegeTag(event)" />
+              onkeydown="addTagTo('college-tags','college-inp',event)" />
           </div>
-          <div style="font-size:11px;color:var(--sub);margin-top:4px;">Leave empty to post to all colleges on the
-            platform.</div>
+          <div style="font-size:11px;color:var(--txmu);margin-top:4px;">Leave empty to post to all colleges.</div>
         </div>
         <div class="fg full"><label>Required Skills</label>
           <div class="tag-wrap" id="skill-tags" onclick="document.getElementById('skill-inp').focus()">
             <span class="tag">React<button onclick="removeTag(this)">×</button></span>
             <span class="tag">Node.js<button onclick="removeTag(this)">×</button></span>
             <input class="tag-input" id="skill-inp" placeholder="Add skill and press Enter…"
-              onkeydown="addSkillTag(event)" />
+              onkeydown="addTagTo('skill-tags','skill-inp',event)" />
           </div>
         </div>
-        <div class="fg full"><label>Job Description *</label>
-          <textarea placeholder="Describe responsibilities, requirements, and what makes this role exciting…"
-            style="min-height:100px;"></textarea>
-        </div>
-        <div class="fg full"><label>Selection Process</label>
-          <input placeholder="e.g. Online Test → Technical Round → HR Round" />
-        </div>
+        <div class="fg full"><label>Job Description *</label><textarea
+            placeholder="Describe responsibilities, requirements, and what makes this role exciting…"
+            style="min-height:100px;"></textarea></div>
+        <div class="fg full"><label>Selection Process</label><input
+            placeholder="e.g. Online Test → Technical Round → HR Round" /></div>
       </div>
-      <div style="display:flex;gap:8px;margin-top:16px;">
+      <div style="display:flex;gap:8px;margin-top:18px;">
         <button class="btn lg"
           onclick="document.getElementById('post-modal').classList.remove('on');showToast('Job posted successfully!')">
           <svg viewBox="0 0 24 24">
             <path d="M5 13l4 4L19 7" />
-          </svg>
-          Post Job
+          </svg> Post Job
         </button>
         <button class="btn sec lg"
           onclick="document.getElementById('post-modal').classList.remove('on')">Cancel</button>
@@ -130,22 +1940,29 @@
   </div>
 
   <!-- ══ TOAST ══ -->
-  <div id="toast"
-    style="display:none;position:fixed;bottom:24px;right:24px;background:#134e4a;color:#fff;padding:11px 18px;border-radius:9px;font-size:13px;font-weight:600;z-index:99;animation:fadeIn .3s ease both;box-shadow:0 4px 20px rgba(0,0,0,.15);">
-    Job posted!
-  </div>
+  <div id="toast">Saved!</div>
 
   <!-- ══ SIDEBAR ══ -->
   <aside class="sidebar" id="sidebar">
-    <div class="sb-logo" onclick="toggleSidebar()" title="Click to collapse / expand">
-      <div class="sb-logo-mark" id="logo-mark">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 2L2 7l10 5 10-5-10-5z" />
-          <path d="M2 17l10 5 10-5" />
-          <path d="M2 12l10 5 10-5" />
-        </svg>
+    <div class="sb-logo" onclick="toggleSidebar()" title="Toggle sidebar">
+      <svg class="sb-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="48" height="48" rx="11" fill="url(#clg)" />
+        <defs>
+          <linearGradient id="clg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#166534" />
+            <stop offset="1" stop-color="#15803d" />
+          </linearGradient>
+        </defs>
+        <polygon points="24,11.5 39.5,19 24,26.5 8.5,19" fill="white" />
+        <polygon points="8.5,19 8.5,22 24,29.5 24,26.5" fill="white" opacity=".42" />
+        <polygon points="39.5,19 39.5,22 24,29.5 24,26.5" fill="white" opacity=".58" />
+        <path d="M16.5 21 L16.5 26.5 Q16.5 29.5 24 29.5 Q31.5 29.5 31.5 26.5 L31.5 21 Z" fill="white" />
+        <path d="M39.5 19 Q43 19 43 23 L43 29.5" stroke="white" stroke-width="1.5" fill="none" />
+        <circle cx="43" cy="29.5" r="2" fill="white" />
+      </svg>
+      <div class="sb-wm">
+        <span class="sb-wc">Campus</span><span class="sb-dot">.</span><span class="sb-wp">Place</span>
       </div>
-      <span class="sb-logo-name">Campus<span>Place</span></span>
     </div>
 
     <div class="sb-user">
@@ -162,70 +1979,78 @@
     </div>
 
     <nav class="sb-nav">
-      <div class="sb-label">Main</div>
+      <div class="sb-sec">Main</div>
       <button class="nl on" onclick="go('home',this)">
-        <svg class="ic" viewBox="0 0 24 24">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-          <polyline points="9 22 9 12 15 12 15 22" />
-        </svg>
-        <span class="sb-label-text">Dashboard</span>
+        <span class="ic"><svg viewBox="0 0 24 24">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+          </svg></span>
+        <span class="sb-label">Dashboard</span>
       </button>
       <button class="nl" onclick="go('jobs',this)">
-        <svg class="ic" viewBox="0 0 24 24">
-          <rect x="2" y="7" width="20" height="14" rx="2" />
-          <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-        </svg>
-        <span class="sb-label-text">Job Postings</span>
-        <span class="nb t">5</span>
+        <span class="ic"><svg viewBox="0 0 24 24">
+            <rect x="2" y="7" width="20" height="14" rx="2" />
+            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+          </svg></span>
+        <span class="sb-label">Job Postings</span>
+        <span class="sb-badge teal">5</span>
       </button>
       <button class="nl" onclick="go('candidates',this)">
-        <svg class="ic" viewBox="0 0 24 24">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg>
-        <span class="sb-label-text">Applicants</span>
-        <span class="nb">24</span>
+        <span class="ic"><svg viewBox="0 0 24 24">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg></span>
+        <span class="sb-label">Applicants</span>
+        <span class="sb-badge">24</span>
       </button>
       <button class="nl" onclick="go('drives',this)">
-        <svg class="ic" viewBox="0 0 24 24">
-          <rect x="3" y="4" width="18" height="18" rx="2" />
-          <line x1="16" y1="2" x2="16" y2="6" />
-          <line x1="8" y1="2" x2="8" y2="6" />
-          <line x1="3" y1="10" x2="21" y2="10" />
-        </svg>
-        <span class="sb-label-text">Campus Drives</span>
+        <span class="ic"><svg viewBox="0 0 24 24">
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg></span>
+        <span class="sb-label">Campus Drives</span>
       </button>
-
-      <div class="sb-label">Manage</div>
+      <div class="sb-sec">Manage</div>
       <button class="nl" onclick="go('profile',this)">
-        <svg class="ic" viewBox="0 0 24 24">
-          <rect x="2" y="7" width="20" height="14" rx="2" />
-          <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-          <line x1="12" y1="12" x2="12" y2="16" />
-          <line x1="10" y1="14" x2="14" y2="14" />
-        </svg>
-        <span class="sb-label-text">Company Profile</span>
+        <span class="ic"><svg viewBox="0 0 24 24">
+            <rect x="2" y="7" width="20" height="14" rx="2" />
+            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+            <line x1="12" y1="12" x2="12" y2="16" />
+            <line x1="10" y1="14" x2="14" y2="14" />
+          </svg></span>
+        <span class="sb-label">Company Profile</span>
+      </button>
+      <button class="nl" onclick="go('stats',this)">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10" />
+            <line x1="12" y1="20" x2="12" y2="4" />
+            <line x1="6" y1="20" x2="6" y2="14" />
+          </svg></span>
+        <span class="sb-label">Analytics</span>
       </button>
       <button class="nl" onclick="go('settings',this)">
-        <svg class="ic" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="3" />
-          <path
-            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-        </svg>
-        <span class="sb-label-text">Settings</span>
+        <span class="ic"><svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg></span>
+        <span class="sb-label">Settings</span>
       </button>
     </nav>
 
     <div class="sb-foot">
-      <button class="nl" style="color:var(--red);" onclick="logout()">
-        <svg class="ic" viewBox="0 0 24 24">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-          <polyline points="16 17 21 12 16 7" />
-          <line x1="21" y1="12" x2="9" y2="12" />
-        </svg>
-        <span class="sb-label-text">Log Out</span>
+      <button class="nl" style="color:var(--R);" onclick="logout()">
+        <span class="ic"><svg viewBox="0 0 24 24">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg></span>
+        <span class="sb-label">Log Out</span>
       </button>
     </div>
   </aside>
@@ -233,9 +2058,15 @@
   <!-- ══ MAIN ══ -->
   <div class="main" id="main-content">
 
-    <!-- TOPBAR -->
     <header class="topbar">
       <div class="tb-left">
+        <button class="tb-toggle" onclick="toggleSidebar()">
+          <svg width="16" height="16" viewBox="0 0 24 24">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
         <span class="tb-title" id="tb-title">Dashboard</span>
       </div>
       <div class="tb-right">
@@ -251,15 +2082,15 @@
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
             <path d="M13.73 21a2 2 0 0 1-3.46 0" />
           </svg>
-          <span class="rdot" id="notif-rdot"></span>
+          <span class="rdot"></span>
         </div>
-        <div class="tb-chip" onclick="go('profile', document.querySelectorAll('.nl')[4])" title="Company Profile">
-          <div class="tb-chip-av">
-            <svg viewBox="0 0 24 24">
-              <rect x="2" y="7" width="20" height="14" rx="2" />
-              <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-            </svg>
-          </div>
+        <div class="icon-btn" onclick="toggleDarkMode()" id="top-dark-toggle">
+          <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </div>
+        <div class="tb-chip" onclick="go('profile',document.querySelector('.nl[onclick*=profile]'))">
+          <div class="tb-av">IN</div>
           <span id="tb-name">Infosys</span>
         </div>
       </div>
@@ -267,86 +2098,174 @@
 
     <div class="body">
 
-      <!-- ════ DASHBOARD HOME ════ -->
+      <!-- ══════════ DASHBOARD HOME ══════════ -->
       <div class="page on" id="pg-home">
-        <div class="banner">
-          <div>
-            <h2 id="greet-msg">Good morning, Infosys Technologies</h2>
-            <p>You have 24 pending applicants and 2 campus drives this month.</p>
+
+        <div class="greet-banner">
+          <div style="flex:1;">
+            <div class="greet-hi" id="greet-msg">Good morning, Infosys 👋</div>
+            <div class="greet-sub">You have <strong>3 new applicants</strong> and 1 drive pending approval.</div>
+            <div class="co-action-card">
+              <div class="cac-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+              <div class="cac-info">
+                <div class="cac-top">Upcoming Action</div>
+                <div class="cac-main"><strong>JNTU Campus Drive</strong> Preparation</div>
+                <div class="cac-sub">Mar 18 · Ensure all student assessments are ready.</div>
+              </div>
+              <button class="btn sm" onclick="go('drives',document.querySelector('.nl[onclick*=drives]'))" style="margin-left:auto;background:#fff;color:var(--P);">Manage Drive</button>
+            </div>
           </div>
-          <div class="banner-icon">
-            <svg viewBox="0 0 24 24">
-              <rect x="2" y="7" width="20" height="14" rx="2" />
-              <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-              <line x1="12" y1="12" x2="12" y2="16" />
-              <line x1="10" y1="14" x2="14" y2="14" />
-            </svg>
+          <div class="greet-right">
+            <div class="greet-stat">
+              <div class="greet-stat-val">24</div>
+              <div class="greet-stat-lbl">Applicants</div>
+            </div>
+            <div class="greet-stat">
+              <div class="greet-stat-val">5</div>
+              <div class="greet-stat-lbl">Active Jobs</div>
+            </div>
+            <div class="greet-stat">
+              <div class="greet-stat-val">Mar 18</div>
+              <div class="greet-stat-lbl">Next Drive</div>
+            </div>
           </div>
         </div>
 
-        <div class="stats">
-          <div class="stat">
-            <div class="stat-icon t"><svg viewBox="0 0 24 24">
+        <!-- Stat cards — recruiter/company metrics -->
+        <div class="stats-row">
+          <div class="stat-card" onclick="go('jobs',document.querySelector('.nl[onclick*=jobs]'))"
+            style="cursor:pointer;">
+            <div class="stat-icon" style="background:var(--PL);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--P)" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
                 <rect x="2" y="7" width="20" height="14" rx="2" />
                 <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-              </svg></div>
-            <div class="stat-body">
-              <div class="stat-l">Active Jobs</div>
-              <div class="stat-v">5</div>
-              <div class="stat-n t">2 closing soon</div>
+              </svg>
+            </div>
+            <div class="stat-val" style="color:var(--P);">5</div>
+            <div class="stat-lbl">Active Job Posts</div>
+            <div class="stat-note warn">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              2 closing in 5 days
             </div>
           </div>
-          <div class="stat">
-            <div class="stat-icon g"><svg viewBox="0 0 24 24">
+          <div class="stat-card" onclick="go('candidates',document.querySelector('.nl[onclick*=candidates]'))"
+            style="cursor:pointer;">
+            <div class="stat-icon" style="background:var(--TL);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--T)" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                 <circle cx="9" cy="7" r="4" />
-              </svg></div>
-            <div class="stat-body">
-              <div class="stat-l">Total Applicants</div>
-              <div class="stat-v">24</div>
-              <div class="stat-n g">+8 this week</div>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </div>
+            <div class="stat-val" style="color:var(--T);">24</div>
+            <div class="stat-lbl">Total Applicants</div>
+            <div class="stat-note up">
+              <svg viewBox="0 0 24 24">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                <polyline points="17 6 23 6 23 12" />
+              </svg>
+              +3 new today
             </div>
           </div>
-          <div class="stat">
-            <div class="stat-icon a"><svg viewBox="0 0 24 24">
-                <rect x="3" y="4" width="18" height="18" rx="2" />
-                <line x1="16" y1="2" x2="16" y2="6" />
-                <line x1="8" y1="2" x2="8" y2="6" />
-                <line x1="3" y1="10" x2="21" y2="10" />
-              </svg></div>
-            <div class="stat-body">
-              <div class="stat-l">Drives This Month</div>
-              <div class="stat-v">2</div>
-              <div class="stat-n a">Next: Mar 18</div>
+          <div class="stat-card" onclick="go('candidates',document.querySelector('.nl[onclick*=candidates]'))"
+            style="cursor:pointer;">
+            <div class="stat-icon" style="background:var(--AL);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--A)" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+            </div>
+            <div class="stat-val" style="color:var(--A);">9</div>
+            <div class="stat-lbl">Shortlisted</div>
+            <div class="stat-note warn">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              4 interview-ready
             </div>
           </div>
-          <div class="stat">
-            <div class="stat-icon r"><svg viewBox="0 0 24 24">
-                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-              </svg></div>
-            <div class="stat-body">
-              <div class="stat-l">Shortlisted</div>
-              <div class="stat-v">9</div>
-              <div class="stat-n s">Pending interviews</div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--GL);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--G)" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <circle cx="12" cy="8" r="6" />
+                <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+              </svg>
+            </div>
+            <div class="stat-val" style="color:var(--G);">3</div>
+            <div class="stat-lbl">Offers Extended</div>
+            <div class="stat-note up">
+              <svg viewBox="0 0 24 24">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                <polyline points="17 6 23 6 23 12" />
+              </svg>
+              All accepted
             </div>
           </div>
         </div>
 
-        <div class="cols">
+        <!-- Main dash grid -->
+        <div class="dash-grid">
+          <!-- Left -->
           <div>
-            <!-- Recent Applicants -->
-            <div class="block">
-              <div class="bh">
-                <span class="bt">
-                  <svg viewBox="0 0 24 24">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                  </svg>
-                  Recent Applicants
-                </span>
-                <button class="va" onclick="go('candidates',document.querySelectorAll('.nl')[2])">View all →</button>
+            <!-- Applicant funnel chart -->
+            <div class="sec-hd">
+              <div class="sec-title">
+                <svg viewBox="0 0 24 24" stroke="var(--P)">
+                  <line x1="18" y1="20" x2="18" y2="10" />
+                  <line x1="12" y1="20" x2="12" y2="4" />
+                  <line x1="6" y1="20" x2="6" y2="14" />
+                </svg>
+                Applicant Funnel — This Cycle
               </div>
-              <div class="app-card">
+            </div>
+            <div class="chart-card" style="margin-bottom:16px;">
+              <div style="position:relative;height:190px;"><canvas id="chart-funnel"></canvas></div>
+            </div>
+
+            <!-- Hiring trend chart -->
+            <div class="sec-hd">
+              <div class="sec-title">
+                <svg viewBox="0 0 24 24" stroke="var(--T)">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+                Monthly Hiring Activity
+              </div>
+              <div style="display:flex;gap:12px;">
+                <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--txmu);"><span
+                    style="width:9px;height:9px;border-radius:2px;background:var(--P);display:inline-block;"></span>Applications
+                </div>
+                <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--txmu);"><span
+                    style="width:9px;height:9px;border-radius:2px;background:var(--T);display:inline-block;"></span>Hired
+                </div>
+              </div>
+            </div>
+            <div class="chart-card" style="margin-bottom:16px;">
+              <div style="position:relative;height:180px;"><canvas id="chart-trend"></canvas></div>
+            </div>
+
+            <!-- Recent applicants -->
+            <div class="sec-hd">
+              <div class="sec-title">
+                <svg viewBox="0 0 24 24" stroke="var(--txm)">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                </svg>
+                Recent Applicants
+              </div>
+              <button class="sec-link"
+                onclick="go('candidates',document.querySelector('.nl[onclick*=candidates]'))">View all →</button>
+            </div>
+            <div class="card" style="padding:0;">
+              <div class="cand-card">
                 <div class="cand-av">RS</div>
                 <div>
                   <div class="cand-name">Riya Sharma</div>
@@ -354,8 +2273,8 @@
                 </div>
                 <div class="cand-right"><span class="pill new">New</span><button class="btn sm">Review</button></div>
               </div>
-              <div class="app-card">
-                <div class="cand-av">AK</div>
+              <div class="cand-card">
+                <div class="cand-av" style="background:linear-gradient(135deg,#14532d,#0aada0);">AK</div>
                 <div>
                   <div class="cand-name">Arjun Kumar</div>
                   <div class="cand-meta">IT · CGPA 8.2 · Osmania University · Data Analyst</div>
@@ -363,8 +2282,8 @@
                 <div class="cand-right"><span class="pill short">Shortlisted</span><button
                     class="btn sm">Review</button></div>
               </div>
-              <div class="app-card">
-                <div class="cand-av">PM</div>
+              <div class="cand-card">
+                <div class="cand-av" style="background:linear-gradient(135deg,#16a34a,#0aada0);">PM</div>
                 <div>
                   <div class="cand-name">Priya Menon</div>
                   <div class="cand-meta">CSE · CGPA 9.1 · IIT Hyderabad · Backend Engineer</div>
@@ -372,8 +2291,8 @@
                 <div class="cand-right"><span class="pill interview">Interview</span><button
                     class="btn sm">Review</button></div>
               </div>
-              <div class="app-card">
-                <div class="cand-av">VR</div>
+              <div class="cand-card">
+                <div class="cand-av" style="background:linear-gradient(135deg,#7c3aed,#15803d);">VR</div>
                 <div>
                   <div class="cand-name">Vikram Reddy</div>
                   <div class="cand-meta">ECE · CGPA 7.6 · NIT Warangal · Cloud Engineer</div>
@@ -382,131 +2301,141 @@
                 </div>
               </div>
             </div>
-
-            <!-- Active Job Posts -->
-            <div class="block">
-              <div class="bh">
-                <span class="bt">
-                  <svg viewBox="0 0 24 24">
-                    <rect x="2" y="7" width="20" height="14" rx="2" />
-                    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-                  </svg>
-                  Active Job Posts
-                </span>
-                <button class="va" onclick="go('jobs',document.querySelectorAll('.nl')[1])">View all →</button>
-              </div>
-              <div class="tr-head job-grid">
-                <span>Role</span><span>Type</span><span>Applicants</span><span>Deadline</span><span>Status</span></div>
-              <div class="tr job-grid">
-                <div>
-                  <div class="tr-name">Frontend Developer</div>
-                  <div class="tr-sub">Bangalore · ₹12 LPA</div>
-                </div>
-                <span style="font-size:12.5px;color:var(--sub);">Full Time</span>
-                <span style="font-size:13px;font-weight:600;">11</span>
-                <span style="font-size:12px;color:var(--sub);">Mar 20</span>
-                <span class="pill active">Active</span>
-              </div>
-              <div class="tr job-grid">
-                <div>
-                  <div class="tr-name">Data Analyst</div>
-                  <div class="tr-sub">Hyderabad · ₹18 LPA</div>
-                </div>
-                <span style="font-size:12.5px;color:var(--sub);">Full Time</span>
-                <span style="font-size:13px;font-weight:600;">8</span>
-                <span style="font-size:12px;color:var(--red);">Mar 15</span>
-                <span class="pill active">Active</span>
-              </div>
-              <div class="tr job-grid">
-                <div>
-                  <div class="tr-name">Cloud Engineer</div>
-                  <div class="tr-sub">Remote · ₹16 LPA</div>
-                </div>
-                <span style="font-size:12.5px;color:var(--sub);">Full Time</span>
-                <span style="font-size:13px;font-weight:600;">5</span>
-                <span style="font-size:12px;color:var(--sub);">Apr 5</span>
-                <span class="pill active">Active</span>
-              </div>
-            </div>
           </div>
 
-          <!-- Right column -->
+          <!-- Right -->
           <div>
-            <!-- Upcoming Drives -->
-            <div class="block" style="margin-bottom:14px;">
-              <div class="bh">
-                <span class="bt">
-                  <svg viewBox="0 0 24 24">
-                    <rect x="3" y="4" width="18" height="18" rx="2" />
-                    <line x1="16" y1="2" x2="16" y2="6" />
-                    <line x1="8" y1="2" x2="8" y2="6" />
-                    <line x1="3" y1="10" x2="21" y2="10" />
-                  </svg>
-                  Campus Drives
-                </span>
-                <button class="va" onclick="go('drives',document.querySelectorAll('.nl')[3])">View all →</button>
+            <!-- Campus drives -->
+            <div class="sec-hd">
+              <div class="sec-title">
+                <svg viewBox="0 0 24 24" stroke="#d97706">
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                Campus Drives
               </div>
+              <button class="sec-link" onclick="go('drives',document.querySelector('.nl[onclick*=drives]'))">View all
+                →</button>
+            </div>
+            <div class="card" style="padding:0;margin-bottom:16px;">
               <div class="drive-row">
-                <div class="date-box">
-                  <div class="date-d">18</div>
-                  <div class="date-m">Mar</div>
+                <div class="dr-date">
+                  <div class="dr-dd">18</div>
+                  <div class="dr-dm">Mar</div>
                 </div>
-                <div class="drive-info">
-                  <div class="drive-name">JNTU Hyderabad</div>
-                  <div class="drive-meta">10:00 AM · Main Hall · 120 students</div>
+                <div class="dr-info">
+                  <div class="dr-name">JNTU Hyderabad</div>
+                  <div class="dr-meta">10:00 AM · Main Hall · 120 students</div>
                 </div>
                 <span class="pill active">Confirmed</span>
               </div>
               <div class="drive-row">
-                <div class="date-box">
-                  <div class="date-d">25</div>
-                  <div class="date-m">Mar</div>
+                <div class="dr-date">
+                  <div class="dr-dd">25</div>
+                  <div class="dr-dm">Mar</div>
                 </div>
-                <div class="drive-info">
-                  <div class="drive-name">Osmania University</div>
-                  <div class="drive-meta">9:00 AM · Seminar Hall · 80 students</div>
+                <div class="dr-info">
+                  <div class="dr-name">Osmania University</div>
+                  <div class="dr-meta">9:00 AM · Seminar Hall · 80 students</div>
                 </div>
                 <span class="pill pending">Pending</span>
               </div>
               <div class="drive-row">
-                <div class="date-box">
-                  <div class="date-d">3</div>
-                  <div class="date-m">Apr</div>
+                <div class="dr-date" style="background:var(--bgs);">
+                  <div class="dr-dd" style="color:var(--P);">3</div>
+                  <div class="dr-dm" style="color:var(--P);">Apr</div>
                 </div>
-                <div class="drive-info">
-                  <div class="drive-name">NIT Warangal</div>
-                  <div class="drive-meta">Online · Zoom · 200 students</div>
+                <div class="dr-info">
+                  <div class="dr-name">NIT Warangal</div>
+                  <div class="dr-meta">Online · Zoom · 200 students</div>
                 </div>
                 <span class="pill pending">Pending</span>
               </div>
             </div>
 
-            <!-- Recent Activity -->
-            <div class="block">
-              <div class="bh"><span class="bt"><svg viewBox="0 0 24 24">
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                  </svg> Recent Activity</span></div>
-              <div class="act-row"><span class="act-dot t"></span>
+            <!-- Branch-wise applicant chart -->
+            <div class="sec-hd">
+              <div class="sec-title">
+                <svg viewBox="0 0 24 24" stroke="var(--P)">
+                  <path
+                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                </svg>
+                Applicants by Branch
+              </div>
+            </div>
+            <div class="chart-card" style="margin-bottom:16px;">
+              <div style="position:relative;height:150px;"><canvas id="chart-branch"></canvas></div>
+            </div>
+
+            <!-- Active job posts -->
+            <div class="sec-hd">
+              <div class="sec-title">
+                <svg viewBox="0 0 24 24" stroke="var(--G)">
+                  <rect x="2" y="7" width="20" height="14" rx="2" />
+                  <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                </svg>
+                Active Job Posts
+              </div>
+              <button class="sec-link" onclick="go('jobs',document.querySelector('.nl[onclick*=jobs]'))">View all
+                →</button>
+            </div>
+            <div class="card" style="padding:0;">
+              <div class="drive-row" style="padding:12px 16px;">
+                <div style="flex:1;">
+                  <div class="dr-name">Frontend Developer</div>
+                  <div class="dr-meta">Bangalore · ₹12 LPA · 11 applicants</div>
+                </div>
+                <span class="pill active">Active</span>
+              </div>
+              <div class="drive-row" style="padding:12px 16px;">
+                <div style="flex:1;">
+                  <div class="dr-name">Data Analyst</div>
+                  <div class="dr-meta">Hyderabad · ₹18 LPA · 8 applicants</div>
+                </div>
+                <span class="pill active">Active</span>
+              </div>
+              <div class="drive-row" style="padding:12px 16px;">
+                <div style="flex:1;">
+                  <div class="dr-name">Cloud Engineer</div>
+                  <div class="dr-meta">Remote · ₹16 LPA · 5 applicants</div>
+                </div>
+                <span class="pill active">Active</span>
+              </div>
+            </div>
+
+            <!-- Recent activity -->
+            <div class="sec-hd" style="margin-top:16px;">
+              <div class="sec-title">
+                <svg viewBox="0 0 24 24" stroke="var(--T)">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+                Recent Activity
+              </div>
+            </div>
+            <div class="card" style="padding:0;">
+              <div class="act-row"><span class="act-dot" style="background:var(--T);"></span>
                 <div>
                   <div class="act-text"><strong>Riya Sharma</strong> applied to Frontend Developer.</div>
                   <div class="act-time">10 min ago</div>
                 </div>
               </div>
-              <div class="act-row"><span class="act-dot g"></span>
+              <div class="act-row"><span class="act-dot" style="background:var(--G);"></span>
                 <div>
                   <div class="act-text"><strong>Priya Menon</strong> moved to Interview stage.</div>
                   <div class="act-time">2 hours ago</div>
                 </div>
               </div>
-              <div class="act-row"><span class="act-dot a"></span>
+              <div class="act-row"><span class="act-dot" style="background:var(--A);"></span>
                 <div>
                   <div class="act-text">Job post "Cloud Engineer" expires in 2 days.</div>
                   <div class="act-time">Yesterday</div>
                 </div>
               </div>
-              <div class="act-row"><span class="act-dot t"></span>
+              <div class="act-row"><span class="act-dot" style="background:var(--P);"></span>
                 <div>
-                  <div class="act-text">JNTU Hyderabad drive confirmed for Mar 18.</div>
+                  <div class="act-text">JNTU drive confirmed for Mar 18.</div>
                   <div class="act-time">Yesterday</div>
                 </div>
               </div>
@@ -515,10 +2444,17 @@
         </div>
       </div><!-- /pg-home -->
 
-      <!-- ════ JOB POSTINGS ════ -->
+      <!-- ══════════ JOB POSTINGS ══════════ -->
       <div class="page" id="pg-jobs">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-          <span class="sec-h" style="margin:0;">Job Postings</span>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+          <div class="page-hd" style="margin:0;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--P)" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="7" width="20" height="14" rx="2" />
+              <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+            </svg>
+            Job Postings
+          </div>
           <button class="btn" onclick="document.getElementById('post-modal').classList.add('on')">
             <svg viewBox="0 0 24 24">
               <line x1="12" y1="5" x2="12" y2="19" />
@@ -528,124 +2464,125 @@
           </button>
         </div>
         <div class="tabs">
-          <button class="tab on" onclick="swtab('jt','active',this)">Active (5)</button>
-          <button class="tab" onclick="swtab('jt','closed',this)">Closed (3)</button>
-          <button class="tab" onclick="swtab('jt','draft',this)">Drafts (1)</button>
+          <button class="tab on" onclick="swtab('jt','active',this)">Active <span
+              style="background:var(--PL);color:var(--P);font-size:10px;font-weight:700;border-radius:10px;padding:1px 7px;margin-left:4px;">5</span></button>
+          <button class="tab" onclick="swtab('jt','closed',this)">Closed <span
+              style="background:var(--bgs);color:var(--txmu);font-size:10px;font-weight:700;border-radius:10px;padding:1px 7px;margin-left:4px;">3</span></button>
+          <button class="tab" onclick="swtab('jt','draft',this)">Drafts <span
+              style="background:var(--AL);color:#92400e;font-size:10px;font-weight:700;border-radius:10px;padding:1px 7px;margin-left:4px;">1</span></button>
         </div>
         <div class="tab-panel on" id="jt-active">
-          <div class="block">
-            <div class="tr-head job-grid"><span>Role &
+          <div class="card" style="padding:0;">
+            <div class="tbl-head job-grid"><span>Role &
                 Location</span><span>Type</span><span>Applicants</span><span>Deadline</span><span>Status</span></div>
-            <div class="tr job-grid">
+            <div class="tbl-row job-grid">
               <div>
-                <div class="tr-name">Frontend Developer</div>
-                <div class="tr-sub">Bangalore · ₹12 LPA · CSE, IT</div>
-              </div>
-              <span style="font-size:12.5px;color:var(--sub);">Full Time</span>
-              <span style="font-size:13px;font-weight:600;color:var(--teal-dark);">11</span>
-              <span style="font-size:12px;color:var(--sub);">Mar 20</span>
+                <div class="tbl-name">Frontend Developer</div>
+                <div class="tbl-sub">Bangalore · ₹12 LPA · CSE, IT</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
+                style="font-size:13px;font-weight:700;color:var(--G);">11</span><span
+                style="font-size:12px;color:var(--txmu);">Mar 20</span>
               <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
                   class="btn sm sec">Edit</button></div>
             </div>
-            <div class="tr job-grid">
+            <div class="tbl-row job-grid">
               <div>
-                <div class="tr-name">Data Analyst</div>
-                <div class="tr-sub">Hyderabad · ₹18 LPA · CSE, IT, EEE</div>
-              </div>
-              <span style="font-size:12.5px;color:var(--sub);">Full Time</span>
-              <span style="font-size:13px;font-weight:600;color:var(--teal-dark);">8</span>
-              <span style="font-size:12px;color:var(--red);">Mar 15</span>
+                <div class="tbl-name">Data Analyst</div>
+                <div class="tbl-sub">Hyderabad · ₹18 LPA · CSE, IT, EEE</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
+                style="font-size:13px;font-weight:700;color:var(--G);">8</span><span
+                style="font-size:12px;color:var(--R);font-weight:700;">Mar 15</span>
               <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
                   class="btn sm sec">Edit</button></div>
             </div>
-            <div class="tr job-grid">
+            <div class="tbl-row job-grid">
               <div>
-                <div class="tr-name">Cloud Engineer</div>
-                <div class="tr-sub">Remote · ₹16 LPA · All branches</div>
-              </div>
-              <span style="font-size:12.5px;color:var(--sub);">Full Time</span>
-              <span style="font-size:13px;font-weight:600;color:var(--teal-dark);">5</span>
-              <span style="font-size:12px;color:var(--sub);">Apr 5</span>
+                <div class="tbl-name">Cloud Engineer</div>
+                <div class="tbl-sub">Remote · ₹16 LPA · All branches</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
+                style="font-size:13px;font-weight:700;color:var(--G);">5</span><span
+                style="font-size:12px;color:var(--txmu);">Apr 5</span>
               <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
                   class="btn sm sec">Edit</button></div>
             </div>
-            <div class="tr job-grid">
+            <div class="tbl-row job-grid">
               <div>
-                <div class="tr-name">Backend Engineer</div>
-                <div class="tr-sub">Pune · ₹14 LPA · CSE, IT</div>
-              </div>
-              <span style="font-size:12.5px;color:var(--sub);">Full Time</span>
-              <span style="font-size:13px;font-weight:600;color:var(--teal-dark);">0</span>
-              <span style="font-size:12px;color:var(--sub);">Apr 12</span>
+                <div class="tbl-name">Backend Engineer</div>
+                <div class="tbl-sub">Pune · ₹14 LPA · CSE, IT</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
+                style="font-size:13px;font-weight:700;color:var(--txmu);">0</span><span
+                style="font-size:12px;color:var(--txmu);">Apr 12</span>
               <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
                   class="btn sm sec">Edit</button></div>
             </div>
-            <div class="tr job-grid">
+            <div class="tbl-row job-grid">
               <div>
-                <div class="tr-name">React Developer Intern</div>
-                <div class="tr-sub">Remote · ₹25k/mo · CSE, IT</div>
-              </div>
-              <span style="font-size:12.5px;color:var(--sub);">Internship</span>
-              <span style="font-size:13px;font-weight:600;color:var(--teal-dark);">0</span>
-              <span style="font-size:12px;color:var(--sub);">Apr 18</span>
+                <div class="tbl-name">React Developer Intern</div>
+                <div class="tbl-sub">Remote · ₹25k/mo · CSE, IT</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">Internship</span><span
+                style="font-size:13px;font-weight:700;color:var(--txmu);">0</span><span
+                style="font-size:12px;color:var(--txmu);">Apr 18</span>
               <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
                   class="btn sm sec">Edit</button></div>
             </div>
           </div>
         </div>
         <div class="tab-panel" id="jt-closed">
-          <div class="block">
-            <div class="tr-head job-grid"><span>Role &
+          <div class="card" style="padding:0;">
+            <div class="tbl-head job-grid"><span>Role &
                 Location</span><span>Type</span><span>Applicants</span><span>Closed On</span><span>Status</span></div>
-            <div class="tr job-grid">
+            <div class="tbl-row job-grid">
               <div>
-                <div class="tr-name">ML Engineer</div>
-                <div class="tr-sub">Bangalore · ₹22 LPA</div>
-              </div>
-              <span style="font-size:12.5px;color:var(--sub);">Full Time</span>
-              <span style="font-size:13px;font-weight:600;">18</span>
-              <span style="font-size:12px;color:var(--sub);">Mar 1</span>
-              <span class="pill closed">Closed</span>
+                <div class="tbl-name">ML Engineer</div>
+                <div class="tbl-sub">Bangalore · ₹22 LPA</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
+                style="font-size:13px;font-weight:700;">18</span><span style="font-size:12px;color:var(--txmu);">Mar
+                1</span><span class="pill closed">Closed</span>
             </div>
-            <div class="tr job-grid">
+            <div class="tbl-row job-grid">
               <div>
-                <div class="tr-name">DevOps Engineer</div>
-                <div class="tr-sub">Hyderabad · ₹20 LPA</div>
-              </div>
-              <span style="font-size:12.5px;color:var(--sub);">Full Time</span>
-              <span style="font-size:13px;font-weight:600;">12</span>
-              <span style="font-size:12px;color:var(--sub);">Feb 20</span>
-              <span class="pill closed">Closed</span>
+                <div class="tbl-name">DevOps Engineer</div>
+                <div class="tbl-sub">Hyderabad · ₹20 LPA</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
+                style="font-size:13px;font-weight:700;">12</span><span style="font-size:12px;color:var(--txmu);">Feb
+                20</span><span class="pill closed">Closed</span>
             </div>
-            <div class="tr job-grid">
+            <div class="tbl-row job-grid">
               <div>
-                <div class="tr-name">Systems Engineer</div>
-                <div class="tr-sub">Chennai · ₹10 LPA</div>
-              </div>
-              <span style="font-size:12.5px;color:var(--sub);">Full Time</span>
-              <span style="font-size:13px;font-weight:600;">22</span>
-              <span style="font-size:12px;color:var(--sub);">Feb 10</span>
-              <span class="pill closed">Closed</span>
+                <div class="tbl-name">Systems Engineer</div>
+                <div class="tbl-sub">Chennai · ₹10 LPA</div>
+              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
+                style="font-size:13px;font-weight:700;">22</span><span style="font-size:12px;color:var(--txmu);">Feb
+                10</span><span class="pill closed">Closed</span>
             </div>
           </div>
         </div>
         <div class="tab-panel" id="jt-draft">
-          <div class="block">
-            <div class="act-row" style="align-items:center;gap:14px;">
+          <div class="card" style="padding:14px 16px;">
+            <div style="display:flex;align-items:center;gap:14px;">
               <div style="flex:1;">
-                <div class="tr-name">Full Stack Developer</div>
-                <div class="tr-sub">Not published · Created Mar 7</div>
+                <div class="tbl-name">Full Stack Developer</div>
+                <div class="tbl-sub">Not published · Created Mar 7</div>
               </div>
-              <button class="btn sm">Publish</button>
+              <button class="btn sm teal">Publish</button>
               <button class="btn sm sec">Edit</button>
             </div>
           </div>
         </div>
       </div><!-- /pg-jobs -->
 
-      <!-- ════ APPLICANTS ════ -->
+      <!-- ══════════ APPLICANTS ══════════ -->
       <div class="page" id="pg-candidates">
-        <div class="sec-h">All Applicants</div>
+        <div class="page-hd">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--P)" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+          All Applicants
+        </div>
         <div class="tabs">
           <button class="tab on" onclick="swtab('at','all',this)">All (24)</button>
           <button class="tab" onclick="swtab('at','new',this)">New (8)</button>
@@ -654,149 +2591,143 @@
           <button class="tab" onclick="swtab('at','hired',this)">Hired (3)</button>
         </div>
         <div class="tab-panel on" id="at-all">
-          <div class="block">
-            <div class="tr-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
+          <div class="card" style="padding:0;">
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
                 CGPA</span><span>Status</span></div>
-            <div class="tr cand-grid">
+            <div class="tbl-row cand-grid">
               <div>
-                <div class="tr-name">Riya Sharma</div>
-                <div class="tr-sub">Mar 10 · Resume attached</div>
-              </div>
-              <span style="font-size:13px;">Frontend Developer</span>
-              <span style="font-size:12.5px;color:var(--sub);">JNTU Hyd · 8.9</span>
+                <div class="tbl-name">Riya Sharma</div>
+                <div class="tbl-sub">Mar 10 · Resume attached</div>
+              </div><span style="font-size:13px;">Frontend Developer</span><span
+                style="font-size:12.5px;color:var(--txmu);">JNTU Hyd · 8.9</span>
               <div style="display:flex;gap:6px;align-items:center;"><span class="pill new">New</span><button
                   class="btn sm">Review</button></div>
             </div>
-            <div class="tr cand-grid">
+            <div class="tbl-row cand-grid">
               <div>
-                <div class="tr-name">Arjun Kumar</div>
-                <div class="tr-sub">Mar 8 · Resume attached</div>
-              </div>
-              <span style="font-size:13px;">Data Analyst</span>
-              <span style="font-size:12.5px;color:var(--sub);">Osmania · 8.2</span>
+                <div class="tbl-name">Arjun Kumar</div>
+                <div class="tbl-sub">Mar 8 · Resume attached</div>
+              </div><span style="font-size:13px;">Data Analyst</span><span
+                style="font-size:12.5px;color:var(--txmu);">Osmania · 8.2</span>
               <div style="display:flex;gap:6px;align-items:center;"><span class="pill short">Shortlisted</span><button
                   class="btn sm">Review</button></div>
             </div>
-            <div class="tr cand-grid">
+            <div class="tbl-row cand-grid">
               <div>
-                <div class="tr-name">Priya Menon</div>
-                <div class="tr-sub">Mar 7 · Resume attached</div>
-              </div>
-              <span style="font-size:13px;">Backend Engineer</span>
-              <span style="font-size:12.5px;color:var(--sub);">IIT Hyd · 9.1</span>
+                <div class="tbl-name">Priya Menon</div>
+                <div class="tbl-sub">Mar 7 · Resume attached</div>
+              </div><span style="font-size:13px;">Backend Engineer</span><span
+                style="font-size:12.5px;color:var(--txmu);">IIT Hyd · 9.1</span>
               <div style="display:flex;gap:6px;align-items:center;"><span class="pill interview">Interview</span><button
                   class="btn sm">Review</button></div>
             </div>
-            <div class="tr cand-grid">
+            <div class="tbl-row cand-grid">
               <div>
-                <div class="tr-name">Vikram Reddy</div>
-                <div class="tr-sub">Mar 7 · Resume attached</div>
-              </div>
-              <span style="font-size:13px;">Cloud Engineer</span>
-              <span style="font-size:12.5px;color:var(--sub);">NIT Warangal · 7.6</span>
+                <div class="tbl-name">Vikram Reddy</div>
+                <div class="tbl-sub">Mar 7 · Resume attached</div>
+              </div><span style="font-size:13px;">Cloud Engineer</span><span
+                style="font-size:12.5px;color:var(--txmu);">NIT Warangal · 7.6</span>
               <div style="display:flex;gap:6px;align-items:center;"><span class="pill review">Reviewing</span><button
                   class="btn sm">Review</button></div>
             </div>
-            <div class="tr cand-grid">
+            <div class="tbl-row cand-grid">
               <div>
-                <div class="tr-name">Sneha Rao</div>
-                <div class="tr-sub">Mar 6 · Resume attached</div>
-              </div>
-              <span style="font-size:13px;">Data Analyst</span>
-              <span style="font-size:12.5px;color:var(--sub);">CBIT · 8.5</span>
+                <div class="tbl-name">Sneha Rao</div>
+                <div class="tbl-sub">Mar 6 · Resume attached</div>
+              </div><span style="font-size:13px;">Data Analyst</span><span
+                style="font-size:12.5px;color:var(--txmu);">CBIT · 8.5</span>
               <div style="display:flex;gap:6px;align-items:center;"><span class="pill hired">Hired</span><button
                   class="btn sm sec">View</button></div>
             </div>
-            <div class="tr cand-grid">
+            <div class="tbl-row cand-grid">
               <div>
-                <div class="tr-name">Karan Patel</div>
-                <div class="tr-sub">Mar 5 · Resume attached</div>
-              </div>
-              <span style="font-size:13px;">Frontend Developer</span>
-              <span style="font-size:12.5px;color:var(--sub);">VIT Chennai · 7.8</span>
+                <div class="tbl-name">Karan Patel</div>
+                <div class="tbl-sub">Mar 5 · Resume attached</div>
+              </div><span style="font-size:13px;">Frontend Developer</span><span
+                style="font-size:12.5px;color:var(--txmu);">VIT Chennai · 7.8</span>
               <div style="display:flex;gap:6px;align-items:center;"><span class="pill rejected">Rejected</span><button
                   class="btn sm sec">View</button></div>
             </div>
           </div>
         </div>
         <div class="tab-panel" id="at-new">
-          <div class="block">
-            <div class="tr-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
+          <div class="card" style="padding:0;">
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
                 CGPA</span><span>Action</span></div>
-            <div class="tr cand-grid">
+            <div class="tbl-row cand-grid">
               <div>
-                <div class="tr-name">Riya Sharma</div>
-                <div class="tr-sub">Mar 10</div>
-              </div>
-              <span style="font-size:13px;">Frontend Developer</span>
-              <span style="font-size:12.5px;color:var(--sub);">JNTU Hyd · 8.9</span>
+                <div class="tbl-name">Riya Sharma</div>
+                <div class="tbl-sub">Mar 10</div>
+              </div><span>Frontend Developer</span><span style="font-size:12.5px;color:var(--txmu);">JNTU Hyd ·
+                8.9</span>
               <div style="display:flex;gap:6px;"><button class="btn sm">Shortlist</button><button
                   class="btn sm red">Reject</button></div>
             </div>
-            <div class="tr cand-grid">
+            <div class="tbl-row cand-grid">
               <div>
-                <div class="tr-name">Lakshmi V</div>
-                <div class="tr-sub">Mar 10</div>
-              </div>
-              <span style="font-size:13px;">React Intern</span>
-              <span style="font-size:12.5px;color:var(--sub);">Osmania · 8.0</span>
+                <div class="tbl-name">Lakshmi V</div>
+                <div class="tbl-sub">Mar 10</div>
+              </div><span>React Intern</span><span style="font-size:12.5px;color:var(--txmu);">Osmania · 8.0</span>
               <div style="display:flex;gap:6px;"><button class="btn sm">Shortlist</button><button
                   class="btn sm red">Reject</button></div>
             </div>
           </div>
         </div>
         <div class="tab-panel" id="at-short">
-          <div class="block">
-            <div class="tr-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
+          <div class="card" style="padding:0;">
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
                 CGPA</span><span>Action</span></div>
-            <div class="tr cand-grid">
+            <div class="tbl-row cand-grid">
               <div>
-                <div class="tr-name">Arjun Kumar</div>
-                <div class="tr-sub">Mar 8</div>
-              </div>
-              <span>Data Analyst</span>
-              <span style="font-size:12.5px;color:var(--sub);">Osmania · 8.2</span>
-              <div style="display:flex;gap:6px;"><button class="btn sm">Schedule Interview</button></div>
+                <div class="tbl-name">Arjun Kumar</div>
+                <div class="tbl-sub">Mar 8</div>
+              </div><span>Data Analyst</span><span style="font-size:12.5px;color:var(--txmu);">Osmania · 8.2</span>
+              <div style="display:flex;gap:6px;"><button class="btn sm teal">Schedule Interview</button></div>
             </div>
           </div>
         </div>
         <div class="tab-panel" id="at-interview">
-          <div class="block">
-            <div class="tr-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
+          <div class="card" style="padding:0;">
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
                 CGPA</span><span>Action</span></div>
-            <div class="tr cand-grid">
+            <div class="tbl-row cand-grid">
               <div>
-                <div class="tr-name">Priya Menon</div>
-                <div class="tr-sub">Mar 18, 10 AM</div>
-              </div>
-              <span>Backend Engineer</span>
-              <span style="font-size:12.5px;color:var(--sub);">IIT Hyd · 9.1</span>
+                <div class="tbl-name">Priya Menon</div>
+                <div class="tbl-sub">Mar 18, 10 AM</div>
+              </div><span>Backend Engineer</span><span style="font-size:12.5px;color:var(--txmu);">IIT Hyd · 9.1</span>
               <div style="display:flex;gap:6px;"><button class="btn sm">Mark Hired</button><button
                   class="btn sm red">Reject</button></div>
             </div>
           </div>
         </div>
         <div class="tab-panel" id="at-hired">
-          <div class="block">
-            <div class="tr-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
+          <div class="card" style="padding:0;">
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
                 CGPA</span><span>Status</span></div>
-            <div class="tr cand-grid">
+            <div class="tbl-row cand-grid">
               <div>
-                <div class="tr-name">Sneha Rao</div>
-                <div class="tr-sub">Offer sent Mar 6</div>
-              </div>
-              <span>Data Analyst</span>
-              <span style="font-size:12.5px;color:var(--sub);">CBIT · 8.5</span>
-              <span class="pill hired">Hired</span>
+                <div class="tbl-name">Sneha Rao</div>
+                <div class="tbl-sub">Offer sent Mar 6</div>
+              </div><span>Data Analyst</span><span style="font-size:12.5px;color:var(--txmu);">CBIT · 8.5</span><span
+                class="pill hired">Hired</span>
             </div>
           </div>
         </div>
       </div><!-- /pg-candidates -->
 
-      <!-- ════ CAMPUS DRIVES ════ -->
+      <!-- ══════════ CAMPUS DRIVES ══════════ -->
       <div class="page" id="pg-drives">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-          <span class="sec-h" style="margin:0;">Campus Drives</span>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+          <div class="page-hd" style="margin:0;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--P)" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+            Campus Drives
+          </div>
           <button class="btn" onclick="showToast('Schedule drive feature coming soon.')">
             <svg viewBox="0 0 24 24">
               <line x1="12" y1="5" x2="12" y2="19" />
@@ -805,102 +2736,183 @@
             Schedule Drive
           </button>
         </div>
-        <div class="block">
-          <div class="bh"><span class="bt">Upcoming Drives</span></div>
+        <div class="card" style="padding:0;margin-bottom:16px;">
+          <div
+            style="padding:12px 16px;border-bottom:1px solid var(--brs);font-size:12px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.06em;background:var(--bgs);">
+            Upcoming Drives</div>
           <div class="drive-row">
-            <div class="date-box">
-              <div class="date-d">18</div>
-              <div class="date-m">Mar</div>
+            <div class="dr-date">
+              <div class="dr-dd">18</div>
+              <div class="dr-dm">Mar</div>
             </div>
-            <div class="drive-info">
-              <div class="drive-name">JNTU Hyderabad</div>
-              <div class="drive-meta">10:00 AM · CSE Block Hall · 120 registered students · Roles: SDE, Systems Engineer
+            <div class="dr-info">
+              <div class="dr-name">JNTU Hyderabad</div>
+              <div class="dr-meta">10:00 AM · CSE Block Hall · 120 registered students · Roles: SDE, Systems Engineer
               </div>
-            </div>
-            <span class="pill active">Confirmed</span>
+            </div><span class="pill active">Confirmed</span>
           </div>
           <div class="drive-row">
-            <div class="date-box">
-              <div class="date-d">25</div>
-              <div class="date-m">Mar</div>
+            <div class="dr-date">
+              <div class="dr-dd">25</div>
+              <div class="dr-dm">Mar</div>
             </div>
-            <div class="drive-info">
-              <div class="drive-name">Osmania University</div>
-              <div class="drive-meta">9:00 AM · Seminar Hall B · 80 students · Roles: Data Analyst</div>
-            </div>
-            <span class="pill pending">Pending TPO</span>
+            <div class="dr-info">
+              <div class="dr-name">Osmania University</div>
+              <div class="dr-meta">9:00 AM · Seminar Hall B · 80 students · Roles: Data Analyst</div>
+            </div><span class="pill pending">Pending TPO</span>
           </div>
           <div class="drive-row">
-            <div class="date-box">
-              <div class="date-d">3</div>
-              <div class="date-m">Apr</div>
+            <div class="dr-date">
+              <div class="dr-dd">3</div>
+              <div class="dr-dm">Apr</div>
             </div>
-            <div class="drive-info">
-              <div class="drive-name">NIT Warangal</div>
-              <div class="drive-meta">Online · Zoom · 200 students · All roles</div>
-            </div>
-            <span class="pill pending">Pending TPO</span>
+            <div class="dr-info">
+              <div class="dr-name">NIT Warangal</div>
+              <div class="dr-meta">Online · Zoom · 200 students · All roles</div>
+            </div><span class="pill pending">Pending TPO</span>
           </div>
         </div>
-        <div class="block">
-          <div class="bh"><span class="bt">Completed Drives</span></div>
+        <div class="card" style="padding:0;">
+          <div
+            style="padding:12px 16px;border-bottom:1px solid var(--brs);font-size:12px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.06em;background:var(--bgs);">
+            Completed Drives</div>
           <div class="drive-row">
-            <div class="date-box" style="background:#f3f4f6;">
-              <div class="date-d" style="color:var(--sub);">10</div>
-              <div class="date-m" style="color:var(--sub);">Mar</div>
+            <div class="dr-date" style="background:var(--bgs);">
+              <div class="dr-dd" style="color:var(--txmu);">10</div>
+              <div class="dr-dm" style="color:var(--txmu);">Mar</div>
             </div>
-            <div class="drive-info">
-              <div class="drive-name">VIT Chennai</div>
-              <div class="drive-meta">Completed · 95 attended · 8 selected</div>
-            </div>
-            <span class="pill closed">Done</span>
+            <div class="dr-info">
+              <div class="dr-name">VIT Chennai</div>
+              <div class="dr-meta">Completed · 95 attended · 8 selected</div>
+            </div><span class="pill closed">Done</span>
           </div>
           <div class="drive-row">
-            <div class="date-box" style="background:#f3f4f6;">
-              <div class="date-d" style="color:var(--sub);">28</div>
-              <div class="date-m" style="color:var(--sub);">Feb</div>
+            <div class="dr-date" style="background:var(--bgs);">
+              <div class="dr-dd" style="color:var(--txmu);">28</div>
+              <div class="dr-dm" style="color:var(--txmu);">Feb</div>
             </div>
-            <div class="drive-info">
-              <div class="drive-name">CBIT Hyderabad</div>
-              <div class="drive-meta">Completed · 60 attended · 5 selected</div>
-            </div>
-            <span class="pill closed">Done</span>
+            <div class="dr-info">
+              <div class="dr-name">CBIT Hyderabad</div>
+              <div class="dr-meta">Completed · 60 attended · 5 selected</div>
+            </div><span class="pill closed">Done</span>
           </div>
         </div>
       </div><!-- /pg-drives -->
 
-      <!-- ════ COMPANY PROFILE ════ -->
+      <!-- ══════════ COMPANY PROFILE ══════════ -->
       <div class="page" id="pg-profile">
-        <div class="profile-card-hdr">
-          <div class="profile-banner-st">
-            <button class="edit-prof-btn" onclick="toggleEdit()">
-              <i data-lucide="edit-3"></i> Edit Profile
+        <!-- Unique profile header card -->
+        <div class="cph">
+          <div class="cph-banner">
+            <div class="cph-blob1"></div>
+            <div class="cph-blob2"></div>
+            <button class="cph-edit-btn" onclick="toggleCpEdit()">
+              <svg viewBox="0 0 24 24">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+              </svg>
+              Edit Profile
             </button>
           </div>
-          <div class="profile-av-row">
-            <div class="profile-big-av">
-              <svg viewBox="0 0 24 24">
-                <rect x="2" y="7" width="20" height="25" rx="2" />
-                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
-                <line x1="12" y1="12" x2="12" y2="16" />
-                <line x1="10" y1="14" x2="14" y2="14" />
-              </svg>
+          <!-- Company avatar overlapping banner -->
+          <div class="cph-av-row">
+            <div class="cph-av-wrap">
+              <div class="cph-av">
+                <svg viewBox="0 0 24 24">
+                  <rect x="2" y="7" width="20" height="14" rx="2" />
+                  <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                  <line x1="12" y1="12" x2="12" y2="16" />
+                  <line x1="10" y1="14" x2="14" y2="14" />
+                </svg>
+              </div>
+              <div class="cph-av-ring"></div>
             </div>
-            <div class="profile-info">
-              <div class="profile-co-name" id="pg-coname">Infosys Technologies Ltd.</div>
-              <div class="profile-co-meta" id="pg-coemail">hr@infosys.com</div>
+          </div>
+          <!-- Name + email + tags below banner on white -->
+          <div class="cph-nameblock">
+            <div class="cph-name" id="pg-coname">Infosys Technologies Ltd.</div>
+            <div class="cph-email" id="pg-coemail">hr@infosys.com</div>
+            <div class="cph-tags">
+              <span class="cph-tag teal">
+                <svg viewBox="0 0 24 24">
+                  <rect x="2" y="7" width="20" height="14" rx="2" />
+                  <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                </svg>
+                IT Services
+              </span>
+              <span class="cph-tag green">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                Verified
+              </span>
+              <span class="cph-tag amber">
+                <svg viewBox="0 0 24 24">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                Bangalore
+              </span>
             </div>
-            <div class="profile-badges">
-              <span class="p-badge t"><i data-lucide="briefcase"></i> IT Services</span>
-              <span class="p-badge g"><i data-lucide="check-circle"></i> Verified</span>
-              <span class="p-badge a"><i data-lucide="map-pin"></i> Bangalore</span>
+          </div>
+          <!-- Stats row -->
+          <div class="cph-body">
+            <div class="cph-stats">
+              <div class="cph-stat">
+                <div class="cph-stat-ico" style="background:var(--PL);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="var(--P)" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <rect x="2" y="7" width="20" height="14" rx="2" />
+                    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                  </svg>
+                </div>
+                <div class="cph-stat-val" style="color:var(--P);">5</div>
+                <div class="cph-stat-lbl">Active Posts</div>
+              </div>
+              <div class="cph-stat">
+                <div class="cph-stat-ico" style="background:var(--TL);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="var(--T)" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                  </svg>
+                </div>
+                <div class="cph-stat-val" style="color:var(--T);">24</div>
+                <div class="cph-stat-lbl">Total Applicants</div>
+              </div>
+              <div class="cph-stat">
+                <div class="cph-stat-ico" style="background:var(--AL);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="var(--A)" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                    <path d="M9 16l2 2 4-4" />
+                  </svg>
+                </div>
+                <div class="cph-stat-val" style="color:var(--A);">2</div>
+                <div class="cph-stat-lbl">Campus Drives</div>
+              </div>
+              <div class="cph-stat">
+                <div class="cph-stat-ico" style="background:var(--GL);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="var(--G)" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <circle cx="12" cy="8" r="6" />
+                    <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+                  </svg>
+                </div>
+                <div class="cph-stat-val" style="color:var(--G);">3</div>
+                <div class="cph-stat-lbl">Offers Made</div>
+              </div>
             </div>
           </div>
         </div>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-          <div class="form-card">
-            <div class="form-title">
+          <div class="db">
+            <div class="db-title">
               <svg viewBox="0 0 24 24">
                 <rect x="2" y="7" width="20" height="14" rx="2" />
                 <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
@@ -908,62 +2920,45 @@
               Company Details
             </div>
             <div id="cp-view">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                <div>
-                  <div
-                    style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">
-                    Company Name</div>
-                  <div style="font-size:13.5px;font-weight:500;">Infosys Technologies Ltd.</div>
+              <div class="dg">
+                <div class="df"><label>Company Name</label>
+                  <p>Infosys Technologies Ltd.</p>
                 </div>
-                <div>
-                  <div
-                    style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">
-                    Industry</div>
-                  <div style="font-size:13.5px;font-weight:500;">IT Services & Consulting</div>
+                <div class="df"><label>Industry</label>
+                  <p>IT Services & Consulting</p>
                 </div>
-                <div>
-                  <div
-                    style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">
-                    Company Size</div>
-                  <div style="font-size:13.5px;font-weight:500;">10,000+ Employees</div>
+                <div class="df"><label>Company Size</label>
+                  <p>10,000+ Employees</p>
                 </div>
-                <div>
-                  <div
-                    style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">
-                    Headquarters</div>
-                  <div style="font-size:13.5px;font-weight:500;">Bangalore, Karnataka</div>
+                <div class="df"><label>Headquarters</label>
+                  <p>Bangalore, Karnataka</p>
                 </div>
-                <div>
-                  <div
-                    style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">
-                    Website</div>
-                  <div style="font-size:13.5px;font-weight:500;color:var(--teal-dark);">infosys.com</div>
+                <div class="df"><label>Website</label>
+                  <p style="color:var(--T);">infosys.com</p>
                 </div>
-                <div>
-                  <div
-                    style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">
-                    Official HR Email</div>
-                  <div style="font-size:13.5px;font-weight:500;">hr@infosys.com</div>
+                <div class="df"><label>HR Email</label>
+                  <p>hr@infosys.com</p>
                 </div>
               </div>
               <div style="margin-top:14px;">
                 <div
-                  style="font-size:10.5px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;">
+                  style="font-size:10.5px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;">
                   About</div>
-                <div style="font-size:13px;line-height:1.65;color:var(--sub);">Infosys is a global leader in
-                  next-generation digital services and consulting. We enable clients in more than 50 countries to
-                  navigate their digital transformation.</div>
+                <div style="font-size:13px;line-height:1.65;color:var(--txmu);">Infosys is a global leader in
+                  next-generation digital services and consulting, enabling clients in 50+ countries to navigate digital
+                  transformation.</div>
               </div>
-              <button class="btn sec" style="margin-top:14px;" onclick="toggleCpEdit()">
-                <svg viewBox="0 0 24 24"
-                  style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                </svg>
-                Edit Profile
-              </button>
+              <div style="margin-top:18px;">
+                <div style="font-size:10.5px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">Hiring Process</div>
+                <div class="hiring-steps">
+                  <div class="hstep"><span class="hnum">1</span><span>Application Screen</span></div>
+                  <div class="hstep"><span class="hnum">2</span><span>Aptitude Test</span></div>
+                  <div class="hstep"><span class="hnum">3</span><span>Technical Round</span></div>
+                  <div class="hstep"><span class="hnum">4</span><span>HR Discussion</span></div>
+                </div>
+              </div>
             </div>
-            <div id="cp-edit" style="display:none;">
+            <div id="cp-edit" style="display:none;margin-top:14px;">
               <div class="form-grid">
                 <div class="fg"><label>Company Name</label><input value="Infosys Technologies Ltd." /></div>
                 <div class="fg"><label>Industry</label><input value="IT Services & Consulting" /></div>
@@ -976,51 +2971,21 @@
                   </select></div>
                 <div class="fg"><label>Headquarters</label><input value="Bangalore, Karnataka" /></div>
                 <div class="fg"><label>Website</label><input value="infosys.com" /></div>
-                <div class="fg"><label>HR Contact Email</label><input value="hr@infosys.com" /></div>
-                <div class="fg full"><label>About Company</label><textarea
+                <div class="fg"><label>HR Email</label><input value="hr@infosys.com" /></div>
+                <div class="fg full"><label>About</label><textarea
                     style="min-height:80px;">Infosys is a global leader in next-generation digital services and consulting.</textarea>
                 </div>
               </div>
-              <div style="display:flex;gap:8px;margin-top:4px;">
+              <div style="display:flex;gap:8px;margin-top:14px;">
                 <button class="btn lg" onclick="toggleCpEdit();showToast('Profile updated successfully.')">Save
                   Changes</button>
                 <button class="btn sec lg" onclick="toggleCpEdit()">Cancel</button>
               </div>
             </div>
           </div>
-
           <div>
-            <div class="form-card" style="margin-bottom:14px;">
-              <div class="form-title">
-                <svg viewBox="0 0 24 24">
-                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                </svg>
-                Hiring Stats
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;">
-                  <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--teal-dark);">5
-                  </div>
-                  <div style="font-size:11.5px;color:var(--sub);margin-top:2px;">Active Jobs</div>
-                </div>
-                <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;">
-                  <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--green);">24
-                  </div>
-                  <div style="font-size:11.5px;color:var(--sub);margin-top:2px;">Total Applicants</div>
-                </div>
-                <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;">
-                  <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--amber);">2
-                  </div>
-                  <div style="font-size:11.5px;color:var(--sub);margin-top:2px;">Drives This Month</div>
-                </div>
-                <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;">
-                  <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--blue);">3</div>
-                  <div style="font-size:11.5px;color:var(--sub);margin-top:2px;">Hired This Year</div>
-                </div>
-              </div>
-            </div>
-            <div class="form-card">
-              <div class="form-title">
+            <div class="db" style="margin-bottom:14px;">
+              <div class="db-title">
                 <svg viewBox="0 0 24 24">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
@@ -1028,32 +2993,237 @@
               </div>
               <div style="display:flex;flex-direction:column;gap:8px;">
                 <div
-                  style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 10px;background:var(--bg);border-radius:7px;">
+                  style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 12px;background:var(--bgs);border-radius:var(--rs);border:1px solid var(--brs);">
                   <span>JNTU Hyderabad</span><span class="pill active">Active</span></div>
                 <div
-                  style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 10px;background:var(--bg);border-radius:7px;">
+                  style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 12px;background:var(--bgs);border-radius:var(--rs);border:1px solid var(--brs);">
                   <span>Osmania University</span><span class="pill active">Active</span></div>
                 <div
-                  style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 10px;background:var(--bg);border-radius:7px;">
+                  style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 12px;background:var(--bgs);border-radius:var(--rs);border:1px solid var(--brs);">
                   <span>NIT Warangal</span><span class="pill pending">Pending</span></div>
                 <div
-                  style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 10px;background:var(--bg);border-radius:7px;">
+                  style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 12px;background:var(--bgs);border-radius:var(--rs);border:1px solid var(--brs);">
                   <span>VIT Chennai</span><span class="pill active">Active</span></div>
               </div>
+            </div>
+            <!-- Hiring pipeline mini chart -->
+            <div class="db" style="margin-bottom:14px;">
+              <div class="db-title"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Company Vibe</div>
+              <div class="vibe-grid">
+                <div class="vibe-card">🚀 <strong>Innovation</strong> Focus</div>
+                <div class="vibe-card">🏠 <strong>Hybrid</strong> Friendly</div>
+                <div class="vibe-card">📚 <strong>Learning</strong> Budgets</div>
+              </div>
+            </div>
+            <div class="db">
+              <div class="db-title">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+                Hiring Pipeline
+              </div>
+              <div style="position:relative;height:160px;"><canvas id="chart-profile-pipe"></canvas></div>
             </div>
           </div>
         </div>
       </div><!-- /pg-profile -->
 
-      <!-- ════ SETTINGS ════ -->
+
+      <!-- ══════════ ANALYTICS & STATS ══════════ -->
+      <div class="page" id="pg-stats">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;">
+          <div class="page-hd" style="margin:0;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--P)" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10" />
+              <line x1="12" y1="20" x2="12" y2="4" />
+              <line x1="6" y1="20" x2="6" y2="14" />
+            </svg>
+            Recruitment Analytics
+          </div>
+          <select id="stats-period" onchange="renderStatsCharts()"
+            style="background:var(--bgs);border:1px solid var(--br);border-radius:var(--rs);padding:7px 12px;font-size:13px;color:var(--tx);outline:none;">
+            <option value="month">This Month</option>
+            <option value="quarter" selected>This Quarter</option>
+            <option value="year">This Year</option>
+          </select>
+        </div>
+
+        <!-- Summary stat cards -->
+        <div class="stats-row" style="margin-bottom:22px;">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--PL);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--P)" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </div>
+            <div class="stat-val" style="color:var(--P);">109</div>
+            <div class="stat-lbl">Total Applications</div>
+            <div class="stat-note up">
+              <svg viewBox="0 0 24 24">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                <polyline points="17 6 23 6 23 12" />
+              </svg>
+              +22% vs last quarter
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--TL);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--T)" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+            </div>
+            <div class="stat-val" style="color:var(--T);">38</div>
+            <div class="stat-lbl">Shortlisted</div>
+            <div class="stat-note teal">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              34.9% shortlist rate
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--GL);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--G)" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <circle cx="12" cy="8" r="6" />
+                <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+              </svg>
+            </div>
+            <div class="stat-val" style="color:var(--G);">12</div>
+            <div class="stat-lbl">Offers Extended</div>
+            <div class="stat-note up">
+              <svg viewBox="0 0 24 24">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                <polyline points="17 6 23 6 23 12" />
+              </svg>
+              11% offer rate
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--AL);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--A)" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </div>
+            <div class="stat-val" style="color:var(--A);">18</div>
+            <div class="stat-lbl">Avg. Days to Hire</div>
+            <div class="stat-note warn">
+              <svg viewBox="0 0 24 24">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                <polyline points="17 6 23 6 23 12" />
+              </svg>
+              -3 days vs last qtr
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts row 1 -->
+        <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:18px;margin-bottom:18px;">
+          <div class="chart-card">
+            <div class="chart-title">Monthly Application & Hire Trend</div>
+            <div class="chart-sub">Applications received vs offers extended per month</div>
+            <div style="display:flex;gap:14px;margin-bottom:12px;">
+              <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--txmu);"><span
+                  style="width:9px;height:9px;border-radius:2px;background:#15803d;display:inline-block;"></span>Applications
+              </div>
+              <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--txmu);"><span
+                  style="width:9px;height:9px;border-radius:2px;background:#0aada0;display:inline-block;"></span>Shortlisted
+              </div>
+              <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--txmu);"><span
+                  style="width:9px;height:9px;border-radius:2px;background:#16a34a;display:inline-block;"></span>Hired
+              </div>
+            </div>
+            <div style="position:relative;height:210px;"><canvas id="chart-s-trend"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Hiring Funnel</div>
+            <div class="chart-sub">Candidate drop-off at each stage</div>
+            <div style="position:relative;height:250px;"><canvas id="chart-s-funnel"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Charts row 2 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;">
+          <div class="chart-card">
+            <div class="chart-title">Applications by Branch</div>
+            <div class="chart-sub">Which departments are applying most</div>
+            <div style="display:flex;align-items:center;gap:18px;">
+              <div style="position:relative;width:160px;height:160px;flex-shrink:0;">
+                <canvas id="chart-s-branch"></canvas>
+                <div
+                  style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
+                  <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:800;color:var(--P);">109
+                  </div>
+                  <div style="font-size:10px;color:var(--txmu);">total</div>
+                </div>
+              </div>
+              <div style="flex:1;" id="branch-legend"></div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Applications by College</div>
+            <div class="chart-sub">Top recruiting colleges this quarter</div>
+            <div style="position:relative;height:180px;"><canvas id="chart-s-college"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Charts row 3 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+          <div class="chart-card">
+            <div class="chart-title">Job Post Performance</div>
+            <div class="chart-sub">Applications received per active job post</div>
+            <div style="position:relative;height:200px;"><canvas id="chart-s-jobs"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Offer Acceptance Rate</div>
+            <div class="chart-sub">Accepted vs declined offers by month</div>
+            <div style="display:flex;gap:12px;margin-bottom:10px;">
+              <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--txmu);"><span
+                  style="width:9px;height:9px;border-radius:2px;background:#16a34a;display:inline-block;"></span>Accepted
+              </div>
+              <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--txmu);"><span
+                  style="width:9px;height:9px;border-radius:2px;background:#dc2626;display:inline-block;"></span>Declined
+              </div>
+            </div>
+            <div style="position:relative;height:180px;"><canvas id="chart-s-offers"></canvas></div>
+          </div>
+        </div>
+      </div><!-- /pg-stats -->
+
+      <!-- ══════════ SETTINGS ══════════ -->
       <div class="page" id="pg-settings">
-        <div class="sec-h">Settings</div>
+        <div class="page-hd">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--P)" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg>
+          Settings
+        </div>
         <div class="settings-card">
-          <div class="sr"><span>Email Notifications</span><span class="sv">On</span></div>
-          <div class="sr"><span>New Applicant Alerts</span><span class="sv">On</span></div>
-          <div class="sr"><span>Company Profile Visibility</span><span class="sv">Public</span></div>
-          <div class="sr"><span>Account Email</span><span style="font-size:12.5px;color:var(--sub);"
+          <div class="sr"><span>Email Notifications</span><label class="toggle"><input type="checkbox" checked /><span
+                class="slider"></span></label></div>
+          <div class="sr"><span>New Applicant Alerts</span><label class="toggle"><input type="checkbox" checked /><span
+                class="slider"></span></label></div>
+          <div class="sr"><span>Company Profile Visibility</span><label class="toggle"><input type="checkbox"
+                checked /><span class="slider"></span></label></div>
+          <div class="sr"><span>Job Match Alerts</span><label class="toggle"><input type="checkbox" checked /><span
+                class="slider"></span></label></div>
+          <div class="sr"><span>Account Email</span><span style="font-size:12.5px;color:var(--txmu);"
               id="set-email">hr@infosys.com</span></div>
+          <div class="sr"><span>Dark Mode</span><label class="toggle"><input type="checkbox" id="dark-mode-toggle"
+                onchange="toggleDarkMode(this)" /><span class="slider"></span></label></div>
           <div class="sr"><span>Password</span><button class="btn sm sec"
               onclick="showToast('Password reset email sent.')">Change Password</button></div>
         </div>
@@ -1067,10 +3237,11 @@
         </button>
       </div><!-- /pg-settings -->
 
-    </div><!-- /body -->
-  </div><!-- /main -->
+    </div>
+  </div>
 
   <script>
+<<<<<<< HEAD
     // ── INIT ──
     window.addEventListener('DOMContentLoaded', () => {
       const email = sessionStorage.getItem('cp_company_email') || 'hr@infosys.com';
@@ -1102,6 +3273,42 @@
       home: 'Dashboard', jobs: 'Job Postings', candidates: 'Applicants',
       drives: 'Campus Drives', profile: 'Company Profile', settings: 'Settings'
     };
+=======
+    const TITLES = { home: 'Dashboard', jobs: 'Job Postings', candidates: 'Applicants', drives: 'Campus Drives', profile: 'Company Profile', stats: 'Analytics', settings: 'Settings' };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const h = new Date().getHours();
+      const g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+      document.getElementById('greet-msg').textContent = `${g}, Infosys Technologies 👋`;
+      initDarkMode();
+      setTimeout(renderCharts, 100);
+    });
+
+    function toggleDarkMode(el) {
+      if (!el) {
+        el = document.getElementById('dark-mode-toggle');
+        el.checked = !el.checked;
+      }
+      document.body.classList.toggle('dark', el.checked);
+      localStorage.setItem('cp_dark_mode', el.checked);
+      const icon = document.getElementById('theme-icon');
+      if (el.checked) {
+        icon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line>';
+      } else {
+        icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+      }
+    }
+    function initDarkMode() {
+      const darkPref = localStorage.getItem('cp_dark_mode') === 'true';
+      const el = document.getElementById('dark-mode-toggle');
+      if (el) el.checked = darkPref;
+      document.body.classList.toggle('dark', darkPref);
+      const icon = document.getElementById('theme-icon');
+      if (darkPref && icon) {
+        icon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line>';
+      }
+    }
+>>>>>>> UI
 
     function go(id, btn) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
@@ -1110,6 +3317,7 @@
       if (btn) btn.classList.add('on');
       document.getElementById('tb-title').textContent = TITLES[id] || id;
       document.getElementById('notif-panel').classList.remove('on');
+<<<<<<< HEAD
     }
 
     // ── TABS ──
@@ -1118,6 +3326,38 @@
       at: ['all', 'new', 'short', 'interview', 'hired']
     };
 
+=======
+      if (id === 'profile' && !profileChartDone) setTimeout(renderProfileChart, 80);
+      if (id === 'stats' && !statsChartsDone) setTimeout(renderStatsCharts, 80);
+    }
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('col');
+      document.getElementById('main-content').classList.toggle('exp');
+    }
+
+    function toggleNotif() {
+      document.getElementById('notif-panel').classList.toggle('on');
+    }
+
+    document.addEventListener('click', e => {
+      const panel = document.getElementById('notif-panel');
+      if (panel.classList.contains('on') && !panel.contains(e.target) && !e.target.closest('[onclick*=toggleNotif]')) panel.classList.remove('on');
+      const modal = document.getElementById('post-modal');
+      if (modal.classList.contains('on') && e.target === modal) modal.classList.remove('on');
+    });
+
+    function closeOverlay(e, id) { if (e.target === document.getElementById(id)) document.getElementById(id).classList.remove('on'); }
+
+    function toggleCpEdit() {
+      const v = document.getElementById('cp-view'), e = document.getElementById('cp-edit');
+      const editing = e.style.display !== 'none';
+      v.style.display = editing ? 'block' : 'none';
+      e.style.display = editing ? 'none' : 'block';
+    }
+
+    const tabGroups = { jt: ['active', 'closed', 'draft'], at: ['all', 'new', 'short', 'interview', 'hired'] };
+>>>>>>> UI
     function swtab(group, id, btn) {
       tabGroups[group].forEach(t => document.getElementById(`${group}-${t}`).classList.remove('on'));
       btn.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
@@ -1125,6 +3365,7 @@
       btn.classList.add('on');
     }
 
+<<<<<<< HEAD
     // ── NOTIF ──
     function toggleNotif() {
       document.getElementById('notif-panel').classList.toggle('on');
@@ -1196,6 +3437,225 @@
     function logout() {
       sessionStorage.clear();
       window.location.href = 'Login.html';
+=======
+    function addTagTo(wrapId, inputId, e) {
+      if (e.key !== 'Enter' && e.key !== ',') return; e.preventDefault();
+      const inp = document.getElementById(inputId);
+      const v = inp.value.trim().replace(',', ''); if (!v) return;
+      const t = document.createElement('span'); t.className = 'tag';
+      t.innerHTML = `${v}<button onclick="removeTag(this)">×</button>`;
+      document.getElementById(wrapId).insertBefore(t, inp); inp.value = '';
+    }
+    function removeTag(btn) { btn.closest('.tag').remove(); }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast'); t.textContent = msg; t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 3000);
+    }
+
+    function logout() { if (confirm('Log out of CampusPlace?')) alert('Logged out.'); }
+
+    /* ── CHARTS ── */
+    const P = '#15803d', T = '#0aada0', G = '#16a34a', A = '#d97706', R = '#dc2626', PU = '#7c3aed';
+    const grid = 'rgba(21,128,61,0.07)', tick = { color: '#4a7060', font: { size: 11 } };
+
+    function renderCharts() {
+      // Funnel chart
+      new Chart(document.getElementById('chart-funnel'), {
+        type: 'bar',
+        data: {
+          labels: ['Applied', 'Reviewed', 'Shortlisted', 'Interview', 'Hired'],
+          datasets: [{
+            data: [24, 18, 9, 4, 3],
+            backgroundColor: [P + 'cc', T + 'cc', A + 'cc', G + 'cc', PU + 'cc'],
+            borderRadius: 8, borderSkipped: false
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { color: grid }, ticks: tick },
+            y: { grid: { color: grid }, ticks: tick, beginAtZero: true }
+          }
+        }
+      });
+
+      // Monthly trend
+      new Chart(document.getElementById('chart-trend'), {
+        type: 'bar',
+        data: {
+          labels: ['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
+          datasets: [
+            { label: 'Applications', data: [8, 15, 22, 12, 18, 24, 10], backgroundColor: P + 'bb', borderRadius: 5, borderSkipped: false },
+            { label: 'Hired', data: [1, 2, 3, 1, 2, 3, 1], backgroundColor: T + 'bb', borderRadius: 5, borderSkipped: false }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { x: { grid: { color: grid }, ticks: tick }, y: { grid: { color: grid }, ticks: tick, beginAtZero: true } }
+        }
+      });
+
+      // Branch donut
+      new Chart(document.getElementById('chart-branch'), {
+        type: 'doughnut',
+        data: {
+          labels: ['CSE', 'IT', 'ECE', 'EEE', 'Others'],
+          datasets: [{ data: [11, 6, 4, 2, 1], backgroundColor: [P, T, G, A, PU], borderWidth: 3, borderColor: '#fff', hoverOffset: 5 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { position: 'right', labels: { font: { size: 11 }, color: '#4a7060', boxWidth: 10, padding: 10 } } },
+          cutout: '60%'
+        }
+      });
+    }
+
+    let profileChartDone = false;
+    function renderProfileChart() {
+      if (profileChartDone) return; profileChartDone = true;
+      new Chart(document.getElementById('chart-profile-pipe'), {
+        type: 'bar',
+        data: {
+          labels: ['Applied', 'Reviewed', 'Shortlisted', 'Interview', 'Hired'],
+          datasets: [{
+            data: [24, 18, 9, 4, 3],
+            backgroundColor: [P + 'cc', T + 'cc', A + 'cc', G + 'cc', PU + 'cc'],
+            borderRadius: 7, borderSkipped: false
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { color: grid }, ticks: tick, beginAtZero: true },
+            y: { grid: { display: false }, ticks: tick }
+          }
+        }
+      });
+    }
+
+    let statsChartsDone = false;
+    function renderStatsCharts() {
+      if (statsChartsDone) {
+        ['chart-s-trend', 'chart-s-funnel', 'chart-s-branch', 'chart-s-college', 'chart-s-jobs', 'chart-s-offers'].forEach(id => {
+          const c = Chart.getChart(document.getElementById(id)); if (c) c.destroy();
+        });
+        statsChartsDone = false;
+      }
+      statsChartsDone = true;
+
+      // ── Monthly trend (line + bar combo) ──
+      new Chart(document.getElementById('chart-s-trend'), {
+        type: 'bar',
+        data: {
+          labels: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
+          datasets: [
+            { type: 'bar', label: 'Applications', data: [18, 22, 14, 28, 31, 24], backgroundColor: P + 'bb', borderRadius: 6, borderSkipped: false, order: 2 },
+            { type: 'line', label: 'Shortlisted', data: [6, 8, 5, 10, 11, 9], borderColor: T, backgroundColor: 'transparent', tension: .4, pointRadius: 4, pointBackgroundColor: T, borderWidth: 2.5, order: 1 },
+            { type: 'line', label: 'Hired', data: [1, 2, 1, 3, 3, 2], borderColor: G, backgroundColor: 'transparent', tension: .4, pointRadius: 4, pointBackgroundColor: G, borderWidth: 2.5, order: 1, borderDash: [5, 4] }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { x: { grid: { color: grid }, ticks: tick }, y: { grid: { color: grid }, ticks: tick, beginAtZero: true } }
+        }
+      });
+
+      // ── Hiring funnel (horizontal bar) ──
+      new Chart(document.getElementById('chart-s-funnel'), {
+        type: 'bar',
+        data: {
+          labels: ['Applied', 'Reviewed', 'Shortlisted', 'Interviewed', 'Offered', 'Hired'],
+          datasets: [{
+            data: [109, 84, 38, 16, 12, 10],
+            backgroundColor: [P + 'cc', T + 'cc', A + 'cc', '#7c3aedcc', G + 'cc', G],
+            borderRadius: 7, borderSkipped: false
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + ctx.raw + ' candidates' } } },
+          scales: {
+            x: { grid: { color: grid }, ticks: tick, beginAtZero: true },
+            y: { grid: { display: false }, ticks: tick }
+          }
+        }
+      });
+
+      // ── Branch donut ──
+      const branchData = { labels: ['CSE', 'IT', 'ECE', 'EEE', 'Mech', 'Others'], vals: [48, 26, 17, 8, 6, 4] };
+      const bColors = [P, T, G, A, PU, R + '99'];
+      new Chart(document.getElementById('chart-s-branch'), {
+        type: 'doughnut',
+        data: { labels: branchData.labels, datasets: [{ data: branchData.vals, backgroundColor: bColors, borderWidth: 3, borderColor: '#fff', hoverOffset: 5 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, cutout: '60%' }
+      });
+      const bl = document.getElementById('branch-legend');
+      if (bl) bl.innerHTML = branchData.labels.map((l, i) => `<div style="display:flex;justify-content:space-between;align-items:center;padding:3px 0;"><div style="display:flex;align-items:center;gap:7px;"><span style="width:9px;height:9px;border-radius:2px;background:${bColors[i]};display:inline-block;"></span><span style="font-size:12px;color:var(--txmu);">${l}</span></div><span style="font-size:12px;font-weight:700;">${branchData.vals[i]}</span></div>`).join('');
+
+      // ── College bar ──
+      new Chart(document.getElementById('chart-s-college'), {
+        type: 'bar',
+        data: {
+          labels: ['JNTU Hyd', 'Osmania', 'IIT Hyd', 'NIT Wgl', 'CBIT', 'VIT'],
+          datasets: [{ data: [32, 24, 18, 14, 12, 9], backgroundColor: [P, T, G, A, PU, R].map(c => c + 'bb'), borderRadius: 7, borderSkipped: false }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { x: { grid: { color: grid }, ticks: { ...tick, maxRotation: 30 } }, y: { grid: { color: grid }, ticks: tick, beginAtZero: true } }
+        }
+      });
+
+      // ── Job post performance ──
+      new Chart(document.getElementById('chart-s-jobs'), {
+        type: 'bar',
+        data: {
+          labels: ['Frontend Dev', 'Data Analyst', 'Cloud Engr', 'Backend Engr', 'React Intern'],
+          datasets: [{
+            label: 'Applications',
+            data: [11, 8, 5, 0, 0],
+            backgroundColor: [P + 'dd', T + 'dd', G + 'dd', A + 'dd', PU + 'dd'],
+            borderRadius: 7, borderSkipped: false
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { color: grid }, ticks: tick, beginAtZero: true },
+            y: { grid: { display: false }, ticks: { ...tick, font: { size: 11 } } }
+          }
+        }
+      });
+
+      // ── Offer acceptance stacked bar ──
+      new Chart(document.getElementById('chart-s-offers'), {
+        type: 'bar',
+        data: {
+          labels: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
+          datasets: [
+            { label: 'Accepted', data: [1, 2, 1, 3, 3, 2], backgroundColor: G + 'cc', borderRadius: 5, borderSkipped: false },
+            { label: 'Declined', data: [0, 0, 1, 0, 1, 0], backgroundColor: R + 'bb', borderRadius: 5, borderSkipped: false }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { color: grid }, ticks: tick, stacked: true },
+            y: { grid: { color: grid }, ticks: tick, beginAtZero: true, stacked: true }
+          }
+        }
+      });
+>>>>>>> UI
     }
   </script>
 </body>

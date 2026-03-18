@@ -158,7 +158,7 @@
   </style>
 </head>
 <body>
-  <div class="env-strip"></div>
+  <div id="accent-strip" class="role-tpo"></div>
   <div class="page-wrap">
 
     <!-- LEFT PANEL -->
@@ -181,23 +181,28 @@
             <div class="step-circle active" id="circle-2">2</div>
             <div class="step-info"><div class="step-name">Personal Details</div><div class="step-desc" id="sidebar-step2-desc">Institution &amp; admin info</div></div>
           </div>
-          <div class="progress-step" id="sidebar-step-3">
-            <div class="step-circle pending" id="circle-3">3</div>
-            <div class="step-info"><div class="step-name">Verify Email</div><div class="step-desc">Confirm your identity</div></div>
+          <div class="step-row" id="sr-3">
+            <div class="step-col"><div class="step-num" id="sn-3">3</div><div class="step-vline"></div></div>
+            <div class="step-body"><div class="step-name">Verify Email</div><div class="step-desc">Confirm your identity</div></div>
           </div>
-          <div class="progress-step" id="sidebar-step-4">
-            <div class="step-circle pending" id="circle-4">✓</div>
-            <div class="step-info"><div class="step-name">Dashboard Ready</div><div class="step-desc">Account activated!</div></div>
+          <div class="step-row" id="sr-4">
+            <div class="step-col"><div class="step-num" id="sn-4">✓</div></div>
+            <div class="step-body"><div class="step-name">Dashboard Ready</div><div class="step-desc">Account activated!</div></div>
           </div>
         </div>
 
-        <div style="margin-top:auto;padding-top:32px;">
-          <div class="progress-bar-wrap">
-            <div class="progress-bar-fill" id="progress-bar" style="width:50%;"></div>
+        <div class="lp-clock">
+          <div class="lp-time" id="lp-time">--:-- --</div>
+          <div class="lp-date" id="lp-date">Loading…</div>
+        </div>
+
+        <div class="lp-prog">
+          <div class="lp-prog-meta">
+            <span class="lp-prog-lbl" id="prog-lbl">Step 2 of 4</span>
+            <span class="lp-prog-pct" id="prog-pct">50%</span>
           </div>
-          <div class="progress-label">
-            <span id="progress-step-label">Step 2 of 4</span>
-            <span class="progress-pct" id="progress-pct">50%</span>
+          <div class="lp-prog-track">
+            <div class="lp-prog-fill" id="prog-fill" style="width:50%"></div>
           </div>
         </div>
       </div>
@@ -211,57 +216,26 @@
         <h1 class="stage-title">TPO / Admin <span class="shimmer-text">Details</span></h1>
         <p class="stage-sub">Provide your institutional and contact details.</p>
 
-        <div style="display:inline-flex;align-items:center;gap:8px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:100px;padding:6px 16px;margin-bottom:24px;">
-          <span>🛡️</span><span style="font-size:13px;font-weight:600;color:#7c3aed;">TPO / Admin Registration</span>
-        </div>
-
-        <form onsubmit="return false;">
+        <form id="tpo-signup-form" onsubmit="return false;">
+          <div class="sec-head">Personal Details</div>
           <div class="form-grid">
-
-            <div class="form-group">
-              <label>Full Name <span>*</span></label>
+            <div class="fg">
+              <label>Full Name <span class="req">*</span></label>
               <input type="text" id="t-name" placeholder="e.g. Dr. Ramesh Kumar" oninput="clearErr(this)" />
-              <span class="error-msg" id="err-t-name">Please enter your full name.</span>
+              <div class="err-msg" id="err-t-name">Please enter your full name.</div>
             </div>
-
-            <div class="form-group">
-              <label>Official College Email <span>*</span></label>
+            <div class="fg">
+              <label>Official College Email <span class="req">*</span></label>
               <input type="email" id="t-email" placeholder="tpo@college.edu" oninput="clearErr(this)" />
-              <span class="error-msg" id="err-t-email">Enter a valid college email.</span>
+              <div class="err-msg" id="err-t-email">Enter a valid college email.</div>
             </div>
-
-            <div class="form-group">
-              <label>Password <span>*</span></label>
-              <div class="pwd-wrap">
-                <input type="password" id="t-pwd" placeholder="Create a strong password" oninput="checkPwd(this,'tpb','t-pwd-label');clearErr(this)" />
-                <button type="button" class="show-pwd" onclick="togglePwd('t-pwd',this)">👁</button>
-              </div>
-              <div class="pwd-strength">
-                <div class="pwd-bars">
-                  <div class="pwd-bar" id="tpb1"></div>
-                  <div class="pwd-bar" id="tpb2"></div>
-                  <div class="pwd-bar" id="tpb3"></div>
-                  <div class="pwd-bar" id="tpb4"></div>
-                </div>
-                <div class="pwd-label" id="t-pwd-label">Enter a password</div>
-              </div>
-              <span class="error-msg" id="err-t-pwd">Password must be at least 8 characters.</span>
-            </div>
-
-            <div class="form-group">
-              <label>Phone Number <span>*</span></label>
+            <div class="fg">
+              <label>Phone Number <span class="req">*</span></label>
               <input type="tel" id="t-phone" placeholder="+91 98765 43210" oninput="clearErr(this)" maxlength="13" />
-              <span class="error-msg" id="err-t-phone">Enter a valid phone number.</span>
+              <div class="err-msg" id="err-t-phone">Enter a valid phone number.</div>
             </div>
-
-            <div class="form-group span2">
-              <label>College / Institution Name <span>*</span></label>
-              <input type="text" id="t-college" placeholder="e.g. IIT Bombay / VIT Vellore" oninput="clearErr(this)" />
-              <span class="error-msg" id="err-t-college">Please enter your college name.</span>
-            </div>
-
-            <div class="form-group">
-              <label>Designation <span>*</span></label>
+            <div class="fg">
+              <label>Designation <span class="req">*</span></label>
               <select id="t-designation" onchange="clearErr(this)">
                 <option value="">Select designation</option>
                 <option>Training &amp; Placement Officer</option>
@@ -272,27 +246,32 @@
                 <option>Admin</option>
                 <option>Other</option>
               </select>
-              <span class="error-msg" id="err-t-designation">Please select your designation.</span>
+              <div class="err-msg" id="err-t-designation">Please select your designation.</div>
             </div>
-
-            <div class="form-group">
+            <div class="fg full">
               <label>Department / Office</label>
               <input type="text" id="t-dept" placeholder="e.g. Placement Cell" />
             </div>
+          </div>
 
-            <div class="form-group">
-              <label>College Location <span>*</span></label>
+          <div class="sec-head">Institutional Details</div>
+          <div class="form-grid">
+            <div class="fg full">
+              <label>College / Institution Name <span class="req">*</span></label>
+              <input type="text" id="t-college" placeholder="e.g. IIT Bombay / VIT Vellore" oninput="clearErr(this)" />
+              <div class="err-msg" id="err-t-college">Please enter your college name.</div>
+            </div>
+            <div class="fg">
+              <label>College Location <span class="req">*</span></label>
               <input type="text" id="t-location" placeholder="City, State" oninput="clearErr(this)" />
-              <span class="error-msg" id="err-t-location">Please enter the college location.</span>
+              <div class="err-msg" id="err-t-location">Please enter the college location.</div>
             </div>
-
-            <div class="form-group">
-              <label>College Code <span>*</span></label>
+            <div class="fg">
+              <label>College Code <span class="req">*</span></label>
               <input type="text" id="t-code" placeholder="e.g. IITB001" oninput="clearErr(this)" />
-              <span class="error-msg" id="err-t-code">Please enter a valid college code (min 4 chars).</span>
+              <div class="err-msg" id="err-t-code">Please enter a valid college code (min 4 chars).</div>
             </div>
-
-            <div class="form-group">
+            <div class="fg">
               <label>NAAC Accreditation</label>
               <select id="t-accreditation">
                 <option value="">Select grade</option>
@@ -305,12 +284,29 @@
                 <option>Not Accredited</option>
               </select>
             </div>
-
-            <div class="form-group span2">
+            <div class="fg full">
               <label>About Your Placement Cell</label>
               <textarea id="t-about" placeholder="Describe your placement cell's activities, average placements per year, notable recruiters…"></textarea>
             </div>
+          </div>
 
+          <div class="sec-head">Security</div>
+          <div class="form-grid">
+            <div class="fg full">
+              <label>Password <span class="req">*</span></label>
+              <div class="pwd-wrap">
+                <input type="password" id="t-pwd" placeholder="Create a strong password" oninput="checkPwd(this,'tpb','t-pwd-label');clearErr(this)" />
+                <button class="show-pwd" type="button" onclick="togglePwd('t-pwd',this)">👁️</button>
+              </div>
+              <div class="pwd-bars">
+                <div class="pwd-bar" id="tpb1"></div>
+                <div class="pwd-bar" id="tpb2"></div>
+                <div class="pwd-bar" id="tpb3"></div>
+                <div class="pwd-bar" id="tpb4"></div>
+              </div>
+              <div class="pwd-lbl" id="t-pwd-label">Enter a password</div>
+              <div class="err-msg" id="err-t-pwd">Password must be at least 8 characters.</div>
+            </div>
           </div>
 
           <div class="form-nav">
@@ -329,56 +325,58 @@
         <p class="stage-sub">We've sent a 6-digit OTP to your email. Enter it below to activate your account.</p>
 
         <!-- Sending spinner -->
-        <div id="otp-sending-state" class="otp-sending" style="display:none;">
-          <div class="otp-sending-spinner"></div>
-          <p style="font-size:14px;color:var(--sub);font-weight:500;">Sending OTP to your email…</p>
+        <div id="otp-sending-state" style="display:none; text-align:center; padding: 40px 20px;">
+          <div class="spinner" style="display:inline-block; border-color: rgba(124,58,237,.3); border-top-color: #7c3aed; width:40px;height:40px; margin-bottom:14px;"></div>
+          <p style="font-size:14px;color:var(--txmu);font-weight:500;">Sending OTP to your email…</p>
         </div>
 
         <!-- OTP Entry -->
         <div id="otp-entry-state" style="display:none;">
 
-          <!-- Dev mode banner (shown only when EmailJS fails) -->
-          <div class="demo-banner" id="demo-mode-banner" style="display:none;">
+          <!-- Dev mode banner -->
+          <div id="demo-mode-banner" style="display:none; background: #fef3c7; border: 1px solid #fbbf24; border-radius: 10px; padding: 10px 16px; font-size: 13px; color: #92400e; margin-bottom: 20px; text-align: left; align-items: flex-start; gap: 8px;">
             ⚠️ <div><strong>EmailJS not reachable.</strong> Running in demo mode — your OTP is shown below the input boxes.</div>
           </div>
 
           <div class="verify-center">
-            <span class="email-illustration">📧</span>
-            <div class="verify-email-display" id="verify-email-show">you@example.com</div>
-            <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">Check your inbox (and spam folder just in case)</p>
-            <p id="otp-sent-badge" style="font-size:12px;color:var(--muted);margin-bottom:28px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:8px 14px;display:inline-block;">
+            <span class="email-illus">📬</span>
+            <div class="verify-email" id="verify-email-show">tpo@college.edu</div>
+            <div class="verify-note">Check your inbox (and spam folder). The code expires in <strong>10 minutes</strong>.</div>
+            
+            <p id="otp-sent-badge" style="font-size:12px;color:var(--txmu);margin-bottom:28px;background:var(--PL);border:1px solid rgba(23,89,214,.15);border-radius:8px;padding:8px 14px;display:inline-block;">
               ✅ OTP sent successfully! Valid for <strong>10 minutes</strong>.
             </p>
 
             <div class="otp-row">
-              <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,0)" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
-              <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,1)" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
-              <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,2)" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
-              <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,3)" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
-              <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,4)" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
-              <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,5)" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+              <input class="otp-box otp-input" type="text" maxlength="1" onkeyup="otpMove(this,0)" oninput="this.value=this.value.replace(/[^0-9]/g,''); otpFill(this);" />
+              <input class="otp-box otp-input" type="text" maxlength="1" onkeyup="otpMove(this,1)" oninput="this.value=this.value.replace(/[^0-9]/g,''); otpFill(this);" />
+              <input class="otp-box otp-input" type="text" maxlength="1" onkeyup="otpMove(this,2)" oninput="this.value=this.value.replace(/[^0-9]/g,''); otpFill(this);" />
+              <input class="otp-box otp-input" type="text" maxlength="1" onkeyup="otpMove(this,3)" oninput="this.value=this.value.replace(/[^0-9]/g,''); otpFill(this);" />
+              <input class="otp-box otp-input" type="text" maxlength="1" onkeyup="otpMove(this,4)" oninput="this.value=this.value.replace(/[^0-9]/g,''); otpFill(this);" />
+              <input class="otp-box otp-input" type="text" maxlength="1" onkeyup="otpMove(this,5)" oninput="this.value=this.value.replace(/[^0-9]/g,''); otpFill(this);" />
             </div>
 
-            <!-- Dev OTP display (only shown when EmailJS fails) -->
+            <!-- Dev OTP display -->
             <div id="dev-otp-display" style="display:none;margin-bottom:16px;background:#fffbeb;border:1.5px dashed #fbbf24;border-radius:10px;padding:12px 20px;">
               <p style="font-size:12px;color:#92400e;margin-bottom:4px;font-weight:600;">🔧 DEV MODE — OTP for testing:</p>
-              <p id="dev-otp-value" style="font-size:28px;font-weight:800;color:#4c1d95;letter-spacing:8px;margin:0;"></p>
+              <p id="dev-otp-value" style="font-size:28px;font-weight:800;color:#7c3aed;letter-spacing:8px;margin:0;"></p>
             </div>
 
             <div id="otp-error" style="display:none;color:#ef4444;font-size:13px;margin-bottom:16px;"></div>
 
             <div class="resend-row">
-              Didn't receive it?
-              <button class="resend-btn" onclick="resendOtp()" id="resend-btn" style="display:none;">Resend OTP</button>
-              <span class="timer-badge" id="timer-badge" style="display:none;">⏱ Resend in <span id="timer-count">30</span>s</span>
+              <span class="timer-badge" id="timer-badge" style="display:none;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Resend in <span id="timer-count">30</span>s
+              </span>
+              <span id="resend-show" style="display:none">Didn't get it? <button class="resend-btn" onclick="resendOtp()">Resend code</button></span>
             </div>
           </div>
-
           <div class="form-nav">
-            <button class="btn-prev" onclick="goBackToStage2()">← Back</button>
-            <button class="btn-next" id="verify-btn" onclick="verifyOtp()">
+            <button type="button" class="btn-prev" onclick="goBackToStage2()">← Back</button>
+            <button type="button" class="btn-next" style="background:#7c3aed;" id="verify-btn" onclick="verifyOtp()">
               <span id="verify-spinner" class="spinner"></span>
-              Verify &amp; Activate →
+              Verify &amp; Continue
             </button>
           </div>
         </div>
@@ -404,6 +402,49 @@
     </main>
   </div>
 
-<script src="../js/tposignup.js"></script>
+  <script src="../js/tposignup.js"></script>
+  <script>
+    function checkPwd(el, barPfx, lblId) {
+      var val = el.value;
+      var bars = [1, 2, 3, 4].map(i => document.getElementById(barPfx + i));
+      var lbl = document.getElementById(lblId);
+      if (!val) { bars.forEach(b => b.className = 'pwd-bar'); if(lbl) lbl.textContent = 'Enter a password'; return; }
+      var score = 0;
+      if (val.length >= 8) score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+      var cls = ['', 'lv1', 'lv1', 'lv2', 'lv3', 'lv4'];
+      var name = ['', 'Weak', 'Weak', 'Fair', 'Good', 'Strong'];
+      var col = ['', 'var(--R)', 'var(--R)', 'var(--A)', 'var(--P)', 'var(--G)'];
+      var c = (score === 4) ? 'lv4' : cls[score];
+      bars.forEach((b, i) => b.className = 'pwd-bar' + (i < score ? ' ' + c : ''));
+      if (lbl) { lbl.textContent = name[score] || ''; lbl.style.color = col[score] || ''; }
+    }
+    function togglePwd(id, btn) {
+      var inp = document.getElementById(id);
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+      btn.textContent = inp.type === 'password' ? '👁️' : '🙈';
+    }
+    function otpFill(el) { el.classList.toggle('filled', el.value.length > 0); }
+
+    function tickClock() {
+      var pT = document.getElementById('lp-time');
+      var pD = document.getElementById('lp-date');
+      if(pT && pD) {
+        var now = new Date(), h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+        var ampm = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12;
+        var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        pT.textContent = h + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0') + ' ' + ampm;
+        pD.textContent = DAYS[now.getDay()] + ', ' + MONTHS[now.getMonth()] + ' ' + now.getDate() + ' ' + now.getFullYear();
+      }
+    }
+    tickClock(); setInterval(tickClock, 1000);
+
+    // Polyfill for goNext so we map to the JS's goTo
+    window.goTo = window.goTo || function() {};
+    window.goBackToStage2 = window.goBackToStage2 || function() { document.getElementById('stage-3').classList.remove('active'); document.getElementById('stage-2').classList.add('active'); };
+  </script>
 </body>
 </html>
