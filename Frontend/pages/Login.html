@@ -6,10 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CampusPlace – Log In</title>
   <link
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=DM+Sans:wght@300;400;500;600;700&family=Satisfy&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="../css/loginstyle.css">
-
 </head>
 
 <body>
@@ -21,11 +20,40 @@
     <!-- LEFT PANEL -->
     <aside class="left-panel" id="left-panel">
       <div class="left-content">
-        <a href="CampusPlacementLanding.html" class="logo">
-          <div class="logo-icon">🎓</div>
-          <span class="logo-text">Campus<span class="logo-accent" id="logo-accent">Place</span></span>
+
+        <!-- Logo (matching project SVG) -->
+        <a href="../index.html" class="logo">
+          <div class="logo-icon">
+            <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="48" height="48" rx="11" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.28)"
+                stroke-width="1" />
+              <rect x="1" y="1" width="46" height="23" rx="10" fill="rgba(255,255,255,0.06)" />
+              <polygon points="24,11.5 39.5,19 24,26.5 8.5,19" fill="white" />
+              <polygon points="8.5,19 8.5,22 24,29.5 24,26.5" fill="white" opacity=".42" />
+              <polygon points="39.5,19 39.5,22 24,29.5 24,26.5" fill="white" opacity=".58" />
+              <path d="M16.5 21 L16.5 26.5 Q16.5 29.5 24 29.5 Q31.5 29.5 31.5 26.5 L31.5 21 Z" fill="white" />
+              <path d="M39.5 19 Q43 19 43 23 L43 29.5" stroke="white" stroke-width="1.5" fill="none"
+                stroke-linecap="round" />
+              <circle cx="43" cy="29.5" r="2" fill="white" />
+              <line x1="41.1" y1="31.2" x2="40" y2="36.5" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <line x1="42.3" y1="31.4" x2="41.8" y2="37" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <line x1="43.6" y1="31.4" x2="44" y2="37" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <line x1="44.8" y1="31.2" x2="46" y2="36.5" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <path d="M40 36 Q43 37 46 36" stroke="rgba(255,255,255,0.55)" stroke-width="1.1" fill="none"
+                stroke-linecap="round" />
+            </svg>
+          </div>
+          <div class="logo-brand">
+            <div class="logo-wordmark">
+              <span class="logo-campus">Campus</span><span class="logo-sep">.</span><span
+                class="logo-place">Place</span>
+            </div>
+            <div class="logo-tagline">Placement Portal</div>
+          </div>
         </a>
+
         <div class="left-badge"><span class="left-badge-dot"></span> <span id="badge-label">Welcome Back</span></div>
+
         <h2 class="left-title">
           <span id="ph1">Log Back</span><br />
           <span id="ph2">Into Your</span><br />
@@ -72,6 +100,7 @@
             <div class="left-stat-label">Recruiters</div>
           </div>
         </div>
+
       </div>
     </aside>
 
@@ -102,8 +131,8 @@
             <div class="role-card-desc">Oversee placement activities</div>
           </div>
         </div>
-        <div id="role-error" style="display:none;font-size:12px;color:#ef4444;margin-bottom:16px;">Please select a role
-          to continue.</div>
+        <div id="role-error" style="display:none;font-size:12px;color:var(--R);font-weight:600;margin-bottom:16px;">
+          Please select a role to continue.</div>
         <button class="btn-login default" id="continue-btn" onclick="goToLogin()">Continue →</button>
         <div class="divider">
           <hr /><span>or</span>
@@ -122,25 +151,29 @@
         </div>
         <div class="role-badge student">🎓 Student Account</div>
         <form onsubmit="return false;">
-          <div class="form-group"><label>College Email <span>*</span></label><input type="email" id="sl-email"
-              placeholder="you@college.edu" oninput="clearErr(this)" /><span class="error-msg" id="err-sl-email">Enter a
-              valid email address.</span></div>
-          <div class="form-group"><label>Password <span>*</span></label>
-            <div class="pwd-wrap"><input type="password" id="sl-pwd" placeholder="Enter your password"
-                oninput="clearErr(this)" /><button type="button" class="show-pwd"
-                onclick="togglePwd('sl-pwd',this)">👁</button></div><span class="error-msg" id="err-sl-pwd">Please enter
-              your password.</span>
+          <div class="form-group">
+            <label>College Email <span>*</span></label>
+            <input type="email" id="sl-email" placeholder="you@college.edu" oninput="clearErr(this)" />
+            <span class="error-msg" id="err-sl-email">Enter a valid email address.</span>
+          </div>
+          <div class="form-group">
+            <label>Password <span>*</span></label>
+            <div class="pwd-wrap">
+              <input type="password" id="sl-pwd" placeholder="Enter your password" oninput="clearErr(this)" />
+              <button type="button" class="show-pwd" onclick="togglePwd('sl-pwd',this)">👁</button>
+            </div>
+            <span class="error-msg" id="err-sl-pwd">Please enter your password.</span>
           </div>
           <div class="forgot-row"><span class="forgot-link" onclick="showForgot('student')">Forgot password?</span>
           </div>
           <div id="forgot-student" class="forgot-panel" style="display:none;">
             <h3>Reset Password</h3>
-            <p>Enter your college email and we'll send a reset link.</p><input type="email"
-              placeholder="you@college.edu" style="margin-bottom:12px;" /><button
-              class="btn-send-reset btn-login student" onclick="sendReset(this)">Send Reset Link</button>
+            <p>Enter your college email and we'll send a reset link.</p>
+            <input type="email" placeholder="you@college.edu" style="margin-bottom:12px;" />
+            <button class="btn-send-reset student" onclick="sendReset(this)">Send Reset Link</button>
           </div>
           <div id="login-err-student"
-            style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;font-size:13px;color:#dc2626;margin-bottom:16px;">
+            style="display:none;background:var(--RL,#fef2f2);border:1px solid #fecaca;border-radius:var(--rads);padding:10px 14px;font-size:13px;color:var(--R);margin-bottom:16px;">
             ❌ Invalid email or password. Please try again.</div>
           <button type="button" class="btn-login student" onclick="doLogin('student', event)"><span class="spinner"
               id="spin-student"></span>Sign In to Student Dashboard →</button>
@@ -149,6 +182,7 @@
           <hr /><span>or</span>
           <hr />
         </div>
+        <div class="already">Don't have an account? <a href="Signup.html">Sign up here</a></div>
         <div class="already">Don't have an account? <a href="Signup.html">Sign up here</a></div>
       </div>
 
@@ -178,12 +212,12 @@
           </div>
           <div id="forgot-company" class="forgot-panel" style="display:none;">
             <h3>Reset Password</h3>
-            <p>Enter your company email and we'll send a reset link.</p><input type="email" placeholder="hr@company.com"
-              style="margin-bottom:12px;" /><button class="btn-send-reset btn-login company"
-              onclick="sendReset(this)">Send Reset Link</button>
+            <p>Enter your company email and we'll send a reset link.</p>
+            <input type="email" placeholder="hr@company.com" style="margin-bottom:12px;" />
+            <button class="btn-send-reset company" onclick="sendReset(this)">Send Reset Link</button>
           </div>
           <div id="login-err-company"
-            style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;font-size:13px;color:#dc2626;margin-bottom:16px;">
+            style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:var(--rads);padding:10px 14px;font-size:13px;color:var(--R);margin-bottom:16px;">
             ❌ Invalid credentials. Please try again.</div>
           <button type="button" class="btn-login company" onclick="doLogin('company', event)"><span class="spinner"
               id="spin-company"></span>Sign In to Recruiter Dashboard →</button>
@@ -192,6 +226,7 @@
           <hr /><span>or</span>
           <hr />
         </div>
+        <div class="already">Need an account? <a href="Signup.html">Register your company</a></div>
         <div class="already">Need an account? <a href="Signup.html">Register your company</a></div>
       </div>
 
@@ -220,12 +255,12 @@
           <div class="forgot-row"><span class="forgot-link" onclick="showForgot('tpo')">Forgot password?</span></div>
           <div id="forgot-tpo" class="forgot-panel" style="display:none;">
             <h3>Reset Password</h3>
-            <p>Enter your institutional email and we'll send a reset link.</p><input type="email"
-              placeholder="tpo@college.edu" style="margin-bottom:12px;" /><button class="btn-send-reset btn-login tpo"
-              onclick="sendReset(this)">Send Reset Link</button>
+            <p>Enter your institutional email and we'll send a reset link.</p>
+            <input type="email" placeholder="tpo@college.edu" style="margin-bottom:12px;" />
+            <button class="btn-send-reset tpo" onclick="sendReset(this)">Send Reset Link</button>
           </div>
           <div id="login-err-tpo"
-            style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;font-size:13px;color:#dc2626;margin-bottom:16px;">
+            style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:var(--rads);padding:10px 14px;font-size:13px;color:var(--R);margin-bottom:16px;">
             ❌ Invalid credentials. Contact your admin if the problem persists.</div>
           <button type="button" class="btn-login tpo" onclick="doLogin('tpo', event)"><span class="spinner"
               id="spin-tpo"></span>Sign In to
@@ -235,6 +270,7 @@
           <hr /><span>or</span>
           <hr />
         </div>
+        <div class="already">Need an account? <a href="Signup.html">Contact your admin</a></div>
         <div class="already">Need an account? <a href="Signup.html">Contact your admin</a></div>
       </div>
 
@@ -251,7 +287,175 @@
     </main>
   </div>
 
-  <script src="../js/auth.js"></script>
+  <script>
+    var currentRole = null;
+
+    // ── Role selection ──
+    function selectRole(r) {
+      currentRole = r;
+
+      // 1. Role cards — direct className (no stale state)
+      document.getElementById('card-student').className = 'role-card';
+      document.getElementById('card-company').className = 'role-card';
+      document.getElementById('card-tpo').className = 'role-card';
+      document.getElementById('card-' + r).className = 'role-card active ' + r + '-active';
+
+      // 2. Left panel + accent strip gradient
+      document.getElementById('left-panel').className = 'left-panel role-' + r;
+      document.getElementById('env-strip').className = 'env-strip role-' + r;
+
+      // 3. Highlight the matching role info card in sidebar
+      ['student', 'company', 'tpo'].forEach(function (role) {
+        document.getElementById('left-' + role).classList.remove('highlight');
+      });
+      document.getElementById('left-' + r).classList.add('highlight');
+
+      // 4. Unlock continue button with role colour
+      document.getElementById('continue-btn').className = 'btn-login ' + r;
+
+      // 5. Update left panel hero text per role
+      var titles = {
+        student: ['Log Back', 'Into Your', 'Dashboard'],
+        company: ['Access Your', 'Recruiter', 'Dashboard'],
+        tpo: ['Manage Your', 'Placement', 'Portal']
+      };
+      var subs = {
+        student: 'Access your personalised placement portal. Sign in to continue to your student dashboard.',
+        company: 'Welcome back. Sign in to manage your job postings and campus drives.',
+        tpo: 'Welcome back. Sign in to oversee placements, students and company activity.'
+      };
+      var t = titles[r];
+      document.getElementById('ph1').textContent = t[0];
+      document.getElementById('ph2').textContent = t[1];
+      document.getElementById('ph3').textContent = t[2];
+      document.getElementById('panel-sub').textContent = subs[r];
+
+      // 6. Hide error
+      document.getElementById('role-error').style.display = 'none';
+    }
+
+    // ── Navigate to login form ──
+    function goToLogin() {
+      if (!currentRole) { document.getElementById('role-error').style.display = 'block'; return; }
+      var routes = {
+        student: 'StudentLogin.html',
+        company: 'companylogin.html',
+        tpo: 'TPOlogin.html'
+      };
+      if (routes[currentRole]) {
+         window.location.href = routes[currentRole];
+      }
+    }
+
+    function goBack() {
+      document.querySelectorAll('.form-stage').forEach(function (s) { s.classList.remove('active'); });
+      document.getElementById('stage-1').classList.add('active');
+      // restore current role theme on panel (keep selection visible)
+      if (currentRole) {
+        document.getElementById('left-panel').className = 'left-panel role-' + currentRole;
+        document.getElementById('env-strip').className = 'env-strip role-' + currentRole;
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── Toggle password visibility ──
+    function togglePwd(id, btn) {
+      var inp = document.getElementById(id);
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+      btn.textContent = inp.type === 'password' ? '👁' : '🙈';
+    }
+
+    // ── Clear field error ──
+    function clearErr(el) {
+      el.classList.remove('err');
+      var em = document.getElementById('err-' + el.id);
+      if (em) em.classList.remove('show');
+    }
+
+    // ── Forgot password panel ──
+    function showForgot(role) {
+      var panel = document.getElementById('forgot-' + role);
+      panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function sendReset(btn) {
+      btn.textContent = '✓ Reset Link Sent!';
+      btn.disabled = true;
+      btn.style.opacity = '.7';
+    }
+
+    // ── Login submit ──
+    function doLogin(role, e) {
+      var ok = true;
+      var fields = {
+        student: ['sl-email', 'sl-pwd'],
+        company: ['cl-email', 'cl-company', 'cl-pwd'],
+        tpo: ['tl-email', 'tl-college', 'tl-pwd']
+      };
+
+      fields[role].forEach(function (id) {
+        var el = document.getElementById(id);
+        var em = document.getElementById('err-' + id);
+        if (!el.value.trim()) {
+          el.classList.add('err');
+          if (em) em.classList.add('show');
+          ok = false;
+        }
+      });
+
+      // Email validation
+      var emailId = { student: 'sl-email', company: 'cl-email', tpo: 'tl-email' }[role];
+      var emailEl = document.getElementById(emailId);
+      if (emailEl.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value)) {
+        emailEl.classList.add('err');
+        var em = document.getElementById('err-' + emailId);
+        if (em) { em.textContent = 'Enter a valid email address.'; em.classList.add('show'); }
+        ok = false;
+      }
+
+      if (!ok) return;
+
+      // Show spinner
+      var spinner = document.getElementById('spin-' + role);
+      spinner.style.display = 'block';
+      e.currentTarget.disabled = true;
+
+      setTimeout(function () {
+        spinner.style.display = 'none';
+        e.currentTarget.disabled = false;
+
+        // Show success stage
+        document.querySelectorAll('.form-stage').forEach(function (s) { s.classList.remove('active'); });
+        document.getElementById('stage-3').classList.add('active');
+
+        // Role-specific success styling
+        var circle = document.getElementById('success-circle');
+        var cta = document.getElementById('success-cta');
+        var dashLinks = {
+          student: 'studentdashboard.html',
+          company: 'companydashboard.html',
+          tpo: 'tpodashboard.html'
+        };
+        var colors = {
+          student: { bg: 'linear-gradient(135deg,#0b2e7a,#1759d6)', sh: 'rgba(23,89,214,.35)' },
+          company: { bg: 'linear-gradient(135deg,#097a70,#0aada0)', sh: 'rgba(10,173,160,.35)' },
+          tpo: { bg: 'linear-gradient(135deg,#4c1d95,#7c3aed)', sh: 'rgba(124,58,237,.35)' }
+        };
+        var c = colors[role];
+        circle.style.background = c.bg;
+        circle.style.color = '#fff';
+        circle.style.boxShadow = '0 12px 28px ' + c.sh;
+        cta.style.background = c.bg;
+        cta.href = dashLinks[role];
+
+        document.getElementById('success-sub').textContent =
+          'You\'ve signed in as ' + (role === 'tpo' ? 'TPO / Admin' : role.charAt(0).toUpperCase() + role.slice(1)) +
+          '. Redirecting to your dashboard…';
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 1400);
+    }
+  </script>
 </body>
 
 </html>

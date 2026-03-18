@@ -1,5 +1,11 @@
 // ─── AUTH CHECK ───
+<<<<<<< HEAD
 if (sessionStorage.getItem('isLoggedIn') !== 'true' || sessionStorage.getItem('userRole') !== 'student') {
+=======
+const isLoggedIn = (localStorage.getItem('isLoggedIn') || sessionStorage.getItem('isLoggedIn')) === 'true';
+const role = localStorage.getItem('userRole') || sessionStorage.getItem('userRole');
+if (!isLoggedIn || role !== 'student') {
+>>>>>>> UI
   window.location.href = 'Login.html';
 }
 
@@ -22,8 +28,13 @@ if (sessionStorage.getItem('isLoggedIn') !== 'true' || sessionStorage.getItem('u
 
     // ─── INIT ───
     window.addEventListener('DOMContentLoaded', () => {
+<<<<<<< HEAD
       const name = sessionStorage.getItem('studentName') || 'Student';
       const email = sessionStorage.getItem('studentEmail') || 'student@college.edu';
+=======
+      const name = localStorage.getItem('studentName') || sessionStorage.getItem('studentName') || localStorage.getItem('userName') || 'Student';
+      const email = localStorage.getItem('studentEmail') || sessionStorage.getItem('studentEmail') || localStorage.getItem('userEmail') || 'student@college.edu';
+>>>>>>> UI
       const first = name.split(' ')[0];
       const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
 
@@ -32,6 +43,7 @@ if (sessionStorage.getItem('isLoggedIn') !== 'true' || sessionStorage.getItem('u
       ['pg-email', 'set-email'].forEach(id => { const e = document.getElementById(id); if (e) e.textContent = email; });
       
       // Academic & Personal
+<<<<<<< HEAD
       const branch = sessionStorage.getItem('studentBranch') || '';
       const year = sessionStorage.getItem('studentYear') || '';
       const cgpa = sessionStorage.getItem('studentCGPA') || '';
@@ -41,6 +53,17 @@ if (sessionStorage.getItem('isLoggedIn') !== 'true' || sessionStorage.getItem('u
       const github = sessionStorage.getItem('studentGithub') || '';
       const location = sessionStorage.getItem('studentLocation') || '';
       const skillsArr = JSON.parse(sessionStorage.getItem('studentSkills') || '[]');
+=======
+      const branch = localStorage.getItem('studentBranch') || sessionStorage.getItem('studentBranch') || '';
+      const year = localStorage.getItem('studentYear') || sessionStorage.getItem('studentYear') || '';
+      const cgpa = localStorage.getItem('studentCGPA') || sessionStorage.getItem('studentCGPA') || '';
+      const roll = localStorage.getItem('studentRoll') || sessionStorage.getItem('studentRoll') || '';
+      const phone = localStorage.getItem('studentPhone') || sessionStorage.getItem('studentPhone') || '';
+      const linkedin = localStorage.getItem('studentLinkedin') || sessionStorage.getItem('studentLinkedin') || '';
+      const github = localStorage.getItem('studentGithub') || sessionStorage.getItem('studentGithub') || '';
+      const location = localStorage.getItem('studentLocation') || sessionStorage.getItem('studentLocation') || '';
+      const skillsArr = JSON.parse(localStorage.getItem('studentSkills') || sessionStorage.getItem('studentSkills') || '[]');
+>>>>>>> UI
 
       const brYrEl = document.getElementById('pg-branch-year');
       if (brYrEl) brYrEl.innerHTML = `<i data-lucide="graduation-cap"></i> ${branch} · ${year}`;
@@ -302,7 +325,7 @@ if (sessionStorage.getItem('isLoggedIn') !== 'true' || sessionStorage.getItem('u
     }
 
     // ─── LOGOUT ───
-    function logout() { sessionStorage.clear(); window.location.href = 'Login.html'; }
+    function logout() { sessionStorage.clear(); localStorage.clear(); window.location.href = 'Login.html'; }
 
     // Initialize Lucide icons
     lucide.createIcons();

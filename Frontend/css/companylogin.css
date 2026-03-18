@@ -5,13 +5,3 @@
     border: 1px solid #bbf7d0;
     color: #059669;
 }
-
-.btn-login.company {
-    background: var(--green);
-    box-shadow: 0 4px 14px rgba(5, 150, 105, .3);
-}
-
-.btn-login.company:hover {
-    background: #047857;
-    box-shadow: 0 8px 20px rgba(5, 150, 105, .4);
-}

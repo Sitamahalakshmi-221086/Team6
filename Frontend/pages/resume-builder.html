@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+<<<<<<< HEAD
+=======
+
+>>>>>>> UI
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Resume Builder – CampusPlace</title>
+<<<<<<< HEAD
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&family=Playfair+Display:wght@700;800&family=Space+Grotesk:wght@400;500;600;700&family=Crimson+Pro:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/resume.css" />
 </head>
@@ -642,10 +647,50 @@
         <div style="display:flex;gap:8px;margin-top:14px;">
           <button class="btn sec lg" onclick="rbGo(0)"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;vertical-align:middle;margin-right:4px;"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
           <button class="btn lg" onclick="rbGo(2)">Next: Skills <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2;vertical-align:middle;margin-left:4px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+=======
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;800&family=Space+Grotesk:wght@400;500;600;700&family=Crimson+Pro:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="../css/resume.css">
+</head>
+
+<body>
+
+  <!-- ══════════════ TEMPLATE PICKER SCREEN ══════════════ -->
+  <div id="rb-template-screen" class="rb-screen on">
+    <div class="rbt-header">
+      <div class="rbt-header-inner">
+        <div class="rbt-back-row">
+          <button class="rbt-back-btn" onclick="goToDashboard()">
+            <svg viewBox="0 0 24 24">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+            Back to Dashboard
+          </button>
+        </div>
+        <h1 class="rbt-title">Choose a Resume Template</h1>
+        <p class="rbt-sub">24 professionally designed templates. Pick one that fits your style.</p>
+        <div class="rbt-search-row">
+          <div class="rbt-search">
+            <svg viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input id="tpl-search" type="text" placeholder="Search templates…" oninput="filterTemplates(this.value)" />
+          </div>
+          <div class="rbt-filter-row">
+            <button class="rbt-filter on" data-filter="all" onclick="setFilter(this,'all')">All (24)</button>
+            <button class="rbt-filter" data-filter="classic" onclick="setFilter(this,'classic')">Classic (6)</button>
+            <button class="rbt-filter" data-filter="modern" onclick="setFilter(this,'modern')">Modern (6)</button>
+            <button class="rbt-filter" data-filter="creative" onclick="setFilter(this,'creative')">Creative (6)</button>
+            <button class="rbt-filter" data-filter="minimal" onclick="setFilter(this,'minimal')">Minimal (6)</button>
+          </div>
+>>>>>>> UI
         </div>
       </div>
     </div>
 
+<<<<<<< HEAD
     <!-- Step 3: Skills -->
     <div class="rb-panel" id="rbp2">
       <div class="detail-block">
@@ -704,3 +749,1156 @@
 <script src="../js/resume.js"></script>
 </body>
 </html>
+=======
+    <div class="rbt-grid-wrap">
+      <div class="rbt-grid" id="tpl-grid">
+
+        <!-- CLASSIC 1 -->
+        <div class="tpl-card" data-cat="classic" onclick="selectTemplate('classic1')">
+          <div class="tpl-preview" style="background:#fff;padding:12px 14px;">
+            <div style="height:12px;background:#0b2e7a;border-radius:2px;margin-bottom:8px;"></div>
+            <div style="height:9px;width:55%;background:#0b2e7a;border-radius:2px;margin-bottom:4px;"></div>
+            <div style="height:5px;width:70%;background:#94a3b8;border-radius:2px;margin-bottom:8px;"></div>
+            <div style="height:1px;background:#1759d6;margin-bottom:7px;"></div>
+            <div style="height:6px;width:35%;background:#1759d6;border-radius:2px;margin-bottom:5px;"></div>
+            <div style="height:4px;width:90%;background:#d1d5db;border-radius:2px;margin-bottom:3px;"></div>
+            <div style="height:4px;width:75%;background:#d1d5db;border-radius:2px;margin-bottom:7px;"></div>
+            <div style="height:6px;width:30%;background:#1759d6;border-radius:2px;margin-bottom:5px;"></div>
+            <div style="display:flex;gap:4px;"><span
+                style="height:14px;width:44px;background:#e8f0fd;border-radius:100px;display:inline-block;"></span><span
+                style="height:14px;width:44px;background:#e8f0fd;border-radius:100px;display:inline-block;"></span><span
+                style="height:14px;width:44px;background:#e8f0fd;border-radius:100px;display:inline-block;"></span>
+            </div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Classic Professional</div>
+            <div class="tpl-desc">Navy header bar, clean serif — ideal for corporate roles</div>
+            <div class="tpl-tag-row"><span class="tpl-tag">Classic</span><span class="tpl-tag">Formal</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+        </div>
+
+        <!-- CLASSIC 2 -->
+        <div class="tpl-card" data-cat="classic" onclick="selectTemplate('classic2')">
+          <div class="tpl-preview" style="background:#fffdf7;padding:12px 14px;">
+            <div style="text-align:center;margin-bottom:6px;">
+              <div style="height:11px;width:50%;background:#7c2d12;border-radius:2px;margin:0 auto 3px;"></div>
+              <div style="height:4px;width:65%;background:#d1d5db;border-radius:2px;margin:0 auto;"></div>
+            </div>
+            <div style="height:2px;background:#7c2d12;margin-bottom:7px;"></div>
+            <div style="height:6px;width:32%;background:#7c2d12;border-radius:2px;margin-bottom:5px;"></div>
+            <div style="height:4px;width:88%;background:#d1d5db;border-radius:2px;margin-bottom:3px;"></div>
+            <div style="height:4px;width:70%;background:#d1d5db;border-radius:2px;margin-bottom:7px;"></div>
+            <div style="height:6px;width:28%;background:#7c2d12;border-radius:2px;margin-bottom:5px;"></div>
+            <div style="height:4px;width:82%;background:#d1d5db;border-radius:2px;margin-bottom:3px;"></div>
+            <div style="height:4px;width:65%;background:#d1d5db;border-radius:2px;"></div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Traditional Formal</div>
+            <div class="tpl-desc">Centered header with burgundy accents — timeless elegance</div>
+            <div class="tpl-tag-row"><span class="tpl-tag">Classic</span><span class="tpl-tag">Traditional</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+        </div>
+
+        <!-- CLASSIC 3 -->
+        <div class="tpl-card" data-cat="classic" onclick="selectTemplate('classic3')">
+          <div class="tpl-preview" style="background:#eef4f9;padding:12px 14px;">
+            <div style="background:#0b2e7a;padding:10px;border-radius:3px;margin-bottom:8px;">
+              <div style="height:9px;width:55%;background:rgba(255,255,255,0.9);border-radius:2px;margin-bottom:4px;">
+              </div>
+              <div style="height:4px;width:70%;background:rgba(255,255,255,0.5);border-radius:2px;"></div>
+            </div>
+            <div style="height:6px;width:32%;background:#1759d6;border-radius:2px;margin-bottom:5px;"></div>
+            <div style="height:4px;width:90%;background:#c7d2fe;border-radius:2px;margin-bottom:3px;"></div>
+            <div style="height:4px;width:72%;background:#c7d2fe;border-radius:2px;margin-bottom:7px;"></div>
+            <div style="height:6px;width:28%;background:#1759d6;border-radius:2px;margin-bottom:5px;"></div>
+            <div style="height:4px;width:85%;background:#c7d2fe;border-radius:2px;margin-bottom:3px;"></div>
+            <div style="height:4px;width:60%;background:#c7d2fe;border-radius:2px;"></div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Corporate Blue</div>
+            <div class="tpl-desc">Bold indigo header block — authoritative corporate look</div>
+            <div class="tpl-tag-row"><span class="tpl-tag">Classic</span><span class="tpl-tag">Corporate</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+          <div class="tpl-badge">New</div>
+        </div>
+
+        <!-- CLASSIC 4 -->
+        <div class="tpl-card" data-cat="classic" onclick="selectTemplate('classic4')">
+          <div class="tpl-preview" style="background:#fff;padding:12px 14px;">
+            <div style="border-bottom:3px double #111;padding-bottom:7px;margin-bottom:7px;text-align:center;">
+              <div style="height:11px;width:50%;background:#111;border-radius:2px;margin:0 auto 3px;"></div>
+              <div style="display:flex;justify-content:center;gap:6px;"><span
+                  style="height:4px;width:40px;background:#94a3b8;border-radius:2px;display:inline-block;"></span><span
+                  style="height:4px;width:40px;background:#94a3b8;border-radius:2px;display:inline-block;"></span><span
+                  style="height:4px;width:40px;background:#94a3b8;border-radius:2px;display:inline-block;"></span></div>
+            </div>
+            <div style="height:6px;width:40%;background:#111;border-radius:2px;margin-bottom:5px;"></div>
+            <div style="height:4px;width:88%;background:#e5e7eb;border-radius:2px;margin-bottom:3px;"></div>
+            <div style="height:4px;width:70%;background:#e5e7eb;border-radius:2px;margin-bottom:7px;"></div>
+            <div style="height:6px;width:35%;background:#111;border-radius:2px;margin-bottom:5px;"></div>
+            <div style="height:4px;width:82%;background:#e5e7eb;border-radius:2px;"></div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Executive Prestige</div>
+            <div class="tpl-desc">Double-ruled centered header — senior &amp; leadership roles</div>
+            <div class="tpl-tag-row"><span class="tpl-tag">Classic</span><span class="tpl-tag">Executive</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+        </div>
+
+        <!-- CLASSIC 5 -->
+        <div class="tpl-card" data-cat="classic" onclick="selectTemplate('classic5')">
+          <div class="tpl-preview" style="background:#f5f9fc;padding:12px 14px;">
+            <div
+              style="display:flex;align-items:center;gap:8px;margin-bottom:8px;border-bottom:2px solid #16a34a;padding-bottom:7px;">
+              <div style="width:32px;height:32px;border-radius:50%;background:#16a34a;flex-shrink:0;"></div>
+              <div>
+                <div style="height:8px;width:80px;background:#16a34a;border-radius:2px;margin-bottom:3px;"></div>
+                <div style="height:4px;width:60px;background:#94a3b8;border-radius:2px;"></div>
+              </div>
+            </div>
+            <div style="height:5px;width:35%;background:#16a34a;border-radius:2px;margin-bottom:5px;"></div>
+            <div style="height:4px;width:88%;background:#d1d5db;border-radius:2px;margin-bottom:3px;"></div>
+            <div style="height:4px;width:70%;background:#d1d5db;border-radius:2px;margin-bottom:7px;"></div>
+            <div style="height:5px;width:30%;background:#16a34a;border-radius:2px;margin-bottom:4px;"></div>
+            <div style="height:4px;width:82%;background:#d1d5db;border-radius:2px;"></div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Forest Professional</div>
+            <div class="tpl-desc">Avatar + green accent — polished and approachable</div>
+            <div class="tpl-tag-row"><span class="tpl-tag">Classic</span><span class="tpl-tag">Friendly</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+        </div>
+
+        <!-- CLASSIC 6 -->
+        <div class="tpl-card" data-cat="classic" onclick="selectTemplate('classic6')">
+          <div class="tpl-preview" style="background:#fffbeb;padding:12px 14px;">
+            <div style="border-left:4px solid #92400e;padding-left:8px;margin-bottom:8px;">
+              <div style="height:9px;width:55%;background:#92400e;border-radius:2px;margin-bottom:3px;"></div>
+              <div style="height:4px;width:70%;background:#d97706;border-radius:2px;"></div>
+            </div>
+            <div style="height:5px;width:32%;background:#92400e;border-radius:2px;margin-bottom:5px;"></div>
+            <div style="height:4px;width:90%;background:#fde68a;border-radius:2px;margin-bottom:3px;"></div>
+            <div style="height:4px;width:75%;background:#fde68a;border-radius:2px;margin-bottom:7px;"></div>
+            <div style="height:5px;width:28%;background:#92400e;border-radius:2px;margin-bottom:4px;"></div>
+            <div style="height:4px;width:85%;background:#fde68a;border-radius:2px;margin-bottom:3px;"></div>
+            <div style="height:4px;width:60%;background:#fde68a;border-radius:2px;"></div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Academic Amber</div>
+            <div class="tpl-desc">Left accent bar with amber tones — great for academic/research</div>
+            <div class="tpl-tag-row"><span class="tpl-tag">Classic</span><span class="tpl-tag">Academic</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+        </div>
+
+        <!-- MODERN 1 -->
+        <div class="tpl-card" data-cat="modern" onclick="selectTemplate('modern1')">
+          <div class="tpl-preview" style="display:flex;padding:0;background:#fff;">
+            <div style="width:80px;background:#1e293b;padding:10px 8px;flex-shrink:0;">
+              <div style="width:32px;height:32px;border-radius:50%;background:#0aada0;margin:0 auto 7px;"></div>
+              <div style="height:5px;width:70%;background:rgba(255,255,255,0.3);border-radius:2px;margin:0 auto 3px;">
+              </div>
+              <div style="height:4px;width:55%;background:rgba(255,255,255,0.2);border-radius:2px;margin:0 auto 8px;">
+              </div>
+              <div style="height:4px;width:60%;background:rgba(255,255,255,0.4);border-radius:2px;margin-bottom:4px;">
+              </div>
+              <div style="height:12px;width:70%;background:rgba(10,173,160,0.4);border-radius:3px;margin-bottom:3px;">
+              </div>
+              <div style="height:12px;width:70%;background:rgba(10,173,160,0.4);border-radius:3px;margin-bottom:3px;">
+              </div>
+            </div>
+            <div style="flex:1;padding:10px;">
+              <div style="height:8px;width:70%;background:#111;border-radius:2px;margin-bottom:4px;"></div>
+              <div style="height:4px;width:55%;background:#94a3b8;border-radius:2px;margin-bottom:8px;"></div>
+              <div style="height:5px;width:38%;background:#0aada0;border-radius:2px;margin-bottom:5px;"></div>
+              <div style="height:3px;width:88%;background:#e5e7eb;border-radius:2px;margin-bottom:3px;"></div>
+              <div style="height:3px;width:72%;background:#e5e7eb;border-radius:2px;margin-bottom:7px;"></div>
+              <div style="height:5px;width:34%;background:#0aada0;border-radius:2px;margin-bottom:4px;"></div>
+              <div style="height:3px;width:85%;background:#e5e7eb;border-radius:2px;"></div>
+            </div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Modern Split</div>
+            <div class="tpl-desc">Dark sidebar with teal accents — stands out instantly</div>
+            <div class="tpl-tag-row"><span class="tpl-tag tpl-tag-modern">Modern</span><span
+                class="tpl-tag">Popular</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+          <div class="tpl-badge">Popular</div>
+        </div>
+
+        <!-- MODERN 2 -->
+        <div class="tpl-card" data-cat="modern" onclick="selectTemplate('modern2')">
+          <div class="tpl-preview" style="display:flex;padding:0;background:#fff;">
+            <div style="width:80px;background:#0f172a;padding:10px 8px;flex-shrink:0;">
+              <div style="height:5px;width:75%;background:#f1f5f9;border-radius:2px;margin-bottom:3px;"></div>
+              <div style="height:3px;width:55%;background:#475569;border-radius:2px;margin-bottom:8px;"></div>
+              <div style="height:3px;background:rgba(255,255,255,0.1);margin-bottom:6px;"></div>
+              <div style="height:4px;width:55%;background:#0aada0;border-radius:2px;margin-bottom:4px;"></div>
+              <div
+                style="height:12px;width:80%;background:#1e293b;border-radius:3px;border-left:2px solid #0aada0;margin-bottom:3px;">
+              </div>
+              <div
+                style="height:12px;width:80%;background:#1e293b;border-radius:3px;border-left:2px solid #0aada0;margin-bottom:3px;">
+              </div>
+              <div style="height:12px;width:80%;background:#1e293b;border-radius:3px;border-left:2px solid #0aada0;">
+              </div>
+            </div>
+            <div style="flex:1;padding:10px;">
+              <div
+                style="height:4px;background:linear-gradient(90deg,#0aada0,#1759d6);border-radius:2px;margin-bottom:8px;">
+              </div>
+              <div style="height:8px;width:65%;background:#111;border-radius:2px;margin-bottom:8px;"></div>
+              <div style="height:4px;width:38%;background:#0aada0;border-radius:2px;margin-bottom:4px;"></div>
+              <div style="height:3px;width:90%;background:#e5e7eb;border-radius:2px;margin-bottom:3px;"></div>
+              <div style="height:3px;width:70%;background:#e5e7eb;border-radius:2px;margin-bottom:7px;"></div>
+              <div style="height:4px;width:34%;background:#0aada0;border-radius:2px;margin-bottom:4px;"></div>
+              <div style="height:3px;width:85%;background:#e5e7eb;border-radius:2px;"></div>
+            </div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Tech Stack</div>
+            <div class="tpl-desc">Dark navy sidebar with skill chips — perfect for developers</div>
+            <div class="tpl-tag-row"><span class="tpl-tag tpl-tag-modern">Modern</span><span class="tpl-tag">Tech</span>
+            </div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+        </div>
+
+        <!-- MODERN 3 -->
+        <div class="tpl-card" data-cat="modern" onclick="selectTemplate('modern3')">
+          <div class="tpl-preview" style="background:#fff;padding:0;">
+            <div
+              style="height:40px;background:linear-gradient(135deg,#6366f1,#8b5cf6,#a855f7);display:flex;align-items:center;padding:0 12px;">
+              <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.3);margin-right:8px;">
+              </div>
+              <div>
+                <div
+                  style="height:6px;width:60px;background:rgba(255,255,255,0.9);border-radius:2px;margin-bottom:3px;">
+                </div>
+                <div style="height:3px;width:80px;background:rgba(255,255,255,0.5);border-radius:2px;"></div>
+              </div>
+            </div>
+            <div style="padding:10px 12px;">
+              <div style="height:5px;width:35%;background:#6366f1;border-radius:2px;margin-bottom:5px;"></div>
+              <div style="height:3px;width:90%;background:#e5e7eb;border-radius:2px;margin-bottom:3px;"></div>
+              <div style="height:3px;width:75%;background:#e5e7eb;border-radius:2px;margin-bottom:7px;"></div>
+              <div style="height:5px;width:30%;background:#6366f1;border-radius:2px;margin-bottom:4px;"></div>
+              <div style="display:flex;gap:3px;"><span
+                  style="height:13px;width:36px;background:#ede9fe;border-radius:100px;display:inline-block;"></span><span
+                  style="height:13px;width:36px;background:#ede9fe;border-radius:100px;display:inline-block;"></span><span
+                  style="height:13px;width:36px;background:#ede9fe;border-radius:100px;display:inline-block;"></span>
+              </div>
+            </div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Gradient Accent</div>
+            <div class="tpl-desc">Purple gradient header — vibrant and modern look</div>
+            <div class="tpl-tag-row"><span class="tpl-tag tpl-tag-modern">Modern</span><span
+                class="tpl-tag">Vibrant</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+        </div>
+
+        <!-- MODERN 4 -->
+        <div class="tpl-card" data-cat="modern" onclick="selectTemplate('modern4')">
+          <div class="tpl-preview" style="background:#eef4f9;padding:10px;">
+            <div
+              style="background:#fff;border-radius:6px;padding:8px;margin-bottom:6px;box-shadow:0 1px 3px rgba(23,89,214,0.08);">
+              <div style="height:7px;width:55%;background:#0b2e7a;border-radius:2px;margin-bottom:3px;"></div>
+              <div style="height:4px;width:70%;background:#94a3b8;border-radius:2px;margin-bottom:4px;"></div>
+              <div style="display:flex;gap:4px;"><span
+                  style="height:13px;width:50px;background:#e8f0fd;border-radius:100px;display:inline-block;border:1px solid rgba(23,89,214,0.2);"></span><span
+                  style="height:13px;width:50px;background:#e8f0fd;border-radius:100px;display:inline-block;border:1px solid rgba(23,89,214,0.2);"></span>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;">
+              <div style="background:#fff;border-radius:5px;padding:6px;box-shadow:0 1px 2px rgba(23,89,214,0.06);">
+                <div style="height:4px;width:60%;background:#1759d6;border-radius:2px;margin-bottom:3px;"></div>
+                <div style="height:3px;width:85%;background:#e5e7eb;border-radius:2px;margin-bottom:2px;"></div>
+                <div style="height:3px;width:70%;background:#e5e7eb;border-radius:2px;"></div>
+              </div>
+              <div style="background:#fff;border-radius:5px;padding:6px;box-shadow:0 1px 2px rgba(23,89,214,0.06);">
+                <div style="height:4px;width:60%;background:#1759d6;border-radius:2px;margin-bottom:3px;"></div>
+                <div style="height:3px;width:85%;background:#e5e7eb;border-radius:2px;margin-bottom:2px;"></div>
+                <div style="height:3px;width:70%;background:#e5e7eb;border-radius:2px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Card Layout</div>
+            <div class="tpl-desc">Card-based sections on light blue — clean and structured</div>
+            <div class="tpl-tag-row"><span class="tpl-tag tpl-tag-modern">Modern</span><span
+                class="tpl-tag">Structured</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+        </div>
+
+        <!-- MODERN 5 -->
+        <div class="tpl-card" data-cat="modern" onclick="selectTemplate('modern5')">
+          <div class="tpl-preview" style="background:#0d1117;padding:12px 14px;">
+            <div style="height:8px;width:58%;background:#0aada0;border-radius:2px;margin-bottom:4px;"></div>
+            <div style="height:4px;width:72%;background:#30363d;border-radius:2px;margin-bottom:8px;"></div>
+            <div style="height:1px;background:#0aada0;margin-bottom:7px;opacity:0.4;"></div>
+            <div style="height:5px;width:33%;background:#0aada0;border-radius:2px;margin-bottom:5px;"></div>
+            <div style="height:3px;width:90%;background:#21262d;border-radius:2px;margin-bottom:3px;"></div>
+            <div style="height:3px;width:73%;background:#21262d;border-radius:2px;margin-bottom:7px;"></div>
+            <div style="display:flex;gap:4px;"><span
+                style="height:13px;width:42px;background:rgba(10,173,160,0.15);border-radius:3px;display:inline-block;border:1px solid rgba(10,173,160,0.3);"></span><span
+                style="height:13px;width:42px;background:rgba(10,173,160,0.15);border-radius:3px;display:inline-block;border:1px solid rgba(10,173,160,0.3);"></span><span
+                style="height:13px;width:42px;background:rgba(10,173,160,0.15);border-radius:3px;display:inline-block;border:1px solid rgba(10,173,160,0.3);"></span>
+            </div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Neon Dark</div>
+            <div class="tpl-desc">GitHub-dark theme with neon teal — for bold developers</div>
+            <div class="tpl-tag-row"><span class="tpl-tag tpl-tag-modern">Modern</span><span class="tpl-tag">Dark</span>
+            </div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+        </div>
+
+        <!-- MODERN 6 -->
+        <div class="tpl-card" data-cat="modern" onclick="selectTemplate('modern6')">
+          <div class="tpl-preview" style="display:flex;padding:0;background:#fff;">
+            <div style="width:75px;background:#f5f9fc;border-right:1px solid rgba(23,89,214,0.12);padding:10px 8px;">
+              <div
+                style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#1759d6,#0aada0);margin:0 auto 6px;">
+              </div>
+              <div style="height:4px;width:70%;background:#1759d6;border-radius:2px;margin:0 auto 3px;"></div>
+              <div style="height:3px;width:55%;background:#d1d5db;border-radius:2px;margin:0 auto 8px;"></div>
+              <div style="height:3px;width:60%;background:#e8f0fd;border-radius:2px;margin-bottom:3px;"></div>
+              <div style="height:3px;width:60%;background:#e8f0fd;border-radius:2px;margin-bottom:3px;"></div>
+              <div style="height:3px;width:60%;background:#e8f0fd;border-radius:2px;"></div>
+            </div>
+            <div style="flex:1;padding:10px;">
+              <div style="height:5px;width:38%;background:#1759d6;border-radius:2px;margin-bottom:7px;"></div>
+              <div style="display:flex;gap:5px;margin-bottom:5px;align-items:center;">
+                <div style="width:7px;height:7px;border-radius:50%;background:#1759d6;flex-shrink:0;"></div>
+                <div style="height:3px;flex:1;background:#e5e7eb;border-radius:2px;"></div>
+              </div>
+              <div
+                style="height:3px;width:85%;background:#e5e7eb;border-radius:2px;margin-bottom:2px;margin-left:12px;">
+              </div>
+              <div
+                style="height:3px;width:70%;background:#e5e7eb;border-radius:2px;margin-bottom:5px;margin-left:12px;">
+              </div>
+              <div style="display:flex;gap:5px;align-items:center;margin-bottom:5px;">
+                <div
+                  style="width:7px;height:7px;border-radius:50%;background:#e8f0fd;flex-shrink:0;border:1px solid #1759d6;">
+                </div>
+                <div style="height:3px;flex:1;background:#e5e7eb;border-radius:2px;"></div>
+              </div>
+              <div style="height:3px;width:80%;background:#e5e7eb;border-radius:2px;margin-left:12px;"></div>
+            </div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Timeline Flow</div>
+            <div class="tpl-desc">Timeline-style experience section — dynamic and storytelling</div>
+            <div class="tpl-tag-row"><span class="tpl-tag tpl-tag-modern">Modern</span><span
+                class="tpl-tag">Timeline</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+          <div class="tpl-badge">New</div>
+        </div>
+
+        <!-- CREATIVE 1 -->
+        <div class="tpl-card" data-cat="creative" onclick="selectTemplate('creative1')">
+          <div class="tpl-preview" style="background:#fff;padding:0;">
+            <div style="background:linear-gradient(110deg,#4c1d95,#7c3aed);padding:12px 14px;margin-bottom:8px;">
+              <div style="height:10px;width:55%;background:rgba(255,255,255,0.95);border-radius:2px;margin-bottom:4px;">
+              </div>
+              <div style="height:4px;width:70%;background:rgba(255,255,255,0.55);border-radius:2px;"></div>
+            </div>
+            <div style="padding:0 14px;">
+              <div style="height:5px;width:34%;background:#7c3aed;border-radius:2px;margin-bottom:5px;"></div>
+              <div style="height:3px;width:90%;background:#ede9fe;border-radius:2px;margin-bottom:3px;"></div>
+              <div style="height:3px;width:72%;background:#ede9fe;border-radius:2px;margin-bottom:7px;"></div>
+              <div style="display:flex;gap:4px;"><span
+                  style="height:14px;width:44px;background:#ede9fe;border-radius:100px;display:inline-block;"></span><span
+                  style="height:14px;width:44px;background:#ede9fe;border-radius:100px;display:inline-block;"></span>
+              </div>
+            </div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Creative Bold</div>
+            <div class="tpl-desc">Purple gradient header — great for design &amp; tech roles</div>
+            <div class="tpl-tag-row"><span class="tpl-tag tpl-tag-creative">Creative</span><span
+                class="tpl-tag">Colorful</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+        </div>
+
+        <!-- CREATIVE 2 -->
+        <div class="tpl-card" data-cat="creative" onclick="selectTemplate('creative2')">
+          <div class="tpl-preview" style="background:#fff;padding:0;">
+            <div
+              style="background:linear-gradient(110deg,#dc2626,#ea580c,#d97706);padding:12px 14px;margin-bottom:8px;">
+              <div style="height:10px;width:52%;background:rgba(255,255,255,0.95);border-radius:2px;margin-bottom:4px;">
+              </div>
+              <div style="height:4px;width:68%;background:rgba(255,255,255,0.55);border-radius:2px;"></div>
+            </div>
+            <div style="padding:0 14px;">
+              <div style="height:5px;width:32%;background:#ea580c;border-radius:2px;margin-bottom:5px;"></div>
+              <div style="height:3px;width:88%;background:#ffedd5;border-radius:2px;margin-bottom:3px;"></div>
+              <div style="height:3px;width:70%;background:#ffedd5;border-radius:2px;margin-bottom:7px;"></div>
+              <div style="display:flex;gap:4px;"><span
+                  style="height:14px;width:44px;background:#ffedd5;border-radius:100px;display:inline-block;"></span><span
+                  style="height:14px;width:44px;background:#ffedd5;border-radius:100px;display:inline-block;"></span>
+              </div>
+            </div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Sunset Warm</div>
+            <div class="tpl-desc">Red-orange-amber gradient — energetic and eye-catching</div>
+            <div class="tpl-tag-row"><span class="tpl-tag tpl-tag-creative">Creative</span><span
+                class="tpl-tag">Bold</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+        </div>
+
+        <!-- CREATIVE 3 -->
+        <div class="tpl-card" data-cat="creative" onclick="selectTemplate('creative3')">
+          <div class="tpl-preview" style="background:#fff;padding:0;">
+            <div
+              style="background:linear-gradient(110deg,#0b2e7a,#1759d6,#0aada0);padding:12px 14px;margin-bottom:8px;">
+              <div style="height:10px;width:54%;background:rgba(255,255,255,0.95);border-radius:2px;margin-bottom:4px;">
+              </div>
+              <div style="height:4px;width:69%;background:rgba(255,255,255,0.55);border-radius:2px;"></div>
+            </div>
+            <div style="padding:0 14px;">
+              <div style="height:5px;width:33%;background:#1759d6;border-radius:2px;margin-bottom:5px;"></div>
+              <div style="height:3px;width:90%;background:#e8f0fd;border-radius:2px;margin-bottom:3px;"></div>
+              <div style="height:3px;width:73%;background:#e8f0fd;border-radius:2px;margin-bottom:7px;"></div>
+              <div style="display:flex;gap:4px;"><span
+                  style="height:14px;width:44px;background:#e8f0fd;border-radius:100px;display:inline-block;"></span><span
+                  style="height:14px;width:44px;background:#e8f0fd;border-radius:100px;display:inline-block;"></span>
+              </div>
+            </div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Ocean Blue</div>
+            <div class="tpl-desc">Deep ocean gradient — professional with creative flair</div>
+            <div class="tpl-tag-row"><span class="tpl-tag tpl-tag-creative">Creative</span><span
+                class="tpl-tag">Blue</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+        </div>
+
+        <!-- CREATIVE 4 -->
+        <div class="tpl-card" data-cat="creative" onclick="selectTemplate('creative4')">
+          <div class="tpl-preview" style="background:#fff;padding:0;">
+            <div
+              style="background:linear-gradient(110deg,#064e3b,#065f46,#059669);padding:12px 14px;margin-bottom:8px;">
+              <div style="height:10px;width:53%;background:rgba(255,255,255,0.95);border-radius:2px;margin-bottom:4px;">
+              </div>
+              <div style="height:4px;width:67%;background:rgba(255,255,255,0.55);border-radius:2px;"></div>
+            </div>
+            <div style="padding:0 14px;">
+              <div style="height:5px;width:31%;background:#059669;border-radius:2px;margin-bottom:5px;"></div>
+              <div style="height:3px;width:89%;background:#d1fae5;border-radius:2px;margin-bottom:3px;"></div>
+              <div style="height:3px;width:71%;background:#d1fae5;border-radius:2px;margin-bottom:7px;"></div>
+              <div style="display:flex;gap:4px;"><span
+                  style="height:14px;width:44px;background:#d1fae5;border-radius:100px;display:inline-block;"></span><span
+                  style="height:14px;width:44px;background:#d1fae5;border-radius:100px;display:inline-block;"></span>
+              </div>
+            </div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Emerald</div>
+            <div class="tpl-desc">Rich emerald green gradient — fresh and distinctive</div>
+            <div class="tpl-tag-row"><span class="tpl-tag tpl-tag-creative">Creative</span><span
+                class="tpl-tag">Green</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+        </div>
+
+        <!-- CREATIVE 5 -->
+        <div class="tpl-card" data-cat="creative" onclick="selectTemplate('creative5')">
+          <div class="tpl-preview" style="background:#fff;padding:0;">
+            <div
+              style="background:linear-gradient(110deg,#9f1239,#be185d,#db2777);padding:12px 14px;margin-bottom:8px;">
+              <div style="height:10px;width:56%;background:rgba(255,255,255,0.95);border-radius:2px;margin-bottom:4px;">
+              </div>
+              <div style="height:4px;width:71%;background:rgba(255,255,255,0.55);border-radius:2px;"></div>
+            </div>
+            <div style="padding:0 14px;">
+              <div style="height:5px;width:34%;background:#be185d;border-radius:2px;margin-bottom:5px;"></div>
+              <div style="height:3px;width:91%;background:#fce7f3;border-radius:2px;margin-bottom:3px;"></div>
+              <div style="height:3px;width:74%;background:#fce7f3;border-radius:2px;margin-bottom:7px;"></div>
+              <div style="display:flex;gap:4px;"><span
+                  style="height:14px;width:44px;background:#fce7f3;border-radius:100px;display:inline-block;"></span><span
+                  style="height:14px;width:44px;background:#fce7f3;border-radius:100px;display:inline-block;"></span>
+              </div>
+            </div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Rose &amp; Crimson</div>
+            <div class="tpl-desc">Deep rose gradient — bold and unforgettable</div>
+            <div class="tpl-tag-row"><span class="tpl-tag tpl-tag-creative">Creative</span><span
+                class="tpl-tag">Rose</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+        </div>
+
+        <!-- CREATIVE 6 -->
+        <div class="tpl-card" data-cat="creative" onclick="selectTemplate('creative6')">
+          <div class="tpl-preview" style="background:#fff;padding:0;">
+            <div
+              style="background:linear-gradient(110deg,#1e1b4b,#312e81,#4338ca);padding:12px 14px;margin-bottom:8px;">
+              <div style="display:flex;align-items:center;gap:7px;">
+                <div
+                  style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.4);flex-shrink:0;">
+                </div>
+                <div>
+                  <div
+                    style="height:7px;width:60px;background:rgba(255,255,255,0.9);border-radius:2px;margin-bottom:3px;">
+                  </div>
+                  <div style="height:3px;width:75px;background:rgba(255,255,255,0.5);border-radius:2px;"></div>
+                </div>
+              </div>
+            </div>
+            <div style="padding:0 14px 8px;">
+              <div style="height:5px;width:33%;background:#4338ca;border-radius:2px;margin-bottom:5px;"></div>
+              <div style="height:3px;width:89%;background:#e0e7ff;border-radius:2px;margin-bottom:3px;"></div>
+              <div style="height:3px;width:72%;background:#e0e7ff;border-radius:2px;margin-bottom:7px;"></div>
+              <div style="display:flex;gap:4px;"><span
+                  style="height:14px;width:44px;background:#e0e7ff;border-radius:100px;display:inline-block;"></span><span
+                  style="height:14px;width:44px;background:#e0e7ff;border-radius:100px;display:inline-block;"></span>
+              </div>
+            </div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Midnight Indigo</div>
+            <div class="tpl-desc">Deep indigo with avatar — mysterious and sophisticated</div>
+            <div class="tpl-tag-row"><span class="tpl-tag tpl-tag-creative">Creative</span><span
+                class="tpl-tag">Dark</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+          <div class="tpl-badge">New</div>
+        </div>
+
+        <!-- MINIMAL 1 -->
+        <div class="tpl-card" data-cat="minimal" onclick="selectTemplate('minimal1')">
+          <div class="tpl-preview" style="background:#fff;padding:16px 14px;">
+            <div style="height:12px;width:50%;background:#111;border-radius:2px;margin-bottom:3px;"></div>
+            <div style="height:2px;background:#111;margin:7px 0;"></div>
+            <div style="height:4px;width:65%;background:#9ca3af;border-radius:2px;margin-bottom:12px;"></div>
+            <div style="height:5px;width:30%;background:#374151;border-radius:2px;margin-bottom:5px;"></div>
+            <div style="height:3px;width:90%;background:#f3f4f6;border-radius:2px;margin-bottom:3px;"></div>
+            <div style="height:3px;width:75%;background:#f3f4f6;border-radius:2px;margin-bottom:9px;"></div>
+            <div style="height:5px;width:28%;background:#374151;border-radius:2px;margin-bottom:5px;"></div>
+            <div style="height:3px;width:85%;background:#f3f4f6;border-radius:2px;margin-bottom:3px;"></div>
+            <div style="height:3px;width:62%;background:#f3f4f6;border-radius:2px;"></div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Minimal Elegant</div>
+            <div class="tpl-desc">Pure white with fine typography — timeless and refined</div>
+            <div class="tpl-tag-row"><span class="tpl-tag tpl-tag-minimal">Minimal</span><span
+                class="tpl-tag">Clean</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+        </div>
+
+        <!-- MINIMAL 2 -->
+        <div class="tpl-card" data-cat="minimal" onclick="selectTemplate('minimal2')">
+          <div class="tpl-preview" style="background:#fafafa;padding:14px;">
+            <div
+              style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #e5e7eb;">
+              <div>
+                <div style="height:9px;width:80px;background:#111;border-radius:2px;margin-bottom:3px;"></div>
+                <div style="height:4px;width:60px;background:#9ca3af;border-radius:2px;"></div>
+              </div>
+              <div style="text-align:right;">
+                <div style="height:4px;width:55px;background:#e5e7eb;border-radius:2px;margin-bottom:3px;"></div>
+                <div style="height:4px;width:45px;background:#e5e7eb;border-radius:2px;"></div>
+              </div>
+            </div>
+            <div style="height:5px;width:32%;background:#374151;border-radius:2px;margin-bottom:4px;"></div>
+            <div style="height:3px;width:88%;background:#e5e7eb;border-radius:2px;margin-bottom:3px;"></div>
+            <div style="height:3px;width:70%;background:#e5e7eb;border-radius:2px;margin-bottom:8px;"></div>
+            <div style="height:5px;width:26%;background:#374151;border-radius:2px;margin-bottom:4px;"></div>
+            <div style="height:3px;width:85%;background:#e5e7eb;border-radius:2px;"></div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Monochrome</div>
+            <div class="tpl-desc">Balanced two-column header, pure black &amp; white</div>
+            <div class="tpl-tag-row"><span class="tpl-tag tpl-tag-minimal">Minimal</span><span
+                class="tpl-tag">B&amp;W</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+        </div>
+
+        <!-- MINIMAL 3 -->
+        <div class="tpl-card" data-cat="minimal" onclick="selectTemplate('minimal3')">
+          <div class="tpl-preview" style="background:#fff;padding:14px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#f59e0b;flex-shrink:0;"></div>
+              <div style="height:8px;width:65%;background:#111;border-radius:2px;"></div>
+            </div>
+            <div style="height:3px;width:75%;background:#fde68a;border-radius:2px;margin-bottom:9px;margin-left:16px;">
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+              <div style="width:6px;height:6px;border-radius:50%;background:#f59e0b;flex-shrink:0;"></div>
+              <div style="height:5px;width:30%;background:#374151;border-radius:2px;"></div>
+            </div>
+            <div style="height:3px;width:88%;background:#fef3c7;border-radius:2px;margin-bottom:3px;margin-left:14px;">
+            </div>
+            <div style="height:3px;width:70%;background:#fef3c7;border-radius:2px;margin-bottom:8px;margin-left:14px;">
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+              <div style="width:6px;height:6px;border-radius:50%;background:#f59e0b;flex-shrink:0;"></div>
+              <div style="height:5px;width:26%;background:#374151;border-radius:2px;"></div>
+            </div>
+            <div style="height:3px;width:82%;background:#fef3c7;border-radius:2px;margin-left:14px;"></div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Dot Accent</div>
+            <div class="tpl-desc">Amber dot markers — subtle warmth with minimal style</div>
+            <div class="tpl-tag-row"><span class="tpl-tag tpl-tag-minimal">Minimal</span><span
+                class="tpl-tag">Warm</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+        </div>
+
+        <!-- MINIMAL 4 -->
+        <div class="tpl-card" data-cat="minimal" onclick="selectTemplate('minimal4')">
+          <div class="tpl-preview" style="background:#fff;padding:14px;">
+            <div style="border-left:3px solid #1759d6;padding-left:9px;margin-bottom:9px;">
+              <div style="height:9px;width:55%;background:#111;border-radius:2px;margin-bottom:3px;"></div>
+              <div style="height:4px;width:70%;background:#e8f0fd;border-radius:2px;"></div>
+            </div>
+            <div style="height:4px;width:32%;background:#1759d6;border-radius:2px;margin-bottom:5px;"></div>
+            <div style="height:3px;width:90%;background:#e8f0fd;border-radius:2px;margin-bottom:3px;"></div>
+            <div style="height:3px;width:73%;background:#e8f0fd;border-radius:2px;margin-bottom:8px;"></div>
+            <div style="height:4px;width:28%;background:#1759d6;border-radius:2px;margin-bottom:5px;"></div>
+            <div style="height:3px;width:85%;background:#e8f0fd;border-radius:2px;margin-bottom:3px;"></div>
+            <div style="height:3px;width:62%;background:#e8f0fd;border-radius:2px;"></div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Line Art</div>
+            <div class="tpl-desc">Left border accent in blue — crisp and architectural</div>
+            <div class="tpl-tag-row"><span class="tpl-tag tpl-tag-minimal">Minimal</span><span
+                class="tpl-tag">Lines</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+        </div>
+
+        <!-- MINIMAL 5 -->
+        <div class="tpl-card" data-cat="minimal" onclick="selectTemplate('minimal5')">
+          <div class="tpl-preview" style="background:#f5f9fc;padding:14px;">
+            <div
+              style="background:#fff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border:1px solid rgba(23,89,214,0.12);">
+              <div style="height:8px;width:55%;background:#1a3050;border-radius:2px;margin-bottom:3px;"></div>
+              <div style="height:3px;width:70%;background:#9ca3af;border-radius:2px;"></div>
+            </div>
+            <div style="height:4px;width:30%;background:#1a3050;border-radius:2px;margin-bottom:5px;"></div>
+            <div style="height:3px;width:90%;background:rgba(23,89,214,0.12);border-radius:2px;margin-bottom:3px;">
+            </div>
+            <div style="height:3px;width:73%;background:rgba(23,89,214,0.12);border-radius:2px;margin-bottom:8px;">
+            </div>
+            <div style="height:4px;width:27%;background:#1a3050;border-radius:2px;margin-bottom:5px;"></div>
+            <div style="height:3px;width:84%;background:rgba(23,89,214,0.12);border-radius:2px;"></div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Soft Blue</div>
+            <div class="tpl-desc">Card header on soft blue background — clean and approachable</div>
+            <div class="tpl-tag-row"><span class="tpl-tag tpl-tag-minimal">Minimal</span><span
+                class="tpl-tag">Soft</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+        </div>
+
+        <!-- MINIMAL 6 -->
+        <div class="tpl-card" data-cat="minimal" onclick="selectTemplate('minimal6')">
+          <div class="tpl-preview" style="background:#fff;padding:14px;">
+            <div
+              style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;padding-bottom:8px;border-bottom:2px solid rgba(23,89,214,0.15);">
+              <div>
+                <div style="height:9px;width:80%;background:#111;border-radius:2px;margin-bottom:3px;"></div>
+                <div style="height:3px;width:60%;background:#94a3b8;border-radius:2px;"></div>
+              </div>
+              <div style="text-align:right;">
+                <div
+                  style="height:3px;width:70%;background:rgba(23,89,214,0.15);border-radius:2px;margin:0 0 3px auto;">
+                </div>
+                <div style="height:3px;width:55%;background:rgba(23,89,214,0.15);border-radius:2px;margin-left:auto;">
+                </div>
+              </div>
+            </div>
+            <div style="height:4px;width:30%;background:#0aada0;border-radius:2px;margin-bottom:5px;"></div>
+            <div style="height:3px;width:88%;background:#e6f7f6;border-radius:2px;margin-bottom:3px;"></div>
+            <div style="height:3px;width:71%;background:#e6f7f6;border-radius:2px;margin-bottom:8px;"></div>
+            <div style="height:4px;width:25%;background:#0aada0;border-radius:2px;margin-bottom:4px;"></div>
+            <div style="height:3px;width:83%;background:#e6f7f6;border-radius:2px;"></div>
+          </div>
+          <div class="tpl-info">
+            <div class="tpl-name">Nordic Teal</div>
+            <div class="tpl-desc">Teal accents, grid header — clean Scandinavian feel</div>
+            <div class="tpl-tag-row"><span class="tpl-tag tpl-tag-minimal">Minimal</span><span
+                class="tpl-tag">Nordic</span></div>
+          </div>
+          <div class="tpl-select-btn">Select Template →</div>
+        </div>
+
+      </div><!-- /rbt-grid -->
+      <div class="rbt-empty" id="tpl-empty" style="display:none;">
+        <svg viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        No templates match your search.
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════ FORM SCREEN ══════════════ -->
+  <div id="rb-form-screen" class="rb-screen">
+    <div class="rbf-topbar">
+      <button class="rbt-back-btn" onclick="goBackToTemplates()">
+        <svg viewBox="0 0 24 24">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+        Change Template
+      </button>
+      <div class="rbf-selected-tpl" id="selected-tpl-label">Template: Classic Professional</div>
+      <div style="width:140px;"></div>
+    </div>
+
+    <div class="rbf-body">
+      <div class="sec-h">Resume Builder</div>
+      <div class="rb-steps">
+        <div class="rb-step on" id="rs0" onclick="rbGo(0)">1. Personal</div>
+        <div class="rb-step" id="rs1" onclick="rbGo(1)">2. Education</div>
+        <div class="rb-step" id="rs2" onclick="rbGo(2)">3. Skills</div>
+        <div class="rb-step" id="rs3" onclick="rbGo(3)">4. Projects</div>
+        <div class="rb-step" id="rs4" onclick="rbGo(4)">5. Preview</div>
+      </div>
+
+      <!-- Step 1 -->
+      <div class="rb-panel on" id="rbp0">
+        <div class="detail-block">
+          <div class="detail-title">Personal Information</div>
+          <div class="form-grid">
+            <div class="fg"><label>Full Name</label><input id="rb-name" placeholder="Arjun Sharma" /></div>
+            <div class="fg"><label>Email</label><input id="rb-email" placeholder="arjun@college.edu" /></div>
+            <div class="fg"><label>Phone</label><input id="rb-phone" placeholder="+91 98765 43210" /></div>
+            <div class="fg"><label>LinkedIn URL</label><input id="rb-linkedin" placeholder="linkedin.com/in/arjun" />
+            </div>
+            <div class="fg"><label>GitHub (optional)</label><input id="rb-github" placeholder="github.com/arjun" />
+            </div>
+            <div class="fg"><label>Location</label><input id="rb-location" placeholder="Hyderabad, India" /></div>
+            <div class="fg full"><label>Objective / Summary</label><textarea id="rb-obj"
+                placeholder="A passionate CSE student seeking…"></textarea></div>
+          </div>
+          <button class="btn lg" style="margin-top:14px;" onclick="rbGo(1)">Next: Education <svg viewBox="0 0 24 24"
+              style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2;vertical-align:middle;margin-left:4px;">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg></button>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="rb-panel" id="rbp1">
+        <div class="detail-block">
+          <div class="detail-title">Education</div>
+          <div class="form-grid">
+            <div class="fg"><label>College / University</label><input id="rb-college" placeholder="JNTU Hyderabad" />
+            </div>
+            <div class="fg"><label>Degree &amp; Branch</label><input id="rb-degree"
+                placeholder="B.Tech – Computer Science" /></div>
+            <div class="fg"><label>Year of Passing</label><input id="rb-year" placeholder="2026" /></div>
+            <div class="fg"><label>CGPA</label><input id="rb-cgpa" placeholder="8.5" /></div>
+            <div class="fg"><label>12th School &amp; Percentage</label><input id="rb-12"
+                placeholder="ABC School – 92%" /></div>
+            <div class="fg"><label>10th School &amp; Percentage</label><input id="rb-10"
+                placeholder="XYZ School – 95%" /></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:14px;">
+            <button class="btn sec lg" onclick="rbGo(0)"><svg viewBox="0 0 24 24"
+                style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;vertical-align:middle;margin-right:4px;">
+                <line x1="19" y1="12" x2="5" y2="12" />
+                <polyline points="12 19 5 12 12 5" />
+              </svg> Back</button>
+            <button class="btn lg" onclick="rbGo(2)">Next: Skills <svg viewBox="0 0 24 24"
+                style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2;vertical-align:middle;margin-left:4px;">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="rb-panel" id="rbp2">
+        <div class="detail-block">
+          <div class="detail-title">Skills &amp; Experience</div>
+          <div class="form-grid">
+            <div class="fg full">
+              <label>Technical Skills (press Enter or comma to add)</label>
+              <div class="skill-tags" id="rb-skills-wrap" onclick="document.getElementById('rb-skill-input').focus()">
+                <span class="skill-tag">React<button onclick="removeSkillRb(this)">×</button></span>
+                <span class="skill-tag">Node.js<button onclick="removeSkillRb(this)">×</button></span>
+                <span class="skill-tag">MongoDB<button onclick="removeSkillRb(this)">×</button></span>
+                <input class="skill-input" id="rb-skill-input" placeholder="Add skill…" onkeydown="addSkillRb(event)" />
+              </div>
+            </div>
+            <div class="fg full"><label>Internship / Work Experience</label><textarea id="rb-exp"
+                placeholder="Frontend Intern @ XYZ Corp (June–Aug 2024) – Built dashboard with React…"></textarea></div>
+            <div class="fg full"><label>Certifications</label><input id="rb-cert"
+                placeholder="AWS Cloud Practitioner, Google Analytics, etc." /></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:14px;">
+            <button class="btn sec lg" onclick="rbGo(1)"><svg viewBox="0 0 24 24"
+                style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;vertical-align:middle;margin-right:4px;">
+                <line x1="19" y1="12" x2="5" y2="12" />
+                <polyline points="12 19 5 12 12 5" />
+              </svg> Back</button>
+            <button class="btn lg" onclick="rbGo(3)">Next: Projects <svg viewBox="0 0 24 24"
+                style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2;vertical-align:middle;margin-left:4px;">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="rb-panel" id="rbp3">
+        <div class="detail-block">
+          <div class="detail-title">Projects</div>
+          <div class="form-grid">
+            <div class="fg"><label>Project 1 Title</label><input id="rb-p1t" placeholder="E-Commerce Platform" /></div>
+            <div class="fg"><label>Tech Stack</label><input id="rb-p1s" placeholder="React, Node.js, MongoDB" /></div>
+            <div class="fg full"><label>Description</label><textarea id="rb-p1d"
+                placeholder="Built a full-stack e-commerce app with cart, payment integration…"></textarea></div>
+            <div class="fg"><label>Project 2 Title</label><input id="rb-p2t" placeholder="Portfolio Website" /></div>
+            <div class="fg"><label>Tech Stack</label><input id="rb-p2s" placeholder="HTML, CSS, JS" /></div>
+            <div class="fg full"><label>Description</label><textarea id="rb-p2d"
+                placeholder="Personal portfolio showcasing projects and skills…"></textarea></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:14px;">
+            <button class="btn sec lg" onclick="rbGo(2)"><svg viewBox="0 0 24 24"
+                style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;vertical-align:middle;margin-right:4px;">
+                <line x1="19" y1="12" x2="5" y2="12" />
+                <polyline points="12 19 5 12 12 5" />
+              </svg> Back</button>
+            <button class="btn lg" onclick="rbGo(4)">Preview Resume <svg viewBox="0 0 24 24"
+                style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2;vertical-align:middle;margin-left:4px;">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5: Preview -->
+      <div class="rb-panel" id="rbp4">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+          <button class="btn sec" onclick="rbGo(3)"><svg viewBox="0 0 24 24"
+              style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;vertical-align:middle;margin-right:4px;">
+              <line x1="19" y1="12" x2="5" y2="12" />
+              <polyline points="12 19 5 12 12 5" />
+            </svg> Edit</button>
+          <button class="btn" onclick="downloadPDF()"><svg viewBox="0 0 24 24"
+              style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2;vertical-align:middle;margin-right:4px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg> Download PDF</button>
+          <button class="btn sec" onclick="printResume()"><svg viewBox="0 0 24 24"
+              style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;vertical-align:middle;margin-right:4px;">
+              <polyline points="6 9 6 2 18 2 18 9" />
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+              <rect x="6" y="14" width="12" height="8" />
+            </svg> Print</button>
+        </div>
+        <div id="resume-preview-wrap"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ─── Screen navigation ─── */
+    var currentTemplate = 'classic1';
+
+    function goToDashboard() {
+      window.location.href = 'StudentDashboard.html';
+    }
+    function goBackToTemplates() {
+      document.getElementById('rb-template-screen').classList.add('on');
+      document.getElementById('rb-form-screen').classList.remove('on');
+    }
+    function selectTemplate(id) {
+      currentTemplate = id;
+      document.getElementById('rb-template-screen').classList.remove('on');
+      document.getElementById('rb-form-screen').classList.add('on');
+      var names = {
+        classic1: 'Classic Professional', classic2: 'Traditional Formal', classic3: 'Corporate Blue',
+        classic4: 'Executive Prestige', classic5: 'Forest Professional', classic6: 'Academic Amber',
+        modern1: 'Modern Split', modern2: 'Tech Stack', modern3: 'Gradient Accent',
+        modern4: 'Card Layout', modern5: 'Neon Dark', modern6: 'Timeline Flow',
+        creative1: 'Creative Bold', creative2: 'Sunset Warm', creative3: 'Ocean Blue',
+        creative4: 'Emerald', creative5: 'Rose & Crimson', creative6: 'Midnight Indigo',
+        minimal1: 'Minimal Elegant', minimal2: 'Monochrome', minimal3: 'Dot Accent',
+        minimal4: 'Line Art', minimal5: 'Soft Blue', minimal6: 'Nordic Teal'
+      };
+      document.getElementById('selected-tpl-label').textContent = 'Template: ' + (names[id] || id);
+    }
+
+    /* ─── Filter + search ─── */
+    function setFilter(btn, cat) {
+      document.querySelectorAll('.rbt-filter').forEach(function (b) { b.classList.remove('on'); });
+      btn.classList.add('on');
+      document.querySelectorAll('.tpl-card').forEach(function (c) {
+        c.classList.toggle('hidden', cat !== 'all' && c.getAttribute('data-cat') !== cat);
+      });
+      checkEmpty();
+    }
+    function filterTemplates(q) {
+      var lq = q.toLowerCase();
+      document.querySelectorAll('.tpl-card').forEach(function (c) {
+        var text = c.querySelector('.tpl-name').textContent.toLowerCase()
+          + c.querySelector('.tpl-desc').textContent.toLowerCase();
+        c.classList.toggle('hidden', lq.length > 0 && !text.includes(lq));
+      });
+      checkEmpty();
+    }
+    function checkEmpty() {
+      var visible = document.querySelectorAll('.tpl-card:not(.hidden)').length;
+      document.getElementById('tpl-empty').style.display = visible === 0 ? 'block' : 'none';
+    }
+
+    /* ─── Form steps ─── */
+    function rbGo(n) {
+      for (var i = 0; i < 5; i++) {
+        var step = document.getElementById('rs' + i);
+        var panel = document.getElementById('rbp' + i);
+        if (i === n) {
+          step.classList.add('on'); step.classList.remove('done');
+          panel.classList.add('on');
+        } else {
+          step.classList.remove('on');
+          panel.classList.remove('on');
+          if (i < n) step.classList.add('done'); else step.classList.remove('done');
+        }
+      }
+      if (n === 4) buildPreview();
+    }
+
+    /* ─── Skills ─── */
+    function goToDashboard() {
+      window.location.href = 'StudentDashboard.html';
+    }
+
+    /* ─── STATE ─── */
+    var currentScreen = 'template';
+    var currentTemplate = 'classic1';
+
+    function addSkillRb(e) {
+      if (e.key !== 'Enter' && e.key !== ',') return; e.preventDefault();
+      var inp = document.getElementById('rb-skill-input');
+      var val = inp.value.trim().replace(',', ''); if (!val) return;
+      var span = document.createElement('span');
+      span.className = 'skill-tag';
+      span.innerHTML = val + '<button onclick="removeSkillRb(this)">×</button>';
+      document.getElementById('rb-skills-wrap').insertBefore(span, inp);
+      inp.value = '';
+    }
+    function removeSkillRb(btn) { btn.closest('.skill-tag').remove(); }
+
+    /* ─── Preview builder ─── */
+    function getVal(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
+    function getSkills() {
+      return Array.from(document.querySelectorAll('#rb-skills-wrap .skill-tag'))
+        .map(function (t) { return t.childNodes[0].textContent.trim(); });
+    }
+
+    function buildPreview() {
+      var d = {
+        name: getVal('rb-name') || 'Your Name',
+        email: getVal('rb-email') || 'email@example.com',
+        phone: getVal('rb-phone') || '+91 00000 00000',
+        linkedin: getVal('rb-linkedin'),
+        github: getVal('rb-github'),
+        location: getVal('rb-location'),
+        obj: getVal('rb-obj'),
+        college: getVal('rb-college'),
+        degree: getVal('rb-degree'),
+        year: getVal('rb-year'),
+        cgpa: getVal('rb-cgpa'),
+        school12: getVal('rb-12'),
+        school10: getVal('rb-10'),
+        skills: getSkills(),
+        exp: getVal('rb-exp'),
+        p1t: getVal('rb-p1t'), p1s: getVal('rb-p1s'), p1d: getVal('rb-p1d'),
+        p2t: getVal('rb-p2t'), p2s: getVal('rb-p2s'), p2d: getVal('rb-p2d'),
+        cert: getVal('rb-cert')
+      };
+
+      var contact = [d.email, d.phone, d.location, d.linkedin, d.github].filter(Boolean).join(' · ');
+      var skillsHtml = d.skills.length ? d.skills.join(', ') : '—';
+      var wrap = document.getElementById('resume-preview-wrap');
+      var t = currentTemplate;
+
+      if (t.startsWith('classic')) {
+        var accentColor = {
+          classic1: '#0b2e7a', classic2: '#7c2d12', classic3: '#1a237e',
+          classic4: '#111', classic5: '#166534', classic6: '#92400e'
+        }[t] || '#0b2e7a';
+        
+        wrap.innerHTML = '<div class="pv-classic">'
+          + '<div class="pv-top-bar" style="background:' + accentColor + '"></div>'
+          + '<h1 style="color:' + accentColor + '">' + d.name + '</h1>'
+          + '<div class="pv-contact">' + contact + '</div>'
+          + '<div class="pv-divider" style="background:' + accentColor + '"></div>'
+          + (d.obj ? '<div class="pv-sec"><h3>Objective</h3><div class="pv-item">' + d.obj + '</div></div>' : '')
+          + '<div class="pv-sec"><h3>Education</h3>'
+          + (d.college ? '<div class="pv-item"><strong>' + d.college + '</strong> — ' + d.degree + (d.cgpa ? ' | CGPA: ' + d.cgpa : '') + ' (' + d.year + ')</div>' : '')
+          + (d.school12 ? '<div class="pv-item">12th: ' + d.school12 + '</div>' : '')
+          + (d.school10 ? '<div class="pv-item">10th: ' + d.school10 + '</div>' : '')
+          + '</div>'
+          + '<div class="pv-sec"><h3>Skills</h3><div class="pv-item">' + skillsHtml + '</div></div>'
+          + (d.exp ? '<div class="pv-sec"><h3>Experience</h3><div class="pv-item">' + d.exp.replace(/\n/g, '<br>') + '</div></div>' : '')
+          + ((d.p1t || d.p2t) ? '<div class="pv-sec"><h3>Projects</h3>'
+            + (d.p1t ? '<div class="pv-item"><strong>' + d.p1t + '</strong>' + (d.p1s ? ' <em>(' + d.p1s + ')</em>' : '') + (d.p1d ? '<br>' + d.p1d : '') + '</div>' : '')
+            + (d.p2t ? '<div class="pv-item"><strong>' + d.p2t + '</strong>' + (d.p2s ? ' <em>(' + d.p2s + ')</em>' : '') + (d.p2d ? '<br>' + d.p2d : '') + '</div>' : '')
+            + '</div>' : '')
+          + (d.cert ? '<div class="pv-sec"><h3>Certifications</h3><div class="pv-item">' + d.cert + '</div></div>' : '')
+          + '</div>';
+
+      } else if (t === 'modern1' || t === 'modern6') {
+        var skillTags = d.skills.map(function (s) { return '<span class="pv-skill-tag">' + s + '</span>'; }).join('');
+        wrap.innerHTML = '<div class="pv-modern' + (t === 'modern6' ? ' timeline' : '') + '">'
+          + '<div class="pv-sidebar">'
+          + '<div class="pv-sidebar-av">' + (d.name ? d.name[0].toUpperCase() : 'U') + '</div>'
+          + '<h1>' + d.name + '</h1>'
+          + '<div class="pv-role">' + (d.degree || 'Student') + '</div>'
+          + '<div class="pv-sec-s"><h4>Contact</h4><p>' + [d.email, d.phone, d.location].filter(Boolean).join('<br>') + '</p></div>'
+          + '<div class="pv-sec-s"><h4>Skills</h4><p>' + (skillTags || '—') + '</p></div>'
+          + (d.cert ? '<div class="pv-sec-s"><h4>Certifications</h4><p>' + d.cert + '</p></div>' : '')
+          + '</div>'
+          + '<div class="pv-main">'
+          + '<h2>' + d.name + '</h2>'
+          + '<div class="pv-contact">' + contact + '</div>'
+          + (d.obj ? '<div class="pv-sec"><h3>Objective</h3><div class="pv-item">' + d.obj + '</div></div>' : '')
+          + '<div class="pv-sec"><h3>Education</h3>'
+          + (d.college ? '<div class="pv-item"><strong>' + d.college + '</strong> — ' + d.degree + (d.cgpa ? ' | CGPA: ' + d.cgpa : '') + ' (' + d.year + ')</div>' : '')
+          + '</div>'
+          + (d.exp ? '<div class="pv-sec"><h3>Experience</h3><div class="pv-item">' + d.exp.replace(/\n/g, '<br>') + '</div></div>' : '')
+          + ((d.p1t || d.p2t) ? '<div class="pv-sec"><h3>Projects</h3>'
+            + (d.p1t ? '<div class="pv-item"><strong>' + d.p1t + '</strong>' + (d.p1s ? ' (' + d.p1s + ')' : '') + (d.p1d ? '<br>' + d.p1d : '') + '</div>' : '')
+            + (d.p2t ? '<div class="pv-item"><strong>' + d.p2t + '</strong>' + (d.p2s ? ' (' + d.p2s + ')' : '') + (d.p2d ? '<br>' + d.p2d : '') + '</div>' : '')
+            + '</div>' : '')
+          + '</div>'
+          + '</div>';
+
+      } else if (t.startsWith('creative')) {
+        var grads = {
+          creative1: 'linear-gradient(110deg, #4c1d95, #7c3aed)',
+          creative2: 'linear-gradient(110deg, #dc2626, #ea580c)',
+          creative3: 'linear-gradient(110deg, #0b2e7a, #1759d6)',
+          creative4: 'linear-gradient(110deg, #064e3b, #059669)',
+          creative5: 'linear-gradient(110deg, #9f1239, #db2777)',
+          creative6: 'linear-gradient(110deg, #1e1b4b, #4338ca)'
+        };
+        var grad = grads[t] || grads.creative1;
+
+        wrap.innerHTML = '<div class="pv-creative">'
+          + '<div class="pv-creative-header" style="background:' + grad + '"><h1>' + d.name + '</h1><div class="pv-contact">' + contact + '</div></div>'
+          + '<div class="pv-creative-body">'
+          + (d.obj ? '<div class="pv-sec"><h3>Objective</h3><div class="pv-item">' + d.obj + '</div></div>' : '')
+          + '<div class="pv-sec"><h3>Education</h3>'
+          + (d.college ? '<div class="pv-item"><strong>' + d.college + '</strong> — ' + d.degree + (d.cgpa ? ' | CGPA: ' + d.cgpa : '') + '</div>' : '')
+          + '</div>'
+          + '<div class="pv-sec"><h3>Skills</h3><div>'
+          + d.skills.map(function (s) { return '<span class="pv-skill-pill">' + s + '</span>'; }).join('')
+          + '</div></div>'
+          + (d.exp ? '<div class="pv-sec"><h3>Experience</h3><div class="pv-item">' + d.exp.replace(/\n/g, '<br>') + '</div></div>' : '')
+          + ((d.p1t || d.p2t) ? '<div class="pv-sec"><h3>Projects</h3>'
+            + (d.p1t ? '<div class="pv-item"><strong>' + d.p1t + '</strong>' + (d.p1s ? ' (' + d.p1s + ')' : '') + (d.p1d ? '<br>' + d.p1d : '') + '</div>' : '')
+            + (d.p2t ? '<div class="pv-item"><strong>' + d.p2t + '</strong>' + (d.p2s ? ' (' + d.p2s + ')' : '') + (d.p2d ? '<br>' + d.p2d : '') + '</div>' : '')
+            + '</div>' : '')
+          + '</div>'
+          + '</div>';
+
+      } else if (t.startsWith('minimal')) {
+        var minimalAcc = { minimal3: '#f59e0b', minimal4: '#1759d6', minimal6: '#0aada0' }[t] || '#111';
+        var skillList = d.skills.map(function (s) { return '<span class="pv-skill-tag">' + s + '</span>'; }).join('');
+        wrap.innerHTML = '<div class="pv-minimal' + (t === 'minimal3' ? ' dotted' : '') + '">'
+          + '<h1>' + d.name + '</h1>'
+          + '<div class="pv-minimal-rule" style="background:' + minimalAcc + '"></div>'
+          + '<div class="pv-contact">' + contact + '</div>'
+          + (d.obj ? '<div class="pv-sec"><h3>Profile</h3><div class="pv-item">' + d.obj + '</div></div>' : '')
+          + '<div class="pv-sec"><h3>Education</h3>'
+          + (d.college ? '<div class="pv-item"><strong>' + d.college + '</strong> — ' + d.degree + (d.cgpa ? ' | CGPA: ' + d.cgpa : '') + ' (' + d.year + ')</div>' : '')
+          + (d.school12 ? '<div class="pv-item">12th: ' + d.school12 + '</div>' : '')
+          + '</div>'
+          + '<div class="pv-sec"><h3>Skills</h3><div>' + (skillList || '—') + '</div></div>'
+          + (d.exp ? '<div class="pv-sec"><h3>Experience</h3><div class="pv-item">' + d.exp.replace(/\n/g, '<br>') + '</div></div>' : '')
+          + ((d.p1t || d.p2t) ? '<div class="pv-sec"><h3>Projects</h3>'
+            + (d.p1t ? '<div class="pv-item"><strong>' + d.p1t + '</strong>' + (d.p1d ? ' — ' + d.p1d : '') + '</div>' : '')
+            + (d.p2t ? '<div class="pv-item"><strong>' + d.p2t + '</strong>' + (d.p2d ? ' — ' + d.p2d : '') + '</div>' : '')
+            + '</div>' : '')
+          + (d.cert ? '<div class="pv-sec"><h3>Certifications</h3><div class="pv-item">' + d.cert + '</div></div>' : '')
+          + '</div>';
+
+      } else if (t === 'modern2' || t === 'modern5') {
+        /* Tech / Dark layout */
+        var isDark = (t === 'modern5');
+        wrap.innerHTML = '<div class="pv-tech' + (isDark ? ' dark-mode' : '') + '">'
+          + '<div class="pv-tech-left" style="' + (isDark ? 'background:#0d1117;' : '') + '">'
+          + '<h1>' + d.name + '</h1>'
+          + '<div class="pv-role">' + (d.degree || 'Developer') + '</div>'
+          + '<div class="pv-tl-sec"><h4>Contact</h4><p>' + [d.email, d.phone].filter(Boolean).join('<br>') + '</p></div>'
+          + '<div class="pv-tl-sec"><h4>Skills</h4>'
+          + d.skills.map(function (s) { return '<span class="pv-skill-chip">' + s + '</span>'; }).join('')
+          + '</div>'
+          + '</div>'
+          + '<div class="pv-tech-right" style="' + (isDark ? 'background:#161b22; color:#c9d1d9;' : '') + '">'
+          + '<div class="pv-topbar" style="background:' + (isDark ? '#0aada0' : 'linear-gradient(90deg, var(--T), var(--P))') + '"></div>'
+          + '<h2 style="' + (isDark ? 'color:#f0f6fc;' : '') + '">' + d.name + '</h2>'
+          + '<div class="pv-contact">' + contact + '</div>'
+          + (d.obj ? '<div class="pv-sec"><h3>Summary</h3><div class="pv-item">' + d.obj + '</div></div>' : '')
+          + '<div class="pv-sec"><h3>Education</h3><div class="pv-item"><strong>' + (d.college || '—') + '</strong> — ' + (d.degree || '') + (d.cgpa ? ' | CGPA: ' + d.cgpa : '') + '</div></div>'
+          + (d.exp ? '<div class="pv-sec"><h3>Experience</h3><div class="pv-item">' + d.exp.replace(/\n/g, '<br>') + '</div></div>' : '')
+          + ((d.p1t || d.p2t) ? '<div class="pv-sec"><h3>Projects</h3>'
+            + (d.p1t ? '<div class="pv-item"><strong>' + d.p1t + '</strong>' + (d.p1s ? ' (' + d.p1s + ')' : '') + (d.p1d ? '<br>' + d.p1d : '') + '</div>' : '')
+            + (d.p2t ? '<div class="pv-item"><strong>' + d.p2t + '</strong>' + (d.p2s ? ' (' + d.p2s + ')' : '') + (d.p2d ? '<br>' + d.p2d : '') + '</div>' : '')
+            + '</div>' : '')
+          + '</div>'
+          + '</div>';
+
+      } else {
+        /* modern3, modern4, or fallback — executive style */
+        wrap.innerHTML = '<div class="pv-executive">'
+          + '<div class="pv-exec-header"><h1>' + d.name + '</h1><div class="pv-contact">' + contact + '</div></div>'
+          + (d.obj ? '<div class="pv-sec"><h3>Profile</h3><div class="pv-item">' + d.obj + '</div></div>' : '')
+          + '<div class="pv-sec"><h3>Education</h3>'
+          + (d.college ? '<div class="pv-item"><strong>' + d.college + '</strong> — ' + d.degree + (d.cgpa ? ' | CGPA: ' + d.cgpa : '') + ' (' + d.year + ')</div>' : '')
+          + '</div>'
+          + '<div class="pv-sec"><h3>Skills</h3><div class="pv-item">' + skillsHtml + '</div></div>'
+          + (d.exp ? '<div class="pv-sec"><h3>Experience</h3><div class="pv-item">' + d.exp.replace(/\n/g, '<br>') + '</div></div>' : '')
+          + ((d.p1t || d.p2t) ? '<div class="pv-sec"><h3>Projects</h3>'
+            + (d.p1t ? '<div class="pv-item"><strong>' + d.p1t + '</strong>' + (d.p1d ? '<br>' + d.p1d : '') + '</div>' : '')
+            + (d.p2t ? '<div class="pv-item"><strong>' + d.p2t + '</strong>' + (d.p2d ? '<br>' + d.p2d : '') + '</div>' : '')
+            + '</div>' : '')
+          + '</div>';
+      }
+    }
+
+    /* ─── Download / Print ─── */
+    function downloadPDF() { window.print(); }
+    function printResume() { window.print(); }
+  </script>
+</body>
+
+</html>
+>>>>>>> UI

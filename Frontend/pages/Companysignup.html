@@ -13,7 +13,7 @@
 </head>
 
 <body>
-  <div class="env-strip"></div>
+  <div id="accent-strip" class="role-company"></div>
   <div class="page-wrap">
 
     <!-- ── LEFT PANEL ── -->
@@ -94,13 +94,13 @@
             <div class="form-group">
               <label>Company Name <span>*</span></label>
               <input type="text" id="c-name" placeholder="e.g. Infosys Technologies" oninput="clearErr(this)" />
-              <span class="error-msg" id="err-c-name">Please enter the company name.</span>
+              <div class="err-msg" id="err-c-name">Please enter the company name.</div>
             </div>
 
             <div class="form-group">
               <label>Official Email <span>*</span></label>
               <input type="email" id="c-email" placeholder="hr@company.com" oninput="clearErr(this)" />
-              <span class="error-msg" id="err-c-email">Enter a valid official email.</span>
+              <div class="err-msg" id="err-c-email">Enter a valid official email.</div>
             </div>
 
             <div class="form-group">
@@ -125,13 +125,13 @@
             <div class="form-group">
               <label>HR / Contact Person <span>*</span></label>
               <input type="text" id="c-contact" placeholder="e.g. Priya Nair" oninput="clearErr(this)" />
-              <span class="error-msg" id="err-c-contact">Please enter a contact person name.</span>
+              <div class="err-msg" id="err-c-contact">Please enter a contact person name.</div>
             </div>
 
             <div class="form-group">
               <label>Phone Number <span>*</span></label>
               <input type="tel" id="c-phone" placeholder="+91 98765 43210" oninput="clearErr(this)" maxlength="13" />
-              <span class="error-msg" id="err-c-phone">Enter a valid phone number.</span>
+              <div class="err-msg" id="err-c-phone">Enter a valid phone number.</div>
             </div>
 
             <div class="form-group">
@@ -148,7 +148,7 @@
                 <option>Education</option>
                 <option>Other</option>
               </select>
-              <span class="error-msg" id="err-c-industry">Please select an industry.</span>
+              <div class="err-msg" id="err-c-industry">Please select an industry.</div>
             </div>
 
             <div class="form-group">
@@ -188,7 +188,7 @@
 
             <div class="form-group span2">
               <label>Company Description</label>
-              <textarea id="c-desc" placeholder="Brief overview of your company and culture…"></textarea>
+               <textarea id="c-desc" placeholder="Brief overview of your company and culture…"></textarea>
             </div>
 
           </div>

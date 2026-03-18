@@ -1,8 +1,15 @@
  
+    // ── AUTH CHECK ──
+    const isLoggedIn = (localStorage.getItem('isLoggedIn') || sessionStorage.getItem('isLoggedIn')) === 'true';
+    const role = localStorage.getItem('userRole') || sessionStorage.getItem('userRole');
+    if (!isLoggedIn || role !== 'company') {
+      window.location.href = 'Login.html';
+    }
+
     // ── INIT ──
     window.addEventListener('DOMContentLoaded', () => {
-      const email = sessionStorage.getItem('cp_company_email') || 'hr@infosys.com';
-      const co = sessionStorage.getItem('cp_company_name') || 'Infosys Technologies';
+      const email = localStorage.getItem('companyEmail') || sessionStorage.getItem('companyEmail') || sessionStorage.getItem('cp_company_email') || 'hr@company.com';
+      const co = localStorage.getItem('companyName') || sessionStorage.getItem('companyName') || sessionStorage.getItem('cp_company_name') || 'Your Company';
       const short = co.split(' ')[0];
 
       document.getElementById('sb-uname').textContent = co;
@@ -123,6 +130,7 @@
     // ── LOGOUT ──
     function logout() {
       sessionStorage.clear();
+      localStorage.clear();
       window.location.href = 'Login.html';
     }
   

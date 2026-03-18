@@ -11,9 +11,8 @@
   <link rel="stylesheet" href="../css/signupstyle.css" />
   <link rel="stylesheet" href="../css/student-signup.css" />
 </head>
-
 <body>
-  <div class="env-strip"></div>
+  <div id="accent-strip" class="role-student"></div>
   <div class="page-wrap">
 
     <!-- ── LEFT PANEL ── -->
@@ -29,13 +28,12 @@
         <p class="left-sub">Create your profile in 4 quick steps and get matched with top companies visiting your
           campus.</p>
 
-        <div class="progress-steps">
-          <div class="progress-step done-step" id="sidebar-step-1">
-            <div class="step-circle done" id="circle-1">✓</div>
-            <div class="step-info">
-              <div class="step-name">Select Role</div>
-              <div class="step-desc">Choose your user type</div>
-            </div>
+        <!-- Steps -->
+        <div class="steps-label">Registration Steps</div>
+        <div class="steps">
+          <div class="step-row is-done" id="sr-1">
+            <div class="step-col"><div class="step-num is-done" id="sn-1">✓</div><div class="step-vline"></div></div>
+            <div class="step-body"><div class="step-name">Select Role</div><div class="step-desc">Choose your user type</div></div>
           </div>
           <div class="progress-step active-step" id="sidebar-step-2">
             <div class="step-circle active" id="circle-2">2</div>
@@ -44,19 +42,13 @@
               <div class="step-desc" id="sidebar-step2-desc">Academic & contact info</div>
             </div>
           </div>
-          <div class="progress-step" id="sidebar-step-3">
-            <div class="step-circle pending" id="circle-3">3</div>
-            <div class="step-info">
-              <div class="step-name">Verify Email</div>
-              <div class="step-desc">Confirm your identity</div>
-            </div>
+          <div class="step-row" id="sr-3">
+            <div class="step-col"><div class="step-num" id="sn-3">3</div><div class="step-vline"></div></div>
+            <div class="step-body"><div class="step-name">Verify Email</div><div class="step-desc">Confirm your identity</div></div>
           </div>
-          <div class="progress-step" id="sidebar-step-4">
-            <div class="step-circle pending" id="circle-4">✓</div>
-            <div class="step-info">
-              <div class="step-name">Dashboard Ready</div>
-              <div class="step-desc">Account activated!</div>
-            </div>
+          <div class="step-row" id="sr-4">
+            <div class="step-col"><div class="step-num" id="sn-4">✓</div></div>
+            <div class="step-body"><div class="step-name">Dashboard Ready</div><div class="step-desc">Account activated!</div></div>
           </div>
         </div>
 
@@ -64,9 +56,8 @@
           <div class="progress-bar-wrap">
             <div class="progress-bar-fill" id="progress-bar" style="width:50%;"></div>
           </div>
-          <div class="progress-label">
-            <span id="progress-step-label">Step 2 of 4</span>
-            <span class="progress-pct" id="progress-pct">50%</span>
+          <div class="lp-prog-track">
+            <div class="lp-prog-fill" id="prog-fill" style="width:50%"></div>
           </div>
         </div>
       </div>
@@ -90,46 +81,31 @@
 
         <form onsubmit="return false;">
           <div class="form-grid">
-
-            <div class="form-group">
-              <label>Full Name <span>*</span></label>
+            <div class="fg">
+              <label>Full Name <span class="req">*</span></label>
               <input type="text" id="s-name" placeholder="e.g. Arjun Sharma" oninput="clearErr(this)" />
-              <span class="error-msg" id="err-s-name">Please enter your full name.</span>
+              <div class="err-msg" id="err-s-name">Please enter your full name.</div>
             </div>
-
-            <div class="form-group">
-              <label>College Email <span>*</span></label>
+            <div class="fg">
+              <label>College Email <span class="req">*</span></label>
               <input type="email" id="s-email" placeholder="you@college.edu" oninput="clearErr(this)" />
-              <span class="error-msg" id="err-s-email">Enter a valid email address.</span>
+              <div class="err-msg" id="err-s-email">Enter a valid email address.</div>
             </div>
-
-            <div class="form-group">
-              <label>Password <span>*</span></label>
-              <div class="pwd-wrap">
-                <input type="password" id="s-pwd" placeholder="Create a strong password"
-                  oninput="checkPwd(this,'spb','s-pwd-label');clearErr(this)" />
-                <button type="button" class="show-pwd" onclick="togglePwd('s-pwd',this)">👁</button>
-              </div>
-              <div class="pwd-strength">
-                <div class="pwd-bars">
-                  <div class="pwd-bar" id="spb1"></div>
-                  <div class="pwd-bar" id="spb2"></div>
-                  <div class="pwd-bar" id="spb3"></div>
-                  <div class="pwd-bar" id="spb4"></div>
-                </div>
-                <div class="pwd-label" id="s-pwd-label">Enter a password</div>
-              </div>
-              <span class="error-msg" id="err-s-pwd">Password must be at least 8 characters.</span>
-            </div>
-
-            <div class="form-group">
-              <label>Phone Number <span>*</span></label>
+            <div class="fg">
+              <label>Phone Number <span class="req">*</span></label>
               <input type="tel" id="s-phone" placeholder="+91 98765 43210" oninput="clearErr(this)" maxlength="13" />
-              <span class="error-msg" id="err-s-phone">Enter a valid phone number.</span>
+              <div class="err-msg" id="err-s-phone">Enter a valid phone number.</div>
             </div>
+            <div class="fg">
+              <label>LinkedIn Profile</label>
+              <input type="text" id="s-linkedin" placeholder="https://linkedin.com/in/yourname" />
+            </div>
+          </div>
 
-            <div class="form-group">
-              <label>Branch / Department <span>*</span></label>
+          <div class="sec-head">Academic Details</div>
+          <div class="form-grid">
+            <div class="fg">
+              <label>Branch / Department <span class="req">*</span></label>
               <select id="s-branch" onchange="clearErr(this)">
                 <option value="">Select your branch</option>
                 <option>Computer Science &amp; Engineering</option>
@@ -142,11 +118,10 @@
                 <option>Data Science &amp; AI</option>
                 <option>Other</option>
               </select>
-              <span class="error-msg" id="err-s-branch">Please select your branch.</span>
+              <div class="err-msg" id="err-s-branch">Please select your branch.</div>
             </div>
-
-            <div class="form-group">
-              <label>Year of Study <span>*</span></label>
+            <div class="fg">
+              <label>Year of Study <span class="req">*</span></label>
               <select id="s-year" onchange="clearErr(this)">
                 <option value="">Select year</option>
                 <option>1st Year</option>
@@ -154,32 +129,30 @@
                 <option>3rd Year</option>
                 <option>4th Year</option>
               </select>
-              <span class="error-msg" id="err-s-year">Please select your year.</span>
+              <div class="err-msg" id="err-s-year">Please select your year.</div>
             </div>
-
-            <div class="form-group">
-              <label>CGPA <span>*</span></label>
-              <input type="number" id="s-cgpa" placeholder="e.g. 8.5" min="0" max="10" step="0.01"
-                oninput="updateCgpa(this);clearErr(this)" />
-              <div class="cgpa-track">
-                <div class="cgpa-fill" id="cgpa-fill" style="width:0%"></div>
-              </div>
+            <div class="fg">
+              <label>CGPA <span class="req">*</span></label>
+              <input type="number" id="s-cgpa" placeholder="e.g. 8.5" min="0" max="10" step="0.01" oninput="updateCgpa(this);clearErr(this)" />
+              <div class="cgpa-track"><div class="cgpa-fill" id="cgpa-fill" style="width:0%"></div></div>
               <div class="cgpa-hint" id="cgpa-hint">Enter value between 0 – 10</div>
-              <span class="error-msg" id="err-s-cgpa">Enter a valid CGPA (0–10).</span>
+              <div class="err-msg" id="err-s-cgpa">Enter a valid CGPA (0–10).</div>
             </div>
-
-            <div class="form-group">
+            <div class="fg">
+              <label>College Name <span class="req">*</span></label>
+              <input type="text" id="s-college" placeholder="e.g. JNTU Hyderabad" oninput="clearErr(this)" />
+              <div class="err-msg" id="err-s-college">Please enter your college name.</div>
+            </div>
+            <div class="fg">
               <label>Roll Number</label>
               <input type="text" id="s-roll" placeholder="e.g. 21CSE045" />
             </div>
+          </div>
 
-            <div class="form-group span2">
-              <label>LinkedIn Profile</label>
-              <input type="text" id="s-linkedin" placeholder="https://linkedin.com/in/yourname" />
-            </div>
-
-            <div class="form-group span2">
-              <label>Skills <span>*</span></label>
+          <div class="sec-head">Skills &amp; Resume</div>
+          <div class="form-grid">
+            <div class="fg full">
+              <label>Skills <span class="req">*</span></label>
               <div class="skills-wrap" id="skills-wrap" onclick="document.getElementById('skill-input').focus()">
                 <input type="text" id="skill-input" class="skills-input" placeholder="Type a skill and press Enter…"
                   onkeydown="addSkill(event)" />
@@ -189,14 +162,13 @@
                 after each skill</div>
               <span class="error-msg" id="err-s-skills">Add at least one skill.</span>
             </div>
-
-            <div class="form-group span2">
-              <label>Resume / CV <span>*</span></label>
+            <div class="fg full">
+              <label>Resume / CV <span class="req">*</span></label>
               <div class="upload-zone" id="upload-zone">
-                <input type="file" accept=".pdf,.doc,.docx" onchange="handleFile(this)" id="resume-input" />
+                <input type="file" accept=".pdf,.doc,.docx" id="resume-input" onchange="handleFile(this)" />
                 <div class="upload-icon">📄</div>
-                <div class="upload-title">Drag &amp; drop your resume here</div>
-                <div class="upload-sub">Supports PDF, DOC, DOCX · Max 5MB</div>
+                <div class="upload-title">Drop your resume here or <span style="color:var(--P);font-weight:600">browse</span></div>
+                <div class="upload-sub">PDF, DOC, DOCX · Max 5 MB</div>
               </div>
               <div class="upload-done" id="upload-done">
                 <span class="upload-done-icon">✅</span>
