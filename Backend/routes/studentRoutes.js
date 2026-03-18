@@ -47,19 +47,29 @@ function authMiddleware(req, res, next) {
   }
 }
 
-// ── Existing Routes ──
-router.post('/signup', upload.single('resume'), studentSignup);
+// ── Signup Route with Multer error handling ──
+router.post('/signup', (req, res, next) => {
+  upload.single('resume')(req, res, (err) => {
+    if (err) {
+      console.error('❌ Multer error:', err.message);
+      return res.status(400).json({ success: false, message: err.message });
+    }
+    // ✅ Log body AFTER multer parses it
+    console.log('📋 Signup body after multer:', JSON.stringify(req.body, null, 2));
+    console.log('📎 Resume file:', req.file ? req.file.filename : 'NO FILE');
+    next();
+  });
+}, studentSignup);
+
 router.post('/login', studentLogin);
 
-// ── NEW: Complete Profile after OAuth ──
+// ── Complete Profile after OAuth ──
 router.patch('/complete-profile', authMiddleware, upload.single('resume'), async (req, res) => {
   try {
     const { phone, branch, year, cgpa, college, rollNumber, linkedin, skills } = req.body;
-
     if (!phone || !branch || !year || !cgpa || !college) {
       return res.status(400).json({ success: false, message: 'Please fill all required fields' });
     }
-
     const updateData = {
       phone,
       branch,
@@ -71,7 +81,6 @@ router.patch('/complete-profile', authMiddleware, upload.single('resume'), async
       skills:     skills ? JSON.parse(skills) : [],
       isVerified: true,
     };
-
     if (req.file) {
       updateData.resume = {
         filename:    req.file.filename,
@@ -79,17 +88,13 @@ router.patch('/complete-profile', authMiddleware, upload.single('resume'), async
         contentType: req.file.mimetype
       };
     }
-
     const student = await Student.findByIdAndUpdate(
       req.user.id,
       { $set: updateData },
       { new: true, runValidators: false }
     );
-
     if (!student) return res.status(404).json({ success: false, message: 'Student not found' });
-
     res.json({ success: true, message: 'Profile completed successfully' });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: err.message });

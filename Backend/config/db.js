@@ -4,7 +4,11 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI);
+    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS:          45000,
+      connectTimeoutMS:         10000,
+    });
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (err) {
     console.error(`❌ MongoDB Connection Error: ${err.message}`);

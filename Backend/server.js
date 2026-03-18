@@ -5,7 +5,7 @@ const nodemailer = require('nodemailer');
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 const connectDB = require('./config/db');
-const oauthRoutes = require('./passport-oauth');  // ← ADDED
+const oauthRoutes = require('./passport-oauth');
 
 // Connect to MongoDB
 connectDB();
@@ -14,8 +14,8 @@ const app = express();
 
 // Middleware
 app.use(morgan('dev'));
-app.use(cors({                                    // ← UPDATED
-  origin: process.env.CLIENT_ORIGIN,
+app.use(cors({
+  origin: ['http://127.0.0.1:5500', 'http://localhost:5500'],
   credentials: true
 }));
 app.use(express.json());
@@ -37,11 +37,24 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+// ✅ Check if student email already exists — MUST be before app.use('/api/students', ...)
+app.post('/api/students/check-email', async (req, res) => {
+  try {
+    const { email } = req.body;
+    const Student = require('./models/Student');
+    const exists = await Student.findOne({ email: email.trim().toLowerCase() });
+    res.json({ exists: !!exists });
+  } catch (err) {
+    console.error('check-email error:', err.message);
+    res.status(500).json({ exists: false });
+  }
+});
+
 // Routes
 app.use('/api/students', require('./routes/studentRoutes'));
 app.use('/api/companies', require('./routes/companyRoutes'));
 app.use('/api/tpo', require('./routes/tpoRoutes'));
-app.use(oauthRoutes);                             // ← ADDED
+app.use(oauthRoutes);
 
 // OTP Email Route
 app.post("/send-email", async (req, res) => {
@@ -81,10 +94,8 @@ app.get('/', (req, res) => {
   res.send('✅ Campus Recruitment API is running...');
 });
 
-// Set PORT
-const PORT = process.env.PORT || 5000;
-
 // Start Server
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
