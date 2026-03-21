@@ -3,6 +3,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const nodemailer = require('nodemailer');
 const path = require('path');
+
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 const connectDB = require('./config/db');
 
@@ -30,6 +31,7 @@ const transporter = nodemailer.createTransport({
 // Routes
 app.use('/api/students', require('./routes/studentRoutes'));
 app.use('/api/companies', require('./routes/companyRoutes'));
+app.use('/api/tpo', require('./routes/tpoRoutes'));
 
 // OTP Email Route
 app.post("/send-email", async (req, res) => {

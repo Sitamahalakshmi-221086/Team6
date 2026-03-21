@@ -2960,24 +2960,24 @@
             </div>
             <div id="cp-edit" style="display:none;margin-top:14px;">
               <div class="form-grid">
-                <div class="fg"><label>Company Name</label><input value="Infosys Technologies Ltd." /></div>
-                <div class="fg"><label>Industry</label><input value="IT Services & Consulting" /></div>
-                <div class="fg"><label>Company Size</label><select>
+                <div class="fg"><label>Company Name</label><input id="company-name-input" value="Infosys Technologies Ltd." /></div>
+                <div class="fg"><label>Industry</label><input id="industry-input" value="IT Services & Consulting" /></div>
+                <div class="fg"><label>Company Size</label><select id="company-size-select">
                     <option>1–50</option>
                     <option>51–200</option>
                     <option>201–1000</option>
                     <option>1001–10,000</option>
                     <option selected>10,000+</option>
                   </select></div>
-                <div class="fg"><label>Headquarters</label><input value="Bangalore, Karnataka" /></div>
-                <div class="fg"><label>Website</label><input value="infosys.com" /></div>
-                <div class="fg"><label>HR Email</label><input value="hr@infosys.com" /></div>
-                <div class="fg full"><label>About</label><textarea
+                <div class="fg"><label>Headquarters</label><input id="headquarters-input" value="Bangalore, Karnataka" /></div>
+                <div class="fg"><label>Website</label><input id="website-input" value="infosys.com" /></div>
+                <div class="fg"><label>HR Email</label><input id="hr-email-input" value="hr@infosys.com" /></div>
+                <div class="fg full"><label>About</label><textarea id="about-input"
                     style="min-height:80px;">Infosys is a global leader in next-generation digital services and consulting.</textarea>
                 </div>
               </div>
               <div style="display:flex;gap:8px;margin-top:14px;">
-                <button class="btn lg" onclick="toggleCpEdit();showToast('Profile updated successfully.')">Save
+                <button class="btn lg" onclick="saveCompanyProfileAndClose()">Save
                   Changes</button>
                 <button class="btn sec lg" onclick="toggleCpEdit()">Cancel</button>
               </div>
@@ -3310,6 +3310,55 @@
       const editing = e.style.display !== 'none';
       v.style.display = editing ? 'block' : 'none';
       e.style.display = editing ? 'none' : 'block';
+    }
+
+    async function saveCompanyProfileAndClose() {
+      const companyName = document.getElementById('company-name-input')?.value.trim();
+      const industry = document.getElementById('industry-input')?.value.trim();
+      const companySize = document.getElementById('company-size-select')?.value.trim();
+      const address = document.getElementById('headquarters-input')?.value.trim();
+      const website = document.getElementById('website-input')?.value.trim();
+      const email = document.getElementById('hr-email-input')?.value.trim();
+      const description = document.getElementById('about-input')?.value.trim();
+      if (!email || !companyName) {
+        showToast('Company name and email are required.');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/companies/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, companyName, industry, companySize, address, website, description })
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          showToast(err.message || 'Could not save profile.');
+          return;
+        }
+        const result = await res.json();
+        if (result.company) {
+          const viewRows = document.querySelectorAll('#cp-view .df');
+          viewRows.forEach(row => {
+            const label = row.querySelector('label')?.textContent?.trim();
+            const value = row.querySelector('p');
+            if (!label || !value) return;
+            if (label === 'Company Name') value.textContent = result.company.companyName;
+            if (label === 'Industry') value.textContent = result.company.industry;
+            if (label === 'Company Size') value.textContent = result.company.companySize;
+            if (label === 'Headquarters') value.textContent = result.company.address;
+            if (label === 'Website') value.textContent = result.company.website;
+            if (label === 'HR Email') value.textContent = result.company.email;
+          });
+          const aboutBlock = document.querySelector('#cp-view > div[style*=\"About\"] + div');
+          if (aboutBlock) aboutBlock.textContent = result.company.description;
+        }
+        showToast('Profile updated successfully.');
+        toggleCpEdit();
+      } catch (error) {
+        console.error(error);
+        showToast('Could not save profile. Please try again.');
+      }
     }
 
     const tabGroups = { jt: ['active', 'closed', 'draft'], at: ['all', 'new', 'short', 'interview', 'hired'] };

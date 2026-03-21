@@ -102,7 +102,60 @@ const companyLogin = async (req, res) => {
   }
 };
 
+const updateCompanyProfile = async (req, res) => {
+  try {
+    const {
+      email,
+      companyName,
+      industry,
+      companySize,
+      website,
+      address,
+      description
+    } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Email is required to update profile.' });
+    }
+
+    const updated = await Company.findOneAndUpdate(
+      { email: email.toLowerCase().trim() },
+      {
+        companyName,
+        industry,
+        companySize,
+        website,
+        address,
+        description
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ success: false, message: 'Company account not found.' });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Company profile updated successfully.',
+      company: {
+        companyName: updated.companyName,
+        email: updated.email,
+        industry: updated.industry,
+        companySize: updated.companySize,
+        website: updated.website,
+        address: updated.address,
+        description: updated.description
+      }
+    });
+  } catch (err) {
+    console.error('Update profile error:', err);
+    res.status(500).json({ success: false, message: 'Unable to update profile.' });
+  }
+};
+
 module.exports = {
   companySignup,
-  companyLogin
+  companyLogin,
+  updateCompanyProfile
 };

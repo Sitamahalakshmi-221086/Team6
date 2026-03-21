@@ -29,6 +29,7 @@ window.addEventListener('DOMContentLoaded', () => {
     initDarkMode();
     lucide.createIcons();
     setTimeout(renderHomeCharts, 100);
+    setTimeout(loadDrives, 150);
 });
 
 // ── NAVIGATION ──
@@ -248,3 +249,195 @@ document.addEventListener('click', e => {
         panel.classList.remove('on');
     }
 });
+
+// ── API INTEGRATION ──
+const API_BASE = 'http://localhost:5000/api/tpo';
+const TEMP_TPO_ID = '65e0a0a0a0a0a0a0a0a0a0a0'; // Mock ID since auth is not fully hooked up
+
+async function postNoticeData() {
+    const title = document.getElementById('notice-title').value;
+    const dept = document.getElementById('notice-dept').value;
+    const content = document.getElementById('notice-content').value;
+
+    if(!title || !content) return showToast('Please fill required fields');
+
+    try {
+        const res = await fetch(`${API_BASE}/notices`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, department: dept, priority: 'Normal', content, tpoId: TEMP_TPO_ID })
+        });
+        const data = await res.json();
+        if(data.success) {
+            closeModal('notice-modal');
+            showToast('Notice posted successfully!');
+            document.getElementById('notice-title').value = '';
+            document.getElementById('notice-content').value = '';
+        } else {
+            showToast(data.message || 'Error posting notice');
+        }
+    } catch (err) {
+        showToast('Network error');
+    }
+}
+
+async function scheduleDriveData() {
+    const companyName = document.getElementById('drive-company').value;
+    const date = document.getElementById('drive-date').value;
+    const roles = document.getElementById('drive-roles').value || 'Not specified';
+    const eligibility = document.getElementById('drive-eligibility').value || 'Any';
+
+    if(!companyName || !date) return showToast('Please fill company and date');
+
+    try {
+        const res = await fetch(`${API_BASE}/drives`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ companyName, date, eligibility, roles, tpoId: TEMP_TPO_ID })
+        });
+        const data = await res.json();
+        if(data.success) {
+            closeModal('drive-modal');
+            showToast('Drive scheduled successfully!');
+            if (typeof loadDrives === 'function') setTimeout(loadDrives, 500);
+        } else {
+            showToast(data.message || 'Error scheduling drive');
+        }
+    } catch (err) {
+        showToast('Network error');
+    }
+}
+
+async function approveDriveData(id, btn) {
+    try {
+        btn.textContent = 'Approving...';
+        btn.disabled = true;
+        const res = await fetch(`${API_BASE}/drives/${id}/approve`, { method: 'PUT' });
+        const data = await res.json();
+        
+        if (data.success) {
+            btn.textContent = 'Approved';
+            btn.classList.replace('green', 'sec');
+            showToast('Drive approved successfully.');
+            setTimeout(loadDrives, 1500); // refresh the list
+        } else {
+            btn.textContent = 'Approve';
+            btn.disabled = false;
+            showToast(data.message || 'Error approving drive');
+        }
+    } catch (err) {
+        btn.textContent = 'Approve';
+        btn.disabled = false;
+        showToast('Network error');
+    }
+}
+
+async function loadDrives() {
+    try {
+        const res = await fetch(`${API_BASE}/drives`);
+        const data = await res.json();
+        if(data.success) {
+            const pendingContainer = document.getElementById('pending-drives-container');
+            const approvedContainer = document.getElementById('upcoming-drives-container');
+            const notifContainer = document.getElementById('notif-list-container');
+            const notifDot = document.querySelector('.icon-btn .rdot');
+            
+            if (!pendingContainer || !approvedContainer) return;
+
+            pendingContainer.innerHTML = '';
+            approvedContainer.innerHTML = '';
+            if (notifContainer) notifContainer.innerHTML = '';
+
+            const drives = data.drives;
+            const pending = drives.filter(d => d.status === 'Pending');
+            const approved = drives.filter(d => d.status === 'Approved');
+
+            // --- NOTIFICATIONS & PENDING LIST ---
+            if (pending.length === 0) {
+                pendingContainer.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txmu);">No pending requests</div>';
+                if (notifContainer) notifContainer.innerHTML = '<div style="padding:16px;text-align:center;color:var(--txmu);font-size:12px;">No new notifications</div>';
+                if (notifDot) notifDot.style.display = 'none';
+            } else {
+                if (notifDot) notifDot.style.display = 'block';
+                pending.forEach(d => {
+                    const dateObj = new Date(d.date);
+                    const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    
+                    pendingContainer.innerHTML += `
+                    <div class="req-card">
+                        <div class="req-top"><span class="req-co">${d.companyName}</span><span class="pill pending">Pending</span></div>
+                        <div class="req-meta">Drive request &middot; ${dateStr} &middot; Roles: ${d.roles}</div>
+                        <div class="req-actions">
+                            <button class="btn sm green" onclick="approveDriveData('${d._id}', this)">Approve</button>
+                            <button class="btn sm red" onclick="showToast('Declined')">Decline</button>
+                        </div>
+                    </div>`;
+
+                    if (notifContainer) {
+                        notifContainer.innerHTML += `
+                        <div class="notif-item unread"><span class="n-dot u"></span>
+                          <div>
+                            <div class="n-text"><strong>${d.companyName}</strong> requested a campus drive for ${dateStr}.</div>
+                            <div class="n-time">Just now</div>
+                          </div>
+                        </div>`;
+                    }
+                });
+            }
+
+            // --- APPROVED LIST ---
+            if (approved.length === 0) {
+                approvedContainer.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txmu);">No upcoming drives</div>';
+            } else {
+                approved.forEach(d => {
+                    const dateObj = new Date(d.date);
+                    const dd = dateObj.getDate();
+                    const dm = dateObj.toLocaleDateString('en-US', { month: 'short' });
+                    
+                    approvedContainer.innerHTML += `
+                    <div class="drive-row">
+                        <div class="dr-date"><div class="dr-dd">${dd}</div><div class="dr-dm">${dm}</div></div>
+                        <div class="dr-info">
+                            <div class="dr-name">${d.companyName}</div>
+                            <div class="dr-meta">Roles: ${d.roles} &middot; Eligibility: ${d.eligibility}</div>
+                        </div>
+                        <span class="pill active">Approved</span>
+                    </div>`;
+                });
+            }
+        }
+    } catch (err) {
+        console.error('Failed to load drives', err);
+    }
+}
+
+async function sendReminderData(studentName, email, btn) {
+    try {
+        btn.textContent = 'Sending...';
+        btn.disabled = true;
+        
+        const res = await fetch(`${API_BASE}/reminders`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                email: email || 'bommunikhilreddy2004@gmail.com', // Using a test email
+                studentName, 
+                message: 'Please update your placement profile and check pending drive registrations.' 
+            })
+        });
+        const data = await res.json();
+        if(data.success) {
+            btn.textContent = 'Sent';
+            showToast(`Reminder sent to ${studentName}`);
+        } else {
+            btn.textContent = 'Send Reminder';
+            btn.disabled = false;
+            showToast('Error sending reminder');
+        }
+    } catch (err) {
+        btn.textContent = 'Send Reminder';
+        btn.disabled = false;
+        showToast('Network error while sending');
+    }
+}
+
