@@ -4,21 +4,7 @@ async function doLogin(role, event) {
 
   const emailMap = { student: 'sl-email' };
   const pwdMap = { student: 'sl-pwd' };
-async function doLogin(role, event) {
-  if (event) event.preventDefault();
 
-  const emailMap = { student: 'sl-email' };
-  const pwdMap = { student: 'sl-pwd' };
-
-  const emailEl = document.getElementById(emailMap[role]);
-  const pwdEl = document.getElementById(pwdMap[role]);
-  const errBox = document.getElementById('login-err-' + role);
-  const spinner = document.getElementById('spin-' + role);
-
-  if (!emailEl || !pwdEl || !errBox || !spinner) {
-    console.error('Required elements not found');
-    return;
-  }
   const emailEl = document.getElementById(emailMap[role]);
   const pwdEl = document.getElementById(pwdMap[role]);
   const errBox = document.getElementById('login-err-' + role);
@@ -59,7 +45,8 @@ async function doLogin(role, event) {
   try {
     console.log(`Attempting login for ${role}: ${emailEl.value}`);
     
-    const response = await fetch('http://localhost:5001/api/students/login', {
+    // Explicitly targeting port 5000 for the team's standard
+    const response = await fetch('http://localhost:5000/api/students/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -102,23 +89,7 @@ function showSuccess(role, email) {
   
   if (stage2) stage2.classList.remove('active');
   if (stage3) stage3.classList.add('active');
-/* ── SUCCESS ── */
-function showSuccess(role, email) {
-  const stage2 = document.getElementById('stage-2-' + role);
-  const stage3 = document.getElementById('stage-3');
-  
-  if (stage2) stage2.classList.remove('active');
-  if (stage3) stage3.classList.add('active');
 
-  const titles = {
-    student: 'Welcome Back! 👋',
-  };
-  const subs = {
-    student: `Signed in as ${email}. Redirecting to your student dashboard…`,
-  };
-  const ctas = {
-    student: 'Go to Student Dashboard →',
-  };
   const titles = {
     student: 'Welcome Back! 👋',
   };
@@ -151,14 +122,7 @@ function showSuccess(role, email) {
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
 
-/* ── FORGOT PASSWORD ── */
-function showForgot(role) {
-  const panel = document.getElementById('forgot-' + role);
-  if (panel) panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-}
 /* ── FORGOT PASSWORD ── */
 function showForgot(role) {
   const panel = document.getElementById('forgot-' + role);
@@ -185,39 +149,7 @@ function sendReset(btn) {
     }, 3000);
   }, 1000);
 }
-function sendReset(btn) {
-  const input = btn.previousElementSibling;
-  if (!input || !input.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)) {
-    if (input) input.style.borderColor = '#ef4444';
-    setTimeout(() => { if (input) input.style.borderColor = ''; }, 1500);
-    return;
-  }
-  btn.textContent = 'Sending…';
-  btn.disabled = true;
-  setTimeout(() => {
-    btn.textContent = '✅ Reset link sent!';
-    btn.style.background = '#059669';
-    setTimeout(() => {
-      btn.textContent = 'Send Reset Link';
-      btn.style.background = '';
-      btn.disabled = false;
-      input.value = '';
-    }, 3000);
-  }, 1000);
-}
 
-/* ── HELPERS ── */
-function togglePwd(id, btn) {
-  const inp = document.getElementById(id);
-  if (!inp) return;
-  if (inp.type === 'password') { 
-    inp.type = 'text'; 
-    btn.textContent = '🙈'; 
-  } else { 
-    inp.type = 'password'; 
-    btn.textContent = '👁'; 
-  }
-}
 /* ── HELPERS ── */
 function togglePwd(id, btn) {
   const inp = document.getElementById(id);

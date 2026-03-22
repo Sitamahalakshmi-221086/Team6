@@ -1,5 +1,6 @@
 const dns = require('dns');
 dns.setServers(['8.8.8.8', '8.8.4.4']);
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const express = require('express');
 const cors = require('cors');
@@ -42,6 +43,9 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_PASS
+  },
+  tls: {
+    rejectUnauthorized: false
   }
 });
 
@@ -71,6 +75,8 @@ app.post("/send-email", async (req, res) => {
     });
 
     console.log("✅ OTP sent to:", email);
+    global.otpStore = global.otpStore || {};
+    global.otpStore[email] = otp;
     res.json({ success: true });
 
   } catch (err) {
