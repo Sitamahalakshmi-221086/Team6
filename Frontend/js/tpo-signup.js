@@ -27,19 +27,16 @@ async function goNext(from, btn) {
     };
 
     try {
-      const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-      window._currentOtp = generatedOtp;
       window._pendingTpoData = tpoData;
-
-      const emailResponse = await fetch(`${SERVER_URL}/send-email`, {
+      const emailResponse = await fetch(`${SERVER_URL}/api/tpo/send-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: tpoData.email, name: tpoData.fullName, otp: generatedOtp })
+        body: JSON.stringify({ email: tpoData.email, name: tpoData.fullName })
       });
 
       const emailResult = await emailResponse.json();
       if (!emailResult.success) {
-        alert('Failed to send OTP email. Please try again.');
+        alert(emailResult.message || 'Failed to send OTP email. Please try again.');
         return;
       }
 
@@ -158,21 +155,36 @@ async function verifyOtp() {
   errEl.style.display = 'none';
   if (otp.length < 6) { errEl.textContent = 'Please enter all 6 digits.'; errEl.style.display = 'block'; return; }
 
-  if (spinner) spinner.style.display = 'inline-block';
-  if (verifyBtn) verifyBtn.disabled = true;
-
-  if (!window._currentOtp || otp !== window._currentOtp) {
+  try {
+    const response = await fetch(`${SERVER_URL}/api/tpo/verify-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: window._pendingTpoData.email, otp })
+    });
+    const result = await response.json();
+    if (!result.success) {
+      if (spinner) spinner.style.display = 'none';
+      if (verifyBtn) verifyBtn.disabled = false;
+      errEl.textContent = result.message || 'Incorrect OTP. Please check your email and try again.';
+      errEl.style.display = 'block';
+      otpInputs.forEach(i => { i.value = ''; i.style.borderColor = '#ef4444'; });
+      otpInputs[0].focus();
+      setTimeout(() => otpInputs.forEach(i => i.style.borderColor = ''), 1200);
+      return;
+    }
+  } catch (err) {
+    console.error('OTP Verification Error:', err);
     if (spinner) spinner.style.display = 'none';
     if (verifyBtn) verifyBtn.disabled = false;
-    errEl.textContent = 'Incorrect OTP. Please check your email and try again.';
+    errEl.textContent = 'Verification error. Please try again.';
     errEl.style.display = 'block';
-    otpInputs.forEach(i => { i.value = ''; i.style.borderColor = '#ef4444'; });
-    otpInputs[0].focus();
-    setTimeout(() => otpInputs.forEach(i => i.style.borderColor = ''), 1200);
     return;
   }
 
   try {
+    if (spinner) spinner.style.display = 'inline-block';
+    if (verifyBtn) verifyBtn.disabled = true;
+
     const response = await fetch(`${SERVER_URL}/api/tpo/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -216,17 +228,14 @@ function startResendTimer() {
 
 async function resendOtp() {
   if (!window._pendingTpoData) { alert('Session expired. Please go back and fill the form again.'); goTo(2); return; }
-  const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
-  window._currentOtp = newOtp;
-  otpInputs.forEach(i => i.value = '');
-  otpInputs[0].focus();
-  startResendTimer();
   try {
-    await fetch(`${SERVER_URL}/send-email`, {
+    const res = await fetch(`${SERVER_URL}/api/tpo/send-otp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: window._pendingTpoData.email, name: window._pendingTpoData.fullName, otp: newOtp })
+      body: JSON.stringify({ email: window._pendingTpoData.email, name: window._pendingTpoData.fullName })
     });
+    const result = await res.json();
+    if (!result.success) showToast(result.message || 'Failed to resend OTP');
   } catch (err) { console.error('Resend error:', err); }
   const toast = document.createElement('div');
   toast.textContent = '✅ OTP resent to your email!';

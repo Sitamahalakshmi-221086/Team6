@@ -17,7 +17,8 @@ app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Parse form data
-app.use('/uploads', express.static('uploads')); // Static folder for resumes
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Static folder for resumes
+app.use(express.static(path.resolve(__dirname, '..', 'Frontend'))); // Serve frontend files
 
 // Email Transporter (using credentials from .env)
 const transporter = nodemailer.createTransport({
@@ -73,7 +74,7 @@ app.get('/', (req, res) => {
 });
 
 // Set PORT
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5005;
 
 // Start Server
 app.listen(PORT, () => {

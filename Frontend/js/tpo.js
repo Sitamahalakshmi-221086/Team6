@@ -441,3 +441,46 @@ async function sendReminderData(studentName, email, btn) {
     }
 }
 
+async function saveTPOProfile() {
+    const tpoId = sessionStorage.getItem('tpoId') || TEMP_TPO_ID;
+    const inputs = document.querySelectorAll('#pf-edit input');
+    
+    const updates = {
+        fullName: inputs[0].value,
+        designation: inputs[1].value,
+        college: inputs[2].value,
+        department: inputs[3].value,
+        phone: inputs[4].value,
+        location: inputs[5].value,
+        email: inputs[6].value
+    };
+
+    try {
+        const res = await fetch(`${API_BASE}/profile/${tpoId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updates)
+        });
+        const data = await res.json();
+        
+        if (data.success) {
+            showToast('Profile updated successfully!');
+            // Update view mode
+            const p = document.querySelectorAll('#pf-view p');
+            p[0].textContent = updates.fullName;
+            p[1].textContent = updates.designation;
+            p[2].textContent = updates.college;
+            p[3].textContent = updates.department;
+            p[4].textContent = updates.phone;
+            p[5].textContent = updates.location;
+            p[6].textContent = updates.email;
+            
+            togglePfEdit();
+        } else {
+            showToast(data.message || 'Update failed');
+        }
+    } catch (err) {
+        showToast('Network error');
+        console.error(err);
+    }
+}
