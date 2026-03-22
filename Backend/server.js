@@ -23,15 +23,18 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve static files (like resumes)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(express.static(path.join(__dirname, '../Frontend')));
 
 // Routes
 const studentRoutes = require('./routes/studentRoutes');
 const companyRoutes = require('./routes/companyRoutes');
 const tpoRoutes = require('./routes/tpoRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 app.use('/api/students', studentRoutes);
 app.use('/api/companies', companyRoutes);
 app.use('/api/tpos', tpoRoutes);
+app.use('/api/auth', authRoutes);
 
 // Email Transporter
 const transporter = nodemailer.createTransport({
@@ -76,5 +79,5 @@ app.post("/send-email", async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`✅ Server running on http://localhost:${PORT}`));

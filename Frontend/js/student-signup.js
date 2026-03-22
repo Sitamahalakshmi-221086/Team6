@@ -5,7 +5,7 @@ let selectedRole = 'student';
 let resendTimer = null;
 
 // ── CONFIG ──
-const SERVER_URL = 'http://localhost:5001';
+const SERVER_URL = 'http://localhost:5000';
 
 // Store pending student data and OTP in memory
 // DB is only written AFTER OTP is verified
@@ -30,17 +30,17 @@ async function goNext(from, event) {
 
       // Store as plain object; resume file stored separately
       window._pendingFormData = {
-        fullName:    document.getElementById('s-name').value,
-        email:       document.getElementById('s-email').value,
-        password:    document.getElementById('s-pwd').value,
-        phone:       document.getElementById('s-phone').value,
-        branch:      document.getElementById('s-branch').value,
-        year:        document.getElementById('s-year').value,
-        cgpa:        document.getElementById('s-cgpa').value,
-        rollNumber:  document.getElementById('s-roll').value,
-        linkedin:    document.getElementById('s-linkedin').value,
-        skills:      JSON.stringify(skills),
-        resumeFile:  resumeFile || null
+        fullName: document.getElementById('s-name').value,
+        email: document.getElementById('s-email').value,
+        password: document.getElementById('s-pwd').value,
+        phone: document.getElementById('s-phone').value,
+        branch: document.getElementById('s-branch').value,
+        year: document.getElementById('s-year').value,
+        cgpa: document.getElementById('s-cgpa').value,
+        rollNumber: document.getElementById('s-roll').value,
+        linkedin: document.getElementById('s-linkedin').value,
+        skills: JSON.stringify(skills),
+        resumeFile: resumeFile || null
       };
 
       // Step 2: Generate OTP and send email ONLY (no DB save yet)
@@ -52,8 +52,8 @@ async function goNext(from, event) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: window._pendingFormData.email,
-          name:  window._pendingFormData.fullName,
-          otp:   generatedOtp
+          name: window._pendingFormData.fullName,
+          otp: generatedOtp
         })
       });
 
@@ -135,28 +135,29 @@ function updateSidebar(stage) {
 function validateStage2() {
   let ok = true;
   let checks = [
-    { id: 's-name',   err: 'err-s-name',   test: v => v.trim().length >= 2 },
-    { id: 's-email',  err: 'err-s-email',  test: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
-    { id: 's-pwd',    err: 'err-s-pwd',    test: v => v.length >= 8 },
-    { id: 's-phone',  err: 'err-s-phone',  test: v => v.replace(/\D/g, '').length >= 10 },
+    { id: 's-name', err: 'err-s-name', test: v => v.trim().length >= 2 },
+    { id: 's-email', err: 'err-s-email', test: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+    { id: 's-pwd', err: 'err-s-pwd', test: v => v.length >= 8 },
+    { id: 's-phone', err: 'err-s-phone', test: v => v.replace(/\D/g, '').length >= 10 },
     { id: 's-branch', err: 'err-s-branch', test: v => v !== '' },
-    { id: 's-year',   err: 'err-s-year',   test: v => v !== '' },
-    { id: 's-cgpa',   err: 'err-s-cgpa',   test: v => v !== '' && +v >= 0 && +v <= 10 },
+    { id: 's-year', err: 'err-s-year', test: v => v !== '' },
+    { id: 's-cgpa', err: 'err-s-cgpa', test: v => v !== '' && +v >= 0 && +v <= 10 },
   ];
   checks.forEach(c => runCheck(c, () => ok = false));
-  
-  if (skills.length === 0) { 
+
+  if (skills.length === 0) {
     const skillErr = document.getElementById('err-s-skills');
-    if (skillErr) skillErr.classList.add('show'); 
-    ok = false; 
+    if (skillErr) skillErr.classList.add('show');
+    ok = false;
   }
-  
+
   const resumeInput = document.getElementById('resume-input');
-  if (resumeInput && !resumeInput.files[0]) { 
-    const resumeErr = document.getElementById('err-s-resume');
-    if (resumeErr) resumeErr.classList.add('show'); 
-    ok = false; 
-  }
+  // Temporarily made optional for demo/testing
+  // if (resumeInput && !resumeInput.files[0]) {
+  //   const resumeErr = document.getElementById('err-s-resume');
+  //   if (resumeErr) resumeErr.classList.add('show');
+  //   ok = false;
+  // }
 
   if (!ok) document.querySelector('.error')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   return ok;
@@ -183,17 +184,17 @@ function checkPwd(input, prefix, labelId) {
   if (!bars[0]) return;
   bars.forEach(b => { if (b) b.className = 'pwd-bar'; });
   if (!v) { if (lbl) { lbl.textContent = 'Enter a password'; lbl.style.color = '#94a3b8'; } return; }
-  
+
   let score = 0;
   if (v.length >= 8) score++;
   if (/[A-Z]/.test(v)) score++;
   if (/[0-9]/.test(v)) score++;
   if (/[^A-Za-z0-9]/.test(v)) score++;
-  
+
   const cls = score <= 1 ? 'weak' : score <= 2 ? 'fair' : 'strong';
   const texts = ['', 'Weak', 'Fair', 'Good', 'Strong'];
   const colors = ['', '#ef4444', '#f59e0b', '#22c55e', '#22c55e'];
-  
+
   for (let i = 0; i < score; i++) {
     if (bars[i]) bars[i].classList.add(cls);
   }
@@ -216,7 +217,7 @@ function updateCgpa(input) {
   const fill = document.getElementById('cgpa-fill');
   const hint = document.getElementById('cgpa-hint');
   if (!fill || !hint) return;
-  
+
   if (!isNaN(v) && v >= 0 && v <= 10) {
     fill.style.width = (v / 10 * 100) + '%';
     hint.textContent = v >= 8 ? '🌟 Excellent!' : v >= 6 ? '👍 Good' : v >= 4 ? 'Average' : 'Below average';
@@ -263,7 +264,7 @@ function handleFile(input) {
   const uploadDoneEl = document.getElementById('upload-done');
   const zoneEl = document.getElementById('upload-zone');
   const resumeErrEl = document.getElementById('err-s-resume');
-  
+
   if (fileNameEl) fileNameEl.textContent = file.name;
   if (uploadDoneEl) uploadDoneEl.classList.add('show');
   if (zoneEl) zoneEl.style.opacity = '.5';
@@ -274,7 +275,7 @@ function removeFile() {
   const input = document.getElementById('resume-input');
   const uploadDoneEl = document.getElementById('upload-done');
   const zoneEl = document.getElementById('upload-zone');
-  
+
   if (input) input.value = '';
   if (uploadDoneEl) uploadDoneEl.classList.remove('show');
   if (zoneEl) zoneEl.style.opacity = '1';
@@ -325,14 +326,33 @@ async function verifyOtp() {
   if (verifyBtn) verifyBtn.disabled = true;
 
   // ── Check OTP first ──
-  if (!window._currentOtp || otp !== window._currentOtp) {
+  try {
+    const response = await fetch(`${SERVER_URL}/api/auth/verify-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        email: window._pendingFormData.email,
+        otp: otp
+      })
+    });
+    const result = await response.json();
+
+    if (!result.success) {
+      if (spinner) spinner.style.display = 'none';
+      if (verifyBtn) verifyBtn.disabled = false;
+      errEl.textContent = result.message || 'Incorrect OTP. Please check your email and try again.';
+      errEl.style.display = 'block';
+      otpInputs.forEach(i => { i.value = ''; i.style.borderColor = '#ef4444'; });
+      otpInputs[0].focus();
+      setTimeout(() => otpInputs.forEach(i => i.style.borderColor = ''), 1200);
+      return;
+    }
+  } catch (error) {
+    console.error('OTP verification error:', error);
     if (spinner) spinner.style.display = 'none';
     if (verifyBtn) verifyBtn.disabled = false;
-    errEl.textContent = 'Incorrect OTP. Please check your email and try again.';
+    errEl.textContent = 'Server error during OTP verification. Please try again.';
     errEl.style.display = 'block';
-    otpInputs.forEach(i => { i.value = ''; i.style.borderColor = '#ef4444'; });
-    otpInputs[0].focus();
-    setTimeout(() => otpInputs.forEach(i => i.style.borderColor = ''), 1200);
     return;
   }
 
@@ -342,16 +362,16 @@ async function verifyOtp() {
 
     // Rebuild FormData here (can't store FormData in memory across async ops reliably)
     const formData = new FormData();
-    formData.append('fullName',   data.fullName);
-    formData.append('email',      data.email);
-    formData.append('password',   data.password);
-    formData.append('phone',      data.phone);
-    formData.append('branch',     data.branch);
-    formData.append('year',       data.year);
-    formData.append('cgpa',       data.cgpa);
+    formData.append('fullName', data.fullName);
+    formData.append('email', data.email);
+    formData.append('password', data.password);
+    formData.append('phone', data.phone);
+    formData.append('branch', data.branch);
+    formData.append('year', data.year);
+    formData.append('cgpa', data.cgpa);
     formData.append('rollNumber', data.rollNumber);
-    formData.append('linkedin',   data.linkedin);
-    formData.append('skills',     data.skills);
+    formData.append('linkedin', data.linkedin);
+    formData.append('skills', data.skills);
     if (data.resumeFile) {
       formData.append('resume', data.resumeFile);
     }
@@ -388,11 +408,11 @@ function startResendTimer() {
   const btn = document.getElementById('resend-btn');
   const badge = document.getElementById('timer-badge');
   const count = document.getElementById('timer-count');
-  
+
   if (btn) btn.style.display = 'none';
   if (badge) badge.style.display = 'inline-flex';
   if (count) count.textContent = t;
-  
+
   clearInterval(resendTimer);
   resendTimer = setInterval(() => {
     t--;
@@ -412,35 +432,37 @@ async function resendOtp() {
     return;
   }
 
-  const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
-  window._currentOtp = newOtp;
-
   otpInputs.forEach(i => i.value = '');
   otpInputs[0].focus();
   startResendTimer();
 
   try {
-    await fetch(`${SERVER_URL}/send-email`, {
+    const response = await fetch(`${SERVER_URL}/api/auth/resend-otp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: window._pendingFormData.email,
-        name:  window._pendingFormData.fullName,
-        otp:   newOtp
+        email: window._pendingFormData.email
       })
     });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      const toast = document.createElement('div');
+      toast.textContent = '✅ OTP resent to your email!';
+      Object.assign(toast.style, {
+        position: 'fixed', bottom: '32px', left: '50%', transform: 'translateX(-50%)',
+        background: '#059669', color: '#fff', padding: '10px 24px', borderRadius: '100px',
+        fontSize: '14px', fontWeight: '600', zIndex: '9999',
+        boxShadow: '0 4px 16px rgba(5,150,105,.4)'
+      });
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2500);
+    } else {
+      alert(result.message || 'Failed to resend OTP.');
+    }
   } catch (err) {
     console.error('Resend OTP error:', err);
+    alert('Server error while resending OTP.');
   }
-
-  const toast = document.createElement('div');
-  toast.textContent = '✅ OTP resent to your email!';
-  Object.assign(toast.style, {
-    position: 'fixed', bottom: '32px', left: '50%', transform: 'translateX(-50%)',
-    background: '#059669', color: '#fff', padding: '10px 24px', borderRadius: '100px',
-    fontSize: '14px', fontWeight: '600', zIndex: '9999',
-    boxShadow: '0 4px 16px rgba(5,150,105,.4)'
-  });
-  document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 2500);
 }
