@@ -2508,3 +2508,20 @@ textarea {
 .ph-banner {
     position: relative;
 }
+
+.empty-state {
+    padding: 28px 20px;
+    text-align: center;
+    color: var(--txmu);
+    font-size: 13px;
+    margin: 0;
+}
+
+.chart-empty-msg {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0;
+}

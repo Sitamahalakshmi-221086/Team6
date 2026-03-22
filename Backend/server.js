@@ -33,6 +33,9 @@ const transporter = nodemailer.createTransport({
 app.use('/api/students', require('./routes/studentRoutes'));
 app.use('/api/companies', require('./routes/companyRoutes'));
 app.use('/api/tpo', require('./routes/tpoRoutes'));
+app.use('/api/jobs', require('./routes/jobsRoutes'));
+app.use('/api/drives', require('./routes/drivesPublicRoutes'));
+app.use('/api/applications', require('./routes/applicationRoutes'));
 
 // OTP Email Route
 app.post("/send-email", async (req, res) => {

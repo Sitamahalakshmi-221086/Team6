@@ -19,17 +19,56 @@ const baseChartOptions = {
 };
 
 // ── INIT ──
-window.addEventListener('DOMContentLoaded', () => {
-    // Session Greeting
+window.addEventListener('DOMContentLoaded', async () => {
+    if (!getTpoId() || sessionStorage.getItem('userRole') !== 'tpo' || sessionStorage.getItem('isLoggedIn') !== 'true') {
+        window.location.href = 'Login.html';
+        return;
+    }
+
     const h = new Date().getHours();
     const g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
     const greetMsg = document.getElementById('greet-msg');
-    if (greetMsg) greetMsg.textContent = `${g}, Dr. Ramesh Kumar 👋`;
+    const nm = sessionStorage.getItem('tpoName') || 'TPO';
+    if (greetMsg) greetMsg.textContent = `${g}, ${nm.split(' ')[0]} 👋`;
+
+    try {
+        const pr = await fetch(`${API_BASE}/profile/${getTpoId()}`);
+        const pd = await pr.json();
+        if (pd.success && pd.tpo) {
+            sessionStorage.setItem('tpoName', pd.tpo.fullName || nm);
+            if (greetMsg) greetMsg.textContent = `${g}, ${(pd.tpo.fullName || nm).split(' ')[0]} 👋`;
+        }
+        const ar = await fetch(`${API_BASE}/analytics`);
+        const ad = await ar.json();
+        if (ad.success && ad.stats) {
+            window.__tpoStats = ad.stats;
+            [
+                ['tpo-stat-students', ad.stats.totalStudents],
+                ['tpo-stat-companies', ad.stats.totalCompanies],
+                ['tpo-stat-drives', ad.stats.totalDrives],
+                ['tpo-greet-students', ad.stats.totalStudents],
+                ['tpo-greet-drives', ad.stats.totalDrives]
+            ].forEach(([id, v]) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = String(v ?? 0);
+            });
+            updateHomeBatchUI(ad.stats);
+        }
+    } catch (e) {
+        console.error(e);
+    }
 
     initDarkMode();
     lucide.createIcons();
-    setTimeout(renderHomeCharts, 100);
+    setTimeout(renderHomeChartsLive, 100);
     setTimeout(loadDrives, 150);
+    setTimeout(() => {
+        loadTPOStudentsDirectory();
+        loadTPOCompaniesTabs();
+        loadTPOFullDrivesPage();
+        loadTPOPlacementsPage();
+        loadTPONotices();
+    }, 200);
 });
 
 // ── NAVIGATION ──
@@ -44,7 +83,7 @@ function go(id, btn) {
     document.getElementById('tb-title').textContent = TITLES[id] || id;
     document.getElementById('notif-panel').classList.remove('on');
 
-    if (id === 'analytics' && !window.analyticsDone) setTimeout(renderAnalytics, 80);
+    if (id === 'analytics') setTimeout(() => renderAnalytics(true), 80);
     if (id === 'profile' && !window.profilePipeDone) setTimeout(renderProfilePipe, 80);
 }
 
@@ -129,117 +168,561 @@ function initDarkMode() {
 }
 
 // ── CHARTS ──
-function renderHomeCharts() {
+function updateHomeBatchUI(s) {
+    const total = s.totalStudents || 0;
+    const placed = s.placedStudents || 0;
+    const proc = s.inProcessStudents || 0;
+    const na = s.notAppliedStudents || 0;
+    const pct = (n) => (total ? Math.round((n / total) * 100) : 0);
+    const elP = document.getElementById('tpo-home-placed-text');
+    const elPr = document.getElementById('tpo-home-proc-text');
+    const elN = document.getElementById('tpo-home-na-text');
+    const barP = document.getElementById('tpo-home-bar-placed');
+    const barPr = document.getElementById('tpo-home-bar-proc');
+    const barN = document.getElementById('tpo-home-bar-na');
+    if (elP) elP.innerHTML = `<span style="font-weight:700;color:var(--G);">${placed} / ${total}</span>`;
+    if (elPr) elPr.innerHTML = `<span style="font-weight:700;color:var(--A);">${proc} / ${total}</span>`;
+    if (elN) elN.innerHTML = `<span style="font-weight:700;color:var(--txmu);">${na} / ${total}</span>`;
+    if (barP) barP.style.width = `${pct(placed)}%`;
+    if (barPr) barPr.style.width = `${pct(proc)}%`;
+    if (barN) barN.style.width = `${pct(na)}%`;
+    const avgEl = document.getElementById('tpo-home-pkg-avg');
+    const hiEl = document.getElementById('tpo-home-pkg-high');
+    const rateEl = document.getElementById('tpo-home-place-rate');
+    if (avgEl) avgEl.textContent = '—';
+    if (hiEl) hiEl.textContent = '—';
+    if (rateEl) rateEl.textContent = total ? `${Math.round((placed / total) * 100)}%` : '0%';
+}
+
+function renderHomeChartsLive() {
+    const s = window.__tpoStats || {};
+    const sum = (s.totalStudents || 0) + (s.totalCompanies || 0) + (s.totalDrives || 0);
     const progCtx = document.getElementById('chart-home-progress');
-    if (progCtx) {
-        new Chart(progCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
-                datasets: [
-                    { label: 'Placed', data: [12, 18, 24, 15, 22, 28, 19], backgroundColor: P + 'bb', borderRadius: 6, borderSkipped: false },
-                    { label: 'In Process', data: [8, 10, 14, 9, 12, 10, 8], backgroundColor: T + 'bb', borderRadius: 6, borderSkipped: false }
-                ]
-            },
-            options: baseChartOptions
-        });
+    if (progCtx && progCtx.parentElement) {
+        if (sum === 0) {
+            progCtx.parentElement.innerHTML = '<p class="empty-state" style="padding:20px;text-align:center;color:var(--txmu);">No analytics data available</p>';
+        } else {
+            new Chart(progCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Students', 'Companies', 'Drives'],
+                    datasets: [
+                        {
+                            label: 'Live',
+                            data: [s.totalStudents || 0, s.totalCompanies || 0, s.totalDrives || 0],
+                            backgroundColor: [P + 'bb', T + 'bb', G + 'bb'],
+                            borderRadius: 6,
+                            borderSkipped: false
+                        }
+                    ]
+                },
+                options: baseChartOptions
+            });
+        }
     }
 
     const branchCtx = document.getElementById('chart-home-branch');
-    if (branchCtx) {
-        new Chart(branchCtx, {
-            type: 'bar',
-            data: {
-                labels: ['CSE', 'IT', 'ECE', 'EEE', 'MECH'],
-                datasets: [{ data: [68, 22, 14, 7, 5], backgroundColor: [P, T, G, A, B].map(c => c + 'cc'), borderRadius: 6, borderSkipped: false }]
-            },
-            options: { ...baseChartOptions, indexAxis: 'y', scales: { x: { grid: { color: grid }, ticks: tick, beginAtZero: true }, y: { grid: { display: false }, ticks: tick } } }
-        });
+    if (branchCtx && branchCtx.parentElement) {
+        if (sum === 0) {
+            branchCtx.parentElement.innerHTML = '<p class="empty-state" style="padding:20px;text-align:center;color:var(--txmu);">No analytics data available</p>';
+        } else {
+            new Chart(branchCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Students', 'Companies', 'Drives'],
+                    datasets: [{ data: [s.totalStudents || 0, s.totalCompanies || 0, s.totalDrives || 0], backgroundColor: [P, T, G].map((c) => c + 'cc'), borderRadius: 6, borderSkipped: false }]
+                },
+                options: { ...baseChartOptions, indexAxis: 'y', scales: { x: { grid: { color: grid }, ticks: tick, beginAtZero: true }, y: { grid: { display: false }, ticks: tick } } }
+            });
+        }
     }
 }
 
-function renderAnalytics() {
-    if (window.analyticsDone) return;
+function destroyTPOAnalyticsCharts() {
+    if (!window.__tpoAnCharts) window.__tpoAnCharts = [];
+    window.__tpoAnCharts.forEach((c) => {
+        try {
+            c.destroy();
+        } catch (e) {}
+    });
+    window.__tpoAnCharts = [];
+}
+
+function fillAnalyticsChartWrap(wrapId, canvasId, heightPx, emptyMessage) {
+    const w = document.getElementById(wrapId);
+    if (!w) return null;
+    if (emptyMessage) {
+        w.innerHTML = `<p class="empty-state" style="padding:20px;text-align:center;color:var(--txmu);">${emptyMessage}</p>`;
+        return null;
+    }
+    w.innerHTML = '';
+    w.style.position = 'relative';
+    if (heightPx) w.style.height = `${heightPx}px`;
+    const c = document.createElement('canvas');
+    c.id = canvasId;
+    w.appendChild(c);
+    return c;
+}
+
+function renderAnalytics(force) {
+    if (!force && window.analyticsDone) return;
     window.analyticsDone = true;
+    destroyTPOAnalyticsCharts();
 
-    new Chart(document.getElementById('chart-a-trend'), {
-        type: 'bar',
-        data: {
-            labels: ['Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'],
-            datasets: [
-                { type: 'bar', label: 'Placed', data: [8, 12, 18, 24, 15, 22, 28, 19, 12, 5], backgroundColor: P + 'bb', borderRadius: 5, borderSkipped: false, order: 2 },
-                { type: 'line', label: 'In Process', data: [14, 18, 22, 16, 18, 14, 10, 8, 6, 4], borderColor: T, backgroundColor: 'transparent', tension: .4, pointRadius: 4, pointBackgroundColor: T, borderWidth: 2.5, order: 1 }
-            ]
-        },
-        options: baseChartOptions
-    });
+    const s = window.__tpoStats || {};
+    const setTxt = (id, v) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = v;
+    };
+    setTxt('tpo-an-eligible', String(s.totalStudents ?? 0));
+    setTxt('tpo-an-placed', String(s.placedStudents ?? 0));
+    setTxt('tpo-an-pkg', '—');
+    setTxt('tpo-an-cos', String(s.totalCompanies ?? 0));
+    const donut = document.getElementById('tpo-an-placed-donut');
+    if (donut) donut.textContent = String(s.placedStudents ?? 0);
 
-    new Chart(document.getElementById('chart-a-branch'), {
-        type: 'bar',
-        data: {
-            labels: ['CSE', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL'],
-            datasets: [{ data: [72, 58, 44, 35, 28, 18], backgroundColor: [P, T, G, A, B, R + '99'].map(c => c + 'cc'), borderRadius: 5, borderSkipped: false }]
-        },
-        options: { ...baseChartOptions, indexAxis: 'y', scales: { x: { grid: { color: grid }, ticks: tick, max: 100 }, y: { grid: { display: false }, ticks: tick } } }
-    });
+    const newC = awaitOrSyncCounts(s);
+    const trendCtx = fillAnalyticsChartWrap(
+        'tpo-wrap-a-trend',
+        'chart-a-trend',
+        210,
+        newC.sumPipe === 0 ? 'No analytics data available' : ''
+    );
+    if (trendCtx) {
+        window.__tpoAnCharts.push(
+            new Chart(trendCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Applied', 'Shortlisted', 'Interview', 'Offers'],
+                    datasets: [
+                        {
+                            label: 'Live',
+                            data: [newC.applied, s.shortlisted || 0, s.interviews || 0, s.offers || 0],
+                            backgroundColor: [P + 'bb', B + 'bb', A + 'bb', G + 'bb'],
+                            borderRadius: 6,
+                            borderSkipped: false
+                        }
+                    ]
+                },
+                options: { ...baseChartOptions, plugins: { legend: { display: false } } }
+            })
+        );
+    }
 
-    const pkgData = { labels: ['<5 LPA', '5–10 LPA', '10–15 LPA', '15–20 LPA', '20–25 LPA', '25+ LPA'], vals: [12, 38, 48, 24, 11, 5] };
-    const pkgColors = [P + 'cc', B + 'cc', T + 'cc', G + 'cc', A + 'cc', R + 'cc'];
-    new Chart(document.getElementById('chart-a-pkg'), {
-        type: 'doughnut',
-        data: { labels: pkgData.labels, datasets: [{ data: pkgData.vals, backgroundColor: pkgColors, borderWidth: 3, borderColor: '#fff' }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, cutout: '60%' }
-    });
-    
-    const pl = document.getElementById('pkg-legend-a');
-    if (pl) pl.innerHTML = pkgData.labels.map((l, i) => `<div style="display:flex;justify-content:space-between;align-items:center;padding:3px 0;"><div style="display:flex;align-items:center;gap:7px;"><span style="width:9px;height:9px;border-radius:2px;background:${pkgColors[i]};display:inline-block;"></span><span style="font-size:12px;color:var(--txmu);">${l}</span></div><span style="font-size:12px;font-weight:700;">${pkgData.vals[i]}</span></div>`).join('');
+    const br = s.branchPlacement || [];
+    const brSum = br.reduce((a, b) => a + (b.rate || 0), 0);
+    const branchCtx = fillAnalyticsChartWrap(
+        'tpo-wrap-a-branch',
+        'chart-a-branch',
+        250,
+        !br.length || brSum === 0 ? 'No analytics data available' : ''
+    );
+    if (branchCtx) {
+        window.__tpoAnCharts.push(
+            new Chart(branchCtx, {
+                type: 'bar',
+                data: {
+                    labels: br.map((x) => x.branch),
+                    datasets: [
+                        {
+                            data: br.map((x) => x.rate),
+                            backgroundColor: br.map((_, i) => [P, T, G, A, B, R][i % 6] + 'cc'),
+                            borderRadius: 5,
+                            borderSkipped: false
+                        }
+                    ]
+                },
+                options: {
+                    ...baseChartOptions,
+                    indexAxis: 'y',
+                    scales: {
+                        x: { grid: { color: grid }, ticks: tick, max: 100, beginAtZero: true },
+                        y: { grid: { display: false }, ticks: tick }
+                    }
+                }
+            })
+        );
+    }
 
-    new Chart(document.getElementById('chart-a-companies'), {
-        type: 'bar',
-        data: {
-            labels: ['TCS', 'Infosys', 'Wipro', 'HCL', 'Cognizant', 'Others'],
-            datasets: [{ data: [32, 28, 18, 14, 12, 34], backgroundColor: [P, T, G, A, B, R + '99'].map(c => c + 'bb'), borderRadius: 6, borderSkipped: false }]
-        },
-        options: baseChartOptions
-    });
+    const pkgLeg = document.getElementById('pkg-legend-a');
+    if (pkgLeg) pkgLeg.innerHTML = '';
+    fillAnalyticsChartWrap('tpo-wrap-a-pkg', 'chart-a-pkg', 160, 'No analytics data available');
 
-    new Chart(document.getElementById('chart-a-yoy'), {
-        type: 'line',
-        data: {
-            labels: ['2021', '2022', '2023', '2024', '2025'],
-            datasets: [
-                { data: [32, 38, 43, 48, 56], borderColor: P, backgroundColor: P + '18', fill: true, tension: .4, pointRadius: 5, pointBackgroundColor: P, borderWidth: 2.5, label: 'JNTU' },
-                { data: [35, 40, 44, 47, 52], borderColor: T, backgroundColor: 'transparent', borderDash: [5, 4], tension: .4, pointRadius: 4, pointBackgroundColor: T, borderWidth: 2, label: 'Industry Avg' }
-            ]
-        },
-        options: baseChartOptions
-    });
+    const hires = s.companyHires || [];
+    const coCtx = fillAnalyticsChartWrap(
+        'tpo-wrap-a-companies',
+        'chart-a-companies',
+        180,
+        !hires.length ? 'No analytics data available' : ''
+    );
+    if (coCtx) {
+        window.__tpoAnCharts.push(
+            new Chart(coCtx, {
+                type: 'bar',
+                data: {
+                    labels: hires.map((x) => x.name),
+                    datasets: [
+                        {
+                            data: hires.map((x) => x.hires),
+                            backgroundColor: hires.map((_, i) => [P, T, G, A, B, R][i % 6] + 'bb'),
+                            borderRadius: 6,
+                            borderSkipped: false
+                        }
+                    ]
+                },
+                options: baseChartOptions
+            })
+        );
+    }
 
-    const roles = { labels: ['SDE / SWE', 'Data / ML', 'Systems Engr', 'DevOps', 'Consulting', 'Others'], data: [38, 20, 18, 10, 9, 5] };
-    const rColors = [P, T, G, A, B, R + '99'];
-    new Chart(document.getElementById('chart-a-roles'), {
-        type: 'doughnut',
-        data: { datasets: [{ data: roles.data, backgroundColor: rColors, borderWidth: 3, borderColor: '#fff' }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, cutout: '55%' }
-    });
+    fillAnalyticsChartWrap('tpo-wrap-a-yoy', 'chart-a-yoy', 200, 'No analytics data available');
     const rl = document.getElementById('roles-legend-a');
-    if (rl) rl.innerHTML = roles.labels.map((l, i) => `<div style="display:flex;align-items:center;gap:7px;"><span style="width:9px;height:9px;border-radius:2px;background:${rColors[i]};flex-shrink:0;"></span><span style="color:var(--txmu);">${l} <strong style="color:var(--tx);">${roles.data[i]}%</strong></span></div>`).join('');
+    if (rl) rl.innerHTML = '';
+    fillAnalyticsChartWrap('tpo-wrap-a-roles', 'chart-a-roles', 180, 'No analytics data available');
+}
+
+function awaitOrSyncCounts(s) {
+    const applied = s.totalApplications || 0;
+    const sumPipe = applied + (s.shortlisted || 0) + (s.interviews || 0) + (s.offers || 0);
+    return { applied, sumPipe };
 }
 
 function renderProfilePipe() {
     if (window.profilePipeDone) return;
     window.profilePipeDone = true;
     const pipeCtx = document.getElementById('chart-profile-pipe');
-    if (pipeCtx) {
-        new Chart(pipeCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Registered', 'Applied', 'Shortlisted', 'Interview', 'Placed'],
-                datasets: [{ data: [320, 184, 72, 38, 138], backgroundColor: [P + 'cc', B + 'cc', A + 'cc', T + 'cc', G + 'cc'], borderRadius: 7, borderSkipped: false }]
-            },
-            options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: grid }, ticks: tick, beginAtZero: true }, y: { grid: { display: false }, ticks: tick } } }
-        });
+    if (!pipeCtx || !pipeCtx.parentElement) return;
+    const s = window.__tpoStats || {};
+    const total = s.totalStudents || 0;
+    const applied = s.totalApplications || 0;
+    const sh = s.shortlisted || 0;
+    const inv = s.interviews || 0;
+    const pl = s.placedStudents || 0;
+    const sum = total + applied + sh + inv + pl;
+    if (sum === 0) {
+        pipeCtx.parentElement.innerHTML =
+            '<p class="empty-state" style="padding:20px;text-align:center;color:var(--txmu);">No analytics data available</p>';
+        return;
     }
+    window.__tpoProfileChart = new Chart(pipeCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Registered', 'Applied', 'Shortlisted', 'Interview', 'Placed'],
+            datasets: [
+                {
+                    data: [total, applied, sh, inv, pl],
+                    backgroundColor: [P + 'cc', B + 'cc', A + 'cc', T + 'cc', G + 'cc'],
+                    borderRadius: 7,
+                    borderSkipped: false
+                }
+            ]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { grid: { color: grid }, ticks: tick, beginAtZero: true },
+                y: { grid: { display: false }, ticks: tick }
+            }
+        }
+    });
+}
+
+async function loadTPOStudentsDirectory() {
+    const all = document.getElementById('tpo-st-all-rows');
+    const placed = document.getElementById('tpo-st-placed-rows');
+    const active = document.getElementById('tpo-st-active-rows');
+    const unplaced = document.getElementById('tpo-st-unplaced-rows');
+    if (!all) return;
+    try {
+        const res = await fetch(`${API_BASE}/students`);
+        const data = await res.json();
+        const list = data.success && data.students ? data.students : [];
+        const c = { placed: 0, active: 0, unplaced: 0 };
+        list.forEach((st) => {
+            c[st.category] = (c[st.category] || 0) + 1;
+        });
+        const tabAll = document.getElementById('tpo-tab-count-all');
+        const tabPl = document.getElementById('tpo-tab-count-placed');
+        const tabAc = document.getElementById('tpo-tab-count-active');
+        const tabUn = document.getElementById('tpo-tab-count-unplaced');
+        if (tabAll) tabAll.textContent = String(list.length);
+        if (tabPl) tabPl.textContent = String(c.placed || 0);
+        if (tabAc) tabAc.textContent = String(c.active || 0);
+        if (tabUn) tabUn.textContent = String(c.unplaced || 0);
+
+        const row = (st, extra) => {
+            const status =
+                st.category === 'placed'
+                    ? '<span class="pill placed">Placed</span>'
+                    : st.category === 'active'
+                      ? '<span class="pill active">In process</span>'
+                      : '<span class="pill closed">Not applied</span>';
+            return `<div class="tbl-row g5">
+              <div><div class="tbl-name">${st.fullName || '—'}</div><div class="tbl-sub">Roll: ${st.rollNumber || '—'}</div></div>
+              <span style="font-size:12.5px;color:var(--txmu);">${st.branch || '—'} · ${st.year || '—'}</span>
+              <span style="font-weight:600;">${st.cgpa != null ? st.cgpa : '—'}</span>
+              ${extra || status}
+              <button class="btn sm sec" type="button">View</button>
+            </div>`;
+        };
+
+        const rowPlaced = (st) =>
+            `<div class="tbl-row g4">
+              <div><div class="tbl-name">${st.fullName || '—'}</div><div class="tbl-sub">Roll: ${st.rollNumber || '—'}</div></div>
+              <span style="font-size:12.5px;color:var(--txmu);">${st.branch || '—'} · ${st.cgpa != null ? st.cgpa : '—'}</span>
+              <span style="font-weight:600;">—</span>
+              <span style="font-weight:700;color:var(--G);">—</span>
+            </div>`;
+
+        const rowActive = (st) =>
+            `<div class="tbl-row g4">
+              <div><div class="tbl-name">${st.fullName || '—'}</div><div class="tbl-sub">Roll: ${st.rollNumber || '—'}</div></div>
+              <span style="font-size:12.5px;color:var(--txmu);">${st.branch || '—'} · ${st.cgpa != null ? st.cgpa : '—'}</span>
+              <span>Applications: ${st.applicationCount || 0}</span>
+              <span class="pill active">In process</span>
+            </div>`;
+
+        const rowUn = (st) =>
+            `<div class="tbl-row g3">
+              <div><div class="tbl-name">${st.fullName || '—'}</div><div class="tbl-sub">Roll: ${st.rollNumber || '—'}</div></div>
+              <span style="font-size:12.5px;color:var(--txmu);">${st.branch || '—'} · ${st.cgpa != null ? st.cgpa : '—'}</span>
+              <button class="btn sm" type="button" onclick="sendReminderData('${(st.fullName || '').replace(/'/g, "\\'")}', '${st.email || ''}', this)">Send Reminder</button>
+            </div>`;
+
+        all.innerHTML = list.length
+            ? list.map((st) => row(st)).join('')
+            : '<p class="empty-state" style="padding:24px;">No data available</p>';
+        const plList = list.filter((x) => x.category === 'placed');
+        const acList = list.filter((x) => x.category === 'active');
+        const unList = list.filter((x) => x.category === 'unplaced');
+        if (placed)
+            placed.innerHTML = plList.length
+                ? plList.map(rowPlaced).join('')
+                : '<p class="empty-state" style="padding:24px;">No data available</p>';
+        if (active)
+            active.innerHTML = acList.length
+                ? acList.map(rowActive).join('')
+                : '<p class="empty-state" style="padding:24px;">No data available</p>';
+        if (unplaced)
+            unplaced.innerHTML = unList.length
+                ? unList.map(rowUn).join('')
+                : '<p class="empty-state" style="padding:24px;">No data available</p>';
+    } catch (e) {
+        console.error(e);
+        all.innerHTML = '<p class="empty-state" style="padding:24px;">No data available</p>';
+    }
+}
+
+async function loadTPOCompaniesTabs() {
+    const reqEl = document.getElementById('tpo-ct-requests');
+    const apprEl = document.getElementById('tpo-ct-approved');
+    const histEl = document.getElementById('tpo-ct-history');
+    const badge = document.getElementById('tpo-ct-req-badge');
+    try {
+        const [reqRes, coRes] = await Promise.all([
+            fetch(`${API_BASE}/requests`),
+            fetch(`${API_BASE}/companies-list`)
+        ]);
+        const reqData = await reqRes.json();
+        const coData = await coRes.json();
+        const pendingJ = reqData.success ? reqData.pendingJobs || [] : [];
+        const pendingD = reqData.success ? reqData.pendingDrives || [] : [];
+        const n = pendingJ.length + pendingD.length;
+        if (badge) badge.textContent = String(n);
+
+        if (reqEl) {
+            if (n === 0) {
+                reqEl.innerHTML = '<p class="empty-state" style="padding:24px;">No pending requests</p>';
+            } else {
+                let html = '';
+                pendingJ.forEach((j) => {
+                    const co =
+                        j.companyId && j.companyId.companyName ? j.companyId.companyName : j.companyName || 'Company';
+                    html += `<div class="req-card">
+                      <div class="req-top"><span class="req-co">${co}</span><span class="pill pending">Job</span></div>
+                      <div class="req-meta">${j.title || ''} · ${j.location || ''}</div>
+                      <div class="req-actions">
+                        <button class="btn sm green" type="button" onclick="approveTPO('job','${j._id}',this)">Approve</button>
+                        <button class="btn sm red" type="button" onclick="rejectTPO('job','${j._id}',this)">Decline</button>
+                      </div>
+                    </div>`;
+                });
+                pendingD.forEach((d) => {
+                    html += `<div class="req-card">
+                      <div class="req-top"><span class="req-co">${d.companyName}</span><span class="pill pending">Drive</span></div>
+                      <div class="req-meta">Drive · ${new Date(d.date).toLocaleDateString()}</div>
+                      <div class="req-actions">
+                        <button class="btn sm green" type="button" onclick="approveTPO('drive','${d._id}',this)">Approve</button>
+                        <button class="btn sm red" type="button" onclick="rejectTPO('drive','${d._id}',this)">Decline</button>
+                      </div>
+                    </div>`;
+                });
+                reqEl.innerHTML = html;
+            }
+        }
+
+        const companies = coData.success && coData.companies ? coData.companies : [];
+        if (apprEl) {
+            if (!companies.length) {
+                apprEl.innerHTML =
+                    '<div class="tbl-head g4"><span>Company</span><span>Email</span><span>Industry</span><span>Status</span></div><p class="empty-state" style="padding:24px;">No data available</p>';
+            } else {
+                let h =
+                    '<div class="tbl-head g4"><span>Company</span><span>Email</span><span>Industry</span><span>Status</span></div>';
+                companies.forEach((c) => {
+                    h += `<div class="tbl-row g4">
+                      <div><div class="tbl-name">${c.companyName || '—'}</div><div class="tbl-sub">${c.contactPerson || ''}</div></div>
+                      <span style="font-size:12.5px;color:var(--txmu);">${c.email || '—'}</span>
+                      <span style="font-size:12.5px;color:var(--txmu);">${c.industry || '—'}</span>
+                      <span class="pill confirmed">Registered</span>
+                    </div>`;
+                });
+                apprEl.innerHTML = h;
+            }
+        }
+        if (histEl) {
+            histEl.innerHTML =
+                '<div class="tbl-head g4"><span>Company</span><span>Visited</span><span>Students Hired</span><span>Avg Package</span></div><p class="empty-state" style="padding:24px;">No data available</p>';
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+async function loadTPOFullDrivesPage() {
+    const up = document.getElementById('tpo-page-upcoming-list');
+    const done = document.getElementById('tpo-page-completed-list');
+    const ds1 = document.getElementById('tpo-ds-upcoming');
+    const ds2 = document.getElementById('tpo-ds-participation');
+    const ds3 = document.getElementById('tpo-ds-pkg');
+    if (!up || !done) return;
+    try {
+        const res = await fetch(`${API_BASE}/drives`);
+        const data = await res.json();
+        const drives = data.success && data.drives ? data.drives : [];
+        const now = new Date();
+        const upcoming = [];
+        const completed = [];
+        drives.forEach((d) => {
+            const dt = new Date(d.date);
+            const row = `<div class="drive-row">
+            <div class="dr-date"><div class="dr-dd">${isNaN(dt.getTime()) ? '—' : dt.getDate()}</div><div class="dr-dm">${isNaN(dt.getTime()) ? '' : dt.toLocaleString(undefined, { month: 'short' })}</div></div>
+            <div class="dr-info"><div class="dr-name">${d.companyName || ''}</div><div class="dr-meta">${d.roles || ''} · ${d.eligibility || ''}</div></div>
+            <span class="pill ${d.status === 'Approved' ? 'active' : d.status === 'Rejected' ? 'closed' : 'pending'}">${d.status}</span>
+          </div>`;
+            if (!isNaN(dt.getTime()) && dt >= now && d.status !== 'Rejected') upcoming.push(row);
+            else completed.push(row);
+        });
+        if (ds1) ds1.textContent = String(upcoming.length);
+        if (ds2) ds2.textContent = '0%';
+        if (ds3) ds3.textContent = '—';
+        up.innerHTML = upcoming.length
+            ? upcoming.join('')
+            : '<p class="empty-state" style="padding:24px;">No drives available</p>';
+        done.innerHTML = completed.length
+            ? completed.join('')
+            : '<p class="empty-state" style="padding:24px;">No drives available</p>';
+    } catch (e) {
+        up.innerHTML = '<p class="empty-state" style="padding:24px;">No drives available</p>';
+        done.innerHTML = '';
+    }
+}
+
+async function loadTPOPlacementsPage() {
+    const tb = document.getElementById('tpo-placements-tbody');
+    if (!tb) return;
+    try {
+        const res = await fetch(`${API_BASE}/placement-records`);
+        const data = await res.json();
+        const rows = data.success && data.records ? data.records : [];
+        const set = (id, v) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = v;
+        };
+        set('tpo-pl-st-placed', String(rows.length));
+        set('tpo-pl-avgpkg', '—');
+        set('tpo-pl-cos', window.__tpoStats ? String(window.__tpoStats.totalCompanies || 0) : '0');
+        const ts = window.__tpoStats || {};
+        const rate =
+            ts.totalStudents > 0 ? `${Math.round(((ts.placedStudents || 0) / ts.totalStudents) * 100)}%` : '0%';
+        set('tpo-pl-rate', rate);
+
+        if (!rows.length) {
+            tb.innerHTML =
+                '<p class="empty-state" style="padding:24px;text-align:center;">No data available</p>';
+            return;
+        }
+        tb.innerHTML = rows
+            .map((r) => {
+                const st = r.studentId || {};
+                const co = r.companyId || {};
+                const job = r.jobId || {};
+                const pkg = job.salary ? job.salary : '—';
+                return `<div class="tbl-row g5">
+                <div><div class="tbl-name">${st.fullName || '—'}</div></div>
+                <span style="color:var(--txmu);">${st.branch || '—'}</span>
+                <span style="font-weight:600;">${co.companyName || '—'}</span>
+                <span>${job.title || '—'}</span>
+                <span style="font-weight:700;color:var(--G);">${pkg}</span>
+              </div>`;
+            })
+            .join('');
+    } catch (e) {
+        tb.innerHTML = '<p class="empty-state" style="padding:24px;">No data available</p>';
+    }
+}
+
+async function loadTPONotices() {
+    const act = document.getElementById('tpo-notices-active');
+    const past = document.getElementById('tpo-notices-past');
+    if (!act) return;
+    try {
+        const res = await fetch(`${API_BASE}/notices`);
+        const data = await res.json();
+        const list = data.success && data.notices ? data.notices : [];
+        if (!list.length) {
+            act.innerHTML = '<p class="empty-state" style="padding:24px;">No notices posted yet</p>';
+            if (past) past.innerHTML = '<p class="empty-state" style="padding:24px;">No data available</p>';
+            return;
+        }
+        act.innerHTML = list
+            .slice(0, 15)
+            .map(
+                (n) => `<div class="notice-row"><span class="notice-dot" style="background:var(--P);"></span>
+            <div style="flex:1;">
+              <div style="font-size:13.5px;font-weight:600;margin-bottom:3px;">${n.title || ''}</div>
+              <div class="notice-body">${n.content || ''}</div>
+              <div class="notice-time">${n.department || ''} · ${n.postedAt ? new Date(n.postedAt).toLocaleString() : ''}</div>
+            </div></div>`
+            )
+            .join('');
+        if (past) past.innerHTML = '<p class="empty-state" style="padding:24px;">No archived notices</p>';
+    } catch (e) {
+        act.innerHTML = '<p class="empty-state" style="padding:24px;">No data available</p>';
+    }
+}
+
+function exportTPOAnalyticsCsv() {
+    const s = window.__tpoStats || {};
+    const lines = [
+        'metric,value',
+        `totalStudents,${s.totalStudents || 0}`,
+        `totalCompanies,${s.totalCompanies || 0}`,
+        `totalDrives,${s.totalDrives || 0}`,
+        `totalApplications,${s.totalApplications || 0}`,
+        `placedStudents,${s.placedStudents || 0}`
+    ];
+    const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'tpo-analytics.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Report exported.');
 }
 
 // Global Click Closer
@@ -252,7 +735,10 @@ document.addEventListener('click', e => {
 
 // ── API INTEGRATION ──
 const API_BASE = 'http://localhost:5000/api/tpo';
-const TEMP_TPO_ID = '65e0a0a0a0a0a0a0a0a0a0a0'; // Mock ID since auth is not fully hooked up
+
+function getTpoId() {
+    return sessionStorage.getItem('tpoId');
+}
 
 async function postNoticeData() {
     const title = document.getElementById('notice-title').value;
@@ -265,7 +751,7 @@ async function postNoticeData() {
         const res = await fetch(`${API_BASE}/notices`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title, department: dept, priority: 'Normal', content, tpoId: TEMP_TPO_ID })
+            body: JSON.stringify({ title, department: dept || 'General', priority: 'Normal', content, tpoId: getTpoId() })
         });
         const data = await res.json();
         if(data.success) {
@@ -273,6 +759,7 @@ async function postNoticeData() {
             showToast('Notice posted successfully!');
             document.getElementById('notice-title').value = '';
             document.getElementById('notice-content').value = '';
+            loadTPONotices();
         } else {
             showToast(data.message || 'Error posting notice');
         }
@@ -293,13 +780,14 @@ async function scheduleDriveData() {
         const res = await fetch(`${API_BASE}/drives`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ companyName, date, eligibility, roles, tpoId: TEMP_TPO_ID })
+            body: JSON.stringify({ companyName, date, eligibility, roles, tpoId: getTpoId() })
         });
         const data = await res.json();
         if(data.success) {
             closeModal('drive-modal');
             showToast('Drive scheduled successfully!');
             if (typeof loadDrives === 'function') setTimeout(loadDrives, 500);
+            loadTPOFullDrivesPage();
         } else {
             showToast(data.message || 'Error scheduling drive');
         }
@@ -332,68 +820,163 @@ async function approveDriveData(id, btn) {
     }
 }
 
+async function approveTPO(resourceType, id, btn) {
+    try {
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = '…';
+        }
+        const res = await fetch(`http://localhost:5000/api/tpo/approve/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ resourceType })
+        });
+        const data = await res.json();
+        if (data.success) {
+            showToast('Approved');
+            loadDrives();
+            loadTPOFullDrivesPage();
+            loadTPOCompaniesTabs();
+        } else {
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = 'Approve';
+            }
+            showToast(data.message || 'Error');
+        }
+    } catch (err) {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Approve';
+        }
+        showToast('Network error');
+    }
+}
+
+async function rejectTPO(resourceType, id, btn) {
+    try {
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = '…';
+        }
+        const res = await fetch(`http://localhost:5000/api/tpo/reject/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ resourceType })
+        });
+        const data = await res.json();
+        if (data.success) {
+            showToast('Rejected');
+            loadDrives();
+            loadTPOFullDrivesPage();
+            loadTPOCompaniesTabs();
+        } else {
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = 'Reject';
+            }
+            showToast(data.message || 'Error');
+        }
+    } catch (err) {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Reject';
+        }
+        showToast('Network error');
+    }
+}
+
 async function loadDrives() {
     try {
-        const res = await fetch(`${API_BASE}/drives`);
-        const data = await res.json();
-        if(data.success) {
-            const pendingContainer = document.getElementById('pending-drives-container');
-            const approvedContainer = document.getElementById('upcoming-drives-container');
-            const notifContainer = document.getElementById('notif-list-container');
-            const notifDot = document.querySelector('.icon-btn .rdot');
-            
-            if (!pendingContainer || !approvedContainer) return;
+        const jobsBox = document.getElementById('pending-jobs-container');
+        const pendingContainer = document.getElementById('pending-drives-container');
+        const approvedContainer = document.getElementById('upcoming-drives-container');
+        const notifContainer = document.getElementById('notif-list-container');
+        const notifDot = document.querySelector('.icon-btn .rdot');
 
-            pendingContainer.innerHTML = '';
-            approvedContainer.innerHTML = '';
-            if (notifContainer) notifContainer.innerHTML = '';
+        if (jobsBox) jobsBox.innerHTML = '';
+        if (pendingContainer) pendingContainer.innerHTML = '';
+        if (approvedContainer) approvedContainer.innerHTML = '';
+        if (notifContainer) notifContainer.innerHTML = '';
 
-            const drives = data.drives;
-            const pending = drives.filter(d => d.status === 'Pending');
-            const approved = drives.filter(d => d.status === 'Approved');
+        const reqRes = await fetch(`${API_BASE}/requests`);
+        const reqData = await reqRes.json();
+        const pendingJobs = reqData.success ? reqData.pendingJobs || [] : [];
+        const pendingDrivesReq = reqData.success ? reqData.pendingDrives || [] : [];
+        const pendingCount = pendingJobs.length + pendingDrivesReq.length;
+        const pe = document.getElementById('tpo-stat-pending');
+        if (pe) pe.textContent = String(pendingCount);
+        const gr = document.getElementById('tpo-greet-requests');
+        if (gr) gr.textContent = String(pendingCount);
 
-            // --- NOTIFICATIONS & PENDING LIST ---
-            if (pending.length === 0) {
-                pendingContainer.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txmu);">No pending requests</div>';
-                if (notifContainer) notifContainer.innerHTML = '<div style="padding:16px;text-align:center;color:var(--txmu);font-size:12px;">No new notifications</div>';
+        if (jobsBox) {
+            if (!pendingJobs.length) {
+                jobsBox.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txmu);">No pending job postings</div>';
+            } else {
+                pendingJobs.forEach((j) => {
+                    const co = j.companyId && j.companyId.companyName ? j.companyId.companyName : j.companyName || 'Company';
+                    jobsBox.innerHTML += `
+                    <div class="req-card">
+                        <div class="req-top"><span class="req-co">${co}</span><span class="pill pending">Job</span></div>
+                        <div class="req-meta">${j.title || ''} &middot; ${j.location || ''}</div>
+                        <div class="req-actions">
+                            <button class="btn sm green" onclick="approveTPO('job','${j._id}',this)">Approve</button>
+                            <button class="btn sm red" onclick="rejectTPO('job','${j._id}',this)">Reject</button>
+                        </div>
+                    </div>`;
+                });
+            }
+        }
+
+        if (pendingContainer) {
+            if (!pendingDrivesReq.length) {
+                pendingContainer.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txmu);">No pending drive requests</div>';
+            } else {
+                pendingDrivesReq.forEach((d) => {
+                    const dateObj = new Date(d.date);
+                    const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    pendingContainer.innerHTML += `
+                    <div class="req-card">
+                        <div class="req-top"><span class="req-co">${d.companyName}</span><span class="pill pending">Drive</span></div>
+                        <div class="req-meta">Drive request &middot; ${dateStr} &middot; Roles: ${d.roles}</div>
+                        <div class="req-actions">
+                            <button class="btn sm green" onclick="approveTPO('drive','${d._id}',this)">Approve</button>
+                            <button class="btn sm red" onclick="rejectTPO('drive','${d._id}',this)">Reject</button>
+                        </div>
+                    </div>`;
+                });
+            }
+        }
+
+        if (notifContainer) {
+            if (pendingCount === 0) {
+                notifContainer.innerHTML = '<div style="padding:16px;text-align:center;color:var(--txmu);font-size:12px;">No new notifications</div>';
                 if (notifDot) notifDot.style.display = 'none';
             } else {
                 if (notifDot) notifDot.style.display = 'block';
-                pending.forEach(d => {
+                pendingJobs.forEach((j) => {
+                    const co = j.companyId && j.companyId.companyName ? j.companyId.companyName : j.companyName || 'Company';
+                    notifContainer.innerHTML += `<div class="notif-item unread"><span class="n-dot u"></span><div><div class="n-text"><strong>${co}</strong> — job: ${j.title || ''}</div><div class="n-time">Pending</div></div></div>`;
+                });
+                pendingDrivesReq.forEach((d) => {
                     const dateObj = new Date(d.date);
                     const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                    
-                    pendingContainer.innerHTML += `
-                    <div class="req-card">
-                        <div class="req-top"><span class="req-co">${d.companyName}</span><span class="pill pending">Pending</span></div>
-                        <div class="req-meta">Drive request &middot; ${dateStr} &middot; Roles: ${d.roles}</div>
-                        <div class="req-actions">
-                            <button class="btn sm green" onclick="approveDriveData('${d._id}', this)">Approve</button>
-                            <button class="btn sm red" onclick="showToast('Declined')">Decline</button>
-                        </div>
-                    </div>`;
-
-                    if (notifContainer) {
-                        notifContainer.innerHTML += `
-                        <div class="notif-item unread"><span class="n-dot u"></span>
-                          <div>
-                            <div class="n-text"><strong>${d.companyName}</strong> requested a campus drive for ${dateStr}.</div>
-                            <div class="n-time">Just now</div>
-                          </div>
-                        </div>`;
-                    }
+                    notifContainer.innerHTML += `<div class="notif-item unread"><span class="n-dot u"></span><div><div class="n-text"><strong>${d.companyName}</strong> — drive ${dateStr}</div><div class="n-time">Pending</div></div></div>`;
                 });
             }
+        }
 
-            // --- APPROVED LIST ---
+        const res = await fetch(`${API_BASE}/drives`);
+        const data = await res.json();
+        if (data.success && approvedContainer) {
+            const approved = (data.drives || []).filter((d) => d.status === 'Approved');
             if (approved.length === 0) {
                 approvedContainer.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txmu);">No upcoming drives</div>';
             } else {
-                approved.forEach(d => {
+                approved.forEach((d) => {
                     const dateObj = new Date(d.date);
                     const dd = dateObj.getDate();
                     const dm = dateObj.toLocaleDateString('en-US', { month: 'short' });
-                    
                     approvedContainer.innerHTML += `
                     <div class="drive-row">
                         <div class="dr-date"><div class="dr-dd">${dd}</div><div class="dr-dm">${dm}</div></div>
@@ -413,16 +996,20 @@ async function loadDrives() {
 
 async function sendReminderData(studentName, email, btn) {
     try {
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showToast('Student email missing');
+            return;
+        }
         btn.textContent = 'Sending...';
         btn.disabled = true;
-        
+
         const res = await fetch(`${API_BASE}/reminders`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                email: email || 'bommunikhilreddy2004@gmail.com', // Using a test email
-                studentName, 
-                message: 'Please update your placement profile and check pending drive registrations.' 
+            body: JSON.stringify({
+                email,
+                studentName,
+                message: 'Please update your placement profile and check pending drive registrations.'
             })
         });
         const data = await res.json();
@@ -442,7 +1029,11 @@ async function sendReminderData(studentName, email, btn) {
 }
 
 async function saveTPOProfile() {
-    const tpoId = sessionStorage.getItem('tpoId') || TEMP_TPO_ID;
+    const tpoId = getTpoId();
+    if (!tpoId) {
+        showToast('Session expired — please log in again');
+        return;
+    }
     const inputs = document.querySelectorAll('#pf-edit input');
     
     const updates = {

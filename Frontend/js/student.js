@@ -3,25 +3,44 @@ if (sessionStorage.getItem('isLoggedIn') !== 'true' || sessionStorage.getItem('u
   window.location.href = 'Login.html';
 }
 
-// ─── JOB DATA ───
-
-    // [BACKEND_NEEDED]: Replace this hardcoded array with a fetch call to the backend (e.g., GET /api/jobs)
-    const JOBS = [
-      { id: 1, logo: 'briefcase', logoColor: 'var(--blue)', title: 'Software Engineer Intern', company: 'Microsoft India', loc: 'Hyderabad · Hybrid', type: 'Full Time', ctc: '₹12 LPA', dl: 'Mar 20', cgpa: '7.0', branch: 'CSE, IT, ECE', desc: 'Work on scalable web applications using React and Node.js. Contribute to real products used by millions globally.', skills: ['React', 'Node.js', 'JavaScript'], reco: true, intern: false },
-      { id: 2, logo: 'briefcase', logoColor: 'var(--amber)', title: 'Data Analyst', company: 'Amazon Dev Centre', loc: 'Bangalore', type: 'Full Time', ctc: '₹18 LPA', dl: 'Mar 25', cgpa: '7.5', branch: 'CSE, IT, EEE', desc: 'Analyze large datasets to derive business insights. Work with SQL, Python and AWS toolsets.', skills: ['Python', 'SQL', 'AWS'], reco: false, intern: false },
-      { id: 3, logo: 'briefcase', logoColor: 'var(--purple)', title: 'Backend Engineer', company: 'Swiggy', loc: 'Bangalore', type: 'Full Time', ctc: '₹14 LPA', dl: 'Apr 1', cgpa: '6.5', branch: 'CSE, IT', desc: 'Build and scale REST APIs handling millions of requests. Expertise in Java/Spring Boot preferred.', skills: ['Java', 'Spring Boot', 'MySQL'], reco: false, intern: false },
-      { id: 4, logo: 'briefcase', logoColor: 'var(--red)', title: 'Frontend Developer Intern', company: 'Zomato', loc: 'Remote', type: 'Internship', ctc: '₹8 LPA', dl: 'Mar 30', cgpa: '6.0', branch: 'All', desc: 'Build pixel-perfect UI components. Work closely with design team on consumer-facing products.', skills: ['React', 'TypeScript', 'CSS'], reco: true, intern: true },
-      { id: 5, logo: 'briefcase', logoColor: 'var(--sub)', title: 'ML Engineer', company: 'Flipkart', loc: 'Bangalore', type: 'Full Time', ctc: '₹22 LPA', dl: 'Apr 5', cgpa: '8.0', branch: 'CSE, IT', desc: 'Develop and deploy machine learning models for product recommendations and fraud detection.', skills: ['Python', 'TensorFlow', 'Pandas'], reco: false, intern: false },
-      { id: 6, logo: 'briefcase', logoColor: 'var(--green)', title: 'Cloud Engineer', company: 'Infosys', loc: 'Hyderabad', type: 'Full Time', ctc: '₹16 LPA', dl: 'Apr 10', cgpa: '6.0', branch: 'All', desc: 'Design and maintain cloud infrastructure on AWS/Azure. Automate deployments using CI/CD pipelines.', skills: ['AWS', 'DevOps', 'Linux'], reco: false, intern: false },
-      { id: 7, logo: 'briefcase', logoColor: 'var(--cyan)', title: 'Full Stack Developer', company: 'Paytm', loc: 'Noida', type: 'Full Time', ctc: '₹10 LPA', dl: 'Apr 8', cgpa: '6.5', branch: 'CSE, IT', desc: 'Build and maintain features across the full stack. Fast-paced fintech environment.', skills: ['React', 'Node.js', 'MongoDB'], reco: true, intern: false },
-      { id: 8, logo: 'briefcase', logoColor: 'var(--amber)', title: 'React Developer Intern', company: 'Razorpay', loc: 'Bangalore', type: 'Internship', ctc: '₹6 LPA', dl: 'Apr 15', cgpa: '6.0', branch: 'CSE, IT', desc: 'Work on React-based internal tools and dashboards for the payments team.', skills: ['React', 'JavaScript'], reco: true, intern: true },
-    ];
+// ─── JOB DATA (loaded from API) ───
+    const API_JOBS = 'http://localhost:5000/api/jobs';
+    let JOBS = [];
 
     let appliedJobs = new Set();
     let currentModalJobId = null;
 
     // ─── INIT ───
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', async () => {
+      const sid = sessionStorage.getItem('studentId');
+      if (sid) {
+        try {
+          const res = await fetch(API_JOBS);
+          const data = await res.json();
+          const list = (data.jobs || []).map((j) => ({
+            id: String(j._id),
+            logo: 'briefcase',
+            logoColor: 'var(--blue)',
+            title: j.title || '',
+            company: j.companyName || '',
+            loc: [j.location, j.workMode].filter(Boolean).join(' · ') || '—',
+            type: j.jobType || 'Full Time',
+            ctc: j.salary || '—',
+            dl: j.deadline ? new Date(j.deadline).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '—',
+            cgpa: String(j.minCgpa != null ? j.minCgpa : '—'),
+            branch: (j.requirements || []).join(', ') || '—',
+            desc: j.description || '',
+            skills: j.requirements || [],
+            reco: false,
+            intern: j.jobType === 'Internship'
+          }));
+          JOBS = list;
+        } catch (e) {
+          console.error(e);
+          JOBS = [];
+        }
+      }
+
       const name = sessionStorage.getItem('studentName') || 'Student';
       const email = sessionStorage.getItem('studentEmail') || 'student@college.edu';
       const first = name.split(' ')[0];
@@ -221,9 +240,26 @@ if (sessionStorage.getItem('isLoggedIn') !== 'true' || sessionStorage.getItem('u
     }
     function closeModal(e) { if (e.target === document.getElementById('job-modal')) document.getElementById('job-modal').classList.remove('on'); }
 
-    function applyJob(id, btn) {
+    async function applyJob(id, btn) {
       if (appliedJobs.has(id)) return;
-      // [BACKEND_NEEDED]: Replace this local state update with a real API call (e.g., POST /api/jobs/apply)
+      const sid = sessionStorage.getItem('studentId');
+      const job = JOBS.find((x) => String(x.id) === String(id));
+      if (!sid || !job) return;
+      try {
+        const res = await fetch('http://localhost:5000/api/applications/apply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ studentId: sid, jobId: id })
+        });
+        const data = await res.json();
+        if (!data.success) {
+          alert(data.message || 'Could not apply');
+          return;
+        }
+      } catch (e) {
+        alert('Network error');
+        return;
+      }
       appliedJobs.add(id);
       document.querySelectorAll(`#apply-btn-${id}`).forEach(b => { b.classList.add('done'); b.innerHTML = '<i data-lucide="check-circle" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i> Applied'; });
       if (btn) { btn.classList.add('done'); btn.innerHTML = '<i data-lucide="check-circle" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i> Applied'; }

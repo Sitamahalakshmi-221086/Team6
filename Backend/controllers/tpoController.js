@@ -1,6 +1,10 @@
 const TPO = require('../models/TPO');
 const Notice = require('../models/Notice');
 const Drive = require('../models/Drive');
+const Job = require('../models/Job');
+const Student = require('../models/Student');
+const Company = require('../models/Company');
+const Application = require('../models/Application');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 
@@ -81,7 +85,13 @@ const scheduleDrive = async (req, res) => {
     }
 
     const newDrive = await Drive.create({
-      companyName, date, eligibility, roles, createdBy: tpoId
+      companyName,
+      date: new Date(date),
+      eligibility,
+      roles,
+      createdBy: tpoId,
+      submittedBy: 'tpo',
+      status: 'Approved'
     });
 
     res.status(201).json({ success: true, message: 'Drive scheduled successfully', drive: newDrive });
@@ -198,7 +208,7 @@ const updateTPOProfile = async (req, res) => {
     // Prevent password update through this endpoint for safety
     delete updates.password;
 
-    const tpo = await TPO.findByIdAndUpdate(id, updates, { new: true });
+    const tpo = await TPO.findByIdAndUpdate(id, updates, { new: true }).select('-password');
     if (!tpo) return res.status(404).json({ success: false, message: 'TPO not found' });
 
     res.status(200).json({ success: true, message: 'Profile updated successfully', tpo });
@@ -208,15 +218,248 @@ const updateTPOProfile = async (req, res) => {
   }
 };
 
-module.exports = { 
-  tpoSignup, 
-  tpoLogin, 
-  postNotice, 
-  scheduleDrive, 
-  approveDrive, 
-  sendReminder, 
+const getTPOProfile = async (req, res) => {
+  try {
+    const tpo = await TPO.findById(req.params.id).select('-password');
+    if (!tpo) return res.status(404).json({ success: false, message: 'TPO not found' });
+    res.status(200).json({ success: true, tpo });
+  } catch (err) {
+    console.error('Get TPO Profile Error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch profile' });
+  }
+};
+
+const getPlacementRequests = async (req, res) => {
+  try {
+    const pendingJobs = await Job.find({ tpoApproval: 'pending' })
+      .populate('companyId', 'companyName email industry')
+      .sort({ createdAt: -1 })
+      .lean();
+    const pendingDrives = await Drive.find({ submittedBy: 'company', status: 'Pending' })
+      .populate('companyId', 'companyName email')
+      .sort({ createdAt: -1 })
+      .lean();
+    res.status(200).json({ success: true, pendingJobs, pendingDrives });
+  } catch (err) {
+    console.error('Get Placement Requests Error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch requests' });
+  }
+};
+
+const approvePlacementRequest = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const resourceType = req.body.resourceType || 'job';
+    if (resourceType === 'drive') {
+      const drive = await Drive.findByIdAndUpdate(
+        id,
+        { status: 'Approved' },
+        { new: true }
+      );
+      if (!drive) return res.status(404).json({ success: false, message: 'Drive not found' });
+      return res.status(200).json({ success: true, message: 'Drive approved', drive });
+    }
+    const job = await Job.findByIdAndUpdate(
+      id,
+      { tpoApproval: 'approved' },
+      { new: true }
+    );
+    if (!job) return res.status(404).json({ success: false, message: 'Job not found' });
+    return res.status(200).json({ success: true, message: 'Job approved', job });
+  } catch (err) {
+    console.error('Approve Request Error:', err);
+    res.status(500).json({ success: false, message: 'Failed to approve' });
+  }
+};
+
+const rejectPlacementRequest = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const resourceType = req.body.resourceType || 'job';
+    if (resourceType === 'drive') {
+      const drive = await Drive.findByIdAndUpdate(
+        id,
+        { status: 'Rejected' },
+        { new: true }
+      );
+      if (!drive) return res.status(404).json({ success: false, message: 'Drive not found' });
+      return res.status(200).json({ success: true, message: 'Drive rejected', drive });
+    }
+    const job = await Job.findByIdAndUpdate(
+      id,
+      { tpoApproval: 'rejected' },
+      { new: true }
+    );
+    if (!job) return res.status(404).json({ success: false, message: 'Job not found' });
+    return res.status(200).json({ success: true, message: 'Job rejected', job });
+  } catch (err) {
+    console.error('Reject Request Error:', err);
+    res.status(500).json({ success: false, message: 'Failed to reject' });
+  }
+};
+
+const getTPOAnalytics = async (req, res) => {
+  try {
+    const totalStudents = await Student.countDocuments();
+    const totalCompanies = await Company.countDocuments();
+    const totalDrives = await Drive.countDocuments({ status: 'Approved' });
+    const totalApplications = await Application.countDocuments();
+    const shortlisted = await Application.countDocuments({ status: 'Shortlisted' });
+    const interviews = await Application.countDocuments({ status: 'Interview' });
+    const offers = await Application.countDocuments({ status: { $in: ['Offered', 'Hired'] } });
+
+    const placedStudentIds = await Application.distinct('studentId', {
+      status: { $in: ['Offered', 'Hired'] }
+    });
+    const studentsWithApps = await Application.distinct('studentId');
+    const pl = new Set(placedStudentIds.map((id) => String(id)));
+    const sw = new Set(studentsWithApps.map((id) => String(id)));
+    let inProcessStudents = 0;
+    for (const id of sw) {
+      if (!pl.has(id)) inProcessStudents += 1;
+    }
+    const notAppliedStudents = Math.max(0, totalStudents - sw.size);
+    const placedStudents = pl.size;
+
+    const studentsByBranch = await Student.aggregate([
+      { $group: { _id: '$branch', total: { $sum: 1 } } }
+    ]);
+    const placedByBranch = await Application.aggregate([
+      { $match: { status: { $in: ['Offered', 'Hired'] } } },
+      { $lookup: { from: 'students', localField: 'studentId', foreignField: '_id', as: 'st' } },
+      { $unwind: '$st' },
+      { $group: { _id: '$st.branch', placed: { $sum: 1 } } }
+    ]);
+    const placedMap = Object.fromEntries(placedByBranch.map((x) => [x._id, x.placed]));
+    const branchPlacement = studentsByBranch
+      .map(({ _id, total }) => {
+        const b = _id || 'Unknown';
+        const rate = total ? Math.round(((placedMap[b] || 0) / total) * 100) : 0;
+        return { branch: b, rate, total };
+      })
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 8);
+
+    const companyHires = await Application.aggregate([
+      { $match: { status: { $in: ['Offered', 'Hired'] } } },
+      { $group: { _id: '$companyId', hires: { $sum: 1 } } },
+      { $lookup: { from: 'companies', localField: '_id', foreignField: '_id', as: 'co' } },
+      { $project: { name: { $arrayElemAt: ['$co.companyName', 0] }, hires: 1 } },
+      { $sort: { hires: -1 } },
+      { $limit: 8 }
+    ]);
+
+    res.status(200).json({
+      success: true,
+      stats: {
+        totalStudents,
+        totalCompanies,
+        totalDrives,
+        totalApplications,
+        shortlisted,
+        interviews,
+        offers,
+        placedStudents,
+        inProcessStudents,
+        notAppliedStudents,
+        branchPlacement,
+        companyHires: companyHires.map((c) => ({
+          name: c.name || 'Company',
+          hires: c.hires
+        }))
+      }
+    });
+  } catch (err) {
+    console.error('TPO Analytics Error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch analytics' });
+  }
+};
+
+const getTPONotices = async (req, res) => {
+  try {
+    const notices = await Notice.find().sort({ postedAt: -1 }).limit(50).lean();
+    res.status(200).json({ success: true, notices });
+  } catch (err) {
+    console.error('Get notices error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch notices' });
+  }
+};
+
+const getTPOStudentsDirectory = async (req, res) => {
+  try {
+    const students = await Student.find().select('-password').lean();
+    const applications = await Application.find().select('studentId status').lean();
+    const byStudent = {};
+    for (const a of applications) {
+      const sid = String(a.studentId);
+      if (!byStudent[sid]) byStudent[sid] = [];
+      byStudent[sid].push(a.status);
+    }
+    const categorize = (statuses) => {
+      if (!statuses.length) return 'unplaced';
+      if (statuses.some((s) => s === 'Offered' || s === 'Hired')) return 'placed';
+      if (statuses.every((s) => s === 'Rejected')) return 'unplaced';
+      return 'active';
+    };
+    const enriched = students.map((s) => {
+      const st = byStudent[String(s._id)] || [];
+      return {
+        ...s,
+        category: categorize(st),
+        applicationCount: st.length
+      };
+    });
+    res.status(200).json({ success: true, students: enriched });
+  } catch (err) {
+    console.error('TPO students directory error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch students' });
+  }
+};
+
+const getTPOCompaniesDirectory = async (req, res) => {
+  try {
+    const companies = await Company.find().select('-password').sort({ companyName: 1 }).lean();
+    res.status(200).json({ success: true, companies });
+  } catch (err) {
+    console.error('TPO companies list error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch companies' });
+  }
+};
+
+const getTPOPlacementRecords = async (req, res) => {
+  try {
+    const rows = await Application.find({ status: { $in: ['Offered', 'Hired'] } })
+      .populate('studentId', 'fullName branch rollNumber')
+      .populate('jobId', 'title salary')
+      .populate('companyId', 'companyName')
+      .sort({ appliedAt: -1 })
+      .limit(200)
+      .lean();
+    res.status(200).json({ success: true, records: rows });
+  } catch (err) {
+    console.error('TPO placement records error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch placements' });
+  }
+};
+
+module.exports = {
+  tpoSignup,
+  tpoLogin,
+  postNotice,
+  scheduleDrive,
+  approveDrive,
+  sendReminder,
   getDrives,
   sendOTP,
   verifyOTP,
-  updateTPOProfile
+  updateTPOProfile,
+  getTPOProfile,
+  getPlacementRequests,
+  approvePlacementRequest,
+  rejectPlacementRequest,
+  getTPOAnalytics,
+  getTPONotices,
+  getTPOStudentsDirectory,
+  getTPOCompaniesDirectory,
+  getTPOPlacementRecords
 };

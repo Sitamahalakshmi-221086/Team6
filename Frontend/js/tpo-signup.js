@@ -193,6 +193,17 @@ async function verifyOtp() {
     const result = await response.json();
     if (result.success) {
       window._currentOtp = null;
+      if (result.tpoId) {
+        sessionStorage.setItem('tpoId', result.tpoId);
+        sessionStorage.setItem('isLoggedIn', 'true');
+        sessionStorage.setItem('userRole', 'tpo');
+        const d = window._pendingTpoData;
+        if (d) {
+          sessionStorage.setItem('tpoName', d.fullName || '');
+          sessionStorage.setItem('tpoEmail', d.email || '');
+          sessionStorage.setItem('tpoCollege', d.college || '');
+        }
+      }
       window._pendingTpoData = null;
       goTo(4);
     } else {
