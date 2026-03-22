@@ -107,7 +107,47 @@ const studentLogin = async (req, res) => {
   }
 };
 
+const sendPasswordResetEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const student = await Student.findOne({ email: email.trim().toLowerCase() });
+    if (!student) return res.status(404).json({ success: false, message: 'Student not found' });
+    console.log(`📧 Simulated password reset email sent to: ${student.email}`);
+    return res.status(200).json({ success: true, message: `Password reset email sent to ${student.email}` });
+  } catch (error) {
+    console.error('Password Reset Error:', error.message);
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+const startTest = async (req, res) => {
+  try {
+    const { email, testName } = req.body;
+    const student = await Student.findOne({ email: email.trim().toLowerCase() });
+    if (!student) return res.status(404).json({ success: false, message: 'Student not found' });
+    const testLink = `https://campusplace.edu/test/${testName.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`;
+    return res.status(200).json({ success: true, message: `Success! A test link has been sent to ${student.email}`, link: testLink });
+  } catch (error) {
+    console.error('Start Test Error:', error.message);
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+const getStudentProfile = async (req, res) => {
+  try {
+    const student = await Student.findById(req.params.id);
+    if (!student) return res.status(404).json({ success: false, message: 'Student not found' });
+    return res.status(200).json({ success: true, student });
+  } catch (error) {
+    console.error('Get Profile Error:', error.message);
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
 module.exports = {
   studentSignup,
-  studentLogin
+  studentLogin,
+  sendPasswordResetEmail,
+  startTest,
+  getStudentProfile
 };
