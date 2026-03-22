@@ -1,4 +1,7 @@
 const Company = require('../models/Company');
+const Job = require('../models/Job');
+const Application = require('../models/Application');
+const Student = require('../models/Student');
 const bcrypt = require('bcryptjs');
 
 const companySignup = async (req, res) => {
@@ -154,8 +157,95 @@ const updateCompanyProfile = async (req, res) => {
   }
 };
 
+const postJob = async (req, res) => {
+  try {
+    const { companyId, companyName, title, description, requirements, salary, location, jobType, status } = req.body;
+    const newJob = await Job.create({
+      companyId,
+      companyName,
+      title,
+      description,
+      requirements: Array.isArray(requirements) ? requirements : [],
+      salary,
+      location,
+      jobType,
+      status: status || 'Active'
+    });
+    res.status(201).json({ success: true, message: 'Job posted successfully', job: newJob });
+  } catch (error) {
+    console.error('Post Job Error:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+const getCompanyJobs = async (req, res) => {
+  try {
+    const jobs = await Job.find({ companyId: req.params.companyId }).sort({ createdAt: -1 });
+    res.status(200).json({ success: true, jobs });
+  } catch (error) {
+    console.error('Get Company Jobs Error:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+const getJobApplications = async (req, res) => {
+  try {
+    const applications = await Application.find({ jobId: req.params.jobId })
+      .populate('studentId', 'fullName email phone branch year cgpa skills resume')
+      .sort({ appliedAt: -1 });
+    res.status(200).json({ success: true, applications });
+  } catch (error) {
+    console.error('Get Job Applications Error:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+const updateApplicationStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const application = await Application.findByIdAndUpdate(
+      req.params.applicationId,
+      { status },
+      { new: true }
+    );
+    if (!application) return res.status(404).json({ success: false, message: 'Application not found' });
+    res.status(200).json({ success: true, message: `Status updated to ${status}`, application });
+  } catch (error) {
+    console.error('Update Application Status Error:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+const getCompanyStats = async (req, res) => {
+  try {
+    const companyId = req.params.companyId;
+    const activeJobsCount = await Job.countDocuments({ companyId, status: 'Active' });
+    const totalApplicantsCount = await Application.countDocuments({ companyId });
+    const shortlistedCount = await Application.countDocuments({ companyId, status: 'Shortlisted' });
+    const hiredCount = await Application.countDocuments({ companyId, status: 'Hired' });
+
+    res.status(200).json({
+      success: true,
+      stats: {
+        activeJobs: activeJobsCount,
+        totalApplicants: totalApplicantsCount,
+        shortlisted: shortlistedCount,
+        hired: hiredCount
+      }
+    });
+  } catch (error) {
+    console.error('Get Company Stats Error:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
 module.exports = {
   companySignup,
   companyLogin,
-  updateCompanyProfile
+  updateCompanyProfile,
+  postJob,
+  getCompanyJobs,
+  getJobApplications,
+  updateApplicationStatus,
+  getCompanyStats
 };

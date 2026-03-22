@@ -1927,8 +1927,7 @@
             placeholder="e.g. Online Test → Technical Round → HR Round" /></div>
       </div>
       <div style="display:flex;gap:8px;margin-top:18px;">
-        <button class="btn lg"
-          onclick="document.getElementById('post-modal').classList.remove('on');showToast('Job posted successfully!')">
+        <button class="btn lg" onclick="handlePostJob()">
           <svg viewBox="0 0 24 24">
             <path d="M5 13l4 4L19 7" />
           </svg> Post Job
@@ -2103,8 +2102,8 @@
 
         <div class="greet-banner">
           <div style="flex:1;">
-            <div class="greet-hi" id="greet-msg">Good morning, Infosys 👋</div>
-            <div class="greet-sub">You have <strong>3 new applicants</strong> and 1 drive pending approval.</div>
+            <div class="greet-hi" id="greet-msg">Welcome, <span id="company-name-span">Company</span> 👋</div>
+            <div class="greet-sub" id="greet-sub-text">Loading your dashboard stats...</div>
             <div class="co-action-card">
               <div class="cac-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
               <div class="cac-info">
@@ -2117,15 +2116,15 @@
           </div>
           <div class="greet-right">
             <div class="greet-stat">
-              <div class="greet-stat-val">24</div>
+              <div class="greet-stat-val" id="stat-total-applicants">0</div>
               <div class="greet-stat-lbl">Applicants</div>
             </div>
             <div class="greet-stat">
-              <div class="greet-stat-val">5</div>
+              <div class="greet-stat-val" id="stat-active-jobs">0</div>
               <div class="greet-stat-lbl">Active Jobs</div>
             </div>
             <div class="greet-stat">
-              <div class="greet-stat-val">Mar 18</div>
+              <div class="greet-stat-val" id="stat-next-drive">None</div>
               <div class="greet-stat-lbl">Next Drive</div>
             </div>
           </div>
@@ -2142,7 +2141,7 @@
                 <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
               </svg>
             </div>
-            <div class="stat-val" style="color:var(--P);">5</div>
+            <div class="stat-val" style="color:var(--P);" id="card-active-jobs">0</div>
             <div class="stat-lbl">Active Job Posts</div>
             <div class="stat-note warn">
               <svg viewBox="0 0 24 24">
@@ -2163,7 +2162,7 @@
                 <path d="M16 3.13a4 4 0 0 1 0 7.75" />
               </svg>
             </div>
-            <div class="stat-val" style="color:var(--T);">24</div>
+            <div class="stat-val" style="color:var(--T);" id="card-total-applicants">0</div>
             <div class="stat-lbl">Total Applicants</div>
             <div class="stat-note up">
               <svg viewBox="0 0 24 24">
@@ -2182,7 +2181,7 @@
                   points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
               </svg>
             </div>
-            <div class="stat-val" style="color:var(--A);">9</div>
+            <div class="stat-val" style="color:var(--A);" id="card-shortlisted">0</div>
             <div class="stat-lbl">Shortlisted</div>
             <div class="stat-note warn">
               <svg viewBox="0 0 24 24">
@@ -2200,7 +2199,7 @@
                 <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
               </svg>
             </div>
-            <div class="stat-val" style="color:var(--G);">3</div>
+            <div class="stat-val" style="color:var(--G);" id="card-hired">0</div>
             <div class="stat-lbl">Offers Extended</div>
             <div class="stat-note up">
               <svg viewBox="0 0 24 24">
@@ -2265,40 +2264,8 @@
                 onclick="go('candidates',document.querySelector('.nl[onclick*=candidates]'))">View all →</button>
             </div>
             <div class="card" style="padding:0;">
-              <div class="cand-card">
-                <div class="cand-av">RS</div>
-                <div>
-                  <div class="cand-name">Riya Sharma</div>
-                  <div class="cand-meta">CSE · CGPA 8.9 · JNTU Hyderabad · Frontend Developer</div>
-                </div>
-                <div class="cand-right"><span class="pill new">New</span><button class="btn sm">Review</button></div>
-              </div>
-              <div class="cand-card">
-                <div class="cand-av" style="background:linear-gradient(135deg,#14532d,#0aada0);">AK</div>
-                <div>
-                  <div class="cand-name">Arjun Kumar</div>
-                  <div class="cand-meta">IT · CGPA 8.2 · Osmania University · Data Analyst</div>
-                </div>
-                <div class="cand-right"><span class="pill short">Shortlisted</span><button
-                    class="btn sm">Review</button></div>
-              </div>
-              <div class="cand-card">
-                <div class="cand-av" style="background:linear-gradient(135deg,#16a34a,#0aada0);">PM</div>
-                <div>
-                  <div class="cand-name">Priya Menon</div>
-                  <div class="cand-meta">CSE · CGPA 9.1 · IIT Hyderabad · Backend Engineer</div>
-                </div>
-                <div class="cand-right"><span class="pill interview">Interview</span><button
-                    class="btn sm">Review</button></div>
-              </div>
-              <div class="cand-card">
-                <div class="cand-av" style="background:linear-gradient(135deg,#7c3aed,#15803d);">VR</div>
-                <div>
-                  <div class="cand-name">Vikram Reddy</div>
-                  <div class="cand-meta">ECE · CGPA 7.6 · NIT Warangal · Cloud Engineer</div>
-                </div>
-                <div class="cand-right"><span class="pill review">Reviewing</span><button class="btn sm">Review</button>
-                </div>
+              <div id="recent-applicants-list">
+                <!-- Recent applicants will be injected here -->
               </div>
             </div>
           </div>
@@ -2473,101 +2440,24 @@
         </div>
         <div class="tab-panel on" id="jt-active">
           <div class="card" style="padding:0;">
-            <div class="tbl-head job-grid"><span>Role &
-                Location</span><span>Type</span><span>Applicants</span><span>Deadline</span><span>Status</span></div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">Frontend Developer</div>
-                <div class="tbl-sub">Bangalore · ₹12 LPA · CSE, IT</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;color:var(--G);">11</span><span
-                style="font-size:12px;color:var(--txmu);">Mar 20</span>
-              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
-                  class="btn sm sec">Edit</button></div>
-            </div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">Data Analyst</div>
-                <div class="tbl-sub">Hyderabad · ₹18 LPA · CSE, IT, EEE</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;color:var(--G);">8</span><span
-                style="font-size:12px;color:var(--R);font-weight:700;">Mar 15</span>
-              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
-                  class="btn sm sec">Edit</button></div>
-            </div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">Cloud Engineer</div>
-                <div class="tbl-sub">Remote · ₹16 LPA · All branches</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;color:var(--G);">5</span><span
-                style="font-size:12px;color:var(--txmu);">Apr 5</span>
-              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
-                  class="btn sm sec">Edit</button></div>
-            </div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">Backend Engineer</div>
-                <div class="tbl-sub">Pune · ₹14 LPA · CSE, IT</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;color:var(--txmu);">0</span><span
-                style="font-size:12px;color:var(--txmu);">Apr 12</span>
-              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
-                  class="btn sm sec">Edit</button></div>
-            </div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">React Developer Intern</div>
-                <div class="tbl-sub">Remote · ₹25k/mo · CSE, IT</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Internship</span><span
-                style="font-size:13px;font-weight:700;color:var(--txmu);">0</span><span
-                style="font-size:12px;color:var(--txmu);">Apr 18</span>
-              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
-                  class="btn sm sec">Edit</button></div>
+            <div class="tbl-head job-grid"><span>Role & Location</span><span>Type</span><span>Applicants</span><span>Deadline</span><span>Status</span></div>
+            <div id="active-jobs-list">
+              <!-- Active jobs will be injected here -->
             </div>
           </div>
         </div>
         <div class="tab-panel" id="jt-closed">
           <div class="card" style="padding:0;">
-            <div class="tbl-head job-grid"><span>Role &
-                Location</span><span>Type</span><span>Applicants</span><span>Closed On</span><span>Status</span></div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">ML Engineer</div>
-                <div class="tbl-sub">Bangalore · ₹22 LPA</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;">18</span><span style="font-size:12px;color:var(--txmu);">Mar
-                1</span><span class="pill closed">Closed</span>
-            </div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">DevOps Engineer</div>
-                <div class="tbl-sub">Hyderabad · ₹20 LPA</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;">12</span><span style="font-size:12px;color:var(--txmu);">Feb
-                20</span><span class="pill closed">Closed</span>
-            </div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">Systems Engineer</div>
-                <div class="tbl-sub">Chennai · ₹10 LPA</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;">22</span><span style="font-size:12px;color:var(--txmu);">Feb
-                10</span><span class="pill closed">Closed</span>
+            <div class="tbl-head job-grid"><span>Role & Location</span><span>Type</span><span>Applicants</span><span>Closed On</span><span>Status</span></div>
+            <div id="closed-jobs-list">
+              <!-- Closed jobs will be injected here -->
             </div>
           </div>
         </div>
         <div class="tab-panel" id="jt-draft">
-          <div class="card" style="padding:14px 16px;">
-            <div style="display:flex;align-items:center;gap:14px;">
-              <div style="flex:1;">
-                <div class="tbl-name">Full Stack Developer</div>
-                <div class="tbl-sub">Not published · Created Mar 7</div>
-              </div>
-              <button class="btn sm teal">Publish</button>
-              <button class="btn sm sec">Edit</button>
+            <div id="draft-jobs-list">
+              <!-- Draft jobs will be injected here -->
             </div>
-          </div>
         </div>
       </div><!-- /pg-jobs -->
 
@@ -2592,125 +2482,34 @@
         </div>
         <div class="tab-panel on" id="at-all">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
-                CGPA</span><span>Status</span></div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Riya Sharma</div>
-                <div class="tbl-sub">Mar 10 · Resume attached</div>
-              </div><span style="font-size:13px;">Frontend Developer</span><span
-                style="font-size:12.5px;color:var(--txmu);">JNTU Hyd · 8.9</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill new">New</span><button
-                  class="btn sm">Review</button></div>
-            </div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Arjun Kumar</div>
-                <div class="tbl-sub">Mar 8 · Resume attached</div>
-              </div><span style="font-size:13px;">Data Analyst</span><span
-                style="font-size:12.5px;color:var(--txmu);">Osmania · 8.2</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill short">Shortlisted</span><button
-                  class="btn sm">Review</button></div>
-            </div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Priya Menon</div>
-                <div class="tbl-sub">Mar 7 · Resume attached</div>
-              </div><span style="font-size:13px;">Backend Engineer</span><span
-                style="font-size:12.5px;color:var(--txmu);">IIT Hyd · 9.1</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill interview">Interview</span><button
-                  class="btn sm">Review</button></div>
-            </div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Vikram Reddy</div>
-                <div class="tbl-sub">Mar 7 · Resume attached</div>
-              </div><span style="font-size:13px;">Cloud Engineer</span><span
-                style="font-size:12.5px;color:var(--txmu);">NIT Warangal · 7.6</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill review">Reviewing</span><button
-                  class="btn sm">Review</button></div>
-            </div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Sneha Rao</div>
-                <div class="tbl-sub">Mar 6 · Resume attached</div>
-              </div><span style="font-size:13px;">Data Analyst</span><span
-                style="font-size:12.5px;color:var(--txmu);">CBIT · 8.5</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill hired">Hired</span><button
-                  class="btn sm sec">View</button></div>
-            </div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Karan Patel</div>
-                <div class="tbl-sub">Mar 5 · Resume attached</div>
-              </div><span style="font-size:13px;">Frontend Developer</span><span
-                style="font-size:12.5px;color:var(--txmu);">VIT Chennai · 7.8</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill rejected">Rejected</span><button
-                  class="btn sm sec">View</button></div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Status</span></div>
+            <div id="all-applicants-list">
+              <!-- All applicants will be injected here -->
             </div>
           </div>
         </div>
         <div class="tab-panel" id="at-new">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
-                CGPA</span><span>Action</span></div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Riya Sharma</div>
-                <div class="tbl-sub">Mar 10</div>
-              </div><span>Frontend Developer</span><span style="font-size:12.5px;color:var(--txmu);">JNTU Hyd ·
-                8.9</span>
-              <div style="display:flex;gap:6px;"><button class="btn sm">Shortlist</button><button
-                  class="btn sm red">Reject</button></div>
-            </div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Lakshmi V</div>
-                <div class="tbl-sub">Mar 10</div>
-              </div><span>React Intern</span><span style="font-size:12.5px;color:var(--txmu);">Osmania · 8.0</span>
-              <div style="display:flex;gap:6px;"><button class="btn sm">Shortlist</button><button
-                  class="btn sm red">Reject</button></div>
-            </div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Action</span></div>
+            <div id="new-applicants-list"></div>
           </div>
         </div>
         <div class="tab-panel" id="at-short">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
-                CGPA</span><span>Action</span></div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Arjun Kumar</div>
-                <div class="tbl-sub">Mar 8</div>
-              </div><span>Data Analyst</span><span style="font-size:12.5px;color:var(--txmu);">Osmania · 8.2</span>
-              <div style="display:flex;gap:6px;"><button class="btn sm teal">Schedule Interview</button></div>
-            </div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Action</span></div>
+            <div id="shortlisted-applicants-list"></div>
           </div>
         </div>
         <div class="tab-panel" id="at-interview">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
-                CGPA</span><span>Action</span></div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Priya Menon</div>
-                <div class="tbl-sub">Mar 18, 10 AM</div>
-              </div><span>Backend Engineer</span><span style="font-size:12.5px;color:var(--txmu);">IIT Hyd · 9.1</span>
-              <div style="display:flex;gap:6px;"><button class="btn sm">Mark Hired</button><button
-                  class="btn sm red">Reject</button></div>
-            </div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Action</span></div>
+            <div id="interview-applicants-list"></div>
           </div>
         </div>
         <div class="tab-panel" id="at-hired">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
-                CGPA</span><span>Status</span></div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Sneha Rao</div>
-                <div class="tbl-sub">Offer sent Mar 6</div>
-              </div><span>Data Analyst</span><span style="font-size:12.5px;color:var(--txmu);">CBIT · 8.5</span><span
-                class="pill hired">Hired</span>
-            </div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Status</span></div>
+            <div id="hired-applicants-list"></div>
           </div>
         </div>
       </div><!-- /pg-candidates -->
@@ -3287,6 +3086,17 @@
       if (id === 'stats' && !statsChartsDone) setTimeout(renderStatsCharts, 80);
     }
 
+    const companyId = sessionStorage.getItem('companyId');
+    const companyName = sessionStorage.getItem('companyName');
+
+    if (!companyId) {
+      window.location.href = 'Login.html';
+    }
+
+    document.getElementById('company-name-span').textContent = companyName;
+    document.getElementById('sb-uname').textContent = companyName;
+    document.getElementById('tb-name').textContent = companyName.split(' ')[0];
+
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('col');
       document.getElementById('main-content').classList.toggle('exp');
@@ -3313,60 +3123,215 @@
     }
 
     async function saveCompanyProfileAndClose() {
-      const companyName = document.getElementById('company-name-input')?.value.trim();
+      const name = document.getElementById('company-name-input')?.value.trim();
       const industry = document.getElementById('industry-input')?.value.trim();
       const companySize = document.getElementById('company-size-select')?.value.trim();
       const address = document.getElementById('headquarters-input')?.value.trim();
       const website = document.getElementById('website-input')?.value.trim();
       const email = document.getElementById('hr-email-input')?.value.trim();
       const description = document.getElementById('about-input')?.value.trim();
-      if (!email || !companyName) {
-        showToast('Company name and email are required.');
+
+      try {
+        const res = await fetch('http://localhost:5000/api/companies/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, companyName: name, industry, companySize, address, website, description })
+        });
+        const result = await res.json();
+        if (result.success) {
+          sessionStorage.setItem('companyName', name);
+          sessionStorage.setItem('companyEmail', email);
+          location.reload();
+        } else {
+          showToast(result.message || 'Error updating profile');
+        }
+      } catch (err) {
+        showToast('Server error');
+      }
+    }
+
+    /* ── DYNAMIC DATA FETCHING ── */
+    async function fetchDashboardStats() {
+      try {
+        const res = await fetch(`http://localhost:5000/api/companies/stats/${companyId}`);
+        const data = await res.json();
+        if (data.success) {
+          const s = data.stats;
+          document.getElementById('stat-total-applicants').textContent = s.totalApplicants;
+          document.getElementById('stat-active-jobs').textContent = s.activeJobs;
+          document.getElementById('card-total-applicants').textContent = s.totalApplicants;
+          document.getElementById('card-active-jobs').textContent = s.activeJobs;
+          document.getElementById('card-shortlisted').textContent = s.shortlisted;
+          document.getElementById('card-hired').textContent = s.hired;
+          document.getElementById('greet-sub-text').innerHTML = `You have <strong>${s.totalApplicants}</strong> total applicants and <strong>${s.activeJobs}</strong> active jobs.`;
+        }
+      } catch (err) { console.error('Stats fetch error:', err); }
+    }
+
+    async function fetchJobs() {
+      try {
+        const res = await fetch(`http://localhost:5000/api/companies/jobs/${companyId}`);
+        const data = await res.json();
+        if (data.success) {
+          renderJobs(data.jobs);
+        }
+      } catch (err) { console.error('Jobs fetch error:', err); }
+    }
+
+    function renderJobs(jobs) {
+      const containers = {
+        Active: document.getElementById('active-jobs-list'),
+        Closed: document.getElementById('closed-jobs-list'),
+        Draft: document.getElementById('draft-jobs-list')
+      };
+      
+      Object.values(containers).forEach(c => c.innerHTML = '');
+
+      jobs.forEach(job => {
+        const row = document.createElement('div');
+        row.className = 'tbl-row job-grid';
+        row.innerHTML = `
+          <div>
+            <div class="tbl-name">${job.title}</div>
+            <div class="tbl-sub">${job.location || 'Remote'} · ${job.salary || 'N/A'} · ${job.requirements.join(', ')}</div>
+          </div>
+          <span style="font-size:12.5px;color:var(--txmu);">${job.jobType}</span>
+          <span style="font-size:13px;font-weight:700;color:var(--G);">${job.applicantsCount}</span>
+          <span style="font-size:12px;color:var(--txmu);">${new Date(job.createdAt).toLocaleDateString()}</span>
+          <div style="display:flex;gap:6px;">
+            <span class="pill ${job.status.toLowerCase()}">${job.status}</span>
+            <button class="btn sm sec" onclick="viewJobApplications('${job._id}', '${job.title}')">View Apps</button>
+          </div>
+        `;
+        if (containers[job.status]) containers[job.status].appendChild(row);
+      });
+    }
+
+    async function viewJobApplications(jobId, jobTitle) {
+      try {
+        go('candidates', document.querySelector('.nl[onclick*=candidates]'));
+        document.getElementById('tb-title').textContent = `Applicants for ${jobTitle}`;
+        const res = await fetch(`http://localhost:5000/api/companies/applications/${jobId}`);
+        const data = await res.json();
+        if (data.success) {
+          renderApplicants(data.applications, 'all-applicants-list');
+          // Also filter into sub-tabs if needed, or just show all for now
+        }
+      } catch (err) { console.error('Apps fetch error:', err); }
+    }
+
+    function renderApplicants(apps, containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      if (apps.length === 0) {
+        container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txmu);">No applicants yet.</div>';
+        return;
+      }
+      apps.forEach(app => {
+        const student = app.studentId;
+        const row = document.createElement('div');
+        row.className = 'tbl-row cand-grid';
+        row.innerHTML = `
+          <div>
+            <div class="tbl-name">${student.fullName}</div>
+            <div class="tbl-sub">${new Date(app.appliedAt).toLocaleDateString()} · ${app.resume ? 'Resume attached' : 'No resume'}</div>
+          </div>
+          <span style="font-size:13px;">${student.email}</span>
+          <span style="font-size:12.5px;color:var(--txmu);">${student.branch} · ${student.cgpa}</span>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <span class="pill ${app.status.toLowerCase()}">${app.status}</span>
+            <select class="btn sm" onchange="updateAppStatus('${app._id}', this.value)" style="width: auto; padding-right: 20px;">
+              <option value="" disabled selected>Status</option>
+              <option value="New">New</option>
+              <option value="Reviewed">Reviewed</option>
+              <option value="Shortlisted">Shortlisted</option>
+              <option value="Interview">Interview</option>
+              <option value="Hired">Hired</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+            <button class="btn sm sec" onclick="window.open('${student.resume || '#'}')">Review</button>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    async function updateAppStatus(appId, status) {
+      try {
+        const res = await fetch(`http://localhost:5000/api/companies/application-status/${appId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`Candidate moved to ${status}`);
+          fetchDashboardStats();
+        }
+      } catch (err) { showToast('Error updating status'); }
+    }
+
+    async function handlePostJob() {
+      const modal = document.getElementById('post-modal');
+      const title = modal.querySelector('input[placeholder*="Software"]').value;
+      const desc = modal.querySelector('textarea').value;
+      const type = modal.querySelectorAll('select')[0].value;
+      const workMode = modal.querySelectorAll('select')[1].value;
+      const salary = modal.querySelector('input[placeholder*="LPA"]').value;
+      const location = modal.querySelector('input[placeholder*="Bangalore"]').value;
+      const deadline = modal.querySelector('input[type="date"]').value;
+      
+      const skills = Array.from(modal.querySelectorAll('#skill-tags .tag')).map(t => t.textContent.replace('×','').trim());
+      
+      if (!title || !desc || !deadline) {
+        showToast('Title, Description, and Deadline are required.');
         return;
       }
 
       try {
-        const res = await fetch('/api/companies/profile', {
-          method: 'PUT',
+        const res = await fetch('http://localhost:5000/api/companies/post-job', {
+          method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, companyName, industry, companySize, address, website, description })
+          body: JSON.stringify({
+            companyId,
+            companyName,
+            title,
+            description: desc,
+            jobType: type,
+            workMode,
+            salary,
+            location,
+            deadline,
+            requirements: skills
+          })
         });
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({}));
-          showToast(err.message || 'Could not save profile.');
-          return;
+        const data = await res.json();
+        if (data.success) {
+          showToast('Job posted successfully!');
+          modal.classList.remove('on');
+          fetchJobs();
+          fetchDashboardStats();
         }
-        const result = await res.json();
-        if (result.company) {
-          const viewRows = document.querySelectorAll('#cp-view .df');
-          viewRows.forEach(row => {
-            const label = row.querySelector('label')?.textContent?.trim();
-            const value = row.querySelector('p');
-            if (!label || !value) return;
-            if (label === 'Company Name') value.textContent = result.company.companyName;
-            if (label === 'Industry') value.textContent = result.company.industry;
-            if (label === 'Company Size') value.textContent = result.company.companySize;
-            if (label === 'Headquarters') value.textContent = result.company.address;
-            if (label === 'Website') value.textContent = result.company.website;
-            if (label === 'HR Email') value.textContent = result.company.email;
-          });
-          const aboutBlock = document.querySelector('#cp-view > div[style*=\"About\"] + div');
-          if (aboutBlock) aboutBlock.textContent = result.company.description;
-        }
-        showToast('Profile updated successfully.');
-        toggleCpEdit();
-      } catch (error) {
-        console.error(error);
-        showToast('Could not save profile. Please try again.');
-      }
+      } catch (err) { showToast('Server error'); }
     }
 
+    /* ── TABS & NAV ── */
     const tabGroups = { jt: ['active', 'closed', 'draft'], at: ['all', 'new', 'short', 'interview', 'hired'] };
     function swtab(group, id, btn) {
       tabGroups[group].forEach(t => document.getElementById(`${group}-${t}`).classList.remove('on'));
       btn.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
       document.getElementById(`${group}-${id}`).classList.add('on');
       btn.classList.add('on');
+    }
+
+    function go(id, btn) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+      document.getElementById('pg-' + id).classList.add('on');
+      document.querySelectorAll('.nl').forEach(l => l.classList.remove('on'));
+      if (btn) btn.classList.add('on');
+      document.getElementById('tb-title').textContent = id.charAt(0).toUpperCase() + id.slice(1);
+      if (id === 'profile') renderProfileChart();
+      if (id === 'stats') renderStatsCharts();
     }
 
     function addTagTo(wrapId, inputId, e) {
@@ -3384,14 +3349,19 @@
       setTimeout(() => { t.style.display = 'none'; }, 3000);
     }
 
-    function logout() { if (confirm('Log out of CampusPlace?')) alert('Logged out.'); }
+    function logout() { if (confirm('Log out of CampusPlace?')) { sessionStorage.clear(); window.location.href = 'Login.html'; } }
 
-    /* ── CHARTS ── */
+    /* ── CHARTS (Keeping static for now, can be dynamic later) ── */
     const P = '#15803d', T = '#0aada0', G = '#16a34a', A = '#d97706', R = '#dc2626', PU = '#7c3aed';
     const grid = 'rgba(21,128,61,0.07)', tick = { color: '#4a7060', font: { size: 11 } };
 
+    window.onload = () => {
+      fetchDashboardStats();
+      fetchJobs();
+      renderCharts();
+    };
+
     function renderCharts() {
-      // Funnel chart
       new Chart(document.getElementById('chart-funnel'), {
         type: 'bar',
         data: {
@@ -3405,14 +3375,9 @@
         options: {
           responsive: true, maintainAspectRatio: false,
           plugins: { legend: { display: false } },
-          scales: {
-            x: { grid: { color: grid }, ticks: tick },
-            y: { grid: { color: grid }, ticks: tick, beginAtZero: true }
-          }
+          scales: { x: { grid: { color: grid }, ticks: tick }, y: { grid: { color: grid }, ticks: tick, beginAtZero: true } }
         }
       });
-
-      // Monthly trend
       new Chart(document.getElementById('chart-trend'), {
         type: 'bar',
         data: {
@@ -3422,25 +3387,7 @@
             { label: 'Hired', data: [1, 2, 3, 1, 2, 3, 1], backgroundColor: T + 'bb', borderRadius: 5, borderSkipped: false }
           ]
         },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { x: { grid: { color: grid }, ticks: tick }, y: { grid: { color: grid }, ticks: tick, beginAtZero: true } }
-        }
-      });
-
-      // Branch donut
-      new Chart(document.getElementById('chart-branch'), {
-        type: 'doughnut',
-        data: {
-          labels: ['CSE', 'IT', 'ECE', 'EEE', 'Others'],
-          datasets: [{ data: [11, 6, 4, 2, 1], backgroundColor: [P, T, G, A, PU], borderWidth: 3, borderColor: '#fff', hoverOffset: 5 }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { position: 'right', labels: { font: { size: 11 }, color: '#4a7060', boxWidth: 10, padding: 10 } } },
-          cutout: '60%'
-        }
+        options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { color: grid }, ticks: tick }, y: { grid: { color: grid }, ticks: tick, beginAtZero: true } } }
       });
     }
 
@@ -3451,140 +3398,9 @@
         type: 'bar',
         data: {
           labels: ['Applied', 'Reviewed', 'Shortlisted', 'Interview', 'Hired'],
-          datasets: [{
-            data: [24, 18, 9, 4, 3],
-            backgroundColor: [P + 'cc', T + 'cc', A + 'cc', G + 'cc', PU + 'cc'],
-            borderRadius: 7, borderSkipped: false
-          }]
+          datasets: [{ data: [24, 18, 9, 4, 3], backgroundColor: [P+'cc', T+'cc', A+'cc', G+'cc', PU+'cc'], borderRadius: 7 }]
         },
-        options: {
-          indexAxis: 'y',
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: {
-            x: { grid: { color: grid }, ticks: tick, beginAtZero: true },
-            y: { grid: { display: false }, ticks: tick }
-          }
-        }
-      });
-    }
-
-    let statsChartsDone = false;
-    function renderStatsCharts() {
-      if (statsChartsDone) {
-        ['chart-s-trend', 'chart-s-funnel', 'chart-s-branch', 'chart-s-college', 'chart-s-jobs', 'chart-s-offers'].forEach(id => {
-          const c = Chart.getChart(document.getElementById(id)); if (c) c.destroy();
-        });
-        statsChartsDone = false;
-      }
-      statsChartsDone = true;
-
-      // ── Monthly trend (line + bar combo) ──
-      new Chart(document.getElementById('chart-s-trend'), {
-        type: 'bar',
-        data: {
-          labels: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
-          datasets: [
-            { type: 'bar', label: 'Applications', data: [18, 22, 14, 28, 31, 24], backgroundColor: P + 'bb', borderRadius: 6, borderSkipped: false, order: 2 },
-            { type: 'line', label: 'Shortlisted', data: [6, 8, 5, 10, 11, 9], borderColor: T, backgroundColor: 'transparent', tension: .4, pointRadius: 4, pointBackgroundColor: T, borderWidth: 2.5, order: 1 },
-            { type: 'line', label: 'Hired', data: [1, 2, 1, 3, 3, 2], borderColor: G, backgroundColor: 'transparent', tension: .4, pointRadius: 4, pointBackgroundColor: G, borderWidth: 2.5, order: 1, borderDash: [5, 4] }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { x: { grid: { color: grid }, ticks: tick }, y: { grid: { color: grid }, ticks: tick, beginAtZero: true } }
-        }
-      });
-
-      // ── Hiring funnel (horizontal bar) ──
-      new Chart(document.getElementById('chart-s-funnel'), {
-        type: 'bar',
-        data: {
-          labels: ['Applied', 'Reviewed', 'Shortlisted', 'Interviewed', 'Offered', 'Hired'],
-          datasets: [{
-            data: [109, 84, 38, 16, 12, 10],
-            backgroundColor: [P + 'cc', T + 'cc', A + 'cc', '#7c3aedcc', G + 'cc', G],
-            borderRadius: 7, borderSkipped: false
-          }]
-        },
-        options: {
-          indexAxis: 'y',
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + ctx.raw + ' candidates' } } },
-          scales: {
-            x: { grid: { color: grid }, ticks: tick, beginAtZero: true },
-            y: { grid: { display: false }, ticks: tick }
-          }
-        }
-      });
-
-      // ── Branch donut ──
-      const branchData = { labels: ['CSE', 'IT', 'ECE', 'EEE', 'Mech', 'Others'], vals: [48, 26, 17, 8, 6, 4] };
-      const bColors = [P, T, G, A, PU, R + '99'];
-      new Chart(document.getElementById('chart-s-branch'), {
-        type: 'doughnut',
-        data: { labels: branchData.labels, datasets: [{ data: branchData.vals, backgroundColor: bColors, borderWidth: 3, borderColor: '#fff', hoverOffset: 5 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, cutout: '60%' }
-      });
-      const bl = document.getElementById('branch-legend');
-      if (bl) bl.innerHTML = branchData.labels.map((l, i) => `<div style="display:flex;justify-content:space-between;align-items:center;padding:3px 0;"><div style="display:flex;align-items:center;gap:7px;"><span style="width:9px;height:9px;border-radius:2px;background:${bColors[i]};display:inline-block;"></span><span style="font-size:12px;color:var(--txmu);">${l}</span></div><span style="font-size:12px;font-weight:700;">${branchData.vals[i]}</span></div>`).join('');
-
-      // ── College bar ──
-      new Chart(document.getElementById('chart-s-college'), {
-        type: 'bar',
-        data: {
-          labels: ['JNTU Hyd', 'Osmania', 'IIT Hyd', 'NIT Wgl', 'CBIT', 'VIT'],
-          datasets: [{ data: [32, 24, 18, 14, 12, 9], backgroundColor: [P, T, G, A, PU, R].map(c => c + 'bb'), borderRadius: 7, borderSkipped: false }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { x: { grid: { color: grid }, ticks: { ...tick, maxRotation: 30 } }, y: { grid: { color: grid }, ticks: tick, beginAtZero: true } }
-        }
-      });
-
-      // ── Job post performance ──
-      new Chart(document.getElementById('chart-s-jobs'), {
-        type: 'bar',
-        data: {
-          labels: ['Frontend Dev', 'Data Analyst', 'Cloud Engr', 'Backend Engr', 'React Intern'],
-          datasets: [{
-            label: 'Applications',
-            data: [11, 8, 5, 0, 0],
-            backgroundColor: [P + 'dd', T + 'dd', G + 'dd', A + 'dd', PU + 'dd'],
-            borderRadius: 7, borderSkipped: false
-          }]
-        },
-        options: {
-          indexAxis: 'y',
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: {
-            x: { grid: { color: grid }, ticks: tick, beginAtZero: true },
-            y: { grid: { display: false }, ticks: { ...tick, font: { size: 11 } } }
-          }
-        }
-      });
-
-      // ── Offer acceptance stacked bar ──
-      new Chart(document.getElementById('chart-s-offers'), {
-        type: 'bar',
-        data: {
-          labels: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
-          datasets: [
-            { label: 'Accepted', data: [1, 2, 1, 3, 3, 2], backgroundColor: G + 'cc', borderRadius: 5, borderSkipped: false },
-            { label: 'Declined', data: [0, 0, 1, 0, 1, 0], backgroundColor: R + 'bb', borderRadius: 5, borderSkipped: false }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: {
-            x: { grid: { color: grid }, ticks: tick, stacked: true },
-            y: { grid: { color: grid }, ticks: tick, beginAtZero: true, stacked: true }
-          }
-        }
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, scales: { x: { beginAtZero: true } } }
       });
     }
   </script>
