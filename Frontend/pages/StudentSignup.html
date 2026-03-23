@@ -93,6 +93,20 @@
               <div class="err-msg" id="err-s-email">Enter a valid email address.</div>
             </div>
             <div class="fg">
+              <label>Create Password <span class="req">*</span></label>
+              <div style="position:relative;">
+                <input type="password" id="s-pwd" placeholder="8+ chars" oninput="checkPwd(this, 'pwd-bar-', 'pwd-str'); clearErr(this)" style="width:100%" />
+              </div>
+              <div style="display:flex;gap:4px;margin-top:6px;">
+                <div class="pwd-bar" id="pwd-bar-1" style="height:4px;flex:1;background:#e2e8f0;border-radius:2px;"></div>
+                <div class="pwd-bar" id="pwd-bar-2" style="height:4px;flex:1;background:#e2e8f0;border-radius:2px;"></div>
+                <div class="pwd-bar" id="pwd-bar-3" style="height:4px;flex:1;background:#e2e8f0;border-radius:2px;"></div>
+                <div class="pwd-bar" id="pwd-bar-4" style="height:4px;flex:1;background:#e2e8f0;border-radius:2px;"></div>
+              </div>
+              <div id="pwd-str" style="font-size:12px;margin-top:4px;"></div>
+              <div class="err-msg" id="err-s-pwd">Must be 8+ characters.</div>
+            </div>
+            <div class="fg">
               <label>Phone Number <span class="req">*</span></label>
               <input type="tel" id="s-phone" placeholder="+91 98765 43210" oninput="clearErr(this)" maxlength="13" />
               <div class="err-msg" id="err-s-phone">Enter a valid phone number.</div>

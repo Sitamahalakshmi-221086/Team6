@@ -1,5 +1,6 @@
 const dns = require('dns');
 dns.setServers(['8.8.8.8', '8.8.4.4']);
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const express = require('express');
 const cors = require('cors');
@@ -23,7 +24,9 @@ app.use(express.static(path.resolve(__dirname, '..', 'Frontend'))); // Serve fro
 
 // Serve static files (like resumes)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(express.static(path.join(__dirname, '../Frontend')));
 
+// Routes
 // Routes
 app.use('/api/students', require('./routes/studentRoutes'));
 app.use('/api/companies', require('./routes/companyRoutes'));
@@ -31,6 +34,7 @@ app.use('/api/tpo', require('./routes/tpoRoutes'));
 app.use('/api/jobs', require('./routes/jobsRoutes'));
 app.use('/api/drives', require('./routes/drivesPublicRoutes'));
 app.use('/api/applications', require('./routes/applicationRoutes'));
+app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/', require('./passport-oauth'));
 
 
@@ -40,6 +44,9 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_PASS
+  },
+  tls: {
+    rejectUnauthorized: false
   }
 });
 
@@ -70,6 +77,8 @@ app.post("/send-email", async (req, res) => {
     });
 
     console.log("✅ OTP sent to:", email);
+    global.otpStore = global.otpStore || {};
+    global.otpStore[email] = otp;
     res.json({ success: true });
 
   } catch (err) {
@@ -83,9 +92,10 @@ app.get('/', (req, res) => {
 });
 
 // Set PORT
-const PORT = process.env.PORT || 5005;
+const PORT = process.env.PORT || 5001;
 
 // Start Server
 app.listen(PORT, () => {
   console.log(`🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
+

@@ -48,6 +48,7 @@ async function doLogin(role, event) {
     const API_ROOT = (window.CAMPUS_API_BASE || 'http://localhost:5001').replace(/\/$/, '');
     
     const response = await fetch(`${API_ROOT}/api/students/login`, {
+
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -81,6 +82,9 @@ async function doLogin(role, event) {
   }
 }
 
+
+/* ── SUCCESS ── */
+
 function showSuccess(role, email) {
   const stage2 = document.getElementById('stage-2-' + role);
   const stage3 = document.getElementById('stage-3');
@@ -91,6 +95,7 @@ function showSuccess(role, email) {
   const titles = { student: 'Welcome Back! 👋' };
   const subs = { student: `Signed in as ${email}. Redirecting to your student dashboard…` };
   const ctas = { student: 'Go to Student Dashboard →' };
+
 
   const titleEl = document.getElementById('success-title');
   const subEl = document.getElementById('success-sub');
@@ -111,6 +116,9 @@ function showSuccess(role, email) {
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+
+/* ── FORGOT PASSWORD ── */
 
 function showForgot(role) {
   const panel = document.getElementById('forgot-' + role);
@@ -144,6 +152,7 @@ function togglePwd(id, btn) {
   const isPwd = inp.type === 'password';
   inp.type = isPwd ? 'text' : 'password';
   btn.textContent = isPwd ? '🙈' : '👁';
+
 }
 
 function clearErr(el) {
