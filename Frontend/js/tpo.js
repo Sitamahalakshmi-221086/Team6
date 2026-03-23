@@ -7,14 +7,20 @@ const TITLES = {
 };
 
 const P = '#7c3aed', T = '#0aada0', G = '#16a34a', A = '#d97706', R = '#dc2626', B = '#1759d6';
-const grid = 'rgba(124,58,237,0.07)', tick = { color: '#6b4a8a', font: { size: 11 } };
+const grid = 'rgba(124,58,237,0.07)', tick = {
+    color: '#6b4a8a',
+    font: { size: 10 },
+    autoSkip: true,
+    maxRotation: 0,
+    minRotation: 0
+};
 const baseChartOptions = { 
     responsive: true, 
     maintainAspectRatio: false, 
     plugins: { legend: { display: false } }, 
     scales: { 
-        x: { grid: { color: grid }, ticks: tick }, 
-        y: { grid: { color: grid }, ticks: tick, beginAtZero: true } 
+        x: { grid: { color: grid }, ticks: { ...tick } }, 
+        y: { grid: { color: grid }, ticks: { ...tick }, beginAtZero: true } 
     } 
 };
 
@@ -35,8 +41,9 @@ window.addEventListener('DOMContentLoaded', async () => {
         const pr = await fetch(`${API_BASE}/profile/${getTpoId()}`);
         const pd = await pr.json();
         if (pd.success && pd.tpo) {
-            sessionStorage.setItem('tpoName', pd.tpo.fullName || nm);
-            if (greetMsg) greetMsg.textContent = `${g}, ${(pd.tpo.fullName || nm).split(' ')[0]} 👋`;
+            applyTPOProfileToDOM(pd.tpo);
+            const fn = pd.tpo.fullName || nm;
+            if (greetMsg) greetMsg.textContent = `${g}, ${fn.split(' ')[0]} 👋`;
         }
         const ar = await fetch(`${API_BASE}/analytics`);
         const ad = await ar.json();
@@ -53,6 +60,7 @@ window.addEventListener('DOMContentLoaded', async () => {
                 if (el) el.textContent = String(v ?? 0);
             });
             updateHomeBatchUI(ad.stats);
+            syncTPOProfileHeaderStats();
         }
     } catch (e) {
         console.error(e);
@@ -105,6 +113,80 @@ function togglePfEdit() {
     const editing = e.style.display !== 'none';
     v.style.display = editing ? 'block' : 'none';
     e.style.display = editing ? 'none' : 'block';
+}
+
+function dash() {
+    return '—';
+}
+
+function applyTPOProfileToDOM(t) {
+    if (!t) return;
+    const d = (v) => (v != null && String(v).trim() !== '' ? String(v).trim() : dash());
+
+    sessionStorage.setItem('tpoName', t.fullName || '');
+
+    const sb = document.getElementById('sb-uname');
+    if (sb) sb.textContent = d(t.fullName);
+    const tb = document.getElementById('tb-name');
+    if (tb) {
+        const first = (t.fullName || '').trim().split(/\s+/).filter(Boolean)[0];
+        tb.textContent = first || dash();
+    }
+    const sbd = document.getElementById('sb-udept');
+    if (sbd) {
+        const meta = [t.designation, t.college].filter((x) => x && String(x).trim());
+        sbd.textContent = meta.length ? meta.join(' · ') : dash();
+    }
+
+    const hname = document.getElementById('tpo-header-name');
+    if (hname) hname.textContent = d(t.fullName);
+    const hrole = document.getElementById('tpo-header-role-text');
+    if (hrole) {
+        const line = [t.designation, t.college].filter((x) => x && String(x).trim());
+        hrole.textContent = line.length ? line.join(' · ') : dash();
+    }
+
+    const map = [
+        ['tpo-pf-fullname', t.fullName],
+        ['tpo-pf-designation', t.designation],
+        ['tpo-pf-college', t.college],
+        ['tpo-pf-department', t.department],
+        ['tpo-pf-phone', t.phone],
+        ['tpo-pf-location', t.location],
+        ['tpo-pf-email', t.email],
+        ['tpo-pf-code', t.collegeCode]
+    ];
+    map.forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = d(val);
+    });
+
+    const setIn = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val != null ? String(val) : '';
+    };
+    setIn('pf-in-name', t.fullName);
+    setIn('pf-in-designation', t.designation);
+    setIn('pf-in-college', t.college);
+    setIn('pf-in-department', t.department);
+    setIn('pf-in-phone', t.phone);
+    setIn('pf-in-location', t.location);
+    setIn('pf-in-email', t.email);
+}
+
+function syncTPOProfileHeaderStats() {
+    const s = window.__tpoStats || {};
+    const total = s.totalStudents ?? 0;
+    const placed = s.placedStudents ?? 0;
+    const rate = total ? Math.round((placed / total) * 100) : 0;
+    const set = (id, v) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = v;
+    };
+    set('tpo-tph-stat-students', String(total));
+    set('tpo-tph-stat-placed', String(placed));
+    set('tpo-tph-stat-pkg', dash());
+    set('tpo-tph-stat-rate', `${rate}%`);
 }
 
 function showToast(msg) {
@@ -1034,16 +1116,16 @@ async function saveTPOProfile() {
         showToast('Session expired — please log in again');
         return;
     }
-    const inputs = document.querySelectorAll('#pf-edit input');
-    
+    const gv = (id) => (document.getElementById(id)?.value ?? '').trim();
+
     const updates = {
-        fullName: inputs[0].value,
-        designation: inputs[1].value,
-        college: inputs[2].value,
-        department: inputs[3].value,
-        phone: inputs[4].value,
-        location: inputs[5].value,
-        email: inputs[6].value
+        fullName: gv('pf-in-name'),
+        designation: gv('pf-in-designation'),
+        college: gv('pf-in-college'),
+        department: gv('pf-in-department'),
+        phone: gv('pf-in-phone'),
+        location: gv('pf-in-location'),
+        email: gv('pf-in-email')
     };
 
     try {
@@ -1054,18 +1136,9 @@ async function saveTPOProfile() {
         });
         const data = await res.json();
         
-        if (data.success) {
+        if (data.success && data.tpo) {
             showToast('Profile updated successfully!');
-            // Update view mode
-            const p = document.querySelectorAll('#pf-view p');
-            p[0].textContent = updates.fullName;
-            p[1].textContent = updates.designation;
-            p[2].textContent = updates.college;
-            p[3].textContent = updates.department;
-            p[4].textContent = updates.phone;
-            p[5].textContent = updates.location;
-            p[6].textContent = updates.email;
-            
+            applyTPOProfileToDOM(data.tpo);
             togglePfEdit();
         } else {
             showToast(data.message || 'Update failed');

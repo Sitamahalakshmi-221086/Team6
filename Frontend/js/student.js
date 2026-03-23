@@ -41,14 +41,17 @@ if (sessionStorage.getItem('isLoggedIn') !== 'true' || sessionStorage.getItem('u
         }
       }
 
-      const name = sessionStorage.getItem('studentName') || 'Student';
-      const email = sessionStorage.getItem('studentEmail') || 'student@college.edu';
-      const first = name.split(' ')[0];
-      const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+      const name = sessionStorage.getItem('studentName') || '';
+      const email = sessionStorage.getItem('studentEmail') || '';
+      const dash = '—';
+      const first = name.split(' ').filter(Boolean)[0] || '';
+      const initials = name
+        ? name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
+        : dash;
 
       ['sb-av', 'home-av', 'pg-av', 'tb-av'].forEach(id => { const e = document.getElementById(id); if (e) e.textContent = initials; });
-      ['sb-name', 'home-name', 'pg-name', 'pv-fname'].forEach(id => { const e = document.getElementById(id); if (e) e.textContent = name; });
-      ['pg-email', 'set-email'].forEach(id => { const e = document.getElementById(id); if (e) e.textContent = email; });
+      ['sb-name', 'home-pw-name', 'profile-name', 'pv-fname'].forEach(id => { const e = document.getElementById(id); if (e) e.textContent = name || dash; });
+      ['profile-email', 'set-email'].forEach(id => { const e = document.getElementById(id); if (e) e.textContent = email || dash; });
       
       // Academic & Personal
       const branch = sessionStorage.getItem('studentBranch') || '';

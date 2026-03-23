@@ -1,18 +1,19 @@
 // ── INIT ──
     window.addEventListener('DOMContentLoaded', () => {
-      const email = sessionStorage.getItem('cp_company_email') || 'hr@infosys.com';
-      const co = sessionStorage.getItem('cp_company_name') || 'Infosys Technologies';
+      const email = sessionStorage.getItem('cp_company_email') || '—';
+      const co = sessionStorage.getItem('cp_company_name') || '—';
       const short = co.split(' ')[0];
 
       document.getElementById('sb-uname').textContent = co;
       document.getElementById('tb-name').textContent = short;
-      document.getElementById('pg-coname').textContent = co + ' Ltd.';
+      document.getElementById('pg-coname').textContent = co === '—' ? '—' : `${co} Ltd.`;
       document.getElementById('pg-coemail').textContent = email;
       document.getElementById('set-email').textContent = email;
 
       const h = new Date().getHours();
       const g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
-      document.getElementById('greet-msg').textContent = `${g}, ${co}`;
+      const gm = document.getElementById('greet-msg');
+      if (gm) gm.textContent = co === '—' ? g : `${g}, ${co}`;
     });
 
     // ── SIDEBAR COLLAPSE ──

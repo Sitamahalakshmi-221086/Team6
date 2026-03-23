@@ -36,7 +36,7 @@
       <button class="modal-close" onclick="closeModal('notice-modal')">✕</button>
       <div class="modal-title">Post a Notice</div>
       <div class="modal-sub">Notices are visible to all students on the portal.</div>
-      <div class="fg"><label>Notice Title *</label><input id="notice-title" placeholder="e.g. Microsoft Drive – Eligibility Update" />
+      <div class="fg"><label>Notice Title *</label><input id="notice-title" placeholder="e.g. Campus drive – eligibility update" />
       </div>
       <div class="fg"><label>Category</label><select id="notice-dept">
           <option>General</option>
@@ -73,7 +73,7 @@
       <div class="modal-title">Schedule Campus Drive</div>
       <div class="modal-sub">Create and publish a new campus recruitment drive.</div>
       <div class="form-grid">
-        <div class="fg"><label>Company Name *</label><input id="drive-company" placeholder="e.g. Infosys Technologies" /></div>
+        <div class="fg"><label>Company Name *</label><input id="drive-company" placeholder="e.g. registered company name" /></div>
         <div class="fg"><label>Drive Date *</label><input id="drive-date" type="date" /></div>
         <div class="fg"><label>Venue / Mode *</label><input placeholder="e.g. Seminar Hall A / Online – Zoom" /></div>
         <div class="fg"><label>Reporting Time</label><input placeholder="e.g. 9:00 AM" /></div>
@@ -138,8 +138,8 @@
         </svg>
       </div>
       <div>
-        <div class="sb-uname" id="sb-uname">Dr. Ramesh Kumar</div>
-        <div class="sb-udept">TPO · JNTU Hyderabad</div>
+        <div class="sb-uname" id="sb-uname"></div>
+        <div class="sb-udept" id="sb-udept"></div>
       </div>
     </div>
 
@@ -282,7 +282,7 @@
         </div>
         <div class="tb-chip" onclick="go('profile',document.querySelector('.nl[onclick*=profile]'))">
           <div class="tb-av">RK</div>
-          <span id="tb-name">Dr. Ramesh</span>
+          <span id="tb-name"></span>
         </div>
       </div>
     </header>
@@ -293,8 +293,8 @@
       <div class="page on" id="pg-home">
         <div class="greet-banner">
           <div style="flex:1;">
-            <div class="greet-hi" id="greet-msg">Good morning, Dr. Ramesh 👋</div>
-            <div class="greet-sub">High activity today — <strong>3 company requests</strong> pending and 1 mega drive scheduled.</div>
+            <div class="greet-hi" id="greet-msg"></div>
+            <div class="greet-sub" id="greet-sub">Loading your dashboard…</div>
             <div class="tpo-focus-card">
               <div class="tfc-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -954,10 +954,10 @@
               </div>
             </div>
             <div class="tph-info">
-              <div class="tph-name">Dr. Ramesh Kumar</div>
+              <div class="tph-name" id="tpo-header-name"></div>
               <div class="tph-role" style="display: flex; align-items: center; gap: 6px;">
                 <span class="pill active" style="font-size: 9px; padding: 1px 6px;">Official</span>
-                Training & Placement Officer · JNTU Hyderabad
+                <span id="tpo-header-role-text"></span>
               </div>
             </div>
             <div class="tph-actions">
@@ -969,19 +969,19 @@
           </div>
           <div class="tph-stats" style="margin: 0 20px 20px; border-top: 1px solid var(--brs); padding-top: 16px;">
             <div class="tph-stat">
-              <div class="tph-stat-val">320</div>
+              <div class="tph-stat-val" id="tpo-tph-stat-students">0</div>
               <div class="tph-stat-lbl">Students</div>
             </div>
             <div class="tph-stat">
-              <div class="tph-stat-val">138</div>
+              <div class="tph-stat-val" id="tpo-tph-stat-placed">0</div>
               <div class="tph-stat-lbl">Placed</div>
             </div>
             <div class="tph-stat">
-              <div class="tph-stat-val" style="color:var(--G);">₹25L</div>
+              <div class="tph-stat-val" style="color:var(--G);" id="tpo-tph-stat-pkg">—</div>
               <div class="tph-stat-lbl">High Pkg</div>
             </div>
             <div class="tph-stat">
-              <div class="tph-stat-val" style="color:var(--T);">43%</div>
+              <div class="tph-stat-val" style="color:var(--T);" id="tpo-tph-stat-rate">0%</div>
               <div class="tph-stat-lbl">Rate</div>
             </div>
           </div>
@@ -1005,14 +1005,14 @@
                 </svg>Personal Details</div>
               <div id="pf-view">
                 <div class="dg">
-                  <div class="df"><label>Full Name</label><p>Dr. Ramesh Kumar</p></div>
-                  <div class="df"><label>Designation</label><p>Training & Placement Officer</p></div>
-                  <div class="df"><label>College</label><p>JNTU Hyderabad</p></div>
-                  <div class="df"><label>Department</label><p>T&P Cell</p></div>
-                  <div class="df"><label>Phone</label><p>+91 98765 43210</p></div>
-                  <div class="df"><label>Location</label><p>Hyderabad, Telangana</p></div>
-                  <div class="df"><label>Email</label><p>ramesh@jntu.ac.in</p></div>
-                  <div class="df"><label>TPO Code</label><p>JNTU-TPO-2024</p></div>
+                  <div class="df"><label>Full Name</label><p id="tpo-pf-fullname"></p></div>
+                  <div class="df"><label>Designation</label><p id="tpo-pf-designation"></p></div>
+                  <div class="df"><label>College</label><p id="tpo-pf-college"></p></div>
+                  <div class="df"><label>Department</label><p id="tpo-pf-department"></p></div>
+                  <div class="df"><label>Phone</label><p id="tpo-pf-phone"></p></div>
+                  <div class="df"><label>Location</label><p id="tpo-pf-location"></p></div>
+                  <div class="df"><label>Email</label><p id="tpo-pf-email"></p></div>
+                  <div class="df"><label>TPO Code</label><p id="tpo-pf-code"></p></div>
                 </div>
                 <button class="btn sec" style="margin-top:16px;" onclick="togglePfEdit()">
                   <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;">
@@ -1022,13 +1022,13 @@
               </div>
               <div id="pf-edit" style="display:none;">
                 <div class="form-grid">
-                  <div class="fg"><label>Full Name</label><input value="Dr. Ramesh Kumar" /></div>
-                  <div class="fg"><label>Designation</label><input value="Training & Placement Officer" /></div>
-                  <div class="fg"><label>College</label><input value="JNTU Hyderabad" /></div>
-                  <div class="fg"><label>Department</label><input value="T&P Cell" /></div>
-                  <div class="fg"><label>Phone</label><input value="+91 98765 43210" /></div>
-                  <div class="fg"><label>Location</label><input value="Hyderabad, Telangana" /></div>
-                  <div class="fg full"><label>Official Email</label><input value="ramesh@jntu.ac.in" /></div>
+                  <div class="fg"><label>Full Name</label><input id="pf-in-name" value="" /></div>
+                  <div class="fg"><label>Designation</label><input id="pf-in-designation" value="" /></div>
+                  <div class="fg"><label>College</label><input id="pf-in-college" value="" /></div>
+                  <div class="fg"><label>Department</label><input id="pf-in-department" value="" /></div>
+                  <div class="fg"><label>Phone</label><input id="pf-in-phone" value="" /></div>
+                  <div class="fg"><label>Location</label><input id="pf-in-location" value="" /></div>
+                  <div class="fg full"><label>Official Email</label><input id="pf-in-email" value="" /></div>
                 </div>
                 <div style="display:flex;gap:8px;margin-top:12px;">
                   <button class="btn lg" onclick="saveTPOProfile()">Save Changes</button>
@@ -1049,12 +1049,12 @@
             <div class="db">
               <div class="db-title"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path></svg>Major Partner Companies</div>
               <div class="partner-logos">
-                <div class="partner-logo">Google</div>
-                <div class="partner-logo">Microsoft</div>
-                <div class="partner-logo">Amazon</div>
-                <div class="partner-logo">TCS</div>
-                <div class="partner-logo">Wipro</div>
-                <div class="partner-logo">Infosys</div>
+                <div class="partner-logo">Partner A</div>
+                <div class="partner-logo">Partner B</div>
+                <div class="partner-logo">Partner C</div>
+                <div class="partner-logo">Partner D</div>
+                <div class="partner-logo">Partner E</div>
+                <div class="partner-logo">Partner F</div>
               </div>
             </div>
           </div>

@@ -2023,6 +2023,37 @@ textarea {
     margin-bottom: 14px;
 }
 
+.chart-wrap {
+    position: relative;
+    width: 100%;
+    min-height: 300px;
+}
+
+.chart-wrap--home {
+    min-height: 240px;
+    height: 240px;
+}
+
+.chart-wrap--home-sm {
+    min-height: 200px;
+    height: 200px;
+}
+
+.chart-wrap--analytics {
+    min-height: 280px;
+    height: 280px;
+}
+
+.chart-wrap--analytics-sm {
+    min-height: 260px;
+    height: 260px;
+}
+
+.soc-btn.is-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
 /* ─── NOTIF PANEL ─── */
 .notif-panel {
     position: fixed;

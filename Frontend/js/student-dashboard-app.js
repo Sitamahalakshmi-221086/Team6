@@ -48,7 +48,7 @@
 
   function mapApiJob(j, studentSkills) {
     const id = String(j._id);
-    const skills = Array.isArray(j.requirements) && j.requirements.length ? j.requirements : ['Role'];
+    const skills = Array.isArray(j.requirements) && j.requirements.length ? j.requirements : [];
     const st = (studentSkills || []).map((x) => String(x).toLowerCase());
     const reco =
       st.length > 0 &&
@@ -97,7 +97,7 @@
     return {
       id: String(a._id),
       jobId: String(a.jobId?._id || a.jobId),
-      title: job.title || 'Role',
+      title: job.title || '—',
       company: job.companyName || '—',
       type: job.jobType || '—',
       ctc: job.salary || '—',
@@ -122,81 +122,242 @@
     sessionStorage.setItem('studentSkills', JSON.stringify(s.skills || []));
   }
 
+  function profileCompletenessPct(s) {
+    if (!s) return 0;
+    let n = 0;
+    if ((s.fullName || '').trim()) n += 1;
+    if ((s.phone || '').trim()) n += 1;
+    if (s.resume && s.resume.filename) n += 1;
+    if ((s.skills || []).length) n += 1;
+    return Math.round((n / 4) * 100);
+  }
+
+  function setRingStroke(circleEl, pct, circumference) {
+    if (!circleEl) return;
+    const p = Math.max(0, Math.min(100, pct));
+    circleEl.setAttribute('stroke-dasharray', String(circumference));
+    circleEl.setAttribute('stroke-dashoffset', String(circumference * (1 - p / 100)));
+  }
+
+  function clearStudentProfileBindings() {
+    document.querySelectorAll('[id^="profile-"]').forEach((el) => {
+      if (el.id === 'profile-skills-display' || el.id === 'profile-projects-wrap') {
+        el.innerHTML = '';
+        return;
+      }
+      el.textContent = '';
+    });
+    document.querySelectorAll('[id^="pv-"]').forEach((el) => {
+      el.textContent = '';
+    });
+    [
+      'sb-name',
+      'sb-udept',
+      'home-pw-name',
+      'set-email',
+      'tb-name',
+      'resume-filename',
+      'resume-meta',
+      'home-pkg-mid-val',
+      'home-pkg-mid-sub',
+      'home-stat-avg',
+      'home-stat-high',
+      'home-stat-rate'
+    ].forEach((id) => {
+      const e = document.getElementById(id);
+      if (e) e.textContent = '';
+    });
+    const br = document.getElementById('pg-branch-year');
+    if (br) br.innerHTML = '';
+    const psw = document.getElementById('p-skills-wrap');
+    if (psw) {
+      const inp = document.getElementById('p-sk-inp');
+      psw.innerHTML = '';
+      if (inp) psw.appendChild(inp);
+    }
+  }
+
+  function bindSocialLink(id, url) {
+    const a = document.getElementById(id);
+    if (!a) return;
+    const u = (url || '').trim();
+    if (u) {
+      a.href = /^https?:\/\//i.test(u) ? u : `https://${u}`;
+      a.classList.remove('is-disabled');
+    } else {
+      a.href = '#';
+      a.classList.add('is-disabled');
+    }
+  }
+
   function applyProfileToDOM(s) {
-    const name = s.fullName || 'Student';
-    const email = s.email || '';
-    const initials = name
-      .split(' ')
-      .map((w) => w[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
+    clearStudentProfileBindings();
+
+    const dash = '—';
+    const displayName = (s.fullName || '').trim();
+    const initials = displayName
+      ? displayName
+          .split(/\s+/)
+          .map((w) => w[0])
+          .join('')
+          .toUpperCase()
+          .slice(0, 2)
+      : '—';
+
     ['sb-av', 'home-av', 'pg-av', 'tb-av', 'home-pw-av'].forEach((id) => {
       const e = document.getElementById(id);
       if (e) e.textContent = initials;
     });
-    ['sb-name', 'home-name', 'pg-name', 'pv-fname'].forEach((id) => {
+
+    ['profile-name', 'sb-name', 'home-pw-name', 'pv-fname'].forEach((id) => {
       const e = document.getElementById(id);
-      if (e) e.textContent = name;
+      if (e) e.textContent = displayName || dash;
     });
-    ['pg-email', 'set-email'].forEach((id) => {
+
+    ['profile-email', 'set-email'].forEach((id) => {
       const e = document.getElementById(id);
-      if (e) e.textContent = email;
+      if (e) e.textContent = (s.email || '').trim() || dash;
     });
-    const branch = s.branch || '';
-    const year = s.year || '';
+
+    const branch = (s.branch || '').trim();
+    const year = (s.year || '').trim();
     const cgpa = s.cgpa != null ? String(s.cgpa) : '';
-    const roll = s.rollNumber || '';
-    const phone = s.phone || '';
-    const linkedin = s.linkedin || '';
-    const github = s.github || '';
-    const location = s.preferredLocation || '';
+    const roll = (s.rollNumber || '').trim();
+    const phone = (s.phone || '').trim();
+    const linkedin = (s.linkedin || '').trim();
+    const github = (s.github || '').trim();
+    const location = (s.preferredLocation || '').trim();
     const skillsArr = s.skills || [];
 
     const brYrEl = document.getElementById('pg-branch-year');
-    if (brYrEl) brYrEl.innerHTML = `<i data-lucide="graduation-cap"></i> ${branch} · ${year}`;
+    if (brYrEl) {
+      const parts = [branch, year].filter(Boolean);
+      brYrEl.innerHTML =
+        parts.length > 0
+          ? `<i data-lucide="graduation-cap"></i> ${parts.join(' · ')}`
+          : `<i data-lucide="graduation-cap"></i> ${dash}`;
+    }
     const cgpaTag = document.getElementById('pg-cgpa-tag');
-    if (cgpaTag) cgpaTag.textContent = cgpa ? `CGPA ${cgpa}` : 'CGPA —';
+    if (cgpaTag) cgpaTag.textContent = cgpa ? `CGPA ${cgpa}` : `CGPA ${dash}`;
     const rollTag = document.getElementById('pg-roll-tag');
-    if (rollTag) rollTag.textContent = roll ? `Roll No: ${roll}` : '';
-    const pvRoll = document.getElementById('pv-roll');
-    if (pvRoll) pvRoll.textContent = roll || '—';
-    const pvBranch = document.getElementById('pv-branch');
-    if (pvBranch) pvBranch.textContent = branch || '—';
-    const pvYear = document.getElementById('pv-year');
-    if (pvYear) pvYear.textContent = year || '—';
-    const pvCgpa = document.getElementById('pv-cgpa');
-    if (pvCgpa) pvCgpa.textContent = cgpa ? `${cgpa} / 10` : '—';
-    const pvPhone = document.getElementById('pv-phone');
-    if (pvPhone) pvPhone.textContent = phone || '—';
-    const pvLinkedin = document.getElementById('pv-linkedin');
-    if (pvLinkedin) pvLinkedin.textContent = linkedin || 'Not added';
-    const pvGithub = document.getElementById('pv-github');
-    if (pvGithub) pvGithub.textContent = github || 'Not added';
-    const pvLoc = document.getElementById('pv-loc');
-    if (pvLoc) pvLoc.textContent = location || 'Not added';
+    if (rollTag) rollTag.textContent = roll ? `Roll: ${roll}` : dash;
 
-    const skillWrap = document.getElementById('pv-skills');
-    if (skillWrap) {
-      skillWrap.innerHTML = '';
+    const homeBranch = document.getElementById('home-pw-branch');
+    if (homeBranch) homeBranch.textContent = branch || dash;
+    const homeYear = document.getElementById('home-pw-year');
+    if (homeYear) homeYear.textContent = year || dash;
+    const homeCgpa = document.getElementById('home-pw-cgpa');
+    if (homeCgpa) homeCgpa.textContent = cgpa ? `${cgpa} CGPA` : dash;
+
+    const sbDept = document.getElementById('sb-udept');
+    if (sbDept) {
+      const meta = [branch, year].filter(Boolean);
+      sbDept.textContent = meta.length ? meta.join(' · ') : dash;
+    }
+
+    const pvRoll = document.getElementById('pv-roll');
+    if (pvRoll) pvRoll.textContent = roll || dash;
+    const pvBranch = document.getElementById('pv-branch');
+    if (pvBranch) pvBranch.textContent = branch || dash;
+    const pvYear = document.getElementById('pv-year');
+    if (pvYear) pvYear.textContent = year || dash;
+    const pvCgpa = document.getElementById('pv-cgpa');
+    if (pvCgpa) pvCgpa.textContent = cgpa ? `${cgpa} / 10` : dash;
+    const pvPhone = document.getElementById('pv-phone');
+    if (pvPhone) pvPhone.textContent = phone || dash;
+
+    const pvName = document.getElementById('pv-name');
+    if (pvName) pvName.textContent = displayName || dash;
+
+    const contactParts = [];
+    if ((s.email || '').trim()) contactParts.push(s.email.trim());
+    if (phone) contactParts.push(phone);
+    if (linkedin) contactParts.push(linkedin);
+    const pvContact = document.getElementById('pv-contact');
+    if (pvContact) pvContact.textContent = contactParts.length ? contactParts.join(' · ') : dash;
+
+    const pvObj = document.getElementById('pv-obj');
+    if (pvObj) pvObj.textContent = dash;
+    const pvEdu = document.getElementById('pv-edu');
+    if (pvEdu) {
+      const eduBits = [`B.Tech – ${branch || dash}`, `CGPA ${cgpa || dash}`, year || dash].join(' · ');
+      pvEdu.textContent = eduBits;
+    }
+    ['pv-p1', 'pv-exp', 'pv-cert'].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = dash;
+    });
+
+    const pvSkillsLine = document.getElementById('pv-skills');
+    if (pvSkillsLine) {
+      pvSkillsLine.textContent = skillsArr.length ? skillsArr.join(', ') : dash;
+    }
+
+    bindSocialLink('soc-linkedin', linkedin);
+    bindSocialLink('soc-github', github);
+
+    const skillGrid = document.getElementById('profile-skills-display');
+    if (skillGrid) {
+      skillGrid.innerHTML = '';
       if (skillsArr.length) {
         skillsArr.forEach((sk) => {
           const span = document.createElement('span');
           span.className = 'skill-tag';
+          span.style.cursor = 'default';
           span.textContent = sk;
-          skillWrap.appendChild(span);
+          skillGrid.appendChild(span);
         });
       } else {
-        showEmpty(skillWrap, 'No skills added');
+        showEmpty(skillGrid, 'No skills added');
       }
     }
 
+    const resumeName = document.getElementById('resume-filename');
+    const resumeMeta = document.getElementById('resume-meta');
+    if (s.resume && s.resume.filename) {
+      if (resumeName) resumeName.textContent = s.resume.filename;
+      if (resumeMeta) resumeMeta.textContent = s.resume.contentType ? s.resume.contentType : dash;
+    } else {
+      if (resumeName) resumeName.textContent = dash;
+      if (resumeMeta) resumeMeta.textContent = 'No resume uploaded';
+    }
+
+    const pct = profileCompletenessPct(s);
+    const hpwPct = document.getElementById('hpw-ring-pct');
+    const pphPct = document.getElementById('pph-ring-pct');
+    if (hpwPct) hpwPct.textContent = `${pct}%`;
+    if (pphPct) pphPct.textContent = `${pct}%`;
+    setRingStroke(document.getElementById('hpw-ring-circle'), pct, 201);
+    setRingStroke(document.getElementById('pph-ring-circle'), pct, 226);
+
+    const chkBasic = !!(s.fullName || '').trim() && !!(s.email || '').trim();
+    const chkResume = !!(s.resume && s.resume.filename);
+    const chkSkills = skillsArr.length > 0;
+    const chkLi = !!linkedin;
+    const chkPhoto = false;
+    [['hpw-chk-basic', chkBasic], ['hpw-chk-resume', chkResume], ['hpw-chk-skills', chkSkills], ['hpw-chk-li', chkLi], ['hpw-chk-photo', chkPhoto]].forEach(
+      ([id, ok]) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.toggle('done', ok);
+        el.classList.toggle('todo', !ok);
+      }
+    );
+    [['pph-chk-basic', chkBasic], ['pph-chk-resume', chkResume], ['pph-chk-skills', chkSkills], ['pph-chk-li', chkLi], ['pph-chk-photo', chkPhoto]].forEach(
+      ([id, ok]) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.toggle('done', ok);
+        el.classList.toggle('todo', !ok);
+      }
+    );
+
     const editName = document.getElementById('edit-name');
-    if (editName) editName.value = name;
+    if (editName) editName.value = (s.fullName || '').trim();
     const editPhone = document.getElementById('edit-phone');
-    if (editPhone) editPhone.value = phone;
+    if (editPhone) editPhone.value = (s.phone || '').trim();
     const editRoll = document.getElementById('edit-roll');
-    if (editRoll) editRoll.value = roll;
+    if (editRoll) editRoll.value = (s.rollNumber || '').trim();
     const editCgpa = document.getElementById('edit-cgpa');
     if (editCgpa) editCgpa.value = cgpa;
     const editBranch = document.getElementById('edit-branch');
@@ -209,11 +370,31 @@
     if (editGithub) editGithub.value = github;
     const editLoc = document.getElementById('edit-loc');
     if (editLoc) editLoc.value = location;
-    const editSkills = document.getElementById('edit-skills');
-    if (editSkills) editSkills.value = skillsArr.join(', ');
+
+    const pSkillsWrap = document.getElementById('p-skills-wrap');
+    if (pSkillsWrap) {
+      const inp = document.getElementById('p-sk-inp');
+      pSkillsWrap.innerHTML = '';
+      skillsArr.forEach((sk) => {
+        const span = document.createElement('span');
+        span.className = 'skill-tag';
+        span.innerHTML = `${sk}<button onclick="this.parentElement.remove()">×</button>`;
+        if (inp) pSkillsWrap.insertBefore(span, inp);
+        else pSkillsWrap.appendChild(span);
+      });
+      if (inp) pSkillsWrap.appendChild(inp);
+    }
 
     const tbNameEl = document.getElementById('tb-name');
-    if (tbNameEl) tbNameEl.textContent = name.split(' ')[0] || 'Student';
+    if (tbNameEl) {
+      const first = displayName.split(/\s+/)[0];
+      tbNameEl.textContent = first || dash;
+    }
+
+    const projectsWrap = document.getElementById('profile-projects-wrap');
+    if (projectsWrap) showEmpty(projectsWrap, 'No projects added');
+
+    if (typeof lucide !== 'undefined') lucide.createIcons();
   }
 
   async function fetchProfile() {
@@ -271,13 +452,25 @@
     if (statRow[1]) statRow[1].textContent = String(apps);
     if (statRow[2]) statRow[2].textContent = String(interviews);
     if (statRow[3]) {
-      const complete =
-        (studentProfile?.fullName ? 1 : 0) +
-        (studentProfile?.phone ? 1 : 0) +
-        (studentProfile?.resume?.filename ? 1 : 0) +
-        ((studentProfile?.skills || []).length ? 1 : 0);
-      statRow[3].textContent = `${Math.round((complete / 4) * 100)}%`;
+      statRow[3].textContent = `${profileCompletenessPct(studentProfile)}%`;
     }
+
+    const sbj = document.getElementById('sb-badge-jobs');
+    const sba = document.getElementById('sb-badge-apps');
+    if (sbj) sbj.textContent = String(openJobs);
+    if (sba) sba.textContent = String(applications.length);
+
+    const hAvg = document.getElementById('home-stat-avg');
+    const hHi = document.getElementById('home-stat-high');
+    const hRt = document.getElementById('home-stat-rate');
+    if (hAvg) hAvg.textContent = '—';
+    if (hHi) hHi.textContent = '—';
+    if (hRt) hRt.textContent = '—';
+
+    const midVal = document.getElementById('home-pkg-mid-val');
+    const midSub = document.getElementById('home-pkg-mid-sub');
+    if (midVal) midVal.textContent = String(analyticsStats.shortlisted || 0);
+    if (midSub) midSub.textContent = 'shortlisted';
 
     const greetSub = document.getElementById('greet-sub');
     if (greetSub) {
@@ -378,7 +571,13 @@
     const P = '#1759d6';
     const T = '#0aada0';
     const grid = 'rgba(23,89,214,0.07)';
-    const tick = { color: '#4a6070', font: { size: 11 } };
+    const tick = {
+      color: '#4a6070',
+      font: { size: 10 },
+      autoSkip: true,
+      maxRotation: 0,
+      minRotation: 0
+    };
 
     chartOrEmpty('chart-home-activity', () => {
       const labels = ['Applied', 'Shortlisted', 'Interview', 'Offers'];
@@ -407,8 +606,8 @@
           maintainAspectRatio: false,
           plugins: { legend: { display: false } },
           scales: {
-            x: { grid: { color: grid }, ticks: tick },
-            y: { grid: { color: grid }, ticks: { ...tick, stepSize: 1 } }
+            x: { grid: { color: grid }, ticks: { ...tick } },
+            y: { grid: { color: grid }, ticks: { ...tick, stepSize: 1 }, beginAtZero: true }
           }
         }
       });
@@ -460,8 +659,8 @@
           indexAxis: 'y',
           plugins: { legend: { display: false } },
           scales: {
-            x: { grid: { color: grid }, ticks: { ...tick, stepSize: 1 } },
-            y: { grid: { display: false }, ticks: tick }
+            x: { grid: { color: grid }, ticks: { ...tick, stepSize: 1 }, beginAtZero: true },
+            y: { grid: { display: false }, ticks: { ...tick } }
           }
         }
       });
@@ -505,14 +704,20 @@
     const P = '#1759d6';
     const T = '#0aada0';
     const grid = 'rgba(23,89,214,0.07)';
-    const tick = { color: '#4a6070', font: { size: 11 } };
+    const tick = {
+      color: '#4a6070',
+      font: { size: 10 },
+      autoSkip: true,
+      maxRotation: 0,
+      minRotation: 0
+    };
     const base = {
       responsive: true,
       maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        x: { grid: { color: grid }, ticks: tick },
-        y: { grid: { color: grid }, ticks: { ...tick, stepSize: 1 } }
+        x: { grid: { color: grid }, ticks: { ...tick } },
+        y: { grid: { color: grid }, ticks: { ...tick, stepSize: 1 }, beginAtZero: true }
       }
     };
 
@@ -646,10 +851,14 @@
           <span class="pill ${j.intern ? 'upcoming' : 'applied'}" style="padding:1px 8px;font-size:10.5px;">${j.type}</span>
           &nbsp;·&nbsp;${j.company} · ${j.loc}
         </div>
-        <div class="jc-skills">${j.skills
-          .slice(0, 3)
-          .map((s) => `<span class="sk-chip">${s}</span>`)
-          .join('')}${j.skills.length > 3 ? `<span class="sk-chip">+${j.skills.length - 3}</span>` : ''}</div>
+        <div class="jc-skills">${
+          j.skills.length
+            ? `${j.skills
+                .slice(0, 3)
+                .map((sk) => `<span class="sk-chip">${sk}</span>`)
+                .join('')}${j.skills.length > 3 ? `<span class="sk-chip">+${j.skills.length - 3}</span>` : ''}`
+            : `<span class="sk-chip">—</span>`
+        }</div>
       </div>
     </div>
     <div class="jc-right">
@@ -1114,6 +1323,22 @@
     e.style.display = editing ? 'none' : 'block';
   };
 
+  function collectProfileSkillsFromEdit() {
+    const wrap = document.getElementById('p-skills-wrap');
+    if (wrap) {
+      return Array.from(wrap.querySelectorAll('.skill-tag'))
+        .map((el) => {
+          const n = el.childNodes[0];
+          return n && n.textContent ? String(n.textContent).trim() : '';
+        })
+        .filter(Boolean);
+    }
+    return (document.getElementById('edit-skills')?.value || '')
+      .split(',')
+      .map((x) => x.trim())
+      .filter(Boolean);
+  }
+
   window.saveProfile = async function () {
     const body = {
       fullName: document.getElementById('edit-name')?.value,
@@ -1125,10 +1350,7 @@
       linkedin: document.getElementById('edit-linkedin')?.value,
       github: document.getElementById('edit-github')?.value,
       preferredLocation: document.getElementById('edit-loc')?.value,
-      skills: (document.getElementById('edit-skills')?.value || '')
-        .split(',')
-        .map((x) => x.trim())
-        .filter(Boolean)
+      skills: collectProfileSkillsFromEdit()
     };
     try {
       const res = await fetch(`${API}/api/students/profile/${studentId()}`, {
@@ -1221,6 +1443,8 @@
 
     initDarkMode();
 
+    clearStudentProfileBindings();
+
     try {
       await fetchProfile();
       await loadData();
@@ -1242,9 +1466,13 @@
 
     const h = new Date().getHours();
     const greet = document.getElementById('greet-msg');
-    const first = (studentProfile?.fullName || 'Student').split(' ')[0];
+    const rawName = (studentProfile?.fullName || '').trim();
+    const first = rawName.split(/\s+/).filter(Boolean)[0] || '';
+    const part = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
     if (greet) {
-      greet.innerHTML = `${h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening'}, ${first} \u{1F44B}`;
+      greet.innerHTML = first
+        ? `${part}, ${first} \u{1F44B}`
+        : `${part} \u{1F44B}`;
     }
 
     setTimeout(renderHomeCharts, 120);

@@ -43,8 +43,8 @@
     <div class="sb-user">
       <div class="av" id="sb-av">AS</div>
       <div>
-        <div class="sb-uname" id="sb-name">Arjun Sharma</div>
-        <div class="sb-udept">CSE · 3rd Year</div>
+        <div class="sb-uname" id="sb-name"></div>
+        <div class="sb-udept" id="sb-udept"></div>
       </div>
     </div>
 
@@ -67,7 +67,7 @@
             <line x1="10" y1="14" x2="14" y2="14" />
           </svg></span>
         <span class="sb-label">Job Listings</span>
-        <span class="sb-badge">12</span>
+        <span class="sb-badge" id="sb-badge-jobs">0</span>
       </button>
       <button class="nl" onclick="go('applications',this)">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -76,7 +76,7 @@
             <polygon points="22 2 15 22 11 13 2 9 22 2" />
           </svg></span>
         <span class="sb-label">My Applications</span>
-        <span class="sb-badge">4</span>
+        <span class="sb-badge" id="sb-badge-apps">0</span>
       </button>
       <button class="nl" onclick="go('drives',this)">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -301,7 +301,7 @@
         </div>
         <div class="tb-chip" onclick="go('profile',document.querySelector('.nl[onclick*=profile]'))">
           <div class="av" style="width:26px;height:26px;font-size:9px;" id="tb-av">AS</div>
-          <span id="tb-name" style="font-size:13px;font-weight:600;">Student</span>
+          <span id="tb-name" style="font-size:13px;font-weight:600;"></span>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7a96a8" stroke-width="2.5">
             <polyline points="6 9 12 15 18 9" />
           </svg>
@@ -433,7 +433,7 @@
                     style="width:10px;height:10px;border-radius:2px;background:#0aada0;display:inline-block;"></span>Drives
                 </div>
               </div>
-              <div style="position:relative;height:180px;"><canvas id="chart-home-activity"></canvas></div>
+              <div class="chart-wrap chart-wrap--home"><canvas id="chart-home-activity"></canvas></div>
             </div>
 
             <!-- Chart 2: Package donut -->
@@ -455,9 +455,8 @@
                   <canvas id="chart-home-pkg"></canvas>
                   <div
                     style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
-                    <div style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:800;color:var(--P);">
-                      307</div>
-                    <div style="font-size:10px;color:var(--txmu);">placed</div>
+                    <div id="home-pkg-mid-val" style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:800;color:var(--P);"></div>
+                    <div id="home-pkg-mid-sub" style="font-size:10px;color:var(--txmu);"></div>
                   </div>
                 </div>
                 <div style="flex:1;" id="pkg-legend"></div>
@@ -465,18 +464,15 @@
               <div
                 style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;border-top:1px solid var(--brs);padding-top:12px;">
                 <div style="text-align:center;">
-                  <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:var(--G);">
-                    18.4</div>
+                  <div id="home-stat-avg" style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:var(--G);"></div>
                   <div style="font-size:11px;color:var(--txmu);">Avg LPA</div>
                 </div>
                 <div style="text-align:center;">
-                  <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:var(--P);">48
-                  </div>
+                  <div id="home-stat-high" style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:var(--P);"></div>
                   <div style="font-size:11px;color:var(--txmu);">Highest LPA</div>
                 </div>
                 <div style="text-align:center;">
-                  <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:var(--A);">94%
-                  </div>
+                  <div id="home-stat-rate" style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:var(--A);"></div>
                   <div style="font-size:11px;color:var(--txmu);">Placed</div>
                 </div>
               </div>
@@ -516,11 +512,11 @@
               </div>
               <!-- Name + meta -->
               <div class="hpw-info">
-                <div class="hpw-name" id="home-pw-name">Arjun Sharma</div>
+                <div class="hpw-name" id="home-pw-name"></div>
                 <div class="hpw-meta">
-                  <span class="hpw-tag blue">CSE</span>
-                  <span class="hpw-tag teal">3rd Year</span>
-                  <span class="hpw-tag green">8.5 CGPA</span>
+                  <span class="hpw-tag blue" id="home-pw-branch"></span>
+                  <span class="hpw-tag teal" id="home-pw-year"></span>
+                  <span class="hpw-tag green" id="home-pw-cgpa"></span>
                 </div>
               </div>
               <!-- Strength ring + stats row -->
@@ -529,8 +525,8 @@
                   <div class="hpw-ring-wrap">
                     <svg viewBox="0 0 80 80" width="80" height="80" style="transform:rotate(-90deg)">
                       <circle cx="40" cy="40" r="32" fill="none" stroke="#eef4f9" stroke-width="7" />
-                      <circle cx="40" cy="40" r="32" fill="none" stroke="url(#hpw-grad)" stroke-width="7"
-                        stroke-dasharray="201" stroke-dashoffset="50" stroke-linecap="round" />
+                      <circle id="hpw-ring-circle" cx="40" cy="40" r="32" fill="none" stroke="url(#hpw-grad)" stroke-width="7"
+                        stroke-dasharray="201" stroke-dashoffset="201" stroke-linecap="round" />
                       <defs>
                         <linearGradient id="hpw-grad" x1="0%" y1="0%" x2="100%" y2="0%">
                           <stop offset="0%" stop-color="#1759d6" />
@@ -539,46 +535,51 @@
                       </defs>
                     </svg>
                     <div class="hpw-ring-label">
-                      <div class="hpw-ring-pct">75%</div>
+                      <div class="hpw-ring-pct" id="hpw-ring-pct"></div>
                       <div class="hpw-ring-sub">Profile</div>
                     </div>
                   </div>
                   <div class="hpw-stats-col">
                     <div class="hpw-stat">
-                      <div class="hpw-stat-val" style="color:var(--T);">4</div>
+                      <div class="hpw-stat-val" style="color:var(--T);">0</div>
                       <div class="hpw-stat-lbl">Applied</div>
                     </div>
                     <div class="hpw-stat-div"></div>
                     <div class="hpw-stat">
-                      <div class="hpw-stat-val" style="color:var(--A);">2</div>
+                      <div class="hpw-stat-val" style="color:var(--A);">0</div>
                       <div class="hpw-stat-lbl">Shortlisted</div>
                     </div>
                     <div class="hpw-stat-div"></div>
                     <div class="hpw-stat">
-                      <div class="hpw-stat-val" style="color:var(--G);">2</div>
+                      <div class="hpw-stat-val" style="color:var(--G);">0</div>
                       <div class="hpw-stat-lbl">Interviews</div>
+                    </div>
+                    <div class="hpw-stat-div"></div>
+                    <div class="hpw-stat">
+                      <div class="hpw-stat-val" style="color:var(--PU);">0</div>
+                      <div class="hpw-stat-lbl">Offers</div>
                     </div>
                   </div>
                 </div>
                 <!-- Checklist -->
                 <div class="hpw-checks">
-                  <div class="hpw-chk done"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                  <div class="hpw-chk todo" id="hpw-chk-basic"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
                       stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>Basic info</div>
-                  <div class="hpw-chk done"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                  <div class="hpw-chk todo" id="hpw-chk-resume"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
                       stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>Resume</div>
-                  <div class="hpw-chk done"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                  <div class="hpw-chk todo" id="hpw-chk-skills"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
                       stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>Skills</div>
-                  <div class="hpw-chk todo"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7a96a8"
+                  <div class="hpw-chk todo" id="hpw-chk-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7a96a8"
                       stroke-width="2" stroke-linecap="round">
                       <circle cx="12" cy="12" r="9" />
                     </svg>LinkedIn</div>
-                  <div class="hpw-chk todo"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7a96a8"
+                  <div class="hpw-chk todo" id="hpw-chk-photo"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7a96a8"
                       stroke-width="2" stroke-linecap="round">
                       <circle cx="12" cy="12" r="9" />
                     </svg>Photo</div>
@@ -611,7 +612,7 @@
                 →</button>
             </div>
             <div class="card" style="padding:16px 18px;margin-bottom:16px;">
-              <div style="position:relative;height:140px;"><canvas id="chart-home-branch"></canvas></div>
+              <div class="chart-wrap chart-wrap--home-sm"><canvas id="chart-home-branch"></canvas></div>
             </div>
 
             <!-- Upcoming deadlines -->
@@ -876,8 +877,8 @@
           <div class="db">
             <div class="db-title">Personal Information</div>
             <div class="form-grid">
-              <div class="fg"><label>Full Name</label><input id="rb-name" placeholder="Arjun Sharma" /></div>
-              <div class="fg"><label>Email</label><input id="rb-email" placeholder="arjun@college.edu" /></div>
+              <div class="fg"><label>Full Name</label><input id="rb-name" placeholder="Your full name" /></div>
+              <div class="fg"><label>Email</label><input id="rb-email" placeholder="your.email@college.edu" /></div>
               <div class="fg"><label>Phone</label><input id="rb-phone" placeholder="+91 98765 43210" /></div>
               <div class="fg"><label>LinkedIn URL</label><input id="rb-linkedin" placeholder="linkedin.com/in/arjun" />
               </div>
@@ -910,10 +911,7 @@
             <div class="db-title">Skills &amp; Experience</div>
             <div class="form-grid">
               <div class="fg full"><label>Technical Skills</label>
-                <div class="skill-tags" id="rb-skills-wrap" onclick="document.getElementById('rb-sk-inp').focus()"><span
-                    class="skill-tag">React<button onclick="this.parentElement.remove()">×</button></span><span
-                    class="skill-tag">Node.js<button onclick="this.parentElement.remove()">×</button></span><span
-                    class="skill-tag">MongoDB<button onclick="this.parentElement.remove()">×</button></span><input
+                <div class="skill-tags" id="rb-skills-wrap" onclick="document.getElementById('rb-sk-inp').focus()"><input
                     class="skill-input" id="rb-sk-inp" placeholder="Add skill…"
                     onkeydown="addSkill(event,'rb-skills-wrap','rb-sk-inp')" /></div>
               </div>
@@ -953,35 +951,31 @@
                 <line x1="12" y1="15" x2="12" y2="3" />
               </svg> Download PDF</button></div>
           <div class="preview-box">
-            <h1 id="pv-name">Arjun Sharma</h1>
-            <div class="pv-contact" id="pv-contact"><a href="/cdn-cgi/l/email-protection" class="__cf_email__"
-                data-cfemail="d5b4a7bfa0bb95b6bab9b9b0b2b0fbb0b1a0">[email&#160;protected]</a> · +91 98765 43210 ·
-              linkedin.com/in/arjun</div>
+            <h1 id="pv-name"></h1>
+            <div class="pv-contact" id="pv-contact"></div>
             <div class="pv-sec">
               <h3>Objective</h3>
-              <p class="pv-item" id="pv-obj">A passionate CSE student seeking challenging roles in software engineering.
-              </p>
+              <p class="pv-item" id="pv-obj"></p>
             </div>
             <div class="pv-sec">
               <h3>Education</h3>
-              <p class="pv-item" id="pv-edu"><strong>B.Tech – CSE</strong> · JNTU Hyderabad · CGPA 8.5 · 2026</p>
+              <p class="pv-item" id="pv-edu"></p>
             </div>
             <div class="pv-sec">
               <h3>Skills</h3>
-              <p class="pv-item" id="pv-skills">React, Node.js, MongoDB, JavaScript, Python</p>
+              <p class="pv-item" id="pv-skills"></p>
             </div>
             <div class="pv-sec">
               <h3>Projects</h3>
-              <p class="pv-item" id="pv-p1"><strong>E-Commerce Platform</strong> – Full-stack app using React, Node.js,
-                MongoDB.</p>
+              <p class="pv-item" id="pv-p1"></p>
             </div>
             <div class="pv-sec">
               <h3>Experience</h3>
-              <p class="pv-item" id="pv-exp">Frontend Intern @ XYZ Corp (June–Aug 2024)</p>
+              <p class="pv-item" id="pv-exp"></p>
             </div>
             <div class="pv-sec">
               <h3>Certifications</h3>
-              <p class="pv-item" id="pv-cert">AWS Cloud Practitioner, Google Analytics</p>
+              <p class="pv-item" id="pv-cert"></p>
             </div>
           </div>
         </div>
@@ -1130,31 +1124,31 @@
           <div class="chart-card">
             <div class="chart-title">Monthly Placement Activity</div>
             <div class="chart-sub">Offers & drives per month — Batch 2025</div>
-            <div style="position:relative;height:210px;"><canvas id="chart-monthly"></canvas></div>
+            <div class="chart-wrap chart-wrap--analytics"><canvas id="chart-monthly"></canvas></div>
           </div>
           <div class="chart-card">
             <div class="chart-title">Branch-wise Placement Rate</div>
             <div class="chart-sub">% students placed by department</div>
-            <div style="position:relative;height:210px;"><canvas id="chart-branch"></canvas></div>
+            <div class="chart-wrap chart-wrap--analytics"><canvas id="chart-branch"></canvas></div>
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:18px;margin-bottom:18px;">
           <div class="chart-card">
             <div class="chart-title">Package Distribution</div>
             <div class="chart-sub">Students per salary bracket</div>
-            <div style="position:relative;height:210px;"><canvas id="chart-salary"></canvas></div>
+            <div class="chart-wrap chart-wrap--analytics"><canvas id="chart-salary"></canvas></div>
           </div>
           <div class="chart-card">
             <div class="chart-title">Top Recruiters</div>
             <div class="chart-sub">Offers made by company</div>
-            <div style="position:relative;height:210px;"><canvas id="chart-companies"></canvas></div>
+            <div class="chart-wrap chart-wrap--analytics"><canvas id="chart-companies"></canvas></div>
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
           <div class="chart-card">
             <div class="chart-title">Avg Package Trend (5 Years)</div>
             <div class="chart-sub">College vs industry average (LPA)</div>
-            <div style="position:relative;height:195px;"><canvas id="chart-trend"></canvas></div>
+            <div class="chart-wrap chart-wrap--analytics chart-wrap--analytics-sm"><canvas id="chart-trend"></canvas></div>
           </div>
           <div class="chart-card">
             <div class="chart-title">Role Category Breakdown</div>
@@ -1196,19 +1190,18 @@
           </div>
           <!-- Name + email + tags — fully below banner on white background -->
           <div class="pph-nameblock">
-            <div class="pph-name" id="pg-name">Arjun Sharma</div>
-            <div class="pph-email" id="pg-email">arjun@college.edu</div>
+            <div class="pph-name" id="profile-name"></div>
+            <div class="pph-email" id="profile-email"></div>
             <div class="pph-tags">
-              <span class="hpw-tag blue">
+              <span class="hpw-tag blue" id="pg-branch-year">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round">
                   <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
                   <path d="M6 12v5c3 3 9 3 12 0v-5" />
                 </svg>
-                CSE · 3rd Year
               </span>
-              <span class="hpw-tag green">CGPA 8.5</span>
-              <span class="hpw-tag" style="background:var(--AL);color:#92400e;">Roll: 21CSE045</span>
+              <span class="hpw-tag green" id="pg-cgpa-tag"></span>
+              <span class="hpw-tag" style="background:var(--AL);color:#92400e;" id="pg-roll-tag"></span>
             </div>
           </div>
 
@@ -1219,8 +1212,8 @@
               <div class="hpw-ring-wrap" style="width:90px;height:90px;">
                 <svg viewBox="0 0 90 90" width="90" height="90" style="transform:rotate(-90deg)">
                   <circle cx="45" cy="45" r="36" fill="none" stroke="#eef4f9" stroke-width="8" />
-                  <circle cx="45" cy="45" r="36" fill="none" stroke="url(#pph-grad)" stroke-width="8"
-                    stroke-dasharray="226" stroke-dashoffset="57" stroke-linecap="round" />
+                  <circle id="pph-ring-circle" cx="45" cy="45" r="36" fill="none" stroke="url(#pph-grad)" stroke-width="8"
+                    stroke-dasharray="226" stroke-dashoffset="226" stroke-linecap="round" />
                   <defs>
                     <linearGradient id="pph-grad" x1="0%" y1="0%" x2="100%" y2="0%">
                       <stop offset="0%" stop-color="#1759d6" />
@@ -1229,29 +1222,29 @@
                   </defs>
                 </svg>
                 <div class="hpw-ring-label">
-                  <div class="hpw-ring-pct" style="font-size:1.15rem;">75%</div>
+                  <div class="hpw-ring-pct" style="font-size:1.15rem;" id="pph-ring-pct"></div>
                   <div class="hpw-ring-sub">Strength</div>
                 </div>
               </div>
               <!-- Checklist pills -->
               <div class="pph-checks">
-                <div class="hpw-chk done"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                <div class="hpw-chk todo" id="pph-chk-basic"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>Basic info</div>
-                <div class="hpw-chk done"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                <div class="hpw-chk todo" id="pph-chk-resume"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>Resume</div>
-                <div class="hpw-chk done"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                <div class="hpw-chk todo" id="pph-chk-skills"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>Skills</div>
-                <div class="hpw-chk todo"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7a96a8"
+                <div class="hpw-chk todo" id="pph-chk-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7a96a8"
                     stroke-width="2" stroke-linecap="round">
                     <circle cx="12" cy="12" r="9" />
                   </svg>LinkedIn</div>
-                <div class="hpw-chk todo"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7a96a8"
+                <div class="hpw-chk todo" id="pph-chk-photo"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7a96a8"
                     stroke-width="2" stroke-linecap="round">
                     <circle cx="12" cy="12" r="9" />
                   </svg>Photo</div>
@@ -1267,7 +1260,7 @@
                     <polygon points="22 2 15 22 11 13 2 9 22 2" />
                   </svg>
                 </div>
-                <div class="pph-stat-val" style="color:var(--P);">4</div>
+                <div class="pph-stat-val" style="color:var(--P);">0</div>
                 <div class="pph-stat-lbl">Applied</div>
               </div>
               <div class="pph-stat">
@@ -1278,7 +1271,7 @@
                       points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                   </svg>
                 </div>
-                <div class="pph-stat-val" style="color:var(--A);">2</div>
+                <div class="pph-stat-val" style="color:var(--A);">0</div>
                 <div class="pph-stat-lbl">Shortlisted</div>
               </div>
               <div class="pph-stat">
@@ -1292,7 +1285,7 @@
                     <path d="M9 16l2 2 4-4" />
                   </svg>
                 </div>
-                <div class="pph-stat-val" style="color:var(--G);">2</div>
+                <div class="pph-stat-val" style="color:var(--G);">0</div>
                 <div class="pph-stat-lbl">Interviews</div>
               </div>
               <div class="pph-stat">
@@ -1319,22 +1312,22 @@
                 </svg>Personal &amp; Academic Details</div>
               <div class="dg">
                 <div class="df"><label>Full Name</label>
-                  <p id="pv-fname">Arjun Sharma</p>
+                  <p id="pv-fname"></p>
                 </div>
                 <div class="df"><label>Roll No.</label>
-                  <p>21CSE045</p>
+                  <p id="pv-roll"></p>
                 </div>
                 <div class="df"><label>Branch</label>
-                  <p>CSE</p>
+                  <p id="pv-branch"></p>
                 </div>
                 <div class="df"><label>Year</label>
-                  <p>3rd Year</p>
+                  <p id="pv-year"></p>
                 </div>
                 <div class="df"><label>CGPA</label>
-                  <p>8.5 / 10</p>
+                  <p id="pv-cgpa"></p>
                 </div>
                 <div class="df"><label>Phone</label>
-                  <p>+91 98765 43210</p>
+                  <p id="pv-phone"></p>
                 </div>
               </div>
             </div>
@@ -1344,12 +1337,7 @@
                     stroke-width="2" stroke-linecap="round">
                     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                   </svg>Skills</div>
-                <div style="display:flex;flex-wrap:wrap;gap:7px;"><span class="skill-tag"
-                    style="cursor:default;">React</span><span class="skill-tag"
-                    style="cursor:default;">Node.js</span><span class="skill-tag"
-                    style="cursor:default;">MongoDB</span><span class="skill-tag"
-                    style="cursor:default;">JavaScript</span><span class="skill-tag"
-                    style="cursor:default;">Python</span></div>
+                <div id="profile-skills-display" style="display:flex;flex-wrap:wrap;gap:7px;"></div>
               </div>
               <div class="db" style="margin-bottom:14px;">
                 <div class="db-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -1357,8 +1345,8 @@
                     <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
                   </svg>Social & Links</div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                  <a href="#" class="soc-btn"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>LinkedIn</a>
-                  <a href="#" class="soc-btn"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>GitHub</a>
+                  <a href="#" class="soc-btn is-disabled" id="soc-linkedin"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>LinkedIn</a>
+                  <a href="#" class="soc-btn is-disabled" id="soc-github"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>GitHub</a>
                 </div>
               </div>
               <div class="db">
@@ -1375,8 +1363,8 @@
                     <polyline points="14 2 14 8 20 8" />
                   </svg>
                   <div style="flex:1;">
-                    <div style="font-size:13px;font-weight:600;">Arjun_Resume_2025.pdf</div>
-                    <div style="font-size:11.5px;color:var(--txmu);">Mar 1 · 320 KB</div>
+                    <div style="font-size:13px;font-weight:600;" id="resume-filename"></div>
+                    <div style="font-size:11.5px;color:var(--txmu);" id="resume-meta"></div>
                   </div><button class="btn sec sm"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"
                       stroke="currentColor" stroke-width="2" stroke-linecap="round">
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -1389,30 +1377,19 @@
           </div>
           <div class="db" style="margin-top:14px;">
             <div class="db-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Notable Projects</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-              <div class="proj-card">
-                <div class="proj-name">Campus Placement Portal</div>
-                <div class="proj-desc">A MERN stack application to streamline recruitment process...</div>
-                <div class="proj-tags"><span class="ptag">React</span><span class="ptag">Node</span></div>
-              </div>
-              <div class="proj-card">
-                <div class="proj-name">AI Resume Parser</div>
-                <div class="proj-desc">Using Python & NLP to extract entities from PDF resumes...</div>
-                <div class="proj-tags"><span class="ptag">Python</span><span class="ptag">NLP</span></div>
-              </div>
-            </div>
+            <div id="profile-projects-wrap" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"></div>
           </div>
           <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px;">
             <div class="stat-card" style="text-align:center;padding:14px;">
-              <div class="stat-val" style="color:var(--P);font-size:1.4rem;">4</div>
+              <div class="stat-val" style="color:var(--P);font-size:1.4rem;">0</div>
               <div class="stat-lbl">Applications</div>
             </div>
             <div class="stat-card" style="text-align:center;padding:14px;">
-              <div class="stat-val" style="color:var(--G);font-size:1.4rem;">2</div>
+              <div class="stat-val" style="color:var(--G);font-size:1.4rem;">0</div>
               <div class="stat-lbl">Shortlisted</div>
             </div>
             <div class="stat-card" style="text-align:center;padding:14px;">
-              <div class="stat-val" style="color:var(--A);font-size:1.4rem;">2</div>
+              <div class="stat-val" style="color:var(--A);font-size:1.4rem;">0</div>
               <div class="stat-lbl">Interviews</div>
             </div>
             <div class="stat-card" style="text-align:center;padding:14px;">
@@ -1425,30 +1402,32 @@
           <div class="db">
             <div class="db-title">Edit Profile</div>
             <div class="form-grid">
-              <div class="fg"><label>Full Name</label><input id="edit-name" value="Arjun Sharma" /></div>
-              <div class="fg"><label>Phone</label><input id="edit-phone" value="+91 98765 43210" /></div>
+              <div class="fg"><label>Full Name</label><input id="edit-name" value="" /></div>
+              <div class="fg"><label>Phone</label><input id="edit-phone" value="" /></div>
+              <div class="fg"><label>Roll No.</label><input id="edit-roll" value="" /></div>
               <div class="fg"><label>Branch</label><select id="edit-branch">
-                  <option selected>Computer Science</option>
-                  <option>IT</option>
-                  <option>ECE</option>
-                  <option>Mechanical</option>
+                  <option value="">—</option>
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="IT">IT</option>
+                  <option value="ECE">ECE</option>
+                  <option value="Mechanical">Mechanical</option>
+                  <option value="CSE">CSE</option>
                 </select></div>
               <div class="fg"><label>Year</label><select id="edit-year">
-                  <option>1st</option>
-                  <option>2nd</option>
-                  <option selected>3rd</option>
-                  <option>4th</option>
+                  <option value="">—</option>
+                  <option value="1st">1st</option>
+                  <option value="2nd">2nd</option>
+                  <option value="3rd">3rd</option>
+                  <option value="4th">4th</option>
                 </select></div>
-              <div class="fg"><label>CGPA</label><input id="edit-cgpa" value="8.5" /></div>
-              <div class="fg"><label>Preferred Location</label><input id="edit-loc" value="Bangalore, Hyderabad" />
+              <div class="fg"><label>CGPA</label><input id="edit-cgpa" value="" /></div>
+              <div class="fg"><label>Preferred Location</label><input id="edit-loc" value="" />
               </div>
               <div class="fg full"><label>LinkedIn URL</label><input id="edit-linkedin"
-                  placeholder="linkedin.com/in/yourname" /></div>
+                  placeholder="https://linkedin.com/in/…" /></div>
+              <div class="fg full"><label>GitHub URL</label><input id="edit-github" placeholder="https://github.com/…" /></div>
               <div class="fg full"><label>Skills</label>
-                <div class="skill-tags" id="p-skills-wrap" onclick="document.getElementById('p-sk-inp').focus()"><span
-                    class="skill-tag">React<button onclick="this.parentElement.remove()">×</button></span><span
-                    class="skill-tag">Node.js<button onclick="this.parentElement.remove()">×</button></span><span
-                    class="skill-tag">MongoDB<button onclick="this.parentElement.remove()">×</button></span><input
+                <div class="skill-tags" id="p-skills-wrap" onclick="document.getElementById('p-sk-inp').focus()"><input
                     class="skill-input" id="p-sk-inp" placeholder="Add skill…"
                     onkeydown="addSkill(event,'p-skills-wrap','p-sk-inp')" /></div>
               </div>
@@ -1481,11 +1460,9 @@
                   class="slider"></span></label></div>
             <div class="sr"><span>WhatsApp Reminders</span><label class="toggle"><input type="checkbox" /><span
                   class="slider"></span></label></div>
-            <div class="sr"><span>Account Email</span><span style="font-size:12.5px;color:var(--txmu);"><a
-                  href="/cdn-cgi/l/email-protection" class="__cf_email__"
-                  data-cfemail="82e3f0e8f7ecc2e1edeeeee7e5e7ace7e6f7">[email&#160;protected]</a></span></div>
+            <div class="sr"><span>Account Email</span><span id="set-email" style="font-size:12.5px;color:var(--txmu);"></span></div>
             <div class="sr"><span>Password</span><button class="btn sm"
-                onclick="alert('Password reset email sent to arjun@college.edu')">Change Password</button></div>
+                onclick="alert('Password reset is not configured yet.')">Change Password</button></div>
             <div class="sr"><span>Dark Mode</span><label class="toggle"><input type="checkbox" id="dark-mode-toggle"
                   onchange="toggleDarkMode(this)" /><span class="slider"></span></label></div>
           </div>
