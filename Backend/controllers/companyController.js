@@ -160,16 +160,31 @@ const updateCompanyProfile = async (req, res) => {
 
 const postJob = async (req, res) => {
   try {
-    const { companyId, companyName, title, description, requirements, salary, location, jobType, status } = req.body;
+    const {
+      companyId,
+      companyName,
+      title,
+      description,
+      requirements,
+      salary,
+      package: packageCtc,
+      location,
+      jobType,
+      workMode,
+      deadline,
+      status
+    } = req.body;
     const newJob = await Job.create({
       companyId,
       companyName,
       title,
       description,
       requirements: Array.isArray(requirements) ? requirements : [],
-      salary,
+      salary: salary || packageCtc,
       location,
       jobType,
+      workMode,
+      deadline,
       status: status || 'Active',
       tpoApproval: 'pending'
     });

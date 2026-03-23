@@ -69,6 +69,30 @@ window.addEventListener('DOMContentLoaded', async () => {
     initDarkMode();
     lucide.createIcons();
     setTimeout(renderHomeChartsLive, 100);
+    // Keep TPO home analytics live as approvals/applications change.
+    window.__tpoHomePollTimer = setInterval(async () => {
+        if (document.visibilityState !== 'visible') return;
+        try {
+            const ar = await fetch(`${API_BASE}/analytics`);
+            const ad = await ar.json();
+            if (ad.success && ad.stats) {
+                window.__tpoStats = ad.stats;
+                [
+                    ['tpo-stat-students', ad.stats.totalStudents],
+                    ['tpo-stat-companies', ad.stats.totalCompanies],
+                    ['tpo-stat-drives', ad.stats.totalDrives],
+                    ['tpo-greet-students', ad.stats.totalStudents],
+                    ['tpo-greet-drives', ad.stats.totalDrives]
+                ].forEach(([id, v]) => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = String(v ?? 0);
+                });
+                updateHomeBatchUI(ad.stats);
+                syncTPOProfileHeaderStats();
+                renderHomeChartsLive();
+            }
+        } catch (e) {}
+    }, 25000);
     setTimeout(loadDrives, 150);
     setTimeout(() => {
         loadTPOStudentsDirectory();
@@ -277,13 +301,36 @@ function updateHomeBatchUI(s) {
 }
 
 function renderHomeChartsLive() {
+    // When re-drawing (polling), destroy existing Chart.js instances first.
+    try {
+        const p = document.getElementById('chart-home-progress');
+        if (p && typeof Chart !== 'undefined' && Chart.getChart(p)) Chart.getChart(p).destroy();
+        const b = document.getElementById('chart-home-branch');
+        if (b && typeof Chart !== 'undefined' && Chart.getChart(b)) Chart.getChart(b).destroy();
+    } catch (e) {}
+
     const s = window.__tpoStats || {};
     const sum = (s.totalStudents || 0) + (s.totalCompanies || 0) + (s.totalDrives || 0);
     const progCtx = document.getElementById('chart-home-progress');
     if (progCtx && progCtx.parentElement) {
         if (sum === 0) {
-            progCtx.parentElement.innerHTML = '<p class="empty-state" style="padding:20px;text-align:center;color:var(--txmu);">No analytics data available</p>';
+            progCtx.style.display = 'none';
+            let msg = progCtx.parentElement.querySelector('.chart-empty-state');
+            if (!msg) {
+                msg = document.createElement('p');
+                msg.className = 'empty-state chart-empty-state';
+                msg.style.padding = '20px';
+                msg.style.textAlign = 'center';
+                msg.style.color = 'var(--txmu)';
+                msg.textContent = 'No analytics data available';
+                progCtx.parentElement.appendChild(msg);
+            } else {
+                msg.style.display = 'block';
+            }
         } else {
+            progCtx.style.display = 'block';
+            const msg = progCtx.parentElement.querySelector('.chart-empty-state');
+            if (msg) msg.remove();
             new Chart(progCtx, {
                 type: 'bar',
                 data: {
@@ -306,8 +353,23 @@ function renderHomeChartsLive() {
     const branchCtx = document.getElementById('chart-home-branch');
     if (branchCtx && branchCtx.parentElement) {
         if (sum === 0) {
-            branchCtx.parentElement.innerHTML = '<p class="empty-state" style="padding:20px;text-align:center;color:var(--txmu);">No analytics data available</p>';
+            branchCtx.style.display = 'none';
+            let msg = branchCtx.parentElement.querySelector('.chart-empty-state');
+            if (!msg) {
+                msg = document.createElement('p');
+                msg.className = 'empty-state chart-empty-state';
+                msg.style.padding = '20px';
+                msg.style.textAlign = 'center';
+                msg.style.color = 'var(--txmu)';
+                msg.textContent = 'No analytics data available';
+                branchCtx.parentElement.appendChild(msg);
+            } else {
+                msg.style.display = 'block';
+            }
         } else {
+            branchCtx.style.display = 'block';
+            const msg = branchCtx.parentElement.querySelector('.chart-empty-state');
+            if (msg) msg.remove();
             new Chart(branchCtx, {
                 type: 'bar',
                 data: {

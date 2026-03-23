@@ -3374,7 +3374,8 @@
         const data = await res.json();
         if (data.success) {
           showToast(`Candidate moved to ${status}`);
-          fetchDashboardStats();
+          await fetchDashboardStats();
+          renderCharts();
         }
       } catch (err) { showToast('Error updating status'); }
     }
@@ -3391,34 +3392,38 @@
       
       const skills = Array.from(modal.querySelectorAll('#skill-tags .tag')).map(t => t.textContent.replace('×','').trim());
       
-      if (!title || !desc || !deadline) {
-        showToast('Title, Description, and Deadline are required.');
+      if (!title || !desc) {
+        showToast('Title and Job Description are required.');
         return;
       }
 
       try {
-        const res = await fetch('http://localhost:5000/api/companies/post-job', {
+        const payload = {
+          companyId,
+          companyName,
+          title,
+          description: desc,
+          jobType: type,
+          workMode,
+          salary,
+          location,
+          requirements: skills
+        };
+        if (deadline) payload.deadline = deadline;
+        const res = await fetch('http://localhost:5000/api/jobs/create', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            companyId,
-            companyName,
-            title,
-            description: desc,
-            jobType: type,
-            workMode,
-            salary,
-            location,
-            deadline,
-            requirements: skills
-          })
+          body: JSON.stringify(payload)
         });
         const data = await res.json();
         if (data.success) {
           showToast('Job submitted — pending TPO approval');
           modal.classList.remove('on');
           fetchJobs();
-          fetchDashboardStats();
+          await fetchDashboardStats();
+          renderCharts();
+        } else {
+          showToast(data.message || 'Failed to submit job');
         }
       } catch (err) { showToast('Server error'); }
     }
@@ -3459,6 +3464,14 @@
       await fetchJobs();
       fetchCompanyDrives();
       renderCharts();
+      // Keep analytics charts consistent after students apply.
+      window.__coPollTimer = setInterval(async () => {
+        if (document.visibilityState !== 'visible') return;
+        try {
+          await fetchDashboardStats();
+          renderCharts();
+        } catch (e) {}
+      }, 25000);
     };
 
     function renderCharts() {
@@ -3469,10 +3482,45 @@
       const sum = ta + sh + hi;
       const cf = document.getElementById('chart-funnel');
       const ct = document.getElementById('chart-trend');
+
+      // If stats changed and we re-render, destroy the previous charts to avoid duplicates.
+      if (typeof Chart !== 'undefined') {
+        if (cf && Chart.getChart(cf)) Chart.getChart(cf).destroy();
+        if (ct && Chart.getChart(ct)) Chart.getChart(ct).destroy();
+      }
+
       if (sum === 0) {
-        if (cf && cf.parentElement) cf.parentElement.innerHTML = '<p class="empty-state">No analytics data available</p>';
-        if (ct && ct.parentElement) ct.parentElement.innerHTML = '<p class="empty-state">No analytics data available</p>';
+        const setEmpty = (canvasEl) => {
+          if (!canvasEl || !canvasEl.parentElement) return;
+          canvasEl.style.display = 'none';
+          let msg = canvasEl.parentElement.querySelector('.chart-empty-state');
+          if (!msg) {
+            msg = document.createElement('p');
+            msg.className = 'empty-state chart-empty-state';
+            msg.style.padding = '14px';
+            msg.style.textAlign = 'center';
+            msg.style.color = 'var(--txmu)';
+            msg.textContent = 'No analytics data available';
+            canvasEl.parentElement.appendChild(msg);
+          } else {
+            msg.style.display = 'block';
+          }
+        };
+        setEmpty(cf);
+        setEmpty(ct);
         return;
+      }
+
+      // Ensure canvases are visible again when data is available.
+      if (cf && cf.parentElement) {
+        cf.style.display = 'block';
+        const msg = cf.parentElement.querySelector('.chart-empty-state');
+        if (msg) msg.remove();
+      }
+      if (ct && ct.parentElement) {
+        ct.style.display = 'block';
+        const msg = ct.parentElement.querySelector('.chart-empty-state');
+        if (msg) msg.remove();
       }
       new Chart(cf, {
         type: 'bar',

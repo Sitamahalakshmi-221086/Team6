@@ -1026,7 +1026,15 @@
       j.applied = true;
       if (btn) btn.outerHTML = `<span class="pill short" style="font-size:11.5px;">Applied ✓</span>`;
       await refreshApplicationsOnly();
+      await refreshAnalyticsOnly();
       updateStatsUI();
+      redrawHomeCharts();
+      // If the user is currently on Analytics, keep those charts in sync too.
+      const pgAnalytics = document.getElementById('pg-analytics');
+      if (pgAnalytics && pgAnalytics.classList.contains('on')) {
+        renderAnalyticsPageStats();
+        renderAnalyticsCharts();
+      }
     } catch {
       alert('Network error');
     }
@@ -1042,6 +1050,49 @@
     });
     renderApplications();
     renderHomeApps();
+  }
+
+  async function refreshAnalyticsOnly() {
+    const sid = studentId();
+    if (!sid) return;
+    try {
+      const res = await fetch(`${API}/api/students/analytics/${sid}`);
+      const data = await res.json();
+      if (data.success && data.stats) analyticsStats = data.stats;
+    } catch (e) {
+      // Keep UI usable even if analytics refresh fails.
+      console.error(e);
+    }
+  }
+
+  function redrawHomeCharts() {
+    // Home charts are currently drawn once; after analytics changes, we must destroy and redraw.
+    ['chart-home-activity', 'chart-home-pkg', 'chart-home-branch'].forEach(destroyChart);
+    homeChartsDrawn = false;
+    renderHomeCharts();
+  }
+
+  async function refreshJobsOnly() {
+    try {
+      const skills = studentProfile?.skills || [];
+      const jobsRes = await fetch(`${API}/api/jobs`);
+      const jobsData = await jobsRes.json();
+      const nextJobs = (jobsData.jobs || []).map((j) => mapApiJob(j, skills));
+
+      const appliedIds = new Set((applications || []).map((a) => a.jobId).filter(Boolean));
+      nextJobs.forEach((j) => {
+        j.applied = appliedIds.has(j.id);
+        j.saved = savedJobIds.has(j.id);
+      });
+
+      jobs = nextJobs;
+      renderAllJobTabs();
+      filterJobs();
+      renderHomeJobs();
+      updateStatsUI();
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   function renderHomeJobs() {
@@ -1509,6 +1560,11 @@
     }
 
     setTimeout(renderHomeCharts, 120);
+
+    // Keep job visibility in sync after TPO approvals without requiring manual reload.
+    setInterval(() => {
+      if (document.visibilityState === 'visible') refreshJobsOnly();
+    }, 25000);
 
     document.addEventListener('click', (e) => {
       const panel = document.getElementById('notif-panel');
