@@ -195,7 +195,7 @@ const postJob = async (req, res) => {
       safeCompanyName = company.companyName || 'Company';
     }
 
-    const newJob = await Job.create({
+    const payload = {
       companyId,
       companyName: safeCompanyName,
       title: String(title).trim(),
@@ -210,7 +210,31 @@ const postJob = async (req, res) => {
       deadline,
       status: status || 'Active',
       tpoApproval: 'pending'
-    });
+    };
+
+    let newJob;
+    try {
+      newJob = await Job.create(payload);
+    } catch (err) {
+      const isLegacyIdIndexDup =
+        err &&
+        err.code === 11000 &&
+        ((err.keyPattern && err.keyPattern.id) ||
+          (typeof err.message === 'string' && err.message.includes('index:id_1')));
+
+      if (!isLegacyIdIndexDup) throw err;
+
+      // Self-heal: remove legacy unique index on "id" and retry once.
+      try {
+        await Job.collection.dropIndex('id_1');
+      } catch (dropErr) {
+        const indexMissing =
+          dropErr && (dropErr.codeName === 'IndexNotFound' || /index not found/i.test(dropErr.message || ''));
+        if (!indexMissing) throw dropErr;
+      }
+
+      newJob = await Job.create(payload);
+    }
     res.status(201).json({ success: true, message: 'Job submitted for TPO approval', job: newJob });
   } catch (error) {
     console.error('Post Job Error:', error);
