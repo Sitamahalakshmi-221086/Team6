@@ -9,7 +9,8 @@ const router = express.Router();
 
 const Company = require('./models/Company');
 const Student = require('./models/Student');
-const TPO     = require('./models/TPO');
+const TPO     = require('./models/Admin');
+
 
 const {
   GOOGLE_CLIENT_ID,
@@ -90,23 +91,28 @@ async function findOrCreateOAuthUser(profile, provider, role) {
 /* ================================================================
    GOOGLE STRATEGY
    ================================================================ */
-passport.use(new GoogleStrategy(
-  {
-    clientID:          GOOGLE_CLIENT_ID,
-    clientSecret:      GOOGLE_CLIENT_SECRET,
-    callbackURL:       `${CALLBACK_BASE}/auth/google/callback`,
-    passReqToCallback: true,
-  },
-  async (req, accessToken, refreshToken, profile, done) => {
-    try {
-      const role = req.query.state || 'student';
-      const { user, isNewUser } = await findOrCreateOAuthUser(profile, 'google', role);
-      done(null, { user, role, isNewUser });
-    } catch (err) {
-      done(err);
+if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET) {
+  passport.use(new GoogleStrategy(
+    {
+      clientID:          GOOGLE_CLIENT_ID,
+      clientSecret:      GOOGLE_CLIENT_SECRET,
+      callbackURL:       `${CALLBACK_BASE}/auth/google/callback`,
+      passReqToCallback: true,
+    },
+    async (req, accessToken, refreshToken, profile, done) => {
+      try {
+        const role = req.query.state || 'student';
+        const { user, isNewUser } = await findOrCreateOAuthUser(profile, 'google', role);
+        done(null, { user, role, isNewUser });
+      } catch (err) {
+        done(err);
+      }
     }
-  }
-));
+  ));
+} else {
+  console.warn('⚠️ Google OAuth credentials missing. Google Login will not work.');
+}
+
 
 /* ================================================================
    ROUTES
