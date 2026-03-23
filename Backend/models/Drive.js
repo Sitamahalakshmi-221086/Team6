@@ -34,7 +34,7 @@ const driveSchema = new mongoose.Schema({
   },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'TPO',
+    ref: 'Admin',
     required: false
   },
   createdAt: {

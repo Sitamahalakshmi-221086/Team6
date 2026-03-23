@@ -226,9 +226,9 @@ async function doLogin(role, event) {
 
   try {
     const apiMap = {
-      student: 'http://localhost:5000/api/students/login',
-      company: 'http://localhost:5000/api/companies/login',
-      tpo: 'http://localhost:5000/api/tpo/login'
+      student: 'http://localhost:5001/api/students/login',
+      company: 'http://localhost:5001/api/companies/login',
+      tpo: 'http://localhost:5001/api/tpo/login'
     };
 
     if (apiMap[role]) {

@@ -1,4 +1,4 @@
-const TPO = require('../models/TPO');
+const Admin = require('../models/Admin');
 const Notice = require('../models/Notice');
 const Drive = require('../models/Drive');
 const Job = require('../models/Job');
@@ -208,7 +208,7 @@ const updateTPOProfile = async (req, res) => {
     // Prevent password update through this endpoint for safety
     delete updates.password;
 
-    const tpo = await TPO.findByIdAndUpdate(id, updates, { new: true }).select('-password');
+    const tpo = await Admin.findByIdAndUpdate(id, updates, { new: true }).select('-password');
     if (!tpo) return res.status(404).json({ success: false, message: 'TPO not found' });
 
     res.status(200).json({ success: true, message: 'Profile updated successfully', tpo });
@@ -220,7 +220,7 @@ const updateTPOProfile = async (req, res) => {
 
 const getTPOProfile = async (req, res) => {
   try {
-    const tpo = await TPO.findById(req.params.id).select('-password');
+    const tpo = await Admin.findById(req.params.id).select('-password');
     if (!tpo) return res.status(404).json({ success: false, message: 'TPO not found' });
     res.status(200).json({ success: true, tpo });
   } catch (err) {

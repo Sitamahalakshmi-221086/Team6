@@ -4,7 +4,7 @@ if (sessionStorage.getItem('isLoggedIn') !== 'true' || sessionStorage.getItem('u
 }
 
 // ─── JOB DATA (loaded from API) ───
-    const API_JOBS = 'http://localhost:5000/api/jobs';
+    const API_JOBS = 'http://localhost:5001/api/jobs';
     let JOBS = [];
 
     let appliedJobs = new Set();
@@ -249,7 +249,7 @@ if (sessionStorage.getItem('isLoggedIn') !== 'true' || sessionStorage.getItem('u
       const job = JOBS.find((x) => String(x.id) === String(id));
       if (!sid || !job) return;
       try {
-        const res = await fetch('http://localhost:5000/api/applications/apply', {
+        const res = await fetch('http://localhost:5001/api/applications/apply', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ studentId: sid, jobId: id })

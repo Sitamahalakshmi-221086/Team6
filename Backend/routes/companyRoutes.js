@@ -10,7 +10,8 @@ const {
   getCompanyDrives,
   getJobApplications,
   updateApplicationStatus,
-  getCompanyStats
+  getCompanyStats,
+  createCompanyDrive
 } = require('../controllers/companyController');
 
 // POST /api/companies/signup
@@ -40,5 +41,6 @@ router.get('/applications/:jobId', getJobApplications);
 
 // PUT /api/companies/application-status/:applicationId
 router.put('/application-status/:applicationId', updateApplicationStatus);
+router.post('/create-drive', createCompanyDrive);
 
 module.exports = router;

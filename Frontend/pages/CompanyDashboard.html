@@ -56,18 +56,80 @@
       gap: 12px;
       animation: fadeIn .4s ease both;
     }
-    .cac-icon { width: 36px; height: 36px; background: #fff; color: var(--P); border-radius: 10px; display: grid; place-items: center; }
-    .cac-top { font-size: 10px; font-weight: 700; text-transform: uppercase; opacity: 0.8; }
-    .cac-sub { font-size: 11px; opacity: 0.7; }
 
-    .hiring-steps { display: flex; flex-direction: column; gap: 8px; }
-    .hstep { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--txm); }
-    .hnum { width: 22px; height: 22px; background: var(--PL); color: var(--P); border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 800; }
+    .cac-icon {
+      width: 36px;
+      height: 36px;
+      background: #fff;
+      color: var(--P);
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+    }
 
-    .vibe-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
-    .vibe-card { padding: 10px; background: var(--bgs); border: 1px solid var(--brs); border-radius: var(--rs); font-size: 12.5px; }
+    .cac-top {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    .cac-sub {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+
+    .hiring-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .hstep {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--txm);
+    }
+
+    .hnum {
+      width: 22px;
+      height: 22px;
+      background: var(--PL);
+      color: var(--P);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .vibe-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .vibe-card {
+      padding: 10px;
+      background: var(--bgs);
+      border: 1px solid var(--brs);
+      border-radius: var(--rs);
+      font-size: 12.5px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
 
     body.dark {
       --bg: #051009;
@@ -2084,7 +2146,8 @@
           <span class="rdot"></span>
         </div>
         <div class="icon-btn" onclick="toggleDarkMode()" id="top-dark-toggle">
-          <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
           </svg>
         </div>
@@ -2105,13 +2168,18 @@
             <div class="greet-hi" id="greet-msg">Welcome, <span id="company-name-span">Company</span> 👋</div>
             <div class="greet-sub" id="greet-sub-text">Loading your dashboard stats...</div>
             <div class="co-action-card">
-              <div class="cac-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+              <div class="cac-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg></div>
               <div class="cac-info">
                 <div class="cac-top">Upcoming Action</div>
                 <div class="cac-main"><strong>JNTU Campus Drive</strong> Preparation</div>
                 <div class="cac-sub">Mar 18 · Ensure all student assessments are ready.</div>
               </div>
-              <button class="btn sm" onclick="go('drives',document.querySelector('.nl[onclick*=drives]'))" style="margin-left:auto;background:#fff;color:var(--P);">Manage Drive</button>
+              <button class="btn sm" onclick="go('drives',document.querySelector('.nl[onclick*=drives]'))"
+                style="margin-left:auto;background:#fff;color:var(--P);">Manage Drive</button>
             </div>
           </div>
           <div class="greet-right">
@@ -2440,7 +2508,8 @@
         </div>
         <div class="tab-panel on" id="jt-active">
           <div class="card" style="padding:0;">
-            <div class="tbl-head job-grid"><span>Role & Location</span><span>Type</span><span>Applicants</span><span>Deadline</span><span>Status</span></div>
+            <div class="tbl-head job-grid"><span>Role &
+                Location</span><span>Type</span><span>Applicants</span><span>Deadline</span><span>Status</span></div>
             <div id="active-jobs-list">
               <!-- Active jobs will be injected here -->
             </div>
@@ -2448,16 +2517,17 @@
         </div>
         <div class="tab-panel" id="jt-closed">
           <div class="card" style="padding:0;">
-            <div class="tbl-head job-grid"><span>Role & Location</span><span>Type</span><span>Applicants</span><span>Closed On</span><span>Status</span></div>
+            <div class="tbl-head job-grid"><span>Role &
+                Location</span><span>Type</span><span>Applicants</span><span>Closed On</span><span>Status</span></div>
             <div id="closed-jobs-list">
               <!-- Closed jobs will be injected here -->
             </div>
           </div>
         </div>
         <div class="tab-panel" id="jt-draft">
-            <div id="draft-jobs-list">
-              <!-- Draft jobs will be injected here -->
-            </div>
+          <div id="draft-jobs-list">
+            <!-- Draft jobs will be injected here -->
+          </div>
         </div>
       </div><!-- /pg-jobs -->
 
@@ -2482,7 +2552,8 @@
         </div>
         <div class="tab-panel on" id="at-all">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Status</span></div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
+                CGPA</span><span>Status</span></div>
             <div id="all-applicants-list">
               <!-- All applicants will be injected here -->
             </div>
@@ -2490,25 +2561,29 @@
         </div>
         <div class="tab-panel" id="at-new">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Action</span></div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
+                CGPA</span><span>Action</span></div>
             <div id="new-applicants-list"></div>
           </div>
         </div>
         <div class="tab-panel" id="at-short">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Action</span></div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
+                CGPA</span><span>Action</span></div>
             <div id="shortlisted-applicants-list"></div>
           </div>
         </div>
         <div class="tab-panel" id="at-interview">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Action</span></div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
+                CGPA</span><span>Action</span></div>
             <div id="interview-applicants-list"></div>
           </div>
         </div>
         <div class="tab-panel" id="at-hired">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Status</span></div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
+                CGPA</span><span>Status</span></div>
             <div id="hired-applicants-list"></div>
           </div>
         </div>
@@ -2539,8 +2614,10 @@
           <div style="font-weight:700;margin-bottom:10px;">Submit campus drive request</div>
           <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;">
             <div class="fg"><label>Date</label><input type="date" id="co-drive-date" /></div>
-            <div class="fg" style="min-width:160px;"><label>Roles</label><input id="co-drive-roles" placeholder="e.g. SDE, Analyst" /></div>
-            <div class="fg" style="min-width:160px;"><label>Eligibility</label><input id="co-drive-elig" placeholder="e.g. CGPA 7+" /></div>
+            <div class="fg" style="min-width:160px;"><label>Roles</label><input id="co-drive-roles"
+                placeholder="e.g. SDE, Analyst" /></div>
+            <div class="fg" style="min-width:160px;"><label>Eligibility</label><input id="co-drive-elig"
+                placeholder="e.g. CGPA 7+" /></div>
             <button class="btn" type="button" onclick="submitDriveRequest()">Submit</button>
           </div>
         </div>
@@ -2588,7 +2665,7 @@
             </div>
           </div>
           <!-- Name + email + tags below banner on white -->
-            <div class="cph-nameblock">
+          <div class="cph-nameblock">
             <div class="cph-name" id="pg-coname">—</div>
             <div class="cph-email" id="pg-coemail">—</div>
             <div class="cph-tags">
@@ -2706,7 +2783,9 @@
                 <div id="cp-about-text" style="font-size:13px;line-height:1.65;color:var(--txmu);">—</div>
               </div>
               <div style="margin-top:18px;">
-                <div style="font-size:10.5px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">Hiring Process</div>
+                <div
+                  style="font-size:10.5px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">
+                  Hiring Process</div>
                 <div class="hiring-steps">
                   <div class="hstep"><span class="hnum">1</span><span>Application Screen</span></div>
                   <div class="hstep"><span class="hnum">2</span><span>Aptitude Test</span></div>
@@ -2730,8 +2809,7 @@
                 <div class="fg"><label>Headquarters</label><input id="headquarters-input" value="" /></div>
                 <div class="fg"><label>Website</label><input id="website-input" value="" /></div>
                 <div class="fg"><label>HR Email</label><input id="hr-email-input" value="" /></div>
-                <div class="fg full"><label>About</label><textarea id="about-input"
-                    style="min-height:80px;"></textarea>
+                <div class="fg full"><label>About</label><textarea id="about-input" style="min-height:80px;"></textarea>
                 </div>
               </div>
               <div style="display:flex;gap:8px;margin-top:14px;">
@@ -2752,21 +2830,27 @@
               <div style="display:flex;flex-direction:column;gap:8px;">
                 <div
                   style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 12px;background:var(--bgs);border-radius:var(--rs);border:1px solid var(--brs);">
-                  <span>JNTU Hyderabad</span><span class="pill active">Active</span></div>
+                  <span>JNTU Hyderabad</span><span class="pill active">Active</span>
+                </div>
                 <div
                   style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 12px;background:var(--bgs);border-radius:var(--rs);border:1px solid var(--brs);">
-                  <span>Osmania University</span><span class="pill active">Active</span></div>
+                  <span>Osmania University</span><span class="pill active">Active</span>
+                </div>
                 <div
                   style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 12px;background:var(--bgs);border-radius:var(--rs);border:1px solid var(--brs);">
-                  <span>NIT Warangal</span><span class="pill pending">Pending</span></div>
+                  <span>NIT Warangal</span><span class="pill pending">Pending</span>
+                </div>
                 <div
                   style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 12px;background:var(--bgs);border-radius:var(--rs);border:1px solid var(--brs);">
-                  <span>VIT Chennai</span><span class="pill active">Active</span></div>
+                  <span>VIT Chennai</span><span class="pill active">Active</span>
+                </div>
               </div>
             </div>
             <!-- Hiring pipeline mini chart -->
             <div class="db" style="margin-bottom:14px;">
-              <div class="db-title"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Company Vibe</div>
+              <div class="db-title"><svg viewBox="0 0 24 24">
+                  <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                </svg>Company Vibe</div>
               <div class="vibe-grid">
                 <div class="vibe-card">🚀 <strong>Innovation</strong> Focus</div>
                 <div class="vibe-card">🏠 <strong>Hybrid</strong> Friendly</div>
@@ -3000,7 +3084,7 @@
 
   <script>
     const TITLES = { home: 'Dashboard', jobs: 'Job Postings', candidates: 'Applicants', drives: 'Campus Drives', profile: 'Company Profile', stats: 'Analytics', settings: 'Settings' };
-    const API_ROOT = (window.CAMPUS_API_BASE || sessionStorage.getItem('CAMPUS_API_BASE') || 'http://localhost:5000').replace(/\/$/, '');
+    const API_ROOT = (window.CAMPUS_API_BASE || sessionStorage.getItem('CAMPUS_API_BASE') || 'http://localhost:5001').replace(/\/$/, '');
 
     const companyId = sessionStorage.getItem('companyId') || sessionStorage.getItem('cp_company_id');
     const companyName = sessionStorage.getItem('companyName') || sessionStorage.getItem('cp_company_name') || 'Company';
@@ -3028,32 +3112,62 @@
     });
 
     // ── SIDEBAR COLLAPSE ──
-    let sidebarOpen = true;
-    function toggleSidebar() {
-      sidebarOpen = !sidebarOpen;
-      document.getElementById('sidebar').classList.toggle('collapsed', !sidebarOpen);
-      document.getElementById('main-content').classList.toggle('expanded', !sidebarOpen);
-      document.getElementById('logo-mark').style.transform = sidebarOpen ? 'rotate(0deg)' : 'rotate(180deg)';
-    }
-
-    // ── NAV ──
-    const TITLES = {
-      home: 'Dashboard', jobs: 'Job Postings', candidates: 'Applicants',
-      drives: 'Campus Drives', profile: 'Company Profile', settings: 'Settings'
-    };
-
     function go(id, btn) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
       document.querySelectorAll('.nl').forEach(n => n.classList.remove('on'));
-      document.getElementById('pg-' + id).classList.add('on');
+      const pg = document.getElementById('pg-' + id);
+      if (pg) pg.classList.add('on');
       if (btn) btn.classList.add('on');
       document.getElementById('tb-title').textContent = TITLES[id] || id;
-      document.getElementById('notif-panel').classList.remove('on');
+      const notif = document.getElementById('notif-panel');
+      if (notif) notif.classList.remove('on');
+      // If navigating to profile, ensure chart is rendered
+      if (id === 'profile') setTimeout(renderProfileChart, 100);
     }
 
-    document.getElementById('company-name-span').textContent = companyName;
-    document.getElementById('sb-uname').textContent = companyName;
-    document.getElementById('tb-name').textContent = companyName.split(' ')[0];
+    const tabGroups = { jt: ['active', 'closed', 'draft'], at: ['all', 'new', 'short', 'interview', 'hired'] };
+    function swtab(group, id, btn) {
+      if (tabGroups[group]) {
+        tabGroups[group].forEach(t => {
+          const el = document.getElementById(`${group}-${t}`);
+          if (el) el.classList.remove('on');
+        });
+      }
+      const tabsWrap = btn.closest('.tabs');
+      if (tabsWrap) {
+        tabsWrap.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+      }
+      const target = document.getElementById(`${group}-${id}`);
+      if (target) target.classList.add('on');
+      btn.classList.add('on');
+    }
+
+    function initDarkMode() {
+      const mode = localStorage.getItem('theme') || 'light';
+      if (mode === 'dark') {
+        document.body.classList.add('dark');
+        const toggle = document.getElementById('dark-mode-toggle');
+        if (toggle) toggle.checked = true;
+        const themeIcon = document.getElementById('theme-icon');
+        if (themeIcon) themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line>';
+      }
+    }
+
+    function toggleDarkMode(input) {
+      const isDark = document.body.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      const toggle = document.getElementById('dark-mode-toggle');
+      if (toggle && toggle !== input) toggle.checked = isDark;
+
+      const themeIcon = document.getElementById('theme-icon');
+      if (themeIcon) {
+        if (isDark) {
+          themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line>';
+        } else {
+          themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+        }
+      }
+    }
 
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('col');
@@ -3061,20 +3175,29 @@
     }
 
     function toggleNotif() {
-      document.getElementById('notif-panel').classList.toggle('on');
+      const panel = document.getElementById('notif-panel');
+      if (panel) panel.classList.toggle('on');
     }
 
     document.addEventListener('click', e => {
       const panel = document.getElementById('notif-panel');
-      if (panel.classList.contains('on') && !panel.contains(e.target) && !e.target.closest('[onclick*=toggleNotif]')) panel.classList.remove('on');
+      if (panel && panel.classList.contains('on') && !panel.contains(e.target) && !e.target.closest('[onclick*=toggleNotif]')) {
+        panel.classList.remove('on');
+      }
       const modal = document.getElementById('post-modal');
-      if (modal.classList.contains('on') && e.target === modal) modal.classList.remove('on');
+      if (modal && modal.classList.contains('on') && e.target === modal) {
+        modal.classList.remove('on');
+      }
     });
 
-    function closeOverlay(e, id) { if (e.target === document.getElementById(id)) document.getElementById(id).classList.remove('on'); }
+    function closeOverlay(e, id) {
+      const el = document.getElementById(id);
+      if (e.target === el) el.classList.remove('on');
+    }
 
     function toggleCpEdit() {
-      const v = document.getElementById('cp-view'), e = document.getElementById('cp-edit');
+      const v = document.getElementById('cp-view');
+      const e = document.getElementById('cp-edit');
       const editing = e.style.display !== 'none';
       v.style.display = editing ? 'block' : 'none';
       e.style.display = editing ? 'none' : 'block';
@@ -3278,11 +3401,11 @@
         Closed: document.getElementById('closed-jobs-list'),
         Draft: document.getElementById('draft-jobs-list')
       };
-      
+
       Object.values(containers).forEach(c => { if (c) c.innerHTML = ''; });
 
       if (!jobs || !jobs.length) {
-        ['active-jobs-list','closed-jobs-list','draft-jobs-list'].forEach(id => {
+        ['active-jobs-list', 'closed-jobs-list', 'draft-jobs-list'].forEach(id => {
           const c = document.getElementById(id);
           if (c) c.innerHTML = '<div style="padding:24px;text-align:center;color:var(--txmu);" class="empty-state">No jobs posted</div>';
         });
@@ -3388,11 +3511,11 @@
       const salary = modal.querySelector('input[placeholder*="LPA"]').value.trim();
       const location = modal.querySelector('input[placeholder*="Bangalore"]').value.trim();
       const deadline = modal.querySelector('input[type="date"]').value;
-      
+
       const skills = Array.from(modal.querySelectorAll('#skill-tags .tag'))
-        .map(t => t.textContent.replace('×','').trim())
+        .map(t => t.textContent.replace('×', '').trim())
         .filter(Boolean);
-      
+
       if (!title || !desc) {
         showToast('Title and Job Description are required.');
         return;
@@ -3433,42 +3556,6 @@
       } catch (err) { showToast('Server error'); }
     }
 
-    /* ── TABS & NAV ── */
-    const tabGroups = { jt: ['active', 'closed', 'draft'], at: ['all', 'new', 'short', 'interview', 'hired'] };
-    function swtab(group, id, btn) {
-      tabGroups[group].forEach(t => document.getElementById(`${group}-${t}`).classList.remove('on'));
-      btn.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-      document.getElementById(`${group}-${id}`).classList.add('on');
-      btn.classList.add('on');
-    }
-
-    // ── NOTIF ──
-    function toggleNotif() {
-      document.getElementById('notif-panel').classList.toggle('on');
-    }
-
-    document.addEventListener('click', e => {
-      const panel = document.getElementById('notif-panel');
-      if (!panel.contains(e.target) && !e.target.closest('.icon-btn')) {
-        panel.classList.remove('on');
-      }
-    });
-
-    // ── OVERLAY CLOSE ──
-    function closeOverlay(e, id) {
-      if (e.target === document.getElementById(id)) {
-        document.getElementById(id).classList.remove('on');
-      }
-    }
-
-    // ── COMPANY PROFILE EDIT ──
-    function toggleCpEdit() {
-      const v = document.getElementById('cp-view');
-      const e = document.getElementById('cp-edit');
-      const isEditing = e.style.display !== 'none';
-      v.style.display = isEditing ? 'block' : 'none';
-      e.style.display = isEditing ? 'none' : 'block';
-    }
 
     // ── TAGS ──
     function addCollegeTag(e) {
@@ -3527,7 +3614,7 @@
         try {
           await fetchDashboardStats();
           renderCharts();
-        } catch (e) {}
+        } catch (e) { }
       }, 25000);
     };
 
@@ -3614,7 +3701,7 @@
         type: 'bar',
         data: {
           labels: ['Applied', 'Reviewed', 'Shortlisted', 'Interview', 'Hired'],
-          datasets: [{ data: [24, 18, 9, 4, 3], backgroundColor: [P+'cc', T+'cc', A+'cc', G+'cc', PU+'cc'], borderRadius: 7 }]
+          datasets: [{ data: [24, 18, 9, 4, 3], backgroundColor: [P + 'cc', T + 'cc', A + 'cc', G + 'cc', PU + 'cc'], borderRadius: 7 }]
         },
         options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, scales: { x: { beginAtZero: true } } }
       });

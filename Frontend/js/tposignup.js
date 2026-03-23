@@ -4,7 +4,7 @@ let resendTimer = null;
 let generatedOtp = '';
 let otpExpiry = null;
 const OTP_TTL_MS = 10 * 60 * 1000;
-const API_BASE = 'http://127.0.0.1:5000';
+const API_BASE = 'http://localhost:5001';
 
 function generateOtp() {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -12,7 +12,7 @@ function generateOtp() {
 
     /* ✅ EmailJS — sends OTP directly from browser, no server needed */
     async function sendOtpEmail(toEmail, toName, otp) {
-  const res = await fetch('http://localhost:5000/send-email', {
+  const res = await fetch('http://localhost:5001/send-email', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email: toEmail, name: toName, otp: otp })

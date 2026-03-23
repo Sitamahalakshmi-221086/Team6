@@ -7,7 +7,9 @@ const {
   studentLogin,
   getStudentProfile,
   updateStudentProfile,
-  getStudentAnalytics
+  getStudentAnalytics,
+  sendPasswordResetEmail,
+  startTest
 } = require('../controllers/studentController');
 
 // Multer Storage Configuration
@@ -34,5 +36,7 @@ router.post('/login', studentLogin);
 router.get('/profile/:id', getStudentProfile);
 router.put('/profile/:id', updateStudentProfile);
 router.get('/analytics/:id', getStudentAnalytics);
+router.post('/forgot-password', sendPasswordResetEmail);
+router.post('/start-test', startTest);
 
 module.exports = router;

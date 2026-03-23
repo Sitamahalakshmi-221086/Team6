@@ -8,10 +8,6 @@ const path = require('path');
 
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 const connectDB = require('./config/db');
-const path = require('path');
-
-// Load environment variables
-dotenv.config();
 
 // Connect to Database
 connectDB();
@@ -29,13 +25,14 @@ app.use(express.static(path.resolve(__dirname, '..', 'Frontend'))); // Serve fro
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
-const studentRoutes = require('./routes/studentRoutes');
-const companyRoutes = require('./routes/companyRoutes');
-const tpoRoutes = require('./routes/tpoRoutes');
+app.use('/api/students', require('./routes/studentRoutes'));
+app.use('/api/companies', require('./routes/companyRoutes'));
+app.use('/api/tpo', require('./routes/tpoRoutes'));
+app.use('/api/jobs', require('./routes/jobsRoutes'));
+app.use('/api/drives', require('./routes/drivesPublicRoutes'));
+app.use('/api/applications', require('./routes/applicationRoutes'));
+app.use('/', require('./passport-oauth'));
 
-app.use('/api/students', studentRoutes);
-app.use('/api/companies', companyRoutes);
-app.use('/api/tpos', tpoRoutes);
 
 // Email Transporter
 const transporter = nodemailer.createTransport({
@@ -46,13 +43,6 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Routes
-app.use('/api/students', require('./routes/studentRoutes'));
-app.use('/api/companies', require('./routes/companyRoutes'));
-app.use('/api/tpo', require('./routes/tpoRoutes'));
-app.use('/api/jobs', require('./routes/jobsRoutes'));
-app.use('/api/drives', require('./routes/drivesPublicRoutes'));
-app.use('/api/applications', require('./routes/applicationRoutes'));
 
 // OTP Email Route
 app.post("/send-email", async (req, res) => {

@@ -1,6 +1,6 @@
 /* global Chart, lucide, showEmpty, CAMPUS_API_BASE */
 (function () {
-  const API = typeof CAMPUS_API_BASE !== 'undefined' ? CAMPUS_API_BASE : 'http://localhost:5000';
+  const API = typeof CAMPUS_API_BASE !== 'undefined' ? CAMPUS_API_BASE : 'http://localhost:5001';
 
   let jobs = [];
   let applications = [];

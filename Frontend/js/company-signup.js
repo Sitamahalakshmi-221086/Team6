@@ -4,7 +4,7 @@ let selectedRole = 'company';
 let resendTimer = null;
 
 // ── CONFIG ──
-const SERVER_URL = 'http://localhost:5000';
+const SERVER_URL = 'http://localhost:5001';
 
 // Store pending company data and OTP in memory
 // DB is only written AFTER OTP is verified

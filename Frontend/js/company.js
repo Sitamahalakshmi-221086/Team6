@@ -92,7 +92,7 @@
 
       try {
         const token = sessionStorage.getItem('cp_company_token');
-        const res = await fetch('http://localhost:5000/api/companies/profile', {
+        const res = await fetch('http://localhost:5001/api/companies/profile', {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

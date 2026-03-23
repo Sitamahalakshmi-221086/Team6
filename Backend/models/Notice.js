@@ -22,7 +22,7 @@ const noticeSchema = new mongoose.Schema({
   },
   postedBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'TPO',
+    ref: 'Admin',
     required: true
   },
   postedAt: {

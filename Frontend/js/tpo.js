@@ -879,7 +879,7 @@ document.addEventListener('click', e => {
 });
 
 // ── API INTEGRATION ──
-const API_ROOT = (window.CAMPUS_API_BASE || sessionStorage.getItem('CAMPUS_API_BASE') || 'http://localhost:5000').replace(/\/$/, '');
+const API_ROOT = (window.CAMPUS_API_BASE || sessionStorage.getItem('CAMPUS_API_BASE') || 'http://localhost:5001').replace(/\/$/, '');
 const API_BASE = `${API_ROOT}/api/tpo`;
 
 function getTpoId() {
