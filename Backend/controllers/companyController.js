@@ -4,6 +4,7 @@ const Application = require('../models/Application');
 const Student = require('../models/Student');
 const Drive = require('../models/Drive');
 const bcrypt = require('bcryptjs');
+const mongoose = require('mongoose');
 
 const companySignup = async (req, res) => {
   try {
@@ -174,14 +175,36 @@ const postJob = async (req, res) => {
       deadline,
       status
     } = req.body;
+
+    if (!companyId || !mongoose.Types.ObjectId.isValid(companyId)) {
+      return res.status(400).json({ success: false, message: 'Valid companyId is required' });
+    }
+    if (!title || !String(title).trim()) {
+      return res.status(400).json({ success: false, message: 'Job title is required' });
+    }
+    if (!description || !String(description).trim()) {
+      return res.status(400).json({ success: false, message: 'Job description is required' });
+    }
+
+    let safeCompanyName = (companyName || '').trim();
+    if (!safeCompanyName) {
+      const company = await Company.findById(companyId).select('companyName').lean();
+      if (!company) {
+        return res.status(404).json({ success: false, message: 'Company not found for provided companyId' });
+      }
+      safeCompanyName = company.companyName || 'Company';
+    }
+
     const newJob = await Job.create({
       companyId,
-      companyName,
-      title,
-      description,
-      requirements: Array.isArray(requirements) ? requirements : [],
+      companyName: safeCompanyName,
+      title: String(title).trim(),
+      description: String(description).trim(),
+      requirements: Array.isArray(requirements)
+        ? requirements.map((r) => String(r).trim()).filter(Boolean)
+        : [],
       salary: salary || packageCtc,
-      location,
+      location: location ? String(location).trim() : '',
       jobType,
       workMode,
       deadline,
@@ -191,7 +214,10 @@ const postJob = async (req, res) => {
     res.status(201).json({ success: true, message: 'Job submitted for TPO approval', job: newJob });
   } catch (error) {
     console.error('Post Job Error:', error);
-    res.status(500).json({ success: false, message: 'Internal Server Error' });
+    res.status(500).json({
+      success: false,
+      message: error?.message || 'Internal Server Error'
+    });
   }
 };
 

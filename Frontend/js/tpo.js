@@ -878,7 +878,8 @@ document.addEventListener('click', e => {
 });
 
 // ── API INTEGRATION ──
-const API_BASE = 'http://localhost:5000/api/tpo';
+const API_ROOT = (window.CAMPUS_API_BASE || sessionStorage.getItem('CAMPUS_API_BASE') || 'http://localhost:5000').replace(/\/$/, '');
+const API_BASE = `${API_ROOT}/api/tpo`;
 
 function getTpoId() {
     return sessionStorage.getItem('tpoId');
@@ -970,7 +971,7 @@ async function approveTPO(resourceType, id, btn) {
             btn.disabled = true;
             btn.textContent = '…';
         }
-        const res = await fetch(`http://localhost:5000/api/tpo/approve/${id}`, {
+        const res = await fetch(`${API_BASE}/approve/${id}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ resourceType })
@@ -1003,7 +1004,7 @@ async function rejectTPO(resourceType, id, btn) {
             btn.disabled = true;
             btn.textContent = '…';
         }
-        const res = await fetch(`http://localhost:5000/api/tpo/reject/${id}`, {
+        const res = await fetch(`${API_BASE}/reject/${id}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ resourceType })

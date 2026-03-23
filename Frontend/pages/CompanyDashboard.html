@@ -3000,9 +3000,10 @@
 
   <script>
     const TITLES = { home: 'Dashboard', jobs: 'Job Postings', candidates: 'Applicants', drives: 'Campus Drives', profile: 'Company Profile', stats: 'Analytics', settings: 'Settings' };
+    const API_ROOT = (window.CAMPUS_API_BASE || sessionStorage.getItem('CAMPUS_API_BASE') || 'http://localhost:5000').replace(/\/$/, '');
 
-    const companyId = sessionStorage.getItem('companyId');
-    const companyName = sessionStorage.getItem('companyName') || 'Company';
+    const companyId = sessionStorage.getItem('companyId') || sessionStorage.getItem('cp_company_id');
+    const companyName = sessionStorage.getItem('companyName') || sessionStorage.getItem('cp_company_name') || 'Company';
 
     if (!companyId || sessionStorage.getItem('userRole') !== 'company' || sessionStorage.getItem('isLoggedIn') !== 'true') {
       window.location.href = 'Login.html';
@@ -3091,7 +3092,7 @@
       const description = document.getElementById('about-input')?.value.trim();
 
       try {
-        const res = await fetch('http://localhost:5000/api/companies/profile', {
+        const res = await fetch(`${API_ROOT}/api/companies/profile`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, companyName: name, industry, companySize, address, website, description })
@@ -3112,7 +3113,7 @@
     /* ── DYNAMIC DATA FETCHING ── */
     async function fetchDashboardStats() {
       try {
-        const res = await fetch(`http://localhost:5000/api/companies/stats/${companyId}`);
+        const res = await fetch(`${API_ROOT}/api/companies/stats/${companyId}`);
         const data = await res.json();
         if (data.success) {
           const s = data.stats;
@@ -3140,7 +3141,7 @@
 
     async function fetchCompanyProfile() {
       try {
-        const res = await fetch(`http://localhost:5000/api/companies/profile/${companyId}`);
+        const res = await fetch(`${API_ROOT}/api/companies/profile/${companyId}`);
         const data = await res.json();
         if (data.success && data.company) {
           const c = data.company;
@@ -3199,7 +3200,7 @@
       const done = document.getElementById('company-drives-completed-list');
       if (!up || !done) return;
       try {
-        const res = await fetch(`http://localhost:5000/api/companies/drives/${companyId}`);
+        const res = await fetch(`${API_ROOT}/api/companies/drives/${companyId}`);
         const data = await res.json();
         if (!data.success || !data.drives || !data.drives.length) {
           up.innerHTML = '<p class="empty-state" style="padding:24px;text-align:center;color:var(--txmu);">No drives available</p>';
@@ -3242,7 +3243,7 @@
       const elig = document.getElementById('co-drive-elig')?.value?.trim() || '—';
       if (!date) { showToast('Pick a drive date'); return; }
       try {
-        const res = await fetch('http://localhost:5000/api/drives/create', {
+        const res = await fetch(`${API_ROOT}/api/drives/create`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -3265,7 +3266,7 @@
 
     async function fetchJobs() {
       try {
-        const res = await fetch(`http://localhost:5000/api/companies/jobs/${companyId}`);
+        const res = await fetch(`${API_ROOT}/api/companies/jobs/${companyId}`);
         const data = await res.json();
         if (data.success) {
           renderJobs(data.jobs);
@@ -3319,7 +3320,7 @@
       try {
         go('candidates', document.querySelector('.nl[onclick*=candidates]'));
         document.getElementById('tb-title').textContent = `Applicants for ${jobTitle}`;
-        const res = await fetch(`http://localhost:5000/api/companies/applications/${jobId}`);
+        const res = await fetch(`${API_ROOT}/api/companies/applications/${jobId}`);
         const data = await res.json();
         if (data.success) {
           renderApplicants(data.applications, 'all-applicants-list');
@@ -3366,7 +3367,7 @@
 
     async function updateAppStatus(appId, status) {
       try {
-        const res = await fetch(`http://localhost:5000/api/companies/application-status/${appId}`, {
+        const res = await fetch(`${API_ROOT}/api/companies/application-status/${appId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ status })
@@ -3382,25 +3383,31 @@
 
     async function handlePostJob() {
       const modal = document.getElementById('post-modal');
-      const title = modal.querySelector('input[placeholder*="Software"]').value;
-      const desc = modal.querySelector('textarea').value;
+      const title = modal.querySelector('input[placeholder*="Software"]').value.trim();
+      const desc = modal.querySelector('textarea').value.trim();
       const type = modal.querySelectorAll('select')[0].value;
       const workMode = modal.querySelectorAll('select')[1].value;
-      const salary = modal.querySelector('input[placeholder*="LPA"]').value;
-      const location = modal.querySelector('input[placeholder*="Bangalore"]').value;
+      const salary = modal.querySelector('input[placeholder*="LPA"]').value.trim();
+      const location = modal.querySelector('input[placeholder*="Bangalore"]').value.trim();
       const deadline = modal.querySelector('input[type="date"]').value;
       
-      const skills = Array.from(modal.querySelectorAll('#skill-tags .tag')).map(t => t.textContent.replace('×','').trim());
+      const skills = Array.from(modal.querySelectorAll('#skill-tags .tag'))
+        .map(t => t.textContent.replace('×','').trim())
+        .filter(Boolean);
       
       if (!title || !desc) {
         showToast('Title and Job Description are required.');
+        return;
+      }
+      if (!companyId) {
+        showToast('Session expired. Please log in again.');
         return;
       }
 
       try {
         const payload = {
           companyId,
-          companyName,
+          companyName: companyName || '',
           title,
           description: desc,
           jobType: type,
@@ -3410,12 +3417,12 @@
           requirements: skills
         };
         if (deadline) payload.deadline = deadline;
-        const res = await fetch('http://localhost:5000/api/jobs/create', {
+        const res = await fetch(`${API_ROOT}/api/jobs/create`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-        const data = await res.json();
+        const data = await res.json().catch(() => ({ success: false, message: 'Invalid server response' }));
         if (data.success) {
           showToast('Job submitted — pending TPO approval');
           modal.classList.remove('on');
@@ -3423,7 +3430,7 @@
           await fetchDashboardStats();
           renderCharts();
         } else {
-          showToast(data.message || 'Failed to submit job');
+          showToast(data.message || (res.ok ? 'Failed to submit job' : `Server error (${res.status})`));
         }
       } catch (err) { showToast('Server error'); }
     }
