@@ -3159,6 +3159,7 @@
             const el = document.querySelector(sel);
             if (el) el.textContent = val || '—';
           };
+          const hq = c.address || c.location || '';
           setP('#pg-coname', c.companyName);
           setP('#pg-coemail', c.email);
           const dg = document.querySelectorAll('#cp-view .df p');
@@ -3166,7 +3167,7 @@
             dg[0].textContent = c.companyName || '—';
             dg[1].textContent = c.industry || '—';
             dg[2].textContent = c.companySize || '—';
-            dg[3].textContent = c.address || '—';
+            dg[3].textContent = hq || '—';
             dg[4].textContent = c.website || '—';
             dg[5].textContent = c.email || '—';
           }
@@ -3180,7 +3181,7 @@
           const ain = document.getElementById('about-input');
           if (cin) cin.value = c.companyName || '';
           if (iin) iin.value = c.industry || '';
-          if (hin) hin.value = c.address || '';
+          if (hin) hin.value = hq || '';
           if (win) win.value = c.website || '';
           if (ein) ein.value = c.email || '';
           if (ain) ain.value = c.description || '';

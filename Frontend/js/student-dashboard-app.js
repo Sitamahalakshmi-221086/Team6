@@ -1318,9 +1318,13 @@
   window.toggleEdit = function () {
     const v = document.getElementById('profile-view');
     const e = document.getElementById('profile-edit');
+    if (!v || !e) return;
     const editing = e.style.display !== 'none';
     v.style.display = editing ? 'block' : 'none';
     e.style.display = editing ? 'none' : 'block';
+    if (!editing && e.style.display === 'block') {
+      e.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
   };
 
   function collectProfileSkillsFromEdit() {
@@ -1383,22 +1387,51 @@
     }
   };
 
-  window.toggleDarkMode = function (el) {
-    if (!el) el = document.getElementById('dark-mode-toggle');
-    if (!el) {
-      el = { checked: !document.body.classList.contains('dark') };
-      document.body.classList.toggle('dark');
+  function readDarkPreference() {
+    const cp = localStorage.getItem('cp_dark_mode');
+    if (cp === 'true') return true;
+    if (cp === 'false') return false;
+    return localStorage.getItem('theme') === 'dark';
+  }
+
+  function persistDarkPreference(isDark) {
+    localStorage.setItem('cp_dark_mode', isDark ? 'true' : 'false');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  }
+
+  function syncStudentThemeIcon(isDark) {
+    const icon = document.getElementById('theme-icon');
+    if (!icon) return;
+    if (isDark) {
+      icon.innerHTML =
+        '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line>';
     } else {
-      document.body.classList.toggle('dark', el.checked);
+      icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
     }
-    localStorage.setItem('cp_dark_mode', document.body.classList.contains('dark'));
+  }
+
+  /** Top bar: flips settings checkbox then applies; Settings: uses checkbox state (same as Company dashboard). */
+  window.toggleDarkMode = function (el) {
+    if (!el) {
+      el = document.getElementById('dark-mode-toggle');
+      if (el) el.checked = !el.checked;
+    }
+    if (el) {
+      document.body.classList.toggle('dark', el.checked);
+    } else {
+      document.body.classList.toggle('dark');
+    }
+    const isDark = document.body.classList.contains('dark');
+    persistDarkPreference(isDark);
+    syncStudentThemeIcon(isDark);
   };
 
   window.initDarkMode = function () {
-    const darkPref = localStorage.getItem('cp_dark_mode') === 'true';
+    const darkPref = readDarkPreference();
     const toggle = document.getElementById('dark-mode-toggle');
     if (toggle) toggle.checked = darkPref;
     document.body.classList.toggle('dark', darkPref);
+    syncStudentThemeIcon(darkPref);
   };
 
   window.renderAnalytics = function () {
