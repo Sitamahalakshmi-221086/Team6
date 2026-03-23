@@ -1,9 +1,9 @@
 // ── GLOBAL CONSTANTS ──
-const TITLES = { 
-    home: 'Dashboard', students: 'Students', companies: 'Companies', 
-    drives: 'Campus Drives', placements: 'Placements', 
-    analytics: 'Analytics', notices: 'Notice Board', 
-    reports: 'Reports', profile: 'My Profile', settings: 'Settings' 
+const TITLES = {
+    home: 'Dashboard', students: 'Students', companies: 'Companies',
+    drives: 'Campus Drives', placements: 'Placements',
+    analytics: 'Analytics', notices: 'Notice Board',
+    reports: 'Reports', profile: 'My Profile', settings: 'Settings'
 };
 
 const P = '#7c3aed', T = '#0aada0', G = '#16a34a', A = '#d97706', R = '#dc2626', B = '#1759d6';
@@ -14,14 +14,14 @@ const grid = 'rgba(124,58,237,0.07)', tick = {
     maxRotation: 0,
     minRotation: 0
 };
-const baseChartOptions = { 
-    responsive: true, 
-    maintainAspectRatio: false, 
-    plugins: { legend: { display: false } }, 
-    scales: { 
-        x: { grid: { color: grid }, ticks: { ...tick } }, 
-        y: { grid: { color: grid }, ticks: { ...tick }, beginAtZero: true } 
-    } 
+const baseChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+        x: { grid: { color: grid }, ticks: { ...tick } },
+        y: { grid: { color: grid }, ticks: { ...tick }, beginAtZero: true }
+    }
 };
 
 // ── INIT ──
@@ -38,14 +38,14 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (greetMsg) greetMsg.textContent = `${g}, ${nm.split(' ')[0]} 👋`;
 
     try {
-        const pr = await fetch(`${API_BASE}/profile/${getTpoId()}`);
+        const pr = await fetch(`${API_BASE}/api/tpo/profile/${getTpoId()}`);
         const pd = await pr.json();
         if (pd.success && pd.tpo) {
             applyTPOProfileToDOM(pd.tpo);
             const fn = pd.tpo.fullName || nm;
             if (greetMsg) greetMsg.textContent = `${g}, ${fn.split(' ')[0]} 👋`;
         }
-        const ar = await fetch(`${API_BASE}/analytics`);
+        const ar = await fetch(`${API_BASE}/api/tpo/analytics`);
         const ad = await ar.json();
         if (ad.success && ad.stats) {
             window.__tpoStats = ad.stats;
@@ -73,7 +73,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     window.__tpoHomePollTimer = setInterval(async () => {
         if (document.visibilityState !== 'visible') return;
         try {
-            const ar = await fetch(`${API_BASE}/analytics`);
+            const ar = await fetch(`${API_BASE}/api/tpo/analytics`);
             const ad = await ar.json();
             if (ad.success && ad.stats) {
                 window.__tpoStats = ad.stats;
@@ -91,7 +91,7 @@ window.addEventListener('DOMContentLoaded', async () => {
                 syncTPOProfileHeaderStats();
                 renderHomeChartsLive();
             }
-        } catch (e) {}
+        } catch (e) { }
     }, 25000);
     setTimeout(loadDrives, 150);
     setTimeout(() => {
@@ -100,6 +100,8 @@ window.addEventListener('DOMContentLoaded', async () => {
         loadTPOFullDrivesPage();
         loadTPOPlacementsPage();
         loadTPONotices();
+        loadNotifications();
+        renderOpenJobs(); // New feature
     }, 200);
 });
 
@@ -107,11 +109,11 @@ window.addEventListener('DOMContentLoaded', async () => {
 function go(id, btn) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
     document.querySelectorAll('.nl').forEach(n => n.classList.remove('on'));
-    
+
     const targetPage = document.getElementById('pg-' + id);
     if (targetPage) targetPage.classList.add('on');
     if (btn) btn.classList.add('on');
-    
+
     document.getElementById('tb-title').textContent = TITLES[id] || id;
     document.getElementById('notif-panel').classList.remove('on');
 
@@ -234,11 +236,11 @@ const tabGroups = { st: ['all', 'placed', 'active', 'unplaced'], ct: ['requests'
 function swtab(group, id, btn) {
     tabGroups[group].forEach(t => {
         const panel = document.getElementById(`${group}-${t}`);
-        if(panel) panel.classList.remove('on');
+        if (panel) panel.classList.remove('on');
     });
     btn.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
     const targetPanel = document.getElementById(`${group}-${id}`);
-    if(targetPanel) targetPanel.classList.add('on');
+    if (targetPanel) targetPanel.classList.add('on');
     btn.classList.add('on');
 }
 
@@ -251,7 +253,7 @@ function toggleDarkMode(el) {
     const isDark = el ? el.checked : document.body.classList.toggle('dark');
     document.body.classList.toggle('dark', isDark);
     localStorage.setItem('cp_dark_mode', isDark);
-    
+
     const icon = document.getElementById('theme-icon');
     if (icon) {
         if (isDark) {
@@ -307,7 +309,7 @@ function renderHomeChartsLive() {
         if (p && typeof Chart !== 'undefined' && Chart.getChart(p)) Chart.getChart(p).destroy();
         const b = document.getElementById('chart-home-branch');
         if (b && typeof Chart !== 'undefined' && Chart.getChart(b)) Chart.getChart(b).destroy();
-    } catch (e) {}
+    } catch (e) { }
 
     const s = window.__tpoStats || {};
     const sum = (s.totalStudents || 0) + (s.totalCompanies || 0) + (s.totalDrives || 0);
@@ -387,7 +389,7 @@ function destroyTPOAnalyticsCharts() {
     window.__tpoAnCharts.forEach((c) => {
         try {
             c.destroy();
-        } catch (e) {}
+        } catch (e) { }
     });
     window.__tpoAnCharts = [];
 }
@@ -581,7 +583,7 @@ async function loadTPOStudentsDirectory() {
     const unplaced = document.getElementById('tpo-st-unplaced-rows');
     if (!all) return;
     try {
-        const res = await fetch(`${API_BASE}/students`);
+        const res = await fetch(`${API_BASE}/api/tpo/students`);
         const data = await res.json();
         const list = data.success && data.students ? data.students : [];
         const c = { placed: 0, active: 0, unplaced: 0 };
@@ -602,8 +604,8 @@ async function loadTPOStudentsDirectory() {
                 st.category === 'placed'
                     ? '<span class="pill placed">Placed</span>'
                     : st.category === 'active'
-                      ? '<span class="pill active">In process</span>'
-                      : '<span class="pill closed">Not applied</span>';
+                        ? '<span class="pill active">In process</span>'
+                        : '<span class="pill closed">Not applied</span>';
             return `<div class="tbl-row g5">
               <div><div class="tbl-name">${st.fullName || '—'}</div><div class="tbl-sub">Roll: ${st.rollNumber || '—'}</div></div>
               <span style="font-size:12.5px;color:var(--txmu);">${st.branch || '—'} · ${st.year || '—'}</span>
@@ -638,22 +640,22 @@ async function loadTPOStudentsDirectory() {
 
         all.innerHTML = list.length
             ? list.map((st) => row(st)).join('')
-            : '<p class="empty-state" style="padding:24px;">No data available</p>';
+            : '<div style="padding:20px;text-align:center;color:var(--txmu);font-size:13px;">No students registered in the directory</div>';
         const plList = list.filter((x) => x.category === 'placed');
         const acList = list.filter((x) => x.category === 'active');
         const unList = list.filter((x) => x.category === 'unplaced');
         if (placed)
             placed.innerHTML = plList.length
                 ? plList.map(rowPlaced).join('')
-                : '<p class="empty-state" style="padding:24px;">No data available</p>';
+                : '<div style="padding:20px;text-align:center;color:var(--txmu);font-size:13px;">No students found in this category</div>';
         if (active)
             active.innerHTML = acList.length
                 ? acList.map(rowActive).join('')
-                : '<p class="empty-state" style="padding:24px;">No data available</p>';
+                : '<div style="padding:20px;text-align:center;color:var(--txmu);font-size:13px;">No students found in this category</div>';
         if (unplaced)
             unplaced.innerHTML = unList.length
                 ? unList.map(rowUn).join('')
-                : '<p class="empty-state" style="padding:24px;">No data available</p>';
+                : '<div style="padding:20px;text-align:center;color:var(--txmu);font-size:13px;">No students found in this category</div>';
     } catch (e) {
         console.error(e);
         all.innerHTML = '<p class="empty-state" style="padding:24px;">No data available</p>';
@@ -667,8 +669,8 @@ async function loadTPOCompaniesTabs() {
     const badge = document.getElementById('tpo-ct-req-badge');
     try {
         const [reqRes, coRes] = await Promise.all([
-            fetch(`${API_BASE}/requests`),
-            fetch(`${API_BASE}/companies-list`)
+            fetch(`${API_BASE}/api/tpo/requests`),
+            fetch(`${API_BASE}/api/tpo/companies-list`)
         ]);
         const reqData = await reqRes.json();
         const coData = await coRes.json();
@@ -679,7 +681,7 @@ async function loadTPOCompaniesTabs() {
 
         if (reqEl) {
             if (n === 0) {
-                reqEl.innerHTML = '<p class="empty-state" style="padding:24px;">No pending requests</p>';
+                reqEl.innerHTML = '<div style="padding:24px;text-align:center;color:var(--txmu);font-size:13px;">No pending job or drive requests</div>';
             } else {
                 let html = '';
                 pendingJ.forEach((j) => {
@@ -712,7 +714,7 @@ async function loadTPOCompaniesTabs() {
         if (apprEl) {
             if (!companies.length) {
                 apprEl.innerHTML =
-                    '<div class="tbl-head g4"><span>Company</span><span>Email</span><span>Industry</span><span>Status</span></div><p class="empty-state" style="padding:24px;">No data available</p>';
+                    '<div class="tbl-head g4"><span>Company</span><span>Email</span><span>Industry</span><span>Status</span></div><div style="padding:24px;text-align:center;color:var(--txmu);font-size:13px;">No registered companies yet</div>';
             } else {
                 let h =
                     '<div class="tbl-head g4"><span>Company</span><span>Email</span><span>Industry</span><span>Status</span></div>';
@@ -729,7 +731,7 @@ async function loadTPOCompaniesTabs() {
         }
         if (histEl) {
             histEl.innerHTML =
-                '<div class="tbl-head g4"><span>Company</span><span>Visited</span><span>Students Hired</span><span>Avg Package</span></div><p class="empty-state" style="padding:24px;">No data available</p>';
+                '<div class="tbl-head g4"><span>Company</span><span>Visited</span><span>Students Hired</span><span>Avg Package</span></div><div style="padding:24px;text-align:center;color:var(--txmu);font-size:13px;">No placement history available</div>';
         }
     } catch (e) {
         console.error(e);
@@ -744,7 +746,7 @@ async function loadTPOFullDrivesPage() {
     const ds3 = document.getElementById('tpo-ds-pkg');
     if (!up || !done) return;
     try {
-        const res = await fetch(`${API_BASE}/drives`);
+        const res = await fetch(`${API_BASE}/api/tpo/drives`);
         const data = await res.json();
         const drives = data.success && data.drives ? data.drives : [];
         const now = new Date();
@@ -765,12 +767,12 @@ async function loadTPOFullDrivesPage() {
         if (ds3) ds3.textContent = '—';
         up.innerHTML = upcoming.length
             ? upcoming.join('')
-            : '<p class="empty-state" style="padding:24px;">No drives available</p>';
+            : '<div style="padding:40px;text-align:center;color:var(--txmu);font-size:13px;border:1px dashed var(--br);border-radius:12px;margin:10px;">No upcoming drives scheduled</div>';
         done.innerHTML = completed.length
             ? completed.join('')
-            : '<p class="empty-state" style="padding:24px;">No drives available</p>';
+            : '<div style="padding:20px;text-align:center;color:var(--txmu);font-size:13px;">No past drives in history</div>';
     } catch (e) {
-        up.innerHTML = '<p class="empty-state" style="padding:24px;">No drives available</p>';
+        up.innerHTML = '<div style="padding:20px;text-align:center;color:var(--R);opacity:0.7;">Unable to load drives</div>';
         done.innerHTML = '';
     }
 }
@@ -779,7 +781,7 @@ async function loadTPOPlacementsPage() {
     const tb = document.getElementById('tpo-placements-tbody');
     if (!tb) return;
     try {
-        const res = await fetch(`${API_BASE}/placement-records`);
+        const res = await fetch(`${API_BASE}/api/tpo/placement-records`);
         const data = await res.json();
         const rows = data.success && data.records ? data.records : [];
         const set = (id, v) => {
@@ -824,28 +826,48 @@ async function loadTPONotices() {
     const past = document.getElementById('tpo-notices-past');
     if (!act) return;
     try {
-        const res = await fetch(`${API_BASE}/notices`);
+        const res = await fetch(`${API_BASE}/api/notices`);
         const data = await res.json();
         const list = data.success && data.notices ? data.notices : [];
-        if (!list.length) {
-            act.innerHTML = '<p class="empty-state" style="padding:24px;">No notices posted yet</p>';
-            if (past) past.innerHTML = '<p class="empty-state" style="padding:24px;">No data available</p>';
-            return;
-        }
-        act.innerHTML = list
-            .slice(0, 15)
-            .map(
-                (n) => `<div class="notice-row"><span class="notice-dot" style="background:var(--P);"></span>
+
+        const now = new Date();
+        const activeList = list.filter(n => !n.postedAt || (now - new Date(n.postedAt)) < (7 * 24 * 60 * 60 * 1000));
+        const archivedList = list.filter(n => n.postedAt && (now - new Date(n.postedAt)) >= (7 * 24 * 60 * 60 * 1000));
+
+        const renderNotice = (n) => `<div class="notice-row"><span class="notice-dot" style="background:var(--P);"></span>
             <div style="flex:1;">
               <div style="font-size:13.5px;font-weight:600;margin-bottom:3px;">${n.title || ''}</div>
               <div class="notice-body">${n.content || ''}</div>
               <div class="notice-time">${n.department || ''} · ${n.postedAt ? new Date(n.postedAt).toLocaleString() : ''}</div>
-            </div></div>`
-            )
-            .join('');
-        if (past) past.innerHTML = '<p class="empty-state" style="padding:24px;">No archived notices</p>';
+            </div></div>`;
+
+        if (!activeList.length) {
+            act.innerHTML = '<div style="padding:32px;text-align:center;color:var(--txmu);font-size:13px;border:1px dashed var(--br);border-radius:12px;margin:10px;">No active notices at the moment</div>';
+        } else {
+            act.innerHTML = activeList.map(renderNotice).join('');
+        }
+
+        if (past) {
+            if (!archivedList.length) {
+                past.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txmu);font-size:13px;">Notice archives are empty</div>';
+            } else {
+                past.innerHTML = archivedList.map(renderNotice).join('');
+            }
+        }
     } catch (e) {
-        act.innerHTML = '<p class="empty-state" style="padding:24px;">No data available</p>';
+        act.innerHTML = '<div style="padding:20px;text-align:center;color:var(--R);opacity:0.7;">Notice board unavailable</div>';
+    }
+}
+
+async function loadNotifications() {
+    const list = document.getElementById('tpo-notifications-list');
+    if (!list) return;
+
+    // For now, we simulate an empty state or use static items.
+    const hasNotifications = list.children.length > 0;
+
+    if (!hasNotifications) {
+        list.innerHTML = '<div style="padding:24px;text-align:center;color:var(--txmu);font-size:12px;font-weight:500;">No new notifications</div>';
     }
 }
 
@@ -890,7 +912,7 @@ async function postNoticeData() {
     const dept = document.getElementById('notice-dept').value;
     const content = document.getElementById('notice-content').value;
 
-    if(!title || !content) return showToast('Please fill required fields');
+    if (!title || !content) return showToast('Please fill required fields');
 
     try {
         const res = await fetch(`${API_BASE}/notices`, {
@@ -899,7 +921,7 @@ async function postNoticeData() {
             body: JSON.stringify({ title, department: dept || 'General', priority: 'Normal', content, tpoId: getTpoId() })
         });
         const data = await res.json();
-        if(data.success) {
+        if (data.success) {
             closeModal('notice-modal');
             showToast('Notice posted successfully!');
             document.getElementById('notice-title').value = '';
@@ -919,7 +941,7 @@ async function scheduleDriveData() {
     const roles = document.getElementById('drive-roles').value || 'Not specified';
     const eligibility = document.getElementById('drive-eligibility').value || 'Any';
 
-    if(!companyName || !date) return showToast('Please fill company and date');
+    if (!companyName || !date) return showToast('Please fill company and date');
 
     try {
         const res = await fetch(`${API_BASE}/drives`, {
@@ -928,7 +950,7 @@ async function scheduleDriveData() {
             body: JSON.stringify({ companyName, date, eligibility, roles, tpoId: getTpoId() })
         });
         const data = await res.json();
-        if(data.success) {
+        if (data.success) {
             closeModal('drive-modal');
             showToast('Drive scheduled successfully!');
             if (typeof loadDrives === 'function') setTimeout(loadDrives, 500);
@@ -947,7 +969,7 @@ async function approveDriveData(id, btn) {
         btn.disabled = true;
         const res = await fetch(`${API_BASE}/drives/${id}/approve`, { method: 'PUT' });
         const data = await res.json();
-        
+
         if (data.success) {
             btn.textContent = 'Approved';
             btn.classList.replace('green', 'sec');
@@ -1111,7 +1133,7 @@ async function loadDrives() {
             }
         }
 
-        const res = await fetch(`${API_BASE}/drives`);
+        const res = await fetch(`${API_BASE}/api/tpo/drives`);
         const data = await res.json();
         if (data.success && approvedContainer) {
             const approved = (data.drives || []).filter((d) => d.status === 'Approved');
@@ -1158,7 +1180,7 @@ async function sendReminderData(studentName, email, btn) {
             })
         });
         const data = await res.json();
-        if(data.success) {
+        if (data.success) {
             btn.textContent = 'Sent';
             showToast(`Reminder sent to ${studentName}`);
         } else {
@@ -1198,7 +1220,7 @@ async function saveTPOProfile() {
             body: JSON.stringify(updates)
         });
         const data = await res.json();
-        
+
         if (data.success && data.tpo) {
             showToast('Profile updated successfully!');
             applyTPOProfileToDOM(data.tpo);
@@ -1210,4 +1232,116 @@ async function saveTPOProfile() {
         showToast('Network error');
         console.error(err);
     }
+}
+
+// ════════════════════════════════
+// ── OPEN JOBS ENGINE (CareerSpace) ──
+// ════════════════════════════════
+const OPEN_JOBS = [
+    { id: 1, logo: '🔵', co: 'Google', title: 'Software Engineer Intern', ctc: '₹20 LPA', type: 'Full Time', mode: 'Online', branches: ['CSE', 'IT'], cgpa: '7.5', dl: 'Apr 10', skills: ['DSA', 'System Design', 'Python'], shortlisted: false, outreachSent: false },
+    { id: 2, logo: '🟠', co: 'Amazon', title: 'Data Analyst', ctc: '₹18 LPA', type: 'Full Time', mode: 'Online', branches: ['CSE', 'IT', 'EEE'], cgpa: '7.0', dl: 'Apr 8', skills: ['SQL', 'Python', 'Tableau'], shortlisted: true, outreachSent: false },
+    { id: 3, logo: '🟣', co: 'Razorpay', title: 'Backend Engineer', ctc: '₹18 LPA', type: 'Full Time', mode: 'Online', branches: ['CSE', 'IT'], cgpa: '7.0', dl: 'Apr 15', skills: ['Node.js', 'Java', 'MongoDB'], shortlisted: true, outreachSent: true },
+    { id: 4, logo: '🔴', co: 'Zomato', title: 'Frontend Developer Intern', ctc: '₹8 LPA', type: 'Internship', mode: 'Remote', branches: ['CSE', 'IT', 'ECE'], cgpa: '6.0', dl: 'Apr 5', skills: ['React', 'TypeScript', 'CSS'], shortlisted: true, outreachSent: false },
+    { id: 5, logo: '🟤', co: 'Flipkart', title: 'ML Engineer', ctc: '₹22 LPA', type: 'Full Time', mode: 'Online', branches: ['CSE', 'IT'], cgpa: '8.0', dl: 'Apr 20', skills: ['Python', 'TensorFlow', 'Pandas'], shortlisted: false, outreachSent: false },
+    { id: 6, logo: '🟢', co: 'Infosys', title: 'Cloud Engineer', ctc: '₹16 LPA', type: 'Full Time', mode: 'Online', branches: ['All'], cgpa: '6.0', dl: 'Apr 12', skills: ['AWS', 'DevOps', 'Linux'], shortlisted: false, outreachSent: true },
+    { id: 7, logo: '🔷', co: 'Swiggy', title: 'Full Stack Developer', ctc: '₹14 LPA', type: 'Full Time', mode: 'Hybrid', branches: ['CSE', 'ECE'], cgpa: '6.5', dl: 'Apr 18', skills: ['React', 'Node.js', 'MongoDB'], shortlisted: false, outreachSent: true },
+    { id: 8, logo: '🟡', co: 'Paytm', title: 'React Developer Intern', ctc: '₹6 LPA', type: 'Internship', mode: 'Remote', branches: ['CSE', 'IT'], cgpa: '6.0', dl: 'Apr 22', skills: ['React', 'JavaScript'], shortlisted: true, outreachSent: false },
+    { id: 9, logo: '🔵', co: 'Microsoft', title: 'SDE-2', ctc: '₹25 LPA', type: 'Full Time', mode: 'Hybrid', branches: ['CSE', 'IT', 'ECE'], cgpa: '7.5', dl: 'Apr 7', skills: ['C++', 'System Design', 'Azure'], shortlisted: true, outreachSent: false },
+    { id: 10, logo: '🟠', co: 'KPMG', title: 'Data Analyst', ctc: '₹12 LPA', type: 'Full Time', mode: 'Online', branches: ['CSE', 'IT', 'ECE'], cgpa: '6.5', dl: 'Apr 25', skills: ['Excel', 'SQL', 'Power BI'], shortlisted: false, outreachSent: true }
+];
+
+const COLLEGE_BRANCHES = ['CSE', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL'];
+let activeOJBranch = 'all';
+
+function filterByBranch(branch, btn) {
+    activeOJBranch = branch;
+    document.querySelectorAll('.branch-pill').forEach(p => p.classList.remove('on'));
+    if (btn) btn.classList.add('on');
+    renderOpenJobs();
+}
+
+function jobMatchesBranch(job, branch) {
+    if (branch === 'all') return true;
+    if (job.branches.includes('All')) return true;
+    return job.branches.includes(branch);
+}
+
+function renderOpenJobs() {
+    const q = (document.getElementById('oj-search')?.value || '').toLowerCase();
+    const allFiltered = OPEN_JOBS.filter(j => jobMatchesBranch(j, activeOJBranch) && (!q || (j.title + j.co + j.skills.join(' ')).toLowerCase().includes(q)));
+    const slFiltered = allFiltered.filter(j => j.shortlisted);
+
+    const allList = document.getElementById('oj-all-list');
+    const slList = document.getElementById('oj-shortlisted-list');
+    if (allList) allList.innerHTML = allFiltered.length ? allFiltered.map(ojCard).join('') : '<div class="empty-state">No jobs found for selected filter.</div>';
+    if (slList) slList.innerHTML = slFiltered.length ? slFiltered.map(ojCard).join('') : '<div class="empty-state">No jobs notified yet. Use "Notify Students" on any job.</div>';
+
+    const ac = document.getElementById('oj-all-count');
+    const sc = document.getElementById('oj-sl-count');
+    if (ac) ac.textContent = `(${allFiltered.length})`;
+    if (sc) sc.textContent = `(${slFiltered.length})`;
+}
+
+function modeColor(mode) {
+    if (mode === 'Remote') return 'color:var(--T);';
+    if (mode === 'Offline') return 'color:var(--A);';
+    if (mode === 'Hybrid') return 'color:var(--B);';
+    return 'color:var(--P);';
+}
+
+function ojCard(j) {
+    const branchTags = (j.branches[0] === 'All' ? COLLEGE_BRANCHES : j.branches).map(b => `<span class="oj-tag branch">${b}</span>`).join('');
+    const skillTags = j.skills.slice(0, 3).map(s => `<span class="oj-tag">${s}</span>`).join('');
+    const notifyBtn = j.shortlisted
+        ? `<span class="pill notified" style="font-size:10px;">✓ Notified</span>`
+        : `<button class="btn sm green" onclick="notifyStudents(${j.id})"><svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:#fff;fill:none;stroke-width:2.2;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notify Students</button>`;
+    const outreachBtn = j.outreachSent
+        ? `<span class="pill awaiting" style="font-size:10px;">Outreach Sent</span>`
+        : `<button class="btn sm sec" onclick="sendOutreach(${j.id})"><svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:var(--P);fill:none;stroke-width:2.2;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Contact Co.</button>`;
+    return `<div class="oj-card" id="ojc-${j.id}">
+        <div class="oj-top">
+            <div class="oj-logo">${j.logo}</div>
+            <div class="oj-info">
+                <div class="oj-title">${j.title}</div>
+                <div class="oj-co">${j.co} · <span style="${modeColor(j.mode)};font-weight:700;">${j.mode}</span> · Closes ${j.dl} · Min CGPA ${j.cgpa}</div>
+                <div class="oj-tags"><span class="oj-tag ctc">${j.ctc}</span><span class="oj-tag">${j.type}</span>${branchTags}${skillTags}</div>
+            </div>
+            <div class="oj-actions">${notifyBtn}${outreachBtn}</div>
+        </div>
+        <div class="oj-source-note">Scraped from <strong style="color:var(--P);">CareerSpace</strong> · Auto-matched to college branches</div>
+    </div>`;
+}
+
+function notifyStudents(id) {
+    const j = OPEN_JOBS.find(x => x.id === id);
+    if (!j) return;
+    const el = document.getElementById('notify-job-info');
+    if (el) el.innerHTML = `<strong style="font-size:14px;">${j.title}</strong> <span style="color:var(--txmu);">at</span> <strong>${j.co}</strong><br><span style="color:var(--G);font-weight:700;">${j.ctc}</span> · ${j.type} · Branches: <strong>${j.branches.join(', ')}</strong><br><span style="color:var(--txmu);font-size:11.5px;">Students can apply using their default profile or upload a custom resume for this role.</span>`;
+    const btn = document.getElementById('notify-send-btn');
+    if (btn) btn.onclick = () => {
+        j.shortlisted = true;
+        closeModal('notify-modal');
+        renderOpenJobs();
+        showToast(`${j.co} job pushed to eligible students via email & dashboard.`);
+    };
+    openModal('notify-modal');
+}
+
+function sendOutreach(id) {
+    const j = OPEN_JOBS.find(x => x.id === id);
+    if (!j) return;
+    const coEl = document.getElementById('c-company');
+    const roleEl = document.getElementById('c-role');
+    const msgEl = document.getElementById('c-msg');
+    if (coEl) coEl.value = j.co;
+    if (roleEl) roleEl.value = j.title;
+    if (msgEl) msgEl.value = `Dear Hiring Team at ${j.co},\n\nWe at JNTU Hyderabad T&P Cell would like to invite your organization to participate in a campus recruitment drive for the role of ${j.title}.\n\nWe have ${j.branches[0] === 'All' ? 'students from all branches' : j.branches.join(', ') + ' students'} with strong academics (CGPA ≥ ${j.cgpa}) who are excellent candidates for this role.\n\nWe would appreciate your confirmation of availability and preferred dates to conduct the drive.\n\nWarm Regards,\nDr. Ramesh Kumar\nTPO, JNTU Hyderabad`;
+    const sendBtn = document.getElementById('contact-send-btn');
+    if (sendBtn) sendBtn.onclick = () => {
+        j.outreachSent = true;
+        closeModal('contact-modal');
+        renderOpenJobs();
+        showToast(`Outreach proposal sent to ${j.co}. Awaiting response.`);
+    };
+    openModal('contact-modal');
 }

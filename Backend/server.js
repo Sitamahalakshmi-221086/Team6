@@ -48,8 +48,8 @@ app.post("/send-email", async (req, res) => {
 
   try {
     await transporter.sendMail({
-      from:    `"CampusPlace" <${process.env.GMAIL_USER}>`,
-      to:      email,
+      from: `"CampusPlace" <${process.env.GMAIL_USER}>`,
+      to: email,
       subject: `Your CampusPlace OTP: ${otp}`,
       html: `
         <div style="font-family:sans-serif;max-width:480px;margin:auto;padding:32px;border:1px solid #e2e8f0;border-radius:12px;">

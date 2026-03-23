@@ -186,6 +186,24 @@ const getStudentAnalytics = async (req, res) => {
   }
 };
 
+const getAllStudents = async (req, res) => {
+  try {
+    const students = await Student.find().select('-password');
+    // For now, if category is missing in model, we can infer it or default to 'unplaced'
+    const studentsWithCategory = students.map(st => {
+      const studentObj = st.toObject();
+      if (!studentObj.category) {
+        studentObj.category = 'unplaced'; // Default category
+      }
+      return studentObj;
+    });
+    return res.status(200).json({ success: true, students: studentsWithCategory });
+  } catch (error) {
+    console.error('Get All Students Error:', error.message);
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
 module.exports = {
   studentSignup,
   studentLogin,
@@ -193,5 +211,6 @@ module.exports = {
   startTest,
   getStudentProfile,
   updateStudentProfile,
-  getStudentAnalytics
+  getStudentAnalytics,
+  getAllStudents
 };

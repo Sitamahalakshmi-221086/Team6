@@ -7,7 +7,8 @@ const {
   studentLogin,
   getStudentProfile,
   updateStudentProfile,
-  getStudentAnalytics
+  getStudentAnalytics,
+  getAllStudents
 } = require('../controllers/studentController');
 
 // Multer Storage Configuration
@@ -33,6 +34,9 @@ router.post('/signup', upload.single('resume'), (req, res, next) => {
 
 // POST /api/students/login
 router.post('/login', studentLogin);
+
+// GET /api/students (Get all students)
+router.get('/', getAllStudents);
 
 router.get('/profile/:id', getStudentProfile);
 router.put('/profile/:id', updateStudentProfile);
