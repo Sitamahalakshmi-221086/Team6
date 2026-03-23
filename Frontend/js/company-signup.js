@@ -1,11 +1,10 @@
 let currentStage = 2;
-let skills = [];
 let hiringRoles = [];
 let selectedRole = 'company';
 let resendTimer = null;
 
 // ── CONFIG ──
-const SERVER_URL = 'http://localhost:5001';
+const SERVER_URL = 'http://localhost:5000';
 
 // Store pending company data and OTP in memory
 // DB is only written AFTER OTP is verified
@@ -85,8 +84,7 @@ function goTo(stage) {
 
   currentStage = stage;
 
-  const nextEl = document.getElementById('stage-' + (stage === 2 ? '2-company' : stage));
-  if (nextEl) nextEl.classList.add('active');
+  document.getElementById('stage-' + (stage === 2 ? '2-company' : stage)).classList.add('active');
 
   updateSidebar(stage);
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -132,6 +130,13 @@ function updateSidebar(stage) {
 }
 
 /* ── VALIDATION ── */
+function runCheck(c, fail) {
+  const el = document.getElementById(c.id);
+  const errEl = document.getElementById(c.err);
+  if (!el || !errEl) return;
+  if (!c.test(el.value)) { el.classList.add('error'); errEl.classList.add('show'); fail(); }
+}
+
 function validateStage2() {
   let ok = true;
   let checks = [
@@ -225,7 +230,6 @@ function removeRoleTag(s) {
 
 function renderRoles() {
   const wrap = document.getElementById('roles-wrap');
-  if (!wrap) return;
   wrap.querySelectorAll('.skill-tag').forEach(t => t.remove());
   hiringRoles.forEach(s => {
     const tag = document.createElement('span');
@@ -286,6 +290,16 @@ async function verifyOtp() {
 
     if (result.success) {
       window._currentOtp = null;
+      if (result.companyId) {
+        sessionStorage.setItem('companyId', result.companyId);
+        sessionStorage.setItem('isLoggedIn', 'true');
+        sessionStorage.setItem('userRole', 'company');
+        const d = window._pendingCompanyData;
+        if (d) {
+          sessionStorage.setItem('companyName', d.companyName || '');
+          sessionStorage.setItem('companyEmail', d.email || '');
+        }
+      }
       window._pendingCompanyData = null;
       goTo(4);
     } else {

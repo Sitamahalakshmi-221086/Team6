@@ -81,10 +81,11 @@
 
         <form onsubmit="return false;">
           <div class="form-grid">
-            <div class="fg">
-              <label>Full Name <span class="req">*</span></label>
-              <input type="text" id="s-name" placeholder="e.g. Arjun Sharma" oninput="clearErr(this)" />
-              <div class="err-msg" id="err-s-name">Please enter your full name.</div>
+
+            <div class="form-group">
+              <label>Full Name <span>*</span></label>
+              <input type="text" id="s-name" placeholder="Your full name" oninput="clearErr(this)" />
+              <span class="error-msg" id="err-s-name">Please enter your full name.</span>
             </div>
             <div class="fg">
               <label>College Email <span class="req">*</span></label>

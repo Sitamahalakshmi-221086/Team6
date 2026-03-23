@@ -4,7 +4,9 @@ dns.setServers(['8.8.8.8', '8.8.4.4']);
 const express = require('express');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
-const dotenv = require('dotenv');
+const path = require('path');
+
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 const connectDB = require('./config/db');
 const path = require('path');
 
@@ -19,7 +21,9 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true })); // Parse form data
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Static folder for resumes
+app.use(express.static(path.resolve(__dirname, '..', 'Frontend'))); // Serve frontend files
 
 // Serve static files (like resumes)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -42,7 +46,15 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Send Email / OTP Route
+// Routes
+app.use('/api/students', require('./routes/studentRoutes'));
+app.use('/api/companies', require('./routes/companyRoutes'));
+app.use('/api/tpo', require('./routes/tpoRoutes'));
+app.use('/api/jobs', require('./routes/jobsRoutes'));
+app.use('/api/drives', require('./routes/drivesPublicRoutes'));
+app.use('/api/applications', require('./routes/applicationRoutes'));
+
+// OTP Email Route
 app.post("/send-email", async (req, res) => {
   const { email, name, otp } = req.body;
   console.log("📩 Sending OTP to:", email);
@@ -76,5 +88,14 @@ app.post("/send-email", async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => console.log(`✅ Server running on http://localhost:${PORT}`));
+app.get('/', (req, res) => {
+  res.send('✅ Campus Recruitment API is running...');
+});
+
+// Set PORT
+const PORT = process.env.PORT || 5005;
+
+// Start Server
+app.listen(PORT, () => {
+  console.log(`🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+});

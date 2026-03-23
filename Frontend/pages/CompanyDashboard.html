@@ -1864,7 +1864,7 @@
     </div>
     <div class="notif-item"><span class="n-dot r"></span>
       <div>
-        <div class="n-text">Interview with <strong>Arjun Reddy</strong> confirmed.</div>
+        <div class="n-text">Interview reminder: <strong>pending candidate</strong> — check your calendar.</div>
         <div class="n-time">Yesterday</div>
       </div>
     </div>
@@ -1927,8 +1927,7 @@
             placeholder="e.g. Online Test → Technical Round → HR Round" /></div>
       </div>
       <div style="display:flex;gap:8px;margin-top:18px;">
-        <button class="btn lg"
-          onclick="document.getElementById('post-modal').classList.remove('on');showToast('Job posted successfully!')">
+        <button class="btn lg" onclick="handlePostJob()">
           <svg viewBox="0 0 24 24">
             <path d="M5 13l4 4L19 7" />
           </svg> Post Job
@@ -1973,7 +1972,7 @@
         </svg>
       </div>
       <div>
-        <div class="sb-uname" id="sb-uname">Infosys Technologies</div>
+        <div class="sb-uname" id="sb-uname">—</div>
         <div class="sb-udept">Recruiter Account</div>
       </div>
     </div>
@@ -1993,7 +1992,7 @@
             <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
           </svg></span>
         <span class="sb-label">Job Postings</span>
-        <span class="sb-badge teal">5</span>
+        <span class="sb-badge teal" id="co-sb-jobs-badge">0</span>
       </button>
       <button class="nl" onclick="go('candidates',this)">
         <span class="ic"><svg viewBox="0 0 24 24">
@@ -2003,7 +2002,7 @@
             <path d="M16 3.13a4 4 0 0 1 0 7.75" />
           </svg></span>
         <span class="sb-label">Applicants</span>
-        <span class="sb-badge">24</span>
+        <span class="sb-badge" id="co-sb-apps-badge">0</span>
       </button>
       <button class="nl" onclick="go('drives',this)">
         <span class="ic"><svg viewBox="0 0 24 24">
@@ -2091,7 +2090,7 @@
         </div>
         <div class="tb-chip" onclick="go('profile',document.querySelector('.nl[onclick*=profile]'))">
           <div class="tb-av">IN</div>
-          <span id="tb-name">Infosys</span>
+          <span id="tb-name"></span>
         </div>
       </div>
     </header>
@@ -2103,8 +2102,8 @@
 
         <div class="greet-banner">
           <div style="flex:1;">
-            <div class="greet-hi" id="greet-msg">Good morning, Infosys 👋</div>
-            <div class="greet-sub">You have <strong>3 new applicants</strong> and 1 drive pending approval.</div>
+            <div class="greet-hi" id="greet-msg">Welcome, <span id="company-name-span">Company</span> 👋</div>
+            <div class="greet-sub" id="greet-sub-text">Loading your dashboard stats...</div>
             <div class="co-action-card">
               <div class="cac-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
               <div class="cac-info">
@@ -2117,15 +2116,15 @@
           </div>
           <div class="greet-right">
             <div class="greet-stat">
-              <div class="greet-stat-val">24</div>
+              <div class="greet-stat-val" id="stat-total-applicants">0</div>
               <div class="greet-stat-lbl">Applicants</div>
             </div>
             <div class="greet-stat">
-              <div class="greet-stat-val">5</div>
+              <div class="greet-stat-val" id="stat-active-jobs">0</div>
               <div class="greet-stat-lbl">Active Jobs</div>
             </div>
             <div class="greet-stat">
-              <div class="greet-stat-val">Mar 18</div>
+              <div class="greet-stat-val" id="stat-next-drive">None</div>
               <div class="greet-stat-lbl">Next Drive</div>
             </div>
           </div>
@@ -2142,7 +2141,7 @@
                 <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
               </svg>
             </div>
-            <div class="stat-val" style="color:var(--P);">5</div>
+            <div class="stat-val" style="color:var(--P);" id="card-active-jobs">0</div>
             <div class="stat-lbl">Active Job Posts</div>
             <div class="stat-note warn">
               <svg viewBox="0 0 24 24">
@@ -2163,7 +2162,7 @@
                 <path d="M16 3.13a4 4 0 0 1 0 7.75" />
               </svg>
             </div>
-            <div class="stat-val" style="color:var(--T);">24</div>
+            <div class="stat-val" style="color:var(--T);" id="card-total-applicants">0</div>
             <div class="stat-lbl">Total Applicants</div>
             <div class="stat-note up">
               <svg viewBox="0 0 24 24">
@@ -2182,7 +2181,7 @@
                   points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
               </svg>
             </div>
-            <div class="stat-val" style="color:var(--A);">9</div>
+            <div class="stat-val" style="color:var(--A);" id="card-shortlisted">0</div>
             <div class="stat-lbl">Shortlisted</div>
             <div class="stat-note warn">
               <svg viewBox="0 0 24 24">
@@ -2200,7 +2199,7 @@
                 <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
               </svg>
             </div>
-            <div class="stat-val" style="color:var(--G);">3</div>
+            <div class="stat-val" style="color:var(--G);" id="card-hired">0</div>
             <div class="stat-lbl">Offers Extended</div>
             <div class="stat-note up">
               <svg viewBox="0 0 24 24">
@@ -2265,40 +2264,8 @@
                 onclick="go('candidates',document.querySelector('.nl[onclick*=candidates]'))">View all →</button>
             </div>
             <div class="card" style="padding:0;">
-              <div class="cand-card">
-                <div class="cand-av">RS</div>
-                <div>
-                  <div class="cand-name">Riya Sharma</div>
-                  <div class="cand-meta">CSE · CGPA 8.9 · JNTU Hyderabad · Frontend Developer</div>
-                </div>
-                <div class="cand-right"><span class="pill new">New</span><button class="btn sm">Review</button></div>
-              </div>
-              <div class="cand-card">
-                <div class="cand-av" style="background:linear-gradient(135deg,#14532d,#0aada0);">AK</div>
-                <div>
-                  <div class="cand-name">Arjun Kumar</div>
-                  <div class="cand-meta">IT · CGPA 8.2 · Osmania University · Data Analyst</div>
-                </div>
-                <div class="cand-right"><span class="pill short">Shortlisted</span><button
-                    class="btn sm">Review</button></div>
-              </div>
-              <div class="cand-card">
-                <div class="cand-av" style="background:linear-gradient(135deg,#16a34a,#0aada0);">PM</div>
-                <div>
-                  <div class="cand-name">Priya Menon</div>
-                  <div class="cand-meta">CSE · CGPA 9.1 · IIT Hyderabad · Backend Engineer</div>
-                </div>
-                <div class="cand-right"><span class="pill interview">Interview</span><button
-                    class="btn sm">Review</button></div>
-              </div>
-              <div class="cand-card">
-                <div class="cand-av" style="background:linear-gradient(135deg,#7c3aed,#15803d);">VR</div>
-                <div>
-                  <div class="cand-name">Vikram Reddy</div>
-                  <div class="cand-meta">ECE · CGPA 7.6 · NIT Warangal · Cloud Engineer</div>
-                </div>
-                <div class="cand-right"><span class="pill review">Reviewing</span><button class="btn sm">Review</button>
-                </div>
+              <div id="recent-applicants-list">
+                <!-- Recent applicants will be injected here -->
               </div>
             </div>
           </div>
@@ -2473,101 +2440,24 @@
         </div>
         <div class="tab-panel on" id="jt-active">
           <div class="card" style="padding:0;">
-            <div class="tbl-head job-grid"><span>Role &
-                Location</span><span>Type</span><span>Applicants</span><span>Deadline</span><span>Status</span></div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">Frontend Developer</div>
-                <div class="tbl-sub">Bangalore · ₹12 LPA · CSE, IT</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;color:var(--G);">11</span><span
-                style="font-size:12px;color:var(--txmu);">Mar 20</span>
-              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
-                  class="btn sm sec">Edit</button></div>
-            </div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">Data Analyst</div>
-                <div class="tbl-sub">Hyderabad · ₹18 LPA · CSE, IT, EEE</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;color:var(--G);">8</span><span
-                style="font-size:12px;color:var(--R);font-weight:700;">Mar 15</span>
-              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
-                  class="btn sm sec">Edit</button></div>
-            </div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">Cloud Engineer</div>
-                <div class="tbl-sub">Remote · ₹16 LPA · All branches</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;color:var(--G);">5</span><span
-                style="font-size:12px;color:var(--txmu);">Apr 5</span>
-              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
-                  class="btn sm sec">Edit</button></div>
-            </div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">Backend Engineer</div>
-                <div class="tbl-sub">Pune · ₹14 LPA · CSE, IT</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;color:var(--txmu);">0</span><span
-                style="font-size:12px;color:var(--txmu);">Apr 12</span>
-              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
-                  class="btn sm sec">Edit</button></div>
-            </div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">React Developer Intern</div>
-                <div class="tbl-sub">Remote · ₹25k/mo · CSE, IT</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Internship</span><span
-                style="font-size:13px;font-weight:700;color:var(--txmu);">0</span><span
-                style="font-size:12px;color:var(--txmu);">Apr 18</span>
-              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
-                  class="btn sm sec">Edit</button></div>
+            <div class="tbl-head job-grid"><span>Role & Location</span><span>Type</span><span>Applicants</span><span>Deadline</span><span>Status</span></div>
+            <div id="active-jobs-list">
+              <!-- Active jobs will be injected here -->
             </div>
           </div>
         </div>
         <div class="tab-panel" id="jt-closed">
           <div class="card" style="padding:0;">
-            <div class="tbl-head job-grid"><span>Role &
-                Location</span><span>Type</span><span>Applicants</span><span>Closed On</span><span>Status</span></div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">ML Engineer</div>
-                <div class="tbl-sub">Bangalore · ₹22 LPA</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;">18</span><span style="font-size:12px;color:var(--txmu);">Mar
-                1</span><span class="pill closed">Closed</span>
-            </div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">DevOps Engineer</div>
-                <div class="tbl-sub">Hyderabad · ₹20 LPA</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;">12</span><span style="font-size:12px;color:var(--txmu);">Feb
-                20</span><span class="pill closed">Closed</span>
-            </div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">Systems Engineer</div>
-                <div class="tbl-sub">Chennai · ₹10 LPA</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;">22</span><span style="font-size:12px;color:var(--txmu);">Feb
-                10</span><span class="pill closed">Closed</span>
+            <div class="tbl-head job-grid"><span>Role & Location</span><span>Type</span><span>Applicants</span><span>Closed On</span><span>Status</span></div>
+            <div id="closed-jobs-list">
+              <!-- Closed jobs will be injected here -->
             </div>
           </div>
         </div>
         <div class="tab-panel" id="jt-draft">
-          <div class="card" style="padding:14px 16px;">
-            <div style="display:flex;align-items:center;gap:14px;">
-              <div style="flex:1;">
-                <div class="tbl-name">Full Stack Developer</div>
-                <div class="tbl-sub">Not published · Created Mar 7</div>
-              </div>
-              <button class="btn sm teal">Publish</button>
-              <button class="btn sm sec">Edit</button>
+            <div id="draft-jobs-list">
+              <!-- Draft jobs will be injected here -->
             </div>
-          </div>
         </div>
       </div><!-- /pg-jobs -->
 
@@ -2592,125 +2482,34 @@
         </div>
         <div class="tab-panel on" id="at-all">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
-                CGPA</span><span>Status</span></div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Riya Sharma</div>
-                <div class="tbl-sub">Mar 10 · Resume attached</div>
-              </div><span style="font-size:13px;">Frontend Developer</span><span
-                style="font-size:12.5px;color:var(--txmu);">JNTU Hyd · 8.9</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill new">New</span><button
-                  class="btn sm">Review</button></div>
-            </div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Arjun Kumar</div>
-                <div class="tbl-sub">Mar 8 · Resume attached</div>
-              </div><span style="font-size:13px;">Data Analyst</span><span
-                style="font-size:12.5px;color:var(--txmu);">Osmania · 8.2</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill short">Shortlisted</span><button
-                  class="btn sm">Review</button></div>
-            </div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Priya Menon</div>
-                <div class="tbl-sub">Mar 7 · Resume attached</div>
-              </div><span style="font-size:13px;">Backend Engineer</span><span
-                style="font-size:12.5px;color:var(--txmu);">IIT Hyd · 9.1</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill interview">Interview</span><button
-                  class="btn sm">Review</button></div>
-            </div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Vikram Reddy</div>
-                <div class="tbl-sub">Mar 7 · Resume attached</div>
-              </div><span style="font-size:13px;">Cloud Engineer</span><span
-                style="font-size:12.5px;color:var(--txmu);">NIT Warangal · 7.6</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill review">Reviewing</span><button
-                  class="btn sm">Review</button></div>
-            </div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Sneha Rao</div>
-                <div class="tbl-sub">Mar 6 · Resume attached</div>
-              </div><span style="font-size:13px;">Data Analyst</span><span
-                style="font-size:12.5px;color:var(--txmu);">CBIT · 8.5</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill hired">Hired</span><button
-                  class="btn sm sec">View</button></div>
-            </div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Karan Patel</div>
-                <div class="tbl-sub">Mar 5 · Resume attached</div>
-              </div><span style="font-size:13px;">Frontend Developer</span><span
-                style="font-size:12.5px;color:var(--txmu);">VIT Chennai · 7.8</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill rejected">Rejected</span><button
-                  class="btn sm sec">View</button></div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Status</span></div>
+            <div id="all-applicants-list">
+              <!-- All applicants will be injected here -->
             </div>
           </div>
         </div>
         <div class="tab-panel" id="at-new">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
-                CGPA</span><span>Action</span></div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Riya Sharma</div>
-                <div class="tbl-sub">Mar 10</div>
-              </div><span>Frontend Developer</span><span style="font-size:12.5px;color:var(--txmu);">JNTU Hyd ·
-                8.9</span>
-              <div style="display:flex;gap:6px;"><button class="btn sm">Shortlist</button><button
-                  class="btn sm red">Reject</button></div>
-            </div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Lakshmi V</div>
-                <div class="tbl-sub">Mar 10</div>
-              </div><span>React Intern</span><span style="font-size:12.5px;color:var(--txmu);">Osmania · 8.0</span>
-              <div style="display:flex;gap:6px;"><button class="btn sm">Shortlist</button><button
-                  class="btn sm red">Reject</button></div>
-            </div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Action</span></div>
+            <div id="new-applicants-list"></div>
           </div>
         </div>
         <div class="tab-panel" id="at-short">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
-                CGPA</span><span>Action</span></div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Arjun Kumar</div>
-                <div class="tbl-sub">Mar 8</div>
-              </div><span>Data Analyst</span><span style="font-size:12.5px;color:var(--txmu);">Osmania · 8.2</span>
-              <div style="display:flex;gap:6px;"><button class="btn sm teal">Schedule Interview</button></div>
-            </div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Action</span></div>
+            <div id="shortlisted-applicants-list"></div>
           </div>
         </div>
         <div class="tab-panel" id="at-interview">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
-                CGPA</span><span>Action</span></div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Priya Menon</div>
-                <div class="tbl-sub">Mar 18, 10 AM</div>
-              </div><span>Backend Engineer</span><span style="font-size:12.5px;color:var(--txmu);">IIT Hyd · 9.1</span>
-              <div style="display:flex;gap:6px;"><button class="btn sm">Mark Hired</button><button
-                  class="btn sm red">Reject</button></div>
-            </div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Action</span></div>
+            <div id="interview-applicants-list"></div>
           </div>
         </div>
         <div class="tab-panel" id="at-hired">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
-                CGPA</span><span>Status</span></div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Sneha Rao</div>
-                <div class="tbl-sub">Offer sent Mar 6</div>
-              </div><span>Data Analyst</span><span style="font-size:12.5px;color:var(--txmu);">CBIT · 8.5</span><span
-                class="pill hired">Hired</span>
-            </div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Status</span></div>
+            <div id="hired-applicants-list"></div>
           </div>
         </div>
       </div><!-- /pg-candidates -->
@@ -2728,74 +2527,34 @@
             </svg>
             Campus Drives
           </div>
-          <button class="btn" onclick="showToast('Schedule drive feature coming soon.')">
+          <button class="btn" type="button" onclick="openDriveRequestForm()">
             <svg viewBox="0 0 24 24">
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
-            Schedule Drive
+            Request drive (TPO approval)
           </button>
+        </div>
+        <div id="drive-request-card" class="card" style="display:none;padding:16px 18px;margin-bottom:16px;">
+          <div style="font-weight:700;margin-bottom:10px;">Submit campus drive request</div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;">
+            <div class="fg"><label>Date</label><input type="date" id="co-drive-date" /></div>
+            <div class="fg" style="min-width:160px;"><label>Roles</label><input id="co-drive-roles" placeholder="e.g. SDE, Analyst" /></div>
+            <div class="fg" style="min-width:160px;"><label>Eligibility</label><input id="co-drive-elig" placeholder="e.g. CGPA 7+" /></div>
+            <button class="btn" type="button" onclick="submitDriveRequest()">Submit</button>
+          </div>
         </div>
         <div class="card" style="padding:0;margin-bottom:16px;">
           <div
             style="padding:12px 16px;border-bottom:1px solid var(--brs);font-size:12px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.06em;background:var(--bgs);">
             Upcoming Drives</div>
-          <div class="drive-row">
-            <div class="dr-date">
-              <div class="dr-dd">18</div>
-              <div class="dr-dm">Mar</div>
-            </div>
-            <div class="dr-info">
-              <div class="dr-name">JNTU Hyderabad</div>
-              <div class="dr-meta">10:00 AM · CSE Block Hall · 120 registered students · Roles: SDE, Systems Engineer
-              </div>
-            </div><span class="pill active">Confirmed</span>
-          </div>
-          <div class="drive-row">
-            <div class="dr-date">
-              <div class="dr-dd">25</div>
-              <div class="dr-dm">Mar</div>
-            </div>
-            <div class="dr-info">
-              <div class="dr-name">Osmania University</div>
-              <div class="dr-meta">9:00 AM · Seminar Hall B · 80 students · Roles: Data Analyst</div>
-            </div><span class="pill pending">Pending TPO</span>
-          </div>
-          <div class="drive-row">
-            <div class="dr-date">
-              <div class="dr-dd">3</div>
-              <div class="dr-dm">Apr</div>
-            </div>
-            <div class="dr-info">
-              <div class="dr-name">NIT Warangal</div>
-              <div class="dr-meta">Online · Zoom · 200 students · All roles</div>
-            </div><span class="pill pending">Pending TPO</span>
-          </div>
+          <div id="company-drives-upcoming-list"></div>
         </div>
         <div class="card" style="padding:0;">
           <div
             style="padding:12px 16px;border-bottom:1px solid var(--brs);font-size:12px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.06em;background:var(--bgs);">
-            Completed Drives</div>
-          <div class="drive-row">
-            <div class="dr-date" style="background:var(--bgs);">
-              <div class="dr-dd" style="color:var(--txmu);">10</div>
-              <div class="dr-dm" style="color:var(--txmu);">Mar</div>
-            </div>
-            <div class="dr-info">
-              <div class="dr-name">VIT Chennai</div>
-              <div class="dr-meta">Completed · 95 attended · 8 selected</div>
-            </div><span class="pill closed">Done</span>
-          </div>
-          <div class="drive-row">
-            <div class="dr-date" style="background:var(--bgs);">
-              <div class="dr-dd" style="color:var(--txmu);">28</div>
-              <div class="dr-dm" style="color:var(--txmu);">Feb</div>
-            </div>
-            <div class="dr-info">
-              <div class="dr-name">CBIT Hyderabad</div>
-              <div class="dr-meta">Completed · 60 attended · 5 selected</div>
-            </div><span class="pill closed">Done</span>
-          </div>
+            Completed / Past Drives</div>
+          <div id="company-drives-completed-list"></div>
         </div>
       </div><!-- /pg-drives -->
 
@@ -2829,9 +2588,9 @@
             </div>
           </div>
           <!-- Name + email + tags below banner on white -->
-          <div class="cph-nameblock">
-            <div class="cph-name" id="pg-coname">Infosys Technologies Ltd.</div>
-            <div class="cph-email" id="pg-coemail">hr@infosys.com</div>
+            <div class="cph-nameblock">
+            <div class="cph-name" id="pg-coname">—</div>
+            <div class="cph-email" id="pg-coemail">—</div>
             <div class="cph-tags">
               <span class="cph-tag teal">
                 <svg viewBox="0 0 24 24">
@@ -2866,7 +2625,7 @@
                     <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
                   </svg>
                 </div>
-                <div class="cph-stat-val" style="color:var(--P);">5</div>
+                <div class="cph-stat-val" id="cph-stat-jobs" style="color:var(--P);">0</div>
                 <div class="cph-stat-lbl">Active Posts</div>
               </div>
               <div class="cph-stat">
@@ -2878,7 +2637,7 @@
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                   </svg>
                 </div>
-                <div class="cph-stat-val" style="color:var(--T);">24</div>
+                <div class="cph-stat-val" id="cph-stat-apps" style="color:var(--T);">0</div>
                 <div class="cph-stat-lbl">Total Applicants</div>
               </div>
               <div class="cph-stat">
@@ -2892,7 +2651,7 @@
                     <path d="M9 16l2 2 4-4" />
                   </svg>
                 </div>
-                <div class="cph-stat-val" style="color:var(--A);">2</div>
+                <div class="cph-stat-val" id="cph-stat-drives" style="color:var(--A);">0</div>
                 <div class="cph-stat-lbl">Campus Drives</div>
               </div>
               <div class="cph-stat">
@@ -2903,7 +2662,7 @@
                     <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
                   </svg>
                 </div>
-                <div class="cph-stat-val" style="color:var(--G);">3</div>
+                <div class="cph-stat-val" id="cph-stat-offers" style="color:var(--G);">0</div>
                 <div class="cph-stat-lbl">Offers Made</div>
               </div>
             </div>
@@ -2922,31 +2681,29 @@
             <div id="cp-view">
               <div class="dg">
                 <div class="df"><label>Company Name</label>
-                  <p>Infosys Technologies Ltd.</p>
+                  <p>—</p>
                 </div>
                 <div class="df"><label>Industry</label>
-                  <p>IT Services & Consulting</p>
+                  <p>—</p>
                 </div>
                 <div class="df"><label>Company Size</label>
-                  <p>10,000+ Employees</p>
+                  <p>—</p>
                 </div>
                 <div class="df"><label>Headquarters</label>
-                  <p>Bangalore, Karnataka</p>
+                  <p>—</p>
                 </div>
                 <div class="df"><label>Website</label>
-                  <p style="color:var(--T);">infosys.com</p>
+                  <p style="color:var(--T);">—</p>
                 </div>
                 <div class="df"><label>HR Email</label>
-                  <p>hr@infosys.com</p>
+                  <p>—</p>
                 </div>
               </div>
               <div style="margin-top:14px;">
                 <div
                   style="font-size:10.5px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;">
                   About</div>
-                <div style="font-size:13px;line-height:1.65;color:var(--txmu);">Infosys is a global leader in
-                  next-generation digital services and consulting, enabling clients in 50+ countries to navigate digital
-                  transformation.</div>
+                <div id="cp-about-text" style="font-size:13px;line-height:1.65;color:var(--txmu);">—</div>
               </div>
               <div style="margin-top:18px;">
                 <div style="font-size:10.5px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">Hiring Process</div>
@@ -2960,24 +2717,25 @@
             </div>
             <div id="cp-edit" style="display:none;margin-top:14px;">
               <div class="form-grid">
-                <div class="fg"><label>Company Name</label><input value="Infosys Technologies Ltd." /></div>
-                <div class="fg"><label>Industry</label><input value="IT Services & Consulting" /></div>
-                <div class="fg"><label>Company Size</label><select>
-                    <option>1–50</option>
-                    <option>51–200</option>
-                    <option>201–1000</option>
-                    <option>1001–10,000</option>
-                    <option selected>10,000+</option>
+                <div class="fg"><label>Company Name</label><input id="company-name-input" value="" /></div>
+                <div class="fg"><label>Industry</label><input id="industry-input" value="" /></div>
+                <div class="fg"><label>Company Size</label><select id="company-size-select">
+                    <option value="">—</option>
+                    <option>1–50 employees</option>
+                    <option>51–200 employees</option>
+                    <option>201–1000 employees</option>
+                    <option>1001–5000 employees</option>
+                    <option>5000+ employees</option>
                   </select></div>
-                <div class="fg"><label>Headquarters</label><input value="Bangalore, Karnataka" /></div>
-                <div class="fg"><label>Website</label><input value="infosys.com" /></div>
-                <div class="fg"><label>HR Email</label><input value="hr@infosys.com" /></div>
-                <div class="fg full"><label>About</label><textarea
-                    style="min-height:80px;">Infosys is a global leader in next-generation digital services and consulting.</textarea>
+                <div class="fg"><label>Headquarters</label><input id="headquarters-input" value="" /></div>
+                <div class="fg"><label>Website</label><input id="website-input" value="" /></div>
+                <div class="fg"><label>HR Email</label><input id="hr-email-input" value="" /></div>
+                <div class="fg full"><label>About</label><textarea id="about-input"
+                    style="min-height:80px;"></textarea>
                 </div>
               </div>
               <div style="display:flex;gap:8px;margin-top:14px;">
-                <button class="btn lg" onclick="toggleCpEdit();showToast('Profile updated successfully.')">Save
+                <button class="btn lg" onclick="saveCompanyProfileAndClose()">Save
                   Changes</button>
                 <button class="btn sec lg" onclick="toggleCpEdit()">Cancel</button>
               </div>
@@ -3241,7 +2999,16 @@
   </div>
 
   <script>
-    // ── INIT ──
+    const TITLES = { home: 'Dashboard', jobs: 'Job Postings', candidates: 'Applicants', drives: 'Campus Drives', profile: 'Company Profile', stats: 'Analytics', settings: 'Settings' };
+    const API_ROOT = (window.CAMPUS_API_BASE || sessionStorage.getItem('CAMPUS_API_BASE') || 'http://localhost:5000').replace(/\/$/, '');
+
+    const companyId = sessionStorage.getItem('companyId') || sessionStorage.getItem('cp_company_id');
+    const companyName = sessionStorage.getItem('companyName') || sessionStorage.getItem('cp_company_name') || 'Company';
+
+    if (!companyId || sessionStorage.getItem('userRole') !== 'company' || sessionStorage.getItem('isLoggedIn') !== 'true') {
+      window.location.href = 'Login.html';
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       const email = sessionStorage.getItem('cp_company_email') || 'hr@infosys.com';
       const co = sessionStorage.getItem('cp_company_name') || 'Infosys Technologies';
@@ -3255,7 +3022,9 @@
 
       const h = new Date().getHours();
       const g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
-      document.getElementById('greet-msg').textContent = `${g}, ${co}`;
+      document.getElementById('greet-msg').textContent = `${g}, ${companyName} 👋`;
+      initDarkMode();
+      setTimeout(renderCharts, 100);
     });
 
     // ── SIDEBAR COLLAPSE ──
@@ -3282,12 +3051,390 @@
       document.getElementById('notif-panel').classList.remove('on');
     }
 
-    // ── TABS ──
-    const tabGroups = {
-      jt: ['active', 'closed', 'draft'],
-      at: ['all', 'new', 'short', 'interview', 'hired']
-    };
+    document.getElementById('company-name-span').textContent = companyName;
+    document.getElementById('sb-uname').textContent = companyName;
+    document.getElementById('tb-name').textContent = companyName.split(' ')[0];
 
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('col');
+      document.getElementById('main-content').classList.toggle('exp');
+    }
+
+    function toggleNotif() {
+      document.getElementById('notif-panel').classList.toggle('on');
+    }
+
+    document.addEventListener('click', e => {
+      const panel = document.getElementById('notif-panel');
+      if (panel.classList.contains('on') && !panel.contains(e.target) && !e.target.closest('[onclick*=toggleNotif]')) panel.classList.remove('on');
+      const modal = document.getElementById('post-modal');
+      if (modal.classList.contains('on') && e.target === modal) modal.classList.remove('on');
+    });
+
+    function closeOverlay(e, id) { if (e.target === document.getElementById(id)) document.getElementById(id).classList.remove('on'); }
+
+    function toggleCpEdit() {
+      const v = document.getElementById('cp-view'), e = document.getElementById('cp-edit');
+      const editing = e.style.display !== 'none';
+      v.style.display = editing ? 'block' : 'none';
+      e.style.display = editing ? 'none' : 'block';
+    }
+
+    async function saveCompanyProfileAndClose() {
+      const name = document.getElementById('company-name-input')?.value.trim();
+      const industry = document.getElementById('industry-input')?.value.trim();
+      const companySize = document.getElementById('company-size-select')?.value.trim();
+      const address = document.getElementById('headquarters-input')?.value.trim();
+      const website = document.getElementById('website-input')?.value.trim();
+      const email = document.getElementById('hr-email-input')?.value.trim();
+      const description = document.getElementById('about-input')?.value.trim();
+
+      try {
+        const res = await fetch(`${API_ROOT}/api/companies/profile`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, companyName: name, industry, companySize, address, website, description })
+        });
+        const result = await res.json();
+        if (result.success) {
+          sessionStorage.setItem('companyName', name);
+          sessionStorage.setItem('companyEmail', email);
+          location.reload();
+        } else {
+          showToast(result.message || 'Error updating profile');
+        }
+      } catch (err) {
+        showToast('Server error');
+      }
+    }
+
+    /* ── DYNAMIC DATA FETCHING ── */
+    async function fetchDashboardStats() {
+      try {
+        const res = await fetch(`${API_ROOT}/api/companies/stats/${companyId}`);
+        const data = await res.json();
+        if (data.success) {
+          const s = data.stats;
+          document.getElementById('stat-total-applicants').textContent = s.totalApplicants;
+          document.getElementById('stat-active-jobs').textContent = s.activeJobs;
+          document.getElementById('card-total-applicants').textContent = s.totalApplicants;
+          document.getElementById('card-active-jobs').textContent = s.activeJobs;
+          document.getElementById('card-shortlisted').textContent = s.shortlisted;
+          document.getElementById('card-hired').textContent = s.hired;
+          document.getElementById('greet-sub-text').innerHTML = `You have <strong>${s.totalApplicants}</strong> total applicants and <strong>${s.approvedJobs ?? s.activeJobs}</strong> TPO-approved active jobs.`;
+          const jb = document.getElementById('co-sb-jobs-badge');
+          const ab = document.getElementById('co-sb-apps-badge');
+          if (jb) jb.textContent = String(s.totalJobsPosted ?? s.activeJobs ?? 0);
+          if (ab) ab.textContent = String(s.totalApplicants ?? 0);
+          const cj = document.getElementById('cph-stat-jobs');
+          const ca = document.getElementById('cph-stat-apps');
+          const co = document.getElementById('cph-stat-offers');
+          if (cj) cj.textContent = String(s.approvedJobs ?? s.activeJobs ?? 0);
+          if (ca) ca.textContent = String(s.totalApplicants ?? 0);
+          if (co) co.textContent = String(s.hired ?? 0);
+          window.__coStats = s;
+        }
+      } catch (err) { console.error('Stats fetch error:', err); }
+    }
+
+    async function fetchCompanyProfile() {
+      try {
+        const res = await fetch(`${API_ROOT}/api/companies/profile/${companyId}`);
+        const data = await res.json();
+        if (data.success && data.company) {
+          const c = data.company;
+          const nm = c.companyName || 'Company';
+          sessionStorage.setItem('companyName', nm);
+          document.getElementById('company-name-span').textContent = nm;
+          document.getElementById('sb-uname').textContent = nm;
+          document.getElementById('tb-name').textContent = nm.split(' ')[0];
+          const greet = document.getElementById('greet-msg');
+          if (greet) {
+            const h = new Date().getHours();
+            const g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+            greet.textContent = `${g}, ${nm} 👋`;
+          }
+          const setP = (sel, val) => {
+            const el = document.querySelector(sel);
+            if (el) el.textContent = val || '—';
+          };
+          const hq = c.address || c.location || '';
+          setP('#pg-coname', c.companyName);
+          setP('#pg-coemail', c.email);
+          const dg = document.querySelectorAll('#cp-view .df p');
+          if (dg.length >= 6) {
+            dg[0].textContent = c.companyName || '—';
+            dg[1].textContent = c.industry || '—';
+            dg[2].textContent = c.companySize || '—';
+            dg[3].textContent = hq || '—';
+            dg[4].textContent = c.website || '—';
+            dg[5].textContent = c.email || '—';
+          }
+          const aboutEl = document.getElementById('cp-about-text');
+          if (aboutEl) aboutEl.textContent = c.description || '—';
+          const cin = document.getElementById('company-name-input');
+          const iin = document.getElementById('industry-input');
+          const hin = document.getElementById('headquarters-input');
+          const win = document.getElementById('website-input');
+          const ein = document.getElementById('hr-email-input');
+          const ain = document.getElementById('about-input');
+          if (cin) cin.value = c.companyName || '';
+          if (iin) iin.value = c.industry || '';
+          if (hin) hin.value = hq || '';
+          if (win) win.value = c.website || '';
+          if (ein) ein.value = c.email || '';
+          if (ain) ain.value = c.description || '';
+          const sz = document.getElementById('company-size-select');
+          if (sz && c.companySize) {
+            const opts = [...sz.options].map((o) => o.value);
+            if (opts.includes(c.companySize)) sz.value = c.companySize;
+          }
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    async function fetchCompanyDrives() {
+      const up = document.getElementById('company-drives-upcoming-list');
+      const done = document.getElementById('company-drives-completed-list');
+      if (!up || !done) return;
+      try {
+        const res = await fetch(`${API_ROOT}/api/companies/drives/${companyId}`);
+        const data = await res.json();
+        if (!data.success || !data.drives || !data.drives.length) {
+          up.innerHTML = '<p class="empty-state" style="padding:24px;text-align:center;color:var(--txmu);">No drives available</p>';
+          done.innerHTML = '<p class="empty-state" style="padding:24px;text-align:center;color:var(--txmu);">No drives available</p>';
+          const cd0 = document.getElementById('cph-stat-drives');
+          if (cd0) cd0.textContent = '0';
+          return;
+        }
+        const now = new Date();
+        const upcoming = [];
+        const completed = [];
+        data.drives.forEach((d) => {
+          const dt = new Date(d.date);
+          const row = `<div class="drive-row">
+            <div class="dr-date"><div class="dr-dd">${isNaN(dt) ? '—' : dt.getDate()}</div><div class="dr-dm">${isNaN(dt) ? '' : dt.toLocaleString(undefined, { month: 'short' })}</div></div>
+            <div class="dr-info"><div class="dr-name">${d.companyName || ''}</div><div class="dr-meta">${d.roles || ''} · ${d.eligibility || ''}</div></div>
+            <span class="pill ${d.status === 'Approved' ? 'active' : d.status === 'Rejected' ? 'closed' : 'pending'}">${d.status === 'Pending' ? 'Pending TPO' : d.status}</span>
+          </div>`;
+          if (!isNaN(dt) && dt >= now && d.status !== 'Rejected') upcoming.push(row);
+          else completed.push(row);
+        });
+        up.innerHTML = upcoming.length ? upcoming.join('') : '<p class="empty-state" style="padding:24px;text-align:center;color:var(--txmu);">No upcoming drives</p>';
+        done.innerHTML = completed.length ? completed.join('') : '<p class="empty-state" style="padding:24px;text-align:center;color:var(--txmu);">No completed drives</p>';
+        const cd = document.getElementById('cph-stat-drives');
+        if (cd) cd.textContent = String((data.drives || []).filter((d) => d.status === 'Approved').length);
+      } catch (e) {
+        up.innerHTML = '<p class="empty-state" style="padding:24px;">Could not load drives</p>';
+        done.innerHTML = '';
+      }
+    }
+
+    function openDriveRequestForm() {
+      const el = document.getElementById('drive-request-card');
+      if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+
+    async function submitDriveRequest() {
+      const date = document.getElementById('co-drive-date')?.value;
+      const roles = document.getElementById('co-drive-roles')?.value?.trim() || '—';
+      const elig = document.getElementById('co-drive-elig')?.value?.trim() || '—';
+      if (!date) { showToast('Pick a drive date'); return; }
+      try {
+        const res = await fetch(`${API_ROOT}/api/drives/create`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            companyId,
+            companyName: sessionStorage.getItem('companyName'),
+            date,
+            roles,
+            eligibility: elig
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Drive request sent for TPO approval');
+          fetchCompanyDrives();
+          const el = document.getElementById('drive-request-card');
+          if (el) el.style.display = 'none';
+        } else showToast(data.message || 'Failed');
+      } catch (e) { showToast('Server error'); }
+    }
+
+    async function fetchJobs() {
+      try {
+        const res = await fetch(`${API_ROOT}/api/companies/jobs/${companyId}`);
+        const data = await res.json();
+        if (data.success) {
+          renderJobs(data.jobs);
+        }
+      } catch (err) { console.error('Jobs fetch error:', err); }
+    }
+
+    function renderJobs(jobs) {
+      const containers = {
+        Active: document.getElementById('active-jobs-list'),
+        Closed: document.getElementById('closed-jobs-list'),
+        Draft: document.getElementById('draft-jobs-list')
+      };
+      
+      Object.values(containers).forEach(c => { if (c) c.innerHTML = ''; });
+
+      if (!jobs || !jobs.length) {
+        ['active-jobs-list','closed-jobs-list','draft-jobs-list'].forEach(id => {
+          const c = document.getElementById(id);
+          if (c) c.innerHTML = '<div style="padding:24px;text-align:center;color:var(--txmu);" class="empty-state">No jobs posted</div>';
+        });
+        return;
+      }
+
+      jobs.forEach(job => {
+        const row = document.createElement('div');
+        row.className = 'tbl-row job-grid';
+        const reqs = (job.requirements || []).join(', ');
+        const pending = job.tpoApproval === 'pending';
+        const rejected = job.tpoApproval === 'rejected';
+        const bucket = pending || rejected ? 'Draft' : job.status;
+        row.innerHTML = `
+          <div>
+            <div class="tbl-name">${job.title}</div>
+            <div class="tbl-sub">${job.location || 'Remote'} · ${job.salary || 'N/A'} · ${reqs}</div>
+          </div>
+          <span style="font-size:12.5px;color:var(--txmu);">${job.jobType}</span>
+          <span style="font-size:13px;font-weight:700;color:var(--G);">${job.applicantsCount || 0}</span>
+          <span style="font-size:12px;color:var(--txmu);">${new Date(job.createdAt).toLocaleDateString()}</span>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            ${pending ? '<span class="pill pending">Pending TPO</span>' : rejected ? '<span class="pill closed">Rejected</span>' : `<span class="pill ${String(job.status).toLowerCase()}">${job.status}</span>`}
+            ${!pending && !rejected && job.tpoApproval === 'approved' ? `<button class="btn sm sec" onclick="viewJobApplications('${job._id}', '${job.title.replace(/'/g, "\\'")}')">View Apps</button>` : ''}
+          </div>
+        `;
+        if (containers[bucket]) containers[bucket].appendChild(row);
+        else if (containers.Draft) containers.Draft.appendChild(row);
+      });
+    }
+
+    async function viewJobApplications(jobId, jobTitle) {
+      try {
+        go('candidates', document.querySelector('.nl[onclick*=candidates]'));
+        document.getElementById('tb-title').textContent = `Applicants for ${jobTitle}`;
+        const res = await fetch(`${API_ROOT}/api/companies/applications/${jobId}`);
+        const data = await res.json();
+        if (data.success) {
+          renderApplicants(data.applications, 'all-applicants-list');
+          // Also filter into sub-tabs if needed, or just show all for now
+        }
+      } catch (err) { console.error('Apps fetch error:', err); }
+    }
+
+    function renderApplicants(apps, containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      if (apps.length === 0) {
+        container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txmu);">No applicants yet.</div>';
+        return;
+      }
+      apps.forEach(app => {
+        const student = app.studentId;
+        const row = document.createElement('div');
+        row.className = 'tbl-row cand-grid';
+        row.innerHTML = `
+          <div>
+            <div class="tbl-name">${student.fullName}</div>
+            <div class="tbl-sub">${new Date(app.appliedAt).toLocaleDateString()} · ${app.resume ? 'Resume attached' : 'No resume'}</div>
+          </div>
+          <span style="font-size:13px;">${student.email}</span>
+          <span style="font-size:12.5px;color:var(--txmu);">${student.branch} · ${student.cgpa}</span>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <span class="pill ${app.status.toLowerCase()}">${app.status}</span>
+            <select class="btn sm" onchange="updateAppStatus('${app._id}', this.value)" style="width: auto; padding-right: 20px;">
+              <option value="" disabled selected>Status</option>
+              <option value="New">New</option>
+              <option value="Reviewed">Reviewed</option>
+              <option value="Shortlisted">Shortlisted</option>
+              <option value="Interview">Interview</option>
+              <option value="Hired">Hired</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+            <button class="btn sm sec" onclick="window.open('${student.resume || '#'}')">Review</button>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    async function updateAppStatus(appId, status) {
+      try {
+        const res = await fetch(`${API_ROOT}/api/companies/application-status/${appId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`Candidate moved to ${status}`);
+          await fetchDashboardStats();
+          renderCharts();
+        }
+      } catch (err) { showToast('Error updating status'); }
+    }
+
+    async function handlePostJob() {
+      const modal = document.getElementById('post-modal');
+      const title = modal.querySelector('input[placeholder*="Software"]').value.trim();
+      const desc = modal.querySelector('textarea').value.trim();
+      const type = modal.querySelectorAll('select')[0].value;
+      const workMode = modal.querySelectorAll('select')[1].value;
+      const salary = modal.querySelector('input[placeholder*="LPA"]').value.trim();
+      const location = modal.querySelector('input[placeholder*="Bangalore"]').value.trim();
+      const deadline = modal.querySelector('input[type="date"]').value;
+      
+      const skills = Array.from(modal.querySelectorAll('#skill-tags .tag'))
+        .map(t => t.textContent.replace('×','').trim())
+        .filter(Boolean);
+      
+      if (!title || !desc) {
+        showToast('Title and Job Description are required.');
+        return;
+      }
+      if (!companyId) {
+        showToast('Session expired. Please log in again.');
+        return;
+      }
+
+      try {
+        const payload = {
+          companyId,
+          companyName: companyName || '',
+          title,
+          description: desc,
+          jobType: type,
+          workMode,
+          salary,
+          location,
+          requirements: skills
+        };
+        if (deadline) payload.deadline = deadline;
+        const res = await fetch(`${API_ROOT}/api/jobs/create`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json().catch(() => ({ success: false, message: 'Invalid server response' }));
+        if (data.success) {
+          showToast('Job submitted — pending TPO approval');
+          modal.classList.remove('on');
+          fetchJobs();
+          await fetchDashboardStats();
+          renderCharts();
+        } else {
+          showToast(data.message || (res.ok ? 'Failed to submit job' : `Server error (${res.status})`));
+        }
+      } catch (err) { showToast('Server error'); }
+    }
+
+    /* ── TABS & NAV ── */
+    const tabGroups = { jt: ['active', 'closed', 'draft'], at: ['all', 'new', 'short', 'interview', 'hired'] };
     function swtab(group, id, btn) {
       tabGroups[group].forEach(t => document.getElementById(`${group}-${t}`).classList.remove('on'));
       btn.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
@@ -3362,10 +3509,115 @@
       setTimeout(() => { t.style.display = 'none'; }, 3000);
     }
 
-    // ── LOGOUT ──
-    function logout() {
-      sessionStorage.clear();
-      window.location.href = 'Login.html';
+    function logout() { if (confirm('Log out of CampusPlace?')) { sessionStorage.clear(); window.location.href = 'Login.html'; } }
+
+    /* ── CHARTS (Keeping static for now, can be dynamic later) ── */
+    const P = '#15803d', T = '#0aada0', G = '#16a34a', A = '#d97706', R = '#dc2626', PU = '#7c3aed';
+    const grid = 'rgba(21,128,61,0.07)', tick = { color: '#4a7060', font: { size: 11 } };
+
+    window.onload = async () => {
+      await fetchCompanyProfile();
+      await fetchDashboardStats();
+      await fetchJobs();
+      fetchCompanyDrives();
+      renderCharts();
+      // Keep analytics charts consistent after students apply.
+      window.__coPollTimer = setInterval(async () => {
+        if (document.visibilityState !== 'visible') return;
+        try {
+          await fetchDashboardStats();
+          renderCharts();
+        } catch (e) {}
+      }, 25000);
+    };
+
+    function renderCharts() {
+      const s = window.__coStats || {};
+      const ta = s.totalApplicants || 0;
+      const sh = s.shortlisted || 0;
+      const hi = s.hired || 0;
+      const sum = ta + sh + hi;
+      const cf = document.getElementById('chart-funnel');
+      const ct = document.getElementById('chart-trend');
+
+      // If stats changed and we re-render, destroy the previous charts to avoid duplicates.
+      if (typeof Chart !== 'undefined') {
+        if (cf && Chart.getChart(cf)) Chart.getChart(cf).destroy();
+        if (ct && Chart.getChart(ct)) Chart.getChart(ct).destroy();
+      }
+
+      if (sum === 0) {
+        const setEmpty = (canvasEl) => {
+          if (!canvasEl || !canvasEl.parentElement) return;
+          canvasEl.style.display = 'none';
+          let msg = canvasEl.parentElement.querySelector('.chart-empty-state');
+          if (!msg) {
+            msg = document.createElement('p');
+            msg.className = 'empty-state chart-empty-state';
+            msg.style.padding = '14px';
+            msg.style.textAlign = 'center';
+            msg.style.color = 'var(--txmu)';
+            msg.textContent = 'No analytics data available';
+            canvasEl.parentElement.appendChild(msg);
+          } else {
+            msg.style.display = 'block';
+          }
+        };
+        setEmpty(cf);
+        setEmpty(ct);
+        return;
+      }
+
+      // Ensure canvases are visible again when data is available.
+      if (cf && cf.parentElement) {
+        cf.style.display = 'block';
+        const msg = cf.parentElement.querySelector('.chart-empty-state');
+        if (msg) msg.remove();
+      }
+      if (ct && ct.parentElement) {
+        ct.style.display = 'block';
+        const msg = ct.parentElement.querySelector('.chart-empty-state');
+        if (msg) msg.remove();
+      }
+      new Chart(cf, {
+        type: 'bar',
+        data: {
+          labels: ['Applicants', 'Shortlisted', 'Hired'],
+          datasets: [{
+            data: [ta, sh, hi],
+            backgroundColor: [P + 'cc', T + 'cc', G + 'cc'],
+            borderRadius: 8, borderSkipped: false
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { x: { grid: { color: grid }, ticks: tick }, y: { grid: { color: grid }, ticks: tick, beginAtZero: true } }
+        }
+      });
+      new Chart(ct, {
+        type: 'bar',
+        data: {
+          labels: ['Pipeline'],
+          datasets: [
+            { label: 'Applicants', data: [ta], backgroundColor: P + 'bb', borderRadius: 5, borderSkipped: false }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { color: grid }, ticks: tick }, y: { grid: { color: grid }, ticks: tick, beginAtZero: true } } }
+      });
+    }
+
+    let profileChartDone = false;
+    function renderProfileChart() {
+      if (profileChartDone) return; profileChartDone = true;
+      new Chart(document.getElementById('chart-profile-pipe'), {
+        type: 'bar',
+        data: {
+          labels: ['Applied', 'Reviewed', 'Shortlisted', 'Interview', 'Hired'],
+          datasets: [{ data: [24, 18, 9, 4, 3], backgroundColor: [P+'cc', T+'cc', A+'cc', G+'cc', PU+'cc'], borderRadius: 7 }]
+        },
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, scales: { x: { beginAtZero: true } } }
+      });
     }
   </script>
 </body>

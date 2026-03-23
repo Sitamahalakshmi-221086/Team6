@@ -12,7 +12,7 @@ function generateOtp() {
 
     /* ✅ EmailJS — sends OTP directly from browser, no server needed */
     async function sendOtpEmail(toEmail, toName, otp) {
-  const res = await fetch('http://localhost:5001/send-email', {
+  const res = await fetch('http://localhost:5000/send-email', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email: toEmail, name: toName, otp: otp })
@@ -244,10 +244,148 @@ function goBackToStage2() {
   goTo(2);
 }
 
-function showToast(msg, bg = '#7c3aed') {
-  const t = document.createElement('div');
-  t.style.cssText = `position:fixed;bottom:24px;right:24px;background:${bg};color:white;padding:12px 24px;border-radius:8px;box-shadow:0 8px 16px rgba(0,0,0,0.1);z-index:9999;font-family:inherit;font-size:14px;font-weight:500;`;
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 3000);
-}
+    function runCheck(c, fail) {
+      const el    = document.getElementById(c.id);
+      const errEl = document.getElementById(c.err);
+      if (!el || !errEl) return;
+      if (!c.test(el.value)) { el.classList.add('error'); errEl.classList.add('show'); fail(); }
+    }
+
+    function clearErr(el) {
+      el.classList.remove('error');
+      const errEl = document.getElementById('err-' + el.id);
+      if (errEl) errEl.classList.remove('show');
+    }
+
+    /* PASSWORD */
+    function checkPwd(input, prefix, labelId) {
+      const v    = input.value;
+      const bars = [1,2,3,4].map(i => document.getElementById(prefix + i));
+      const lbl  = document.getElementById(labelId);
+      bars.forEach(b => { if (b) b.className = 'pwd-bar'; });
+      if (!v) { lbl.textContent = 'Enter a password'; lbl.style.color = '#94a3b8'; return; }
+      let score = 0;
+      if (v.length >= 8) score++;
+      if (/[A-Z]/.test(v)) score++;
+      if (/[0-9]/.test(v)) score++;
+      if (/[^A-Za-z0-9]/.test(v)) score++;
+      const cls    = score <= 1 ? 'weak' : score <= 2 ? 'fair' : 'strong';
+      const texts  = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+      const colors = ['', '#ef4444', '#f59e0b', '#22c55e', '#22c55e'];
+      for (let i = 0; i < score; i++) bars[i].classList.add(cls);
+      lbl.textContent = texts[score] || '';
+      lbl.style.color = colors[score];
+    }
+
+    function togglePwd(id, btn) {
+      const inp = document.getElementById(id);
+      if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+      else { inp.type = 'password'; btn.textContent = '👁'; }
+    }
+
+    /* OTP VERIFY */
+    const otpInputs = document.querySelectorAll('.otp-input');
+
+    function otpMove(el, idx) {
+      if (el.value && idx < 5) otpInputs[idx + 1].focus();
+      if (event.key === 'Backspace' && !el.value && idx > 0) otpInputs[idx - 1].focus();
+    }
+
+    function verifyOtp() {
+      const otp     = Array.from(otpInputs).map(i => i.value).join('');
+      const spinner = document.getElementById('verify-spinner');
+      const errEl   = document.getElementById('otp-error');
+      errEl.style.display = 'none';
+      errEl.style.color   = '#ef4444';
+
+      if (otp.length < 6) { errEl.textContent = 'Please enter all 6 digits.'; errEl.style.display = 'block'; return; }
+
+      if (Date.now() > otpExpiry) {
+        errEl.textContent   = '⏰ OTP has expired. Please resend.';
+        errEl.style.display = 'block';
+        otpInputs.forEach(i => { i.value = ''; i.style.borderColor = '#ef4444'; });
+        setTimeout(() => otpInputs.forEach(i => i.style.borderColor = ''), 1200);
+        otpInputs[0].focus();
+        return;
+      }
+
+      spinner.style.display = 'block';
+      document.getElementById('verify-btn').disabled = true;
+
+      setTimeout(() => {
+        spinner.style.display = 'none';
+        document.getElementById('verify-btn').disabled = false;
+        if (otp === generatedOtp) {
+          clearInterval(resendTimer);
+          showToast('🎉 Email verified!', '#7c3aed');
+          goTo(4);
+        } else {
+          errEl.textContent   = '❌ Incorrect OTP. Please check your email and try again.';
+          errEl.style.display = 'block';
+          otpInputs.forEach(i => { i.value = ''; i.style.borderColor = '#ef4444'; });
+          otpInputs[0].focus();
+          setTimeout(() => otpInputs.forEach(i => i.style.borderColor = ''), 1200);
+        }
+      }, 800);
+    }
+
+    /* RESEND */
+    function startResendTimer(seconds = 30) {
+      let t = seconds;
+      document.getElementById('resend-btn').style.display  = 'none';
+      document.getElementById('timer-badge').style.display = 'inline-flex';
+      document.getElementById('timer-count').textContent   = t;
+      clearInterval(resendTimer);
+      resendTimer = setInterval(() => {
+        t--;
+        document.getElementById('timer-count').textContent = t;
+        if (t <= 0) {
+          clearInterval(resendTimer);
+          document.getElementById('resend-btn').style.display  = 'inline';
+          document.getElementById('timer-badge').style.display = 'none';
+        }
+      }, 1000);
+    }
+
+    async function resendOtp() {
+      const email = document.getElementById('t-email').value.trim();
+      const name  = document.getElementById('t-name').value.trim();
+      const btn   = document.getElementById('resend-btn');
+
+      btn.disabled = true;
+      otpInputs.forEach(i => { i.value = ''; i.style.borderColor = ''; });
+      document.getElementById('otp-error').style.display = 'none';
+
+      generatedOtp = generateOtp();
+      otpExpiry    = Date.now() + OTP_TTL_MS;
+
+      try {
+        await sendOtpEmail(email, name, generatedOtp);
+        isDevMode = false;
+        document.getElementById('dev-otp-display').style.display  = 'none';
+        document.getElementById('demo-mode-banner').style.display = 'none';
+        document.getElementById('otp-sent-badge').style.display   = 'inline-block';
+        showToast('✅ New OTP sent to ' + email, '#7c3aed');
+      } catch (err) {
+        isDevMode = true;
+        document.getElementById('dev-otp-value').textContent      = generatedOtp;
+        document.getElementById('dev-otp-display').style.display  = 'block';
+        document.getElementById('demo-mode-banner').style.display = 'flex';
+        showToast('⚠️ Email send failed – using dev mode', '#f59e0b', 4000);
+      }
+
+      btn.disabled = false;
+      startResendTimer();
+      otpInputs[0].focus();
+    }
+
+    /* TOAST */
+    function showToast(msg, bg = '#7c3aed', duration = 2500) {
+      const toast = document.createElement('div');
+      toast.className        = 'toast';
+      toast.textContent      = msg;
+      toast.style.background = bg;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), duration);
+    }
+  

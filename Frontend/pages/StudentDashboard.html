@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>CampusPlace – Student Dashboard</title>
   <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,800&family=DM+Sans:wght@300;400;500;600;700&family=Satisfy&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,800&family=DM+Sans:wght@300;400;500;600;700&family=Satisfy&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="../css/studentdashboardstyle.css" />
   <link rel="stylesheet" href="../css/studentdashboardstyle.css" />
@@ -43,8 +43,8 @@
     <div class="sb-user">
       <div class="av" id="sb-av">AS</div>
       <div>
-        <div class="sb-uname" id="sb-name">Arjun Sharma</div>
-        <div class="sb-udept">CSE · 3rd Year</div>
+        <div class="sb-uname" id="sb-name"></div>
+        <div class="sb-udept" id="sb-udept"></div>
       </div>
     </div>
 
@@ -67,7 +67,7 @@
             <line x1="10" y1="14" x2="14" y2="14" />
           </svg></span>
         <span class="sb-label">Job Listings</span>
-        <span class="sb-badge">12</span>
+        <span class="sb-badge" id="sb-badge-jobs">0</span>
       </button>
       <button class="nl" onclick="go('applications',this)">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -76,7 +76,7 @@
             <polygon points="22 2 15 22 11 13 2 9 22 2" />
           </svg></span>
         <span class="sb-label">My Applications</span>
-        <span class="sb-badge">4</span>
+        <span class="sb-badge" id="sb-badge-apps">0</span>
       </button>
       <button class="nl" onclick="go('drives',this)">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -167,34 +167,7 @@
       <span class="notif-hdr-title">Notifications</span>
       <span style="font-size:12px;color:var(--P);font-weight:600;cursor:pointer;">Mark all read</span>
     </div>
-    <div class="notif-item unread">
-      <div class="n-dot" style="background:var(--P);"></div>
-      <div>
-        <div class="n-text">You've been <strong>shortlisted</strong> for Amazon Data Analyst.</div>
-        <div class="n-time">2 hours ago</div>
-      </div>
-    </div>
-    <div class="notif-item unread">
-      <div class="n-dot" style="background:var(--R);"></div>
-      <div>
-        <div class="n-text">Microsoft campus drive registration closes <strong>March 15</strong>.</div>
-        <div class="n-time">5 hours ago</div>
-      </div>
-    </div>
-    <div class="notif-item unread">
-      <div class="n-dot" style="background:var(--T);"></div>
-      <div>
-        <div class="n-text">New: <strong>ML Engineer @ Flipkart</strong> matches your profile.</div>
-        <div class="n-time">Yesterday</div>
-      </div>
-    </div>
-    <div class="notif-item">
-      <div class="n-dot" style="background:var(--txl);"></div>
-      <div>
-        <div class="n-text">Placement orientation – Mar 16, 11 AM, Main Auditorium.</div>
-        <div class="n-time">2 days ago</div>
-      </div>
-    </div>
+    <div id="notif-list" style="padding:8px 12px;"></div>
   </div>
 
   <!-- ════ JOB MODAL ════ -->
@@ -321,14 +294,15 @@
           </svg>
           <span class="rdot" id="notif-dot"></span>
         </div>
-        <div class="icon-btn" onclick="toggleDarkMode()" id="top-dark-toggle">
+        <div class="icon-btn" onclick="toggleDarkMode()" id="top-dark-toggle" title="Toggle theme"
+          role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleDarkMode();}">
           <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
           </svg>
         </div>
         <div class="tb-chip" onclick="go('profile',document.querySelector('.nl[onclick*=profile]'))">
           <div class="av" style="width:26px;height:26px;font-size:9px;" id="tb-av">AS</div>
-          <span id="tb-name" style="font-size:13px;font-weight:600;">Arjun</span>
+          <span id="tb-name" style="font-size:13px;font-weight:600;"></span>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7a96a8" stroke-width="2.5">
             <polyline points="6 9 12 15 18 9" />
           </svg>
@@ -342,29 +316,29 @@
       <div class="page on" id="pg-home">
         <div class="greet-banner">
           <div style="flex:1;">
-            <div class="greet-hi" id="greet-msg">Good morning, Arjun 👋</div>
-            <div class="greet-sub" id="greet-sub">Placement season is live — <strong>12 new roles</strong> match your profile today.</div>
+            <div class="greet-hi" id="greet-msg">Welcome 👋</div>
+            <div class="greet-sub" id="greet-sub">Loading your placement overview…</div>
             <div class="next-step-card">
               <div class="nsc-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
               <div class="nsc-info">
                 <div class="nsc-top">Your Next Step</div>
-                <div class="nsc-main" style="margin:2px 0;font-weight:700;">Review for <strong>Infosys Technical Interview</strong></div>
-                <div class="nsc-time" style="font-size:11px;opacity:0.8;">Mar 18, 10:00 AM · Placement Cell, Block A</div>
+                <div class="nsc-main" style="margin:2px 0;font-weight:700;">Track applications and drives from the menu.</div>
+                <div class="nsc-time" style="font-size:11px;opacity:0.8;">—</div>
               </div>
-              <button class="btn sm" onclick="go('apps',document.querySelector('.nl[onclick*=apps]'))" style="background:#fff;color:var(--P);margin-left:auto;">View Details</button>
+              <button class="btn sm" onclick="go('applications',document.querySelector('.nl[onclick*=applications]'))" style="background:#fff;color:var(--P);margin-left:auto;">View Details</button>
             </div>
           </div>
           <div class="greet-right">
             <div class="greet-stat">
-              <div class="greet-stat-val">12</div>
-              <div class="greet-stat-lbl">New Matches</div>
+              <div class="greet-stat-val">0</div>
+              <div class="greet-stat-lbl">Open Jobs</div>
             </div>
             <div class="greet-stat">
-              <div class="greet-stat-val">2</div>
+              <div class="greet-stat-val">0</div>
               <div class="greet-stat-lbl">Interviews</div>
             </div>
             <div class="greet-stat">
-              <div class="greet-stat-val">Mar 18</div>
+              <div class="greet-stat-val">—</div>
               <div class="greet-stat-lbl">Next Drive</div>
             </div>
           </div>
@@ -381,15 +355,9 @@
                 <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
               </svg>
             </div>
-            <div class="stat-val" style="color:var(--P);">12</div>
+            <div class="stat-val" style="color:var(--P);">0</div>
             <div class="stat-lbl">Open Jobs</div>
-            <div class="stat-note up">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-                <polyline points="17 6 23 6 23 12" />
-              </svg>
-              3 new today
-            </div>
+            <div class="stat-note info">TPO-approved roles</div>
           </div>
           <div class="stat-card" onclick="go('applications',document.querySelector('.nl[onclick*=applications]'))"
             style="cursor:pointer;">
@@ -401,16 +369,10 @@
               </svg>
             </div>
             <div class="stat-v-row">
-              <div class="stat-val" style="color:var(--T);">4</div><span class="live-badge">Live</span>
+              <div class="stat-val" style="color:var(--T);">0</div><span class="live-badge">Live</span>
             </div>
             <div class="stat-lbl">Applications</div>
-            <div class="stat-note info">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-              </svg>
-              1 pending action
-            </div>
+            <div class="stat-note info">From your account</div>
           </div>
           <div class="stat-card" onclick="go('drives',document.querySelector('.nl[onclick*=drives]'))"
             style="cursor:pointer;">
@@ -424,15 +386,9 @@
                 <path d="M9 16l2 2 4-4" />
               </svg>
             </div>
-            <div class="stat-val" style="color:var(--G);">2</div>
-            <div class="stat-lbl">Interviews Lined</div>
-            <div class="stat-note warn">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-              </svg>
-              Next: Mar 18, 10 AM
-            </div>
+            <div class="stat-val" style="color:var(--G);">0</div>
+            <div class="stat-lbl">Interviews</div>
+            <div class="stat-note info">Live pipeline</div>
           </div>
           <div class="stat-card" onclick="go('profile',document.querySelector('.nl[onclick*=profile]'))"
             style="cursor:pointer;">
@@ -443,14 +399,9 @@
                 <circle cx="12" cy="7" r="4" />
               </svg>
             </div>
-            <div class="stat-val" style="color:var(--A);">75%</div>
+            <div class="stat-val" style="color:var(--A);">0%</div>
             <div class="stat-lbl">Profile Score</div>
-            <div class="stat-note info">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-              </svg>
-              Add photo to boost
-            </div>
+            <div class="stat-note info">Based on completeness</div>
           </div>
         </div>
 
@@ -469,7 +420,7 @@
                   <line x1="12" y1="20" x2="12" y2="4" />
                   <line x1="6" y1="20" x2="6" y2="14" />
                 </svg>
-                Placement Activity — Batch 2025
+                Your placement activity (live)
               </div>
               <button class="sec-link" onclick="go('analytics',document.querySelector('.nl[onclick*=analytics]'))">Full
                 stats →</button>
@@ -483,7 +434,7 @@
                     style="width:10px;height:10px;border-radius:2px;background:#0aada0;display:inline-block;"></span>Drives
                 </div>
               </div>
-              <div style="position:relative;height:180px;"><canvas id="chart-home-activity"></canvas></div>
+              <div class="chart-wrap chart-wrap--home"><canvas id="chart-home-activity"></canvas></div>
             </div>
 
             <!-- Chart 2: Package donut -->
@@ -505,9 +456,8 @@
                   <canvas id="chart-home-pkg"></canvas>
                   <div
                     style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
-                    <div style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:800;color:var(--P);">
-                      307</div>
-                    <div style="font-size:10px;color:var(--txmu);">placed</div>
+                    <div id="home-pkg-mid-val" style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:800;color:var(--P);"></div>
+                    <div id="home-pkg-mid-sub" style="font-size:10px;color:var(--txmu);"></div>
                   </div>
                 </div>
                 <div style="flex:1;" id="pkg-legend"></div>
@@ -515,18 +465,15 @@
               <div
                 style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;border-top:1px solid var(--brs);padding-top:12px;">
                 <div style="text-align:center;">
-                  <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:var(--G);">
-                    18.4</div>
+                  <div id="home-stat-avg" style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:var(--G);"></div>
                   <div style="font-size:11px;color:var(--txmu);">Avg LPA</div>
                 </div>
                 <div style="text-align:center;">
-                  <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:var(--P);">48
-                  </div>
+                  <div id="home-stat-high" style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:var(--P);"></div>
                   <div style="font-size:11px;color:var(--txmu);">Highest LPA</div>
                 </div>
                 <div style="text-align:center;">
-                  <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:var(--A);">94%
-                  </div>
+                  <div id="home-stat-rate" style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:var(--A);"></div>
                   <div style="font-size:11px;color:var(--txmu);">Placed</div>
                 </div>
               </div>
@@ -566,11 +513,11 @@
               </div>
               <!-- Name + meta -->
               <div class="hpw-info">
-                <div class="hpw-name" id="home-pw-name">Arjun Sharma</div>
+                <div class="hpw-name" id="home-pw-name"></div>
                 <div class="hpw-meta">
-                  <span class="hpw-tag blue">CSE</span>
-                  <span class="hpw-tag teal">3rd Year</span>
-                  <span class="hpw-tag green">8.5 CGPA</span>
+                  <span class="hpw-tag blue" id="home-pw-branch"></span>
+                  <span class="hpw-tag teal" id="home-pw-year"></span>
+                  <span class="hpw-tag green" id="home-pw-cgpa"></span>
                 </div>
               </div>
               <!-- Strength ring + stats row -->
@@ -579,8 +526,8 @@
                   <div class="hpw-ring-wrap">
                     <svg viewBox="0 0 80 80" width="80" height="80" style="transform:rotate(-90deg)">
                       <circle cx="40" cy="40" r="32" fill="none" stroke="#eef4f9" stroke-width="7" />
-                      <circle cx="40" cy="40" r="32" fill="none" stroke="url(#hpw-grad)" stroke-width="7"
-                        stroke-dasharray="201" stroke-dashoffset="50" stroke-linecap="round" />
+                      <circle id="hpw-ring-circle" cx="40" cy="40" r="32" fill="none" stroke="url(#hpw-grad)" stroke-width="7"
+                        stroke-dasharray="201" stroke-dashoffset="201" stroke-linecap="round" />
                       <defs>
                         <linearGradient id="hpw-grad" x1="0%" y1="0%" x2="100%" y2="0%">
                           <stop offset="0%" stop-color="#1759d6" />
@@ -589,46 +536,51 @@
                       </defs>
                     </svg>
                     <div class="hpw-ring-label">
-                      <div class="hpw-ring-pct">75%</div>
+                      <div class="hpw-ring-pct" id="hpw-ring-pct"></div>
                       <div class="hpw-ring-sub">Profile</div>
                     </div>
                   </div>
                   <div class="hpw-stats-col">
                     <div class="hpw-stat">
-                      <div class="hpw-stat-val" style="color:var(--T);">4</div>
+                      <div class="hpw-stat-val" style="color:var(--T);">0</div>
                       <div class="hpw-stat-lbl">Applied</div>
                     </div>
                     <div class="hpw-stat-div"></div>
                     <div class="hpw-stat">
-                      <div class="hpw-stat-val" style="color:var(--A);">2</div>
+                      <div class="hpw-stat-val" style="color:var(--A);">0</div>
                       <div class="hpw-stat-lbl">Shortlisted</div>
                     </div>
                     <div class="hpw-stat-div"></div>
                     <div class="hpw-stat">
-                      <div class="hpw-stat-val" style="color:var(--G);">2</div>
+                      <div class="hpw-stat-val" style="color:var(--G);">0</div>
                       <div class="hpw-stat-lbl">Interviews</div>
+                    </div>
+                    <div class="hpw-stat-div"></div>
+                    <div class="hpw-stat">
+                      <div class="hpw-stat-val" style="color:var(--PU);">0</div>
+                      <div class="hpw-stat-lbl">Offers</div>
                     </div>
                   </div>
                 </div>
                 <!-- Checklist -->
                 <div class="hpw-checks">
-                  <div class="hpw-chk done"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                  <div class="hpw-chk todo" id="hpw-chk-basic"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
                       stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>Basic info</div>
-                  <div class="hpw-chk done"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                  <div class="hpw-chk todo" id="hpw-chk-resume"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
                       stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>Resume</div>
-                  <div class="hpw-chk done"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                  <div class="hpw-chk todo" id="hpw-chk-skills"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
                       stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>Skills</div>
-                  <div class="hpw-chk todo"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7a96a8"
+                  <div class="hpw-chk todo" id="hpw-chk-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7a96a8"
                       stroke-width="2" stroke-linecap="round">
                       <circle cx="12" cy="12" r="9" />
                     </svg>LinkedIn</div>
-                  <div class="hpw-chk todo"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7a96a8"
+                  <div class="hpw-chk todo" id="hpw-chk-photo"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7a96a8"
                       stroke-width="2" stroke-linecap="round">
                       <circle cx="12" cy="12" r="9" />
                     </svg>Photo</div>
@@ -661,7 +613,7 @@
                 →</button>
             </div>
             <div class="card" style="padding:16px 18px;margin-bottom:16px;">
-              <div style="position:relative;height:140px;"><canvas id="chart-home-branch"></canvas></div>
+              <div class="chart-wrap chart-wrap--home-sm"><canvas id="chart-home-branch"></canvas></div>
             </div>
 
             <!-- Upcoming deadlines -->
@@ -733,15 +685,15 @@
               <option>ECE</option>
             </select>
           </div>
-          <div style="font-size:12px;color:var(--txmu);" id="job-count">Showing 12 jobs</div>
+          <div style="font-size:12px;color:var(--txmu);" id="job-count">Showing 0 jobs</div>
         </div>
         <div class="tabs">
           <button class="tab on" onclick="switchTab('jobs','all',this)">All <span class="tab-cnt"
-              id="tc-all">12</span></button>
+              id="tc-all">0</span></button>
           <button class="tab" onclick="switchTab('jobs','reco',this)">⭐ Recommended <span class="tab-cnt"
-              id="tc-reco">5</span></button>
+              id="tc-reco">0</span></button>
           <button class="tab" onclick="switchTab('jobs','intern',this)">Internships <span class="tab-cnt"
-              id="tc-intern">3</span></button>
+              id="tc-intern">0</span></button>
           <button class="tab" onclick="switchTab('jobs','saved',this)">Saved <span class="tab-cnt"
               id="tc-saved">0</span></button>
         </div>
@@ -793,7 +745,7 @@
                   <polygon points="22 2 15 22 11 13 2 9 22 2" />
                 </svg></div>
               <div class="ps-lbl">Applied</div>
-              <div class="ps-cnt">4</div>
+              <div class="ps-cnt">0</div>
             </div>
             <div class="pl-line done"></div>
             <div class="ps done">
@@ -803,7 +755,7 @@
                   <circle cx="12" cy="12" r="3" />
                 </svg></div>
               <div class="ps-lbl">Reviewed</div>
-              <div class="ps-cnt">3</div>
+              <div class="ps-cnt">0</div>
             </div>
             <div class="pl-line done"></div>
             <div class="ps active">
@@ -813,7 +765,7 @@
                     points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                 </svg></div>
               <div class="ps-lbl">Shortlisted</div>
-              <div class="ps-cnt">2</div>
+              <div class="ps-cnt">0</div>
             </div>
             <div class="pl-line"></div>
             <div class="ps">
@@ -823,7 +775,7 @@
                   <rect x="1" y="5" width="15" height="14" rx="2" />
                 </svg></div>
               <div class="ps-lbl">Interview</div>
-              <div class="ps-cnt">2</div>
+              <div class="ps-cnt">0</div>
             </div>
             <div class="pl-line"></div>
             <div class="ps">
@@ -837,9 +789,9 @@
           </div>
         </div>
         <div class="tabs">
-          <button class="tab on" onclick="switchTab('apps','all',this)">All <span class="tab-cnt">4</span></button>
-          <button class="tab" onclick="switchTab('apps','active',this)">Active <span class="tab-cnt">3</span></button>
-          <button class="tab" onclick="switchTab('apps','closed',this)">Closed <span class="tab-cnt">1</span></button>
+          <button class="tab on" onclick="switchTab('apps','all',this)">All <span class="tab-cnt">0</span></button>
+          <button class="tab" onclick="switchTab('apps','active',this)">Active <span class="tab-cnt">0</span></button>
+          <button class="tab" onclick="switchTab('apps','closed',this)">Closed <span class="tab-cnt">0</span></button>
         </div>
         <div class="tab-panel on" id="apps-all">
           <div class="card" style="padding:0 14px;" id="apps-all-list"></div>
@@ -874,10 +826,10 @@
         <div
           style="background:linear-gradient(110deg,var(--PD),var(--P) 55%,var(--T));border-radius:var(--r);padding:22px 28px;margin-bottom:18px;color:#fff;box-shadow:var(--sh2);">
           <div
-            style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.75;margin-bottom:5px;">
-            Next Test — Infosys InfyTQ</div>
-          <div style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:800;margin-bottom:14px;">Online
-            Test · March 20, 10:00 AM</div>
+            style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.75;margin-bottom:5px;"
+            id="tests-banner-title">Scheduled tests</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:800;margin-bottom:14px;"
+            id="tests-banner-sub">No upcoming tests</div>
           <div style="display:flex;gap:12px;" id="countdown-boxes">
             <div class="cd-box">
               <div class="cd-val" id="cd-d">07</div>
@@ -939,8 +891,8 @@
           <div class="db">
             <div class="db-title">Personal Information</div>
             <div class="form-grid">
-              <div class="fg"><label>Full Name</label><input id="rb-name" placeholder="Arjun Sharma" /></div>
-              <div class="fg"><label>Email</label><input id="rb-email" placeholder="arjun@college.edu" /></div>
+              <div class="fg"><label>Full Name</label><input id="rb-name" placeholder="Your full name" /></div>
+              <div class="fg"><label>Email</label><input id="rb-email" placeholder="your.email@college.edu" /></div>
               <div class="fg"><label>Phone</label><input id="rb-phone" placeholder="+91 98765 43210" /></div>
               <div class="fg"><label>LinkedIn URL</label><input id="rb-linkedin" placeholder="linkedin.com/in/arjun" />
               </div>
@@ -973,10 +925,7 @@
             <div class="db-title">Skills &amp; Experience</div>
             <div class="form-grid">
               <div class="fg full"><label>Technical Skills</label>
-                <div class="skill-tags" id="rb-skills-wrap" onclick="document.getElementById('rb-sk-inp').focus()"><span
-                    class="skill-tag">React<button onclick="this.parentElement.remove()">×</button></span><span
-                    class="skill-tag">Node.js<button onclick="this.parentElement.remove()">×</button></span><span
-                    class="skill-tag">MongoDB<button onclick="this.parentElement.remove()">×</button></span><input
+                <div class="skill-tags" id="rb-skills-wrap" onclick="document.getElementById('rb-sk-inp').focus()"><input
                     class="skill-input" id="rb-sk-inp" placeholder="Add skill…"
                     onkeydown="addSkill(event,'rb-skills-wrap','rb-sk-inp')" /></div>
               </div>
@@ -1016,35 +965,31 @@
                 <line x1="12" y1="15" x2="12" y2="3" />
               </svg> Download PDF</button></div>
           <div class="preview-box">
-            <h1 id="pv-name">Arjun Sharma</h1>
-            <div class="pv-contact" id="pv-contact"><a href="/cdn-cgi/l/email-protection" class="__cf_email__"
-                data-cfemail="d5b4a7bfa0bb95b6bab9b9b0b2b0fbb0b1a0">[email&#160;protected]</a> · +91 98765 43210 ·
-              linkedin.com/in/arjun</div>
+            <h1 id="pv-name"></h1>
+            <div class="pv-contact" id="pv-contact"></div>
             <div class="pv-sec">
               <h3>Objective</h3>
-              <p class="pv-item" id="pv-obj">A passionate CSE student seeking challenging roles in software engineering.
-              </p>
+              <p class="pv-item" id="pv-obj"></p>
             </div>
             <div class="pv-sec">
               <h3>Education</h3>
-              <p class="pv-item" id="pv-edu"><strong>B.Tech – CSE</strong> · JNTU Hyderabad · CGPA 8.5 · 2026</p>
+              <p class="pv-item" id="pv-edu"></p>
             </div>
             <div class="pv-sec">
               <h3>Skills</h3>
-              <p class="pv-item" id="pv-skills">React, Node.js, MongoDB, JavaScript, Python</p>
+              <p class="pv-item" id="pv-skills"></p>
             </div>
             <div class="pv-sec">
               <h3>Projects</h3>
-              <p class="pv-item" id="pv-p1"><strong>E-Commerce Platform</strong> – Full-stack app using React, Node.js,
-                MongoDB.</p>
+              <p class="pv-item" id="pv-p1"></p>
             </div>
             <div class="pv-sec">
               <h3>Experience</h3>
-              <p class="pv-item" id="pv-exp">Frontend Intern @ XYZ Corp (June–Aug 2024)</p>
+              <p class="pv-item" id="pv-exp"></p>
             </div>
             <div class="pv-sec">
               <h3>Certifications</h3>
-              <p class="pv-item" id="pv-cert">AWS Cloud Practitioner, Google Analytics</p>
+              <p class="pv-item" id="pv-cert"></p>
             </div>
           </div>
         </div>
@@ -1138,9 +1083,7 @@
               <line x1="6" y1="20" x2="6" y2="14" />
             </svg>Placement Analytics</div>
           <select class="s-select" id="analytics-year" onchange="renderAnalytics()">
-            <option value="2024">Batch 2024</option>
-            <option value="2025" selected>Batch 2025</option>
-            <option value="2026">Batch 2026 (Live)</option>
+            <option value="live" selected>Live — your data</option>
           </select>
         </div>
         <div class="stats-row" style="margin-bottom:22px;">
@@ -1152,13 +1095,9 @@
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                 <path d="M16 3.13a4 4 0 0 1 0 7.75" />
               </svg></div>
-            <div class="stat-val" style="color:var(--P);">312</div>
-            <div class="stat-lbl">Total Students</div>
-            <div class="stat-note up"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2.5">
-                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-                <polyline points="17 6 23 6 23 12" />
-              </svg>+18 from last batch</div>
+            <div class="stat-val" style="color:var(--P);">0</div>
+            <div class="stat-lbl">Applications</div>
+            <div class="stat-note">Live data</div>
           </div>
           <div class="stat-card">
             <div class="stat-icon" style="background:var(--GL);"><svg width="18" height="18" viewBox="0 0 24 24"
@@ -1166,13 +1105,9 @@
                 <circle cx="12" cy="8" r="6" />
                 <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
               </svg></div>
-            <div class="stat-val" style="color:var(--G);">94%</div>
-            <div class="stat-lbl">Placement Rate</div>
-            <div class="stat-note up"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2.5">
-                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-                <polyline points="17 6 23 6 23 12" />
-              </svg>+2% from 2024</div>
+            <div class="stat-val" style="color:var(--G);">0</div>
+            <div class="stat-lbl">Shortlisted</div>
+            <div class="stat-note">Live data</div>
           </div>
           <div class="stat-card">
             <div class="stat-icon" style="background:var(--AL);"><svg width="18" height="18" viewBox="0 0 24 24"
@@ -1180,13 +1115,9 @@
                 <line x1="12" y1="1" x2="12" y2="23" />
                 <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
               </svg></div>
-            <div class="stat-val" style="color:var(--A);">18.4 LPA</div>
-            <div class="stat-lbl">Avg Package</div>
-            <div class="stat-note up"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2.5">
-                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-                <polyline points="17 6 23 6 23 12" />
-              </svg>+3.2 LPA YoY</div>
+            <div class="stat-val" style="color:var(--A);">0</div>
+            <div class="stat-lbl">Interviews</div>
+            <div class="stat-note">Live data</div>
           </div>
           <div class="stat-card">
             <div class="stat-icon" style="background:var(--PUL);"><svg width="18" height="18" viewBox="0 0 24 24"
@@ -1198,40 +1129,40 @@
                 <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
                 <path d="M18 2H6v7a6 6 0 0 0 12 0V2z" />
               </svg></div>
-            <div class="stat-val" style="color:var(--PU);">48 LPA</div>
-            <div class="stat-lbl">Highest Package</div>
-            <div class="stat-note" style="color:var(--PU);font-size:11.5px;">Google India</div>
+            <div class="stat-val" style="color:var(--PU);">0</div>
+            <div class="stat-lbl">Offers</div>
+            <div class="stat-note">Live data</div>
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;">
           <div class="chart-card">
             <div class="chart-title">Monthly Placement Activity</div>
             <div class="chart-sub">Offers & drives per month — Batch 2025</div>
-            <div style="position:relative;height:210px;"><canvas id="chart-monthly"></canvas></div>
+            <div class="chart-wrap chart-wrap--analytics"><canvas id="chart-monthly"></canvas></div>
           </div>
           <div class="chart-card">
             <div class="chart-title">Branch-wise Placement Rate</div>
             <div class="chart-sub">% students placed by department</div>
-            <div style="position:relative;height:210px;"><canvas id="chart-branch"></canvas></div>
+            <div class="chart-wrap chart-wrap--analytics"><canvas id="chart-branch"></canvas></div>
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:18px;margin-bottom:18px;">
           <div class="chart-card">
             <div class="chart-title">Package Distribution</div>
             <div class="chart-sub">Students per salary bracket</div>
-            <div style="position:relative;height:210px;"><canvas id="chart-salary"></canvas></div>
+            <div class="chart-wrap chart-wrap--analytics"><canvas id="chart-salary"></canvas></div>
           </div>
           <div class="chart-card">
             <div class="chart-title">Top Recruiters</div>
             <div class="chart-sub">Offers made by company</div>
-            <div style="position:relative;height:210px;"><canvas id="chart-companies"></canvas></div>
+            <div class="chart-wrap chart-wrap--analytics"><canvas id="chart-companies"></canvas></div>
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
           <div class="chart-card">
             <div class="chart-title">Avg Package Trend (5 Years)</div>
             <div class="chart-sub">College vs industry average (LPA)</div>
-            <div style="position:relative;height:195px;"><canvas id="chart-trend"></canvas></div>
+            <div class="chart-wrap chart-wrap--analytics chart-wrap--analytics-sm"><canvas id="chart-trend"></canvas></div>
           </div>
           <div class="chart-card">
             <div class="chart-title">Role Category Breakdown</div>
@@ -1251,7 +1182,7 @@
         <div class="pph">
           <!-- Banner — no text, clean gradient with edit btn -->
           <div class="pph-banner">
-            <button class="ph-edit-btn" onclick="toggleEdit()">
+            <button type="button" class="ph-edit-btn" onclick="toggleEdit()">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -1270,12 +1201,21 @@
               <div class="pph-av" id="pg-av">AS</div>
               <div class="pph-av-ring"></div>
             </div>
-            <div class="profile-tags-row">
-              <span class="profile-tag-st blue" id="pg-branch-year">
-                <i data-lucide="graduation-cap"></i> CSE · 3rd Year
+          </div>
+          <!-- Name + email + tags — fully below banner on white background -->
+          <div class="pph-nameblock">
+            <div class="pph-name" id="profile-name"></div>
+            <div class="pph-email" id="profile-email"></div>
+            <div class="pph-tags">
+              <span class="hpw-tag blue" id="pg-branch-year">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                  <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                </svg>
               </span>
-              <span class="profile-tag-st green" id="pg-cgpa-tag">CGPA 8.5</span>
-              <span class="profile-tag-st amber" id="pg-roll-tag">Roll No: 21CSE045</span>
+              <span class="hpw-tag green" id="pg-cgpa-tag"></span>
+              <span class="hpw-tag" style="background:var(--AL);color:#92400e;" id="pg-roll-tag"></span>
             </div>
           </div>
 
@@ -1286,8 +1226,8 @@
               <div class="hpw-ring-wrap" style="width:90px;height:90px;">
                 <svg viewBox="0 0 90 90" width="90" height="90" style="transform:rotate(-90deg)">
                   <circle cx="45" cy="45" r="36" fill="none" stroke="#eef4f9" stroke-width="8" />
-                  <circle cx="45" cy="45" r="36" fill="none" stroke="url(#pph-grad)" stroke-width="8"
-                    stroke-dasharray="226" stroke-dashoffset="57" stroke-linecap="round" />
+                  <circle id="pph-ring-circle" cx="45" cy="45" r="36" fill="none" stroke="url(#pph-grad)" stroke-width="8"
+                    stroke-dasharray="226" stroke-dashoffset="226" stroke-linecap="round" />
                   <defs>
                     <linearGradient id="pph-grad" x1="0%" y1="0%" x2="100%" y2="0%">
                       <stop offset="0%" stop-color="#1759d6" />
@@ -1296,29 +1236,29 @@
                   </defs>
                 </svg>
                 <div class="hpw-ring-label">
-                  <div class="hpw-ring-pct" style="font-size:1.15rem;">75%</div>
+                  <div class="hpw-ring-pct" style="font-size:1.15rem;" id="pph-ring-pct"></div>
                   <div class="hpw-ring-sub">Strength</div>
                 </div>
               </div>
               <!-- Checklist pills -->
               <div class="pph-checks">
-                <div class="hpw-chk done"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                <div class="hpw-chk todo" id="pph-chk-basic"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>Basic info</div>
-                <div class="hpw-chk done"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                <div class="hpw-chk todo" id="pph-chk-resume"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>Resume</div>
-                <div class="hpw-chk done"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+                <div class="hpw-chk todo" id="pph-chk-skills"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>Skills</div>
-                <div class="hpw-chk todo"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7a96a8"
+                <div class="hpw-chk todo" id="pph-chk-li"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7a96a8"
                     stroke-width="2" stroke-linecap="round">
                     <circle cx="12" cy="12" r="9" />
                   </svg>LinkedIn</div>
-                <div class="hpw-chk todo"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7a96a8"
+                <div class="hpw-chk todo" id="pph-chk-photo"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7a96a8"
                     stroke-width="2" stroke-linecap="round">
                     <circle cx="12" cy="12" r="9" />
                   </svg>Photo</div>
@@ -1334,7 +1274,7 @@
                     <polygon points="22 2 15 22 11 13 2 9 22 2" />
                   </svg>
                 </div>
-                <div class="pph-stat-val" style="color:var(--P);">4</div>
+                <div class="pph-stat-val" style="color:var(--P);">0</div>
                 <div class="pph-stat-lbl">Applied</div>
               </div>
               <div class="pph-stat">
@@ -1345,7 +1285,7 @@
                       points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                   </svg>
                 </div>
-                <div class="pph-stat-val" style="color:var(--A);">2</div>
+                <div class="pph-stat-val" style="color:var(--A);">0</div>
                 <div class="pph-stat-lbl">Shortlisted</div>
               </div>
               <div class="pph-stat">
@@ -1359,7 +1299,7 @@
                     <path d="M9 16l2 2 4-4" />
                   </svg>
                 </div>
-                <div class="pph-stat-val" style="color:var(--G);">2</div>
+                <div class="pph-stat-val" style="color:var(--G);">0</div>
                 <div class="pph-stat-lbl">Interviews</div>
               </div>
               <div class="pph-stat">
@@ -1386,47 +1326,41 @@
                 </svg>Personal &amp; Academic Details</div>
               <div class="dg">
                 <div class="df"><label>Full Name</label>
-                  <p id="pv-fname">Arjun Sharma</p>
+                  <p id="pv-fname"></p>
                 </div>
-                <div class="df"><label>Roll Number</label>
-                  <p id="pv-roll">21CSE045</p>
+                <div class="df"><label>Roll No.</label>
+                  <p id="pv-roll"></p>
                 </div>
                 <div class="df"><label>Branch</label>
-                  <p id="pv-branch">Computer Science & Engg.</p>
+                  <p id="pv-branch"></p>
                 </div>
                 <div class="df"><label>Year</label>
-                  <p id="pv-year">3rd Year</p>
+                  <p id="pv-year"></p>
                 </div>
                 <div class="df"><label>CGPA</label>
-                  <p id="pv-cgpa">8.5 / 10</p>
+                  <p id="pv-cgpa"></p>
                 </div>
                 <div class="df"><label>Phone</label>
-                  <p id="pv-phone">+91 98765 43210</p>
-                </div>
-                <div class="df"><label>Preferred Location</label>
-                  <p id="pv-loc">Hyderabad</p>
-                </div>
-                <div class="df"><label>GitHub</label>
-                  <p id="pv-github" style="color:var(--sub);">Not added</p>
-                </div>
-                <div class="df"><label>LinkedIn</label>
-                  <p id="pv-linkedin" style="color:var(--sub);">Not added
-                    <button onclick="toggleEdit()"
-                      style="background:none;border:none;color:var(--blue);font-size:12px;font-weight:600;cursor:pointer;margin-left:4px;">+
-                      Add</button>
-                  </p>
+                  <p id="pv-phone"></p>
                 </div>
               </div>
             </div>
             <div>
-              <div class="detail-block" style="margin-bottom:14px;">
-                <div class="detail-title">Skills</div>
-                <div id="pv-skills" style="display:flex;flex-wrap:wrap;gap:7px;">
-                  <span class="skill-tag" style="cursor:default;">React</span>
-                  <span class="skill-tag" style="cursor:default;">Node.js</span>
-                  <span class="skill-tag" style="cursor:default;">MongoDB</span>
-                  <span class="skill-tag" style="cursor:default;">JavaScript</span>
-                  <span class="skill-tag" style="cursor:default;">Python</span>
+              <div class="db" style="margin-bottom:14px;">
+                <div class="db-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                  </svg>Skills</div>
+                <div id="profile-skills-display" style="display:flex;flex-wrap:wrap;gap:7px;"></div>
+              </div>
+              <div class="db" style="margin-bottom:14px;">
+                <div class="db-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round">
+                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
+                  </svg>Social & Links</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                  <a href="#" class="soc-btn is-disabled" id="soc-linkedin"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>LinkedIn</a>
+                  <a href="#" class="soc-btn is-disabled" id="soc-github"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>GitHub</a>
                 </div>
               </div>
               <div class="db">
@@ -1443,8 +1377,8 @@
                     <polyline points="14 2 14 8 20 8" />
                   </svg>
                   <div style="flex:1;">
-                    <div style="font-size:13px;font-weight:600;">Arjun_Resume_2025.pdf</div>
-                    <div style="font-size:11.5px;color:var(--txmu);">Mar 1 · 320 KB</div>
+                    <div style="font-size:13px;font-weight:600;" id="resume-filename"></div>
+                    <div style="font-size:11.5px;color:var(--txmu);" id="resume-meta"></div>
                   </div><button class="btn sec sm"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"
                       stroke="currentColor" stroke-width="2" stroke-linecap="round">
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -1457,30 +1391,19 @@
           </div>
           <div class="db" style="margin-top:14px;">
             <div class="db-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Notable Projects</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-              <div class="proj-card">
-                <div class="proj-name">Campus Placement Portal</div>
-                <div class="proj-desc">A MERN stack application to streamline recruitment process...</div>
-                <div class="proj-tags"><span class="ptag">React</span><span class="ptag">Node</span></div>
-              </div>
-              <div class="proj-card">
-                <div class="proj-name">AI Resume Parser</div>
-                <div class="proj-desc">Using Python & NLP to extract entities from PDF resumes...</div>
-                <div class="proj-tags"><span class="ptag">Python</span><span class="ptag">NLP</span></div>
-              </div>
-            </div>
+            <div id="profile-projects-wrap" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;"></div>
           </div>
           <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px;">
             <div class="stat-card" style="text-align:center;padding:14px;">
-              <div class="stat-val" style="color:var(--P);font-size:1.4rem;">4</div>
+              <div class="stat-val" style="color:var(--P);font-size:1.4rem;">0</div>
               <div class="stat-lbl">Applications</div>
             </div>
             <div class="stat-card" style="text-align:center;padding:14px;">
-              <div class="stat-val" style="color:var(--G);font-size:1.4rem;">2</div>
+              <div class="stat-val" style="color:var(--G);font-size:1.4rem;">0</div>
               <div class="stat-lbl">Shortlisted</div>
             </div>
             <div class="stat-card" style="text-align:center;padding:14px;">
-              <div class="stat-val" style="color:var(--A);font-size:1.4rem;">2</div>
+              <div class="stat-val" style="color:var(--A);font-size:1.4rem;">0</div>
               <div class="stat-lbl">Interviews</div>
             </div>
             <div class="stat-card" style="text-align:center;padding:14px;">
@@ -1493,30 +1416,32 @@
           <div class="db">
             <div class="db-title">Edit Profile</div>
             <div class="form-grid">
-              <div class="fg"><label>Full Name</label><input id="edit-name" value="Arjun Sharma" /></div>
-              <div class="fg"><label>Phone</label><input id="edit-phone" value="+91 98765 43210" /></div>
+              <div class="fg"><label>Full Name</label><input id="edit-name" value="" /></div>
+              <div class="fg"><label>Phone</label><input id="edit-phone" value="" /></div>
+              <div class="fg"><label>Roll No.</label><input id="edit-roll" value="" /></div>
               <div class="fg"><label>Branch</label><select id="edit-branch">
-                  <option selected>Computer Science</option>
-                  <option>IT</option>
-                  <option>ECE</option>
-                  <option>Mechanical</option>
+                  <option value="">—</option>
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="IT">IT</option>
+                  <option value="ECE">ECE</option>
+                  <option value="Mechanical">Mechanical</option>
+                  <option value="CSE">CSE</option>
                 </select></div>
               <div class="fg"><label>Year</label><select id="edit-year">
-                  <option>1st</option>
-                  <option>2nd</option>
-                  <option selected>3rd</option>
-                  <option>4th</option>
+                  <option value="">—</option>
+                  <option value="1st">1st</option>
+                  <option value="2nd">2nd</option>
+                  <option value="3rd">3rd</option>
+                  <option value="4th">4th</option>
                 </select></div>
-              <div class="fg"><label>CGPA</label><input id="edit-cgpa" value="8.5" /></div>
-              <div class="fg"><label>Preferred Location</label><input id="edit-loc" value="Bangalore, Hyderabad" />
+              <div class="fg"><label>CGPA</label><input id="edit-cgpa" value="" /></div>
+              <div class="fg"><label>Preferred Location</label><input id="edit-loc" value="" />
               </div>
               <div class="fg full"><label>LinkedIn URL</label><input id="edit-linkedin"
-                  placeholder="linkedin.com/in/yourname" /></div>
+                  placeholder="https://linkedin.com/in/…" /></div>
+              <div class="fg full"><label>GitHub URL</label><input id="edit-github" placeholder="https://github.com/…" /></div>
               <div class="fg full"><label>Skills</label>
-                <div class="skill-tags" id="p-skills-wrap" onclick="document.getElementById('p-sk-inp').focus()"><span
-                    class="skill-tag">React<button onclick="this.parentElement.remove()">×</button></span><span
-                    class="skill-tag">Node.js<button onclick="this.parentElement.remove()">×</button></span><span
-                    class="skill-tag">MongoDB<button onclick="this.parentElement.remove()">×</button></span><input
+                <div class="skill-tags" id="p-skills-wrap" onclick="document.getElementById('p-sk-inp').focus()"><input
                     class="skill-input" id="p-sk-inp" placeholder="Add skill…"
                     onkeydown="addSkill(event,'p-skills-wrap','p-sk-inp')" /></div>
               </div>
@@ -1561,11 +1486,9 @@
                   class="slider"></span></label></div>
             <div class="sr"><span>WhatsApp Reminders</span><label class="toggle"><input type="checkbox" /><span
                   class="slider"></span></label></div>
-            <div class="sr"><span>Account Email</span><span style="font-size:12.5px;color:var(--txmu);"><a
-                  href="/cdn-cgi/l/email-protection" class="__cf_email__"
-                  data-cfemail="82e3f0e8f7ecc2e1edeeeee7e5e7ace7e6f7">[email&#160;protected]</a></span></div>
+            <div class="sr"><span>Account Email</span><span id="set-email" style="font-size:12.5px;color:var(--txmu);"></span></div>
             <div class="sr"><span>Password</span><button class="btn sm"
-                onclick="alert('Password reset email sent to arjun@college.edu')">Change Password</button></div>
+                onclick="alert('Password reset is not configured yet.')">Change Password</button></div>
             <div class="sr"><span>Dark Mode</span><label class="toggle"><input type="checkbox" id="dark-mode-toggle"
                   onchange="toggleDarkMode(this)" /><span class="slider"></span></label></div>
           </div>
@@ -1581,489 +1504,8 @@
     </div><!-- /body -->
   </div><!-- /main -->
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-  <script>
-    /* ══════════════════════════════════
-       DATA
-    ══════════════════════════════════ */
-    const JOBS = [
-      { id: 1, title: 'Software Engineer', company: 'Microsoft India', loc: 'Hyderabad', type: 'Full Time', ctc: '₹12 LPA', ctcVal: 12, dl: 'Mar 20', cgpa: '7.0', branch: 'CSE, IT, ECE', desc: 'Build scalable web apps using Azure, React, and distributed systems. Real products used by millions worldwide.', skills: ['React', 'TypeScript', 'Node.js', 'Azure'], applied: false, saved: false, reco: true, intern: false, pipeline: ['Applied', 'Resume Review', 'OA Test', 'Technical', 'HR'], apps: 248, short: 36, hired: 8, logo: 'MS', col: '#1759d6' },
-      { id: 2, title: 'Data Analyst', company: 'Amazon Dev Centre', loc: 'Bangalore', type: 'Full Time', ctc: '₹18 LPA', ctcVal: 18, dl: 'Mar 22', cgpa: '7.5', branch: 'CSE, IT', desc: 'Analyse large datasets to derive business insights using SQL, Python, and AWS QuickSight.', skills: ['Python', 'SQL', 'Power BI', 'AWS'], applied: true, saved: false, reco: true, intern: false, pipeline: ['Applied', 'OA Test', 'Technical', 'Bar Raiser', 'Offer'], apps: 312, short: 28, hired: 6, logo: 'AMZ', col: '#d97706' },
-      { id: 3, title: 'ML Engineer', company: 'Flipkart', loc: 'Bangalore', type: 'Full Time', ctc: '₹22 LPA', ctcVal: 22, dl: 'Mar 25', cgpa: '8.0', branch: 'CSE, IT, ECE', desc: 'Design and deploy ML models at scale for product recommendations, pricing, and demand forecasting.', skills: ['Python', 'TensorFlow', 'PyTorch', 'Spark'], applied: false, saved: false, reco: true, intern: false, pipeline: ['Applied', 'Screening', 'Technical', 'System Design', 'Offer'], apps: 189, short: 22, hired: 4, logo: 'FK', col: '#0aada0' },
-      { id: 4, title: 'Frontend Developer', company: 'Zomato', loc: 'Remote', type: 'Internship', ctc: '₹8 LPA', ctcVal: 8, dl: 'Mar 18', cgpa: '6.5', branch: 'All Branches', desc: 'Build responsive UI components. Improve user experience across web and mobile products.', skills: ['React', 'CSS', 'JavaScript', 'Figma'], applied: true, saved: false, reco: false, intern: true, pipeline: ['Applied', 'Portfolio Review', 'Technical', 'Offer'], apps: 420, short: 45, hired: 12, logo: 'ZMT', col: '#dc2626' },
-      { id: 5, title: 'Backend Engineer', company: 'Swiggy', loc: 'Hyderabad', type: 'Full Time', ctc: '₹14 LPA', ctcVal: 14, dl: 'Mar 28', cgpa: '7.0', branch: 'CSE, IT', desc: 'Develop high-performance APIs and microservices powering delivery-critical infrastructure.', skills: ['Java', 'Spring Boot', 'MySQL', 'Docker'], applied: false, saved: true, reco: false, intern: false, pipeline: ['Applied', 'OA Test', 'Technical', 'System Design', 'HR'], apps: 276, short: 31, hired: 7, logo: 'SWG', col: '#7c3aed' },
-      { id: 6, title: 'DevOps Intern', company: 'Infosys', loc: 'Bangalore', type: 'Internship', ctc: '₹6 LPA', ctcVal: 6, dl: 'Apr 1', cgpa: '6.0', branch: 'CSE, IT, ECE', desc: 'Set up CI/CD pipelines, containerization, and monitoring systems using cloud-native tools.', skills: ['Docker', 'Kubernetes', 'Jenkins', 'Linux'], applied: false, saved: false, reco: false, intern: true, pipeline: ['Applied', 'InfyTQ Test', 'Technical', 'Offer'], apps: 198, short: 24, hired: 15, logo: 'INF', col: '#0aada0' },
-      { id: 7, title: 'Product Manager Intern', company: 'Paytm', loc: 'Noida', type: 'Internship', ctc: '₹9 LPA', ctcVal: 9, dl: 'Apr 3', cgpa: '7.0', branch: 'CSE, IT', desc: 'Work on product roadmap, user research, and feature prioritization with cross-functional teams.', skills: ['Product Thinking', 'SQL', 'Figma', 'Analytics'], applied: false, saved: false, reco: true, intern: true, pipeline: ['Applied', 'Screening', 'Case Study', 'HR', 'Offer'], apps: 334, short: 18, hired: 3, logo: 'PTM', col: '#1759d6' },
-      { id: 8, title: 'Cloud Solutions Engineer', company: 'Google India', loc: 'Hyderabad', type: 'Full Time', ctc: '₹42 LPA', ctcVal: 42, dl: 'Apr 5', cgpa: '8.5', branch: 'CSE, IT', desc: 'Work on Google Cloud helping enterprise clients architect and migrate to GCP at scale.', skills: ['GCP', 'Kubernetes', 'Python', 'Go'], applied: false, saved: false, reco: true, intern: false, pipeline: ['Applied', 'OA', 'Technical', 'System Design', 'Googleyness', 'Offer'], apps: 612, short: 42, hired: 5, logo: 'GGL', col: '#16a34a' },
-      { id: 9, title: 'Android Developer', company: 'Ola', loc: 'Bangalore', type: 'Full Time', ctc: '₹16 LPA', ctcVal: 16, dl: 'Apr 8', cgpa: '7.0', branch: 'CSE, IT, ECE', desc: 'Build and maintain Ola driver and passenger Android apps with millions of daily active users.', skills: ['Kotlin', 'Android SDK', 'Jetpack Compose', 'Firebase'], applied: false, saved: false, reco: false, intern: false, pipeline: ['Applied', 'Technical', 'Design Round', 'HR'], apps: 203, short: 28, hired: 6, logo: 'OLA', col: '#d97706' },
-      { id: 10, title: 'Security Engineer', company: 'CRED', loc: 'Bangalore', type: 'Full Time', ctc: '₹20 LPA', ctcVal: 20, dl: 'Apr 10', cgpa: '7.5', branch: 'CSE, IT', desc: "Own CRED's payment infrastructure security. Pen testing, threat modelling, security reviews.", skills: ['Network Security', 'Python', 'Burp Suite', 'AWS'], applied: false, saved: false, reco: false, intern: false, pipeline: ['Applied', 'Technical', 'Practical Test', 'HR'], apps: 167, short: 19, hired: 4, logo: 'CRD', col: '#7c3aed' },
-      { id: 11, title: 'Data Engineer', company: 'PhonePe', loc: 'Bangalore', type: 'Full Time', ctc: '₹17 LPA', ctcVal: 17, dl: 'Apr 12', cgpa: '7.0', branch: 'CSE, IT', desc: 'Build robust data pipelines and warehouse solutions powering PhonePe analytics.', skills: ['Spark', 'Kafka', 'Hive', 'Python'], applied: false, saved: false, reco: false, intern: false, pipeline: ['Applied', 'Technical', 'System Design', 'HR'], apps: 224, short: 26, hired: 5, logo: 'PP', col: '#7c3aed' },
-      { id: 12, title: 'QA Engineer Intern', company: 'TCS', loc: 'Multiple', type: 'Internship', ctc: '₹4 LPA', ctcVal: 4, dl: 'Apr 15', cgpa: '6.0', branch: 'All Branches', desc: 'Write and maintain automated test suites. Participate in agile sprint testing cycles.', skills: ['Selenium', 'Java', 'TestNG', 'JIRA'], applied: false, saved: false, reco: false, intern: true, pipeline: ['Applied', 'NQT Test', 'Technical', 'Offer'], apps: 891, short: 120, hired: 45, logo: 'TCS', col: '#1759d6' },
-    ];
-
-    const APPS = [
-      { id: 2, title: 'Data Analyst', company: 'Amazon Dev Centre', type: 'Full Time', ctc: '₹18 LPA', date: 'Mar 8', statusLabel: 'Shortlisted', statusClass: 'short', stage: 2 },
-      { id: 4, title: 'Frontend Developer', company: 'Zomato', type: 'Internship', ctc: '₹8 LPA', date: 'Mar 5', statusLabel: 'Under Review', statusClass: 'review', stage: 1 },
-      { id: 1, title: 'Software Engineer', company: 'Microsoft India', type: 'Full Time', ctc: '₹12 LPA', date: 'Mar 10', statusLabel: 'Interview Scheduled', statusClass: 'interview', stage: 3 },
-      { id: 99, title: 'Backend Engineer', company: 'Swiggy', type: 'Full Time', ctc: '₹14 LPA', date: 'Feb 28', statusLabel: 'Rejected', statusClass: 'rejected', stage: -1 },
-    ];
-
-    const DRIVES = [
-      { date: '18', month: 'Mar', name: 'Microsoft Campus Drive', meta: '10:00 AM · Main Auditorium · SDE, SDE-2', elig: 'CGPA ≥ 7.0', status: 'registered' },
-      { date: '22', month: 'Mar', name: 'TCS Mass Hiring Drive', meta: '9:00 AM · Block B Hall · Multiple roles', elig: 'All branches', status: 'open' },
-      { date: '28', month: 'Mar', name: 'Infosys Off-Campus Drive', meta: 'Online · Zoom · Cloud & DevOps', elig: 'CGPA ≥ 6.5', status: 'open' },
-      { date: '3', month: 'Apr', name: 'Wipro Campus Connect', meta: '2:00 PM · Seminar Hall · Engineering', elig: 'CGPA ≥ 6.0', status: 'open' },
-      { date: '7', month: 'Apr', name: 'HCL Tech Hiring Day', meta: '11:00 AM · Block A · CSE & IT', elig: 'CGPA ≥ 6.0', status: 'open' },
-      { date: '14', month: 'Apr', name: 'Accenture Innovation Drive', meta: '10:00 AM · Innovation Hall · Tech & Consulting', elig: 'All branches', status: 'open' },
-    ];
-
-    const TESTS = [
-      { name: 'Infosys InfyTQ', mode: 'online', date: 'March 20, 2025', time: '10:00 AM – 12:00 PM', dur: '2 hours', desc: 'Aptitude · Logical Reasoning · Coding (2 problems)', col: '#0aada0', bg: '#e6f7f6' },
-      { name: 'TCS NQT', mode: 'offline', date: 'March 22, 2025', time: '9:00 AM', dur: '2.5 hours', desc: 'Seminar Hall A, Block B · Bring College ID + HB pencil', col: '#d97706', bg: '#fffbeb', warn: 'Report by 8:30 AM. No electronic devices. Bring printed hall ticket.' },
-    ];
-
-    const CPREP = [
-      { name: 'Microsoft', meta: 'SDE, PM · Online test + 3 rounds', col: '#1759d6' },
-      { name: 'Amazon', meta: 'SDE, DA · OA + Bar raiser round', col: '#d97706' },
-      { name: 'Infosys', meta: 'SE, Systems Engineer · InfyTQ based', col: '#0aada0' },
-      { name: 'TCS', meta: 'Ninja, Digital, Prime · NQT based', col: '#1759d6' },
-      { name: 'Google', meta: 'SDE · 6 rounds including Googleyness', col: '#16a34a' },
-      { name: 'Flipkart', meta: 'SDE, DA · Online coding + system design', col: '#0aada0' },
-    ];
-
-    let currentJob = null;
-
-    /* ══ JOB CARD ══ */
-    function jobCard(j) {
-      const days = Math.max(0, Math.round((new Date(j.dl + ' 2025') - new Date()) / 86400000));
-      const urgStyle = days <= 3 ? 'color:var(--R);font-weight:700;' : '';
-      return `<div class="job-card" onclick="openModal(${j.id})">
-    <div class="jc-left">
-      <div class="co-logo" style="width:42px;height:42px;background:${j.col}18;color:${j.col};">${j.logo}</div>
-      <div class="jc-info">
-        <div class="jc-title">${j.title}</div>
-        <div class="jc-meta">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          ${j.company} &nbsp;·&nbsp;
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          ${j.loc} &nbsp;·&nbsp;
-          <span class="pill ${j.intern ? 'upcoming' : 'applied'}" style="padding:1px 8px;font-size:10.5px;">${j.type}</span>
-        </div>
-        <div class="jc-skills">${j.skills.slice(0, 3).map(s => `<span class="sk-chip">${s}</span>`).join('')}${j.skills.length > 3 ? `<span class="sk-chip">+${j.skills.length - 3}</span>` : ''}</div>
-      </div>
-    </div>
-    <div class="jc-right">
-      <div class="jc-ctc">${j.ctc}</div>
-      <div class="jc-dl" style="${urgStyle}">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:middle;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        ${days > 0 ? days + 'd left' : 'Today!'}
-      </div>
-      <div style="display:flex;gap:6px;margin-top:6px;align-items:center;">
-        <button class="icon-btn" style="width:28px;height:28px;border:1px solid var(--brs);" onclick="event.stopPropagation();toggleSave(${j.id})" title="${j.saved ? 'Unsave' : 'Save'}">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="${j.saved ? 'var(--P)' : 'none'}" stroke="${j.saved ? 'var(--P)' : 'var(--txmu)'}" stroke-width="2" stroke-linecap="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-        </button>
-        ${j.applied ? `<span class="pill short" style="font-size:11.5px;">Applied ✓</span>` : `<button class="btn sm" onclick="event.stopPropagation();quickApply(${j.id},this)">Apply</button>`}
-      </div>
-    </div>
-  </div>`;
-    }
-
-    function renderList(list, id) {
-      const el = document.getElementById(id); if (!el) return;
-      if (!list.length) { el.innerHTML = '<div style="padding:32px;text-align:center;color:var(--txmu);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:.3;display:block;margin:0 auto 10px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>No jobs found.</div>'; return; }
-      el.innerHTML = list.map(jobCard).join('');
-    }
-
-    function filterJobs() {
-      const q = (document.getElementById('job-search') || { value: '' }).value.toLowerCase();
-      const loc = (document.getElementById('filter-loc') || { value: '' }).value;
-      const type = (document.getElementById('filter-type') || { value: '' }).value;
-      const ctcMin = parseFloat((document.getElementById('filter-ctc') || { value: '' }).value) || 0;
-      const branch = (document.getElementById('filter-branch') || { value: '' }).value;
-      const f = JOBS.filter(j => {
-        const mQ = !q || (j.title + j.company + j.skills.join(' ')).toLowerCase().includes(q);
-        return mQ && (!loc || j.loc.includes(loc)) && (!type || j.type === type) && j.ctcVal >= ctcMin && (!branch || j.branch.includes(branch));
-      });
-      renderList(f, 'jobs-list-container');
-      const jc = document.getElementById('job-count'); if (jc) jc.textContent = `Showing ${f.length} jobs`;
-    }
-
-    function renderAllTabs() {
-      renderList(JOBS, 'jobs-list-container');
-      renderList(JOBS.filter(j => j.reco), 'reco-list-container');
-      renderList(JOBS.filter(j => j.intern), 'intern-list-container');
-      renderSaved();
-      ['all', 'reco', 'intern'].forEach((k, i) => {
-        const counts = [JOBS.length, JOBS.filter(j => j.reco).length, JOBS.filter(j => j.intern).length];
-        const el = document.getElementById('tc-' + k); if (el) el.textContent = counts[i];
-      });
-    }
-    function renderSaved() {
-      const sv = JOBS.filter(j => j.saved);
-      const el = document.getElementById('tc-saved'); if (el) el.textContent = sv.length;
-      const ee = document.getElementById('saved-empty');
-      if (!sv.length) { if (ee) ee.style.display = 'block'; renderList([], 'saved-list-container'); }
-      else { if (ee) ee.style.display = 'none'; renderList(sv, 'saved-list-container'); }
-    }
-    function toggleSave(id) {
-      const j = JOBS.find(x => x.id === id); if (!j) return;
-      j.saved = !j.saved; renderAllTabs(); filterJobs();
-    }
-    function quickApply(id, btn) {
-      const j = JOBS.find(x => x.id === id); if (!j || j.applied) return;
-      j.applied = true; btn.outerHTML = `<span class="pill short" style="font-size:11.5px;">Applied ✓</span>`;
-      renderHomeJobs();
-    }
-    function globalSearch(v) { if (document.getElementById('pg-jobs').classList.contains('on')) filterJobs(); }
-
-    /* ══ MODAL ══ */
-    function openModal(id) {
-      const j = JOBS.find(x => x.id === id); if (!j) return; currentJob = j;
-      document.getElementById('m-title').textContent = j.title;
-      document.getElementById('m-company').textContent = j.company + ' · ' + j.loc;
-      document.getElementById('m-ctc').textContent = j.ctc;
-      document.getElementById('m-type').textContent = j.type;
-      document.getElementById('m-loc').textContent = j.loc;
-      document.getElementById('m-dl').textContent = 'Closes ' + j.dl;
-      document.getElementById('m-cgpa').textContent = j.cgpa;
-      document.getElementById('m-branch').textContent = j.branch;
-      document.getElementById('m-desc').textContent = j.desc;
-      document.getElementById('m-apps').textContent = j.apps;
-      document.getElementById('m-short').textContent = j.short;
-      document.getElementById('m-hired').textContent = j.hired;
-      const logo = document.getElementById('m-logo');
-      logo.textContent = j.logo; logo.style.background = j.col + '18'; logo.style.color = j.col;
-      document.getElementById('m-badges').innerHTML =
-        `<span class="pill ${j.intern ? 'upcoming' : 'applied'}">${j.type}</span>` +
-        `<span class="pill review"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${j.loc}</span>`;
-      document.getElementById('m-skills').innerHTML = j.skills.map(s => `<span class="req-tag">${s}</span>`).join('');
-      document.getElementById('m-pipeline').innerHTML = j.pipeline.map((s, i) => `
-    <div style="display:flex;align-items:center;">
-      <div style="text-align:center;padding:0 3px;">
-        <div style="width:28px;height:28px;border-radius:50%;background:${i === 0 ? 'var(--G)' : 'var(--bg)'};border:2px solid ${i === 0 ? 'var(--G)' : 'var(--br)'};display:grid;place-items:center;margin:0 auto 3px;font-size:10px;font-weight:700;color:${i === 0 ? '#fff' : 'var(--txmu)'};">${i + 1}</div>
-        <div style="font-size:9.5px;color:var(--txmu);white-space:nowrap;">${s}</div>
-      </div>
-      ${i < j.pipeline.length - 1 ? `<div style="flex:1;height:2px;background:var(--brs);min-width:10px;"></div>` : ''}
-    </div>`).join('');
-      const btn = document.getElementById('m-apply-btn'), note = document.getElementById('m-applied-note');
-      if (j.applied) { btn.textContent = 'Applied ✓'; btn.disabled = true; btn.style.opacity = '.6'; note.textContent = 'Application submitted'; }
-      else { btn.innerHTML = 'Apply Now →'; btn.disabled = false; btn.style.opacity = '1'; note.textContent = ''; }
-      const sb = document.getElementById('m-save-btn');
-      sb.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="${j.saved ? 'var(--P)' : 'none'}" stroke="var(--P)" stroke-width="2" stroke-linecap="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg> ${j.saved ? 'Saved' : 'Save'}`;
-      document.getElementById('job-modal').classList.add('on');
-    }
-    function applyFromModal() { if (!currentJob || currentJob.applied) return; currentJob.applied = true; document.getElementById('m-apply-btn').textContent = 'Applied ✓'; document.getElementById('m-apply-btn').disabled = true; document.getElementById('m-apply-btn').style.opacity = '.6'; document.getElementById('m-applied-note').textContent = 'Application submitted!'; renderAllTabs(); }
-    function saveJob() { if (!currentJob) return; currentJob.saved = !currentJob.saved; toggleSave(currentJob.id); const sb = document.getElementById('m-save-btn'); sb.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="${currentJob.saved ? 'var(--P)' : 'none'}" stroke="var(--P)" stroke-width="2" stroke-linecap="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg> ${currentJob.saved ? 'Saved' : 'Save'}`; }
-    function closeModal(e) { if (e.target === document.getElementById('job-modal')) document.getElementById('job-modal').classList.remove('on'); }
-
-    /* ══ HOME ══ */
-    function renderHomeJobs() {
-      const el = document.getElementById('home-reco-jobs'); if (!el) return;
-      el.innerHTML = JOBS.filter(j => j.reco).slice(0, 4).map(j => `
-    <div class="app-row" onclick="openModal(${j.id})" style="cursor:pointer;">
-      <div class="co-logo" style="width:36px;height:36px;border-radius:9px;background:${j.col}18;color:${j.col};font-size:10px;font-weight:800;">${j.logo}</div>
-      <div class="app-info">
-        <div class="app-title">${j.title}</div>
-        <div class="app-meta">${j.company} · ${j.loc}</div>
-      </div>
-      <div style="text-align:right;flex-shrink:0;">
-        <div style="font-size:13px;font-weight:700;color:var(--G);">${j.ctc}</div>
-        <div style="font-size:11px;color:var(--txmu);">Closes ${j.dl}</div>
-      </div>
-    </div>`).join('');
-    }
-    function renderHomeApps() {
-      const el = document.getElementById('home-apps-tracker'); if (!el) return;
-      const stages = ['Applied', 'Reviewed', 'Shortlisted', 'Interview', 'Offer'];
-      el.innerHTML = APPS.map(a => `
-    <div class="app-row">
-      <div class="co-logo" style="width:36px;height:36px;border-radius:9px;background:var(--PL);color:var(--P);font-size:9px;font-weight:800;">${a.company.slice(0, 3).toUpperCase()}</div>
-      <div class="app-info">
-        <div class="app-title">${a.title} — ${a.company}</div>
-        <div class="app-meta">${a.type} · ${a.ctc} · Applied ${a.date}</div>
-        <div class="stage-bar">${stages.map((_, i) => `<div class="stage-seg" style="background:${a.stage > i ? 'var(--P)' : a.stage === i ? 'var(--A)' : 'var(--brs)'};"></div>`).join('')}</div>
-      </div>
-      <span class="pill ${a.statusClass}">${a.statusLabel}</span>
-    </div>`).join('');
-    }
-    function renderDeadlines() {
-      const el = document.getElementById('home-deadlines'); if (!el) return;
-      const items = [
-        { text: 'Zomato Frontend Developer', date: 'Mar 18', urgent: true },
-        { text: 'Microsoft Campus Drive reg.', date: 'Mar 15', urgent: true },
-        { text: 'Infosys InfyTQ Test', date: 'Mar 20', urgent: false },
-        { text: 'TCS NQT Exam', date: 'Mar 22', urgent: false },
-      ];
-      el.innerHTML = items.map(d => `
-    <div class="dl-row">
-      <div class="dl-dot" style="background:${d.urgent ? 'var(--R)' : 'var(--A)'};"></div>
-      <div class="dl-text">${d.text}</div>
-      <div class="dl-date" style="color:${d.urgent ? 'var(--R)' : 'var(--txmu)'};">${d.date}</div>
-    </div>`).join('');
-    }
-
-    /* ══ APPLICATIONS ══ */
-    function renderApplications() {
-      const stages = ['Applied', 'Reviewed', 'Shortlisted', 'Interview', 'Offer'];
-      const render = (list, id) => {
-        const el = document.getElementById(id); if (!el) return;
-        el.innerHTML = list.map(a => `
-      <div class="app-row">
-        <div class="co-logo" style="width:40px;height:40px;border-radius:10px;background:var(--PL);color:var(--P);font-size:9px;font-weight:800;">${a.company.slice(0, 3).toUpperCase()}</div>
-        <div class="app-info">
-          <div class="app-title">${a.title} — ${a.company}</div>
-          <div class="app-meta">${a.type} · ${a.ctc} · Applied ${a.date}</div>
-          <div class="stage-bar" style="margin-top:7px;">${stages.map((_, i) => `<div class="stage-seg" style="background:${a.stage > i ? 'var(--P)' : a.stage === i ? 'var(--A)' : 'var(--brs)'};"></div>`).join('')}</div>
-        </div>
-        <span class="pill ${a.statusClass}">${a.statusLabel}</span>
-      </div>`).join('');
-      };
-      render(APPS, 'apps-all-list');
-      render(APPS.filter(a => a.statusClass !== 'rejected'), 'apps-active-list');
-      render(APPS.filter(a => a.statusClass === 'rejected'), 'apps-closed-list');
-    }
-
-    /* ══ DRIVES ══ */
-    function renderDrives() {
-      const el = document.getElementById('drives-list'); if (!el) return;
-      el.innerHTML = DRIVES.map(d => `
-    <div class="drive-row">
-      <div class="dr-date"><div class="dr-dd">${d.date}</div><div class="dr-dm">${d.month}</div></div>
-      <div class="dr-info"><div class="dr-name">${d.name}</div><div class="dr-meta">${d.meta} · ${d.elig}</div></div>
-      ${d.status === 'registered' ? `<span class="pill registered">Registered ✓</span>` : `<button class="btn sm teal" onclick="this.outerHTML='<span class=\\'pill registered\\'>Registered ✓</span>'">Register</button>`}
-    </div>`).join('');
-    }
-
-    /* ══ TESTS ══ */
-    function renderTests() {
-      const el = document.getElementById('tests-list'); if (!el) return;
-      el.innerHTML = TESTS.map(t => `
-    <div class="test-card">
-      <div class="test-icon" style="background:${t.bg};">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="${t.col}" stroke-width="2" stroke-linecap="round">${t.mode === 'online' ? '<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>' : '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>'}</svg>
-      </div>
-      <div style="flex:1;">
-        <div class="test-name">${t.name} — ${t.mode === 'online' ? 'Online' : 'Offline'} Test</div>
-        <span class="pill ${t.mode === 'online' ? 'applied' : 'upcoming'}" style="font-size:11px;margin-bottom:6px;display:inline-flex;">${t.mode.charAt(0).toUpperCase() + t.mode.slice(1)}</span>
-        <div class="test-meta">${t.date} · ${t.time} · ${t.dur}</div>
-        <div style="font-size:12px;color:var(--txmu);margin-bottom:10px;">${t.desc}</div>
-        ${t.warn ? `<div style="background:var(--AL);border:1px solid #fde68a;border-radius:var(--rs);padding:9px 12px;font-size:12.5px;color:#92400e;margin-bottom:10px;">⚠️ ${t.warn}</div>` : ''}
-        <button class="btn sm ${t.mode === 'online' ? 'teal' : ''}">${t.mode === 'online' ? 'Open Test Link' : 'View Hall Ticket'}</button>
-      </div>
-    </div>`).join('');
-      const ct = document.getElementById('completed-tests'); if (!ct) return;
-      ct.innerHTML = `
-    <div class="app-row"><div class="co-logo" style="width:40px;height:40px;border-radius:10px;background:var(--GL);color:var(--G);font-size:9px;font-weight:800;">WILP</div><div class="app-info"><div class="app-title">Wipro WILP Written Test</div><div class="app-meta">Completed Feb 20 · Score: 78/100 · Percentile: 82nd</div></div><span class="pill registered">Passed</span></div>
-    <div class="app-row"><div class="co-logo" style="width:40px;height:40px;border-radius:10px;background:var(--RL);color:var(--R);font-size:9px;font-weight:800;">ZMT</div><div class="app-info"><div class="app-title">Zomato Technical Screening</div><div class="app-meta">Completed Mar 3 · Score: 42/100 · Percentile: 34th</div></div><span class="pill rejected">Not Qualified</span></div>`;
-    }
-
-    /* ══ COMPANY PREP ══ */
-    function renderCompanyPrep() {
-      const el = document.getElementById('company-prep-list'); if (!el) return;
-      el.innerHTML = CPREP.map(c => `
-    <div class="app-row">
-      <div class="co-logo" style="width:40px;height:40px;border-radius:10px;background:${c.col}18;color:${c.col};font-size:10px;font-weight:800;">${c.name.slice(0, 3).toUpperCase()}</div>
-      <div class="app-info"><div class="app-title">${c.name}</div><div class="app-meta">${c.meta}</div></div>
-      <button class="btn sec sm">View Guide</button>
-    </div>`).join('');
-    }
-
-    /* ══ HOME CHARTS ══ */
-    let homeChartsDrawn = false;
-    function renderHomeCharts() {
-      if (homeChartsDrawn) return; homeChartsDrawn = true;
-      const P = '#1759d6', T = '#0aada0', G = '#16a34a', A = '#d97706', R = '#dc2626', PU = '#7c3aed';
-      const grid = 'rgba(23,89,214,0.07)', tick = { color: '#4a6070', font: { size: 11 } };
-
-      new Chart(document.getElementById('chart-home-activity'), {
-        type: 'bar',
-        data: {
-          labels: ['Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'],
-          datasets: [{ label: 'Offers', data: [8, 22, 45, 62, 38, 55, 71, 48, 30, 12], backgroundColor: P + 'cc', borderRadius: 5, borderSkipped: false }, { label: 'Drives', data: [2, 5, 8, 12, 7, 10, 14, 9, 6, 3], backgroundColor: T + 'cc', borderRadius: 5, borderSkipped: false }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: grid }, ticks: tick }, y: { grid: { color: grid }, ticks: tick } } }
-      });
-
-      const pkgData = { labels: ['3–6 LPA', '6–10 LPA', '10–15 LPA', '15–20 LPA', '20–30 LPA', '30+ LPA'], data: [42, 78, 96, 54, 28, 9] };
-      const pkgColors = [R + 'cc', A + 'cc', T + 'cc', G + 'cc', P + 'cc', PU + 'cc'];
-      new Chart(document.getElementById('chart-home-pkg'), {
-        type: 'doughnut',
-        data: { labels: pkgData.labels, datasets: [{ data: pkgData.data, backgroundColor: pkgColors, borderWidth: 3, borderColor: '#fff', hoverOffset: 6 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, cutout: '62%' }
-      });
-      const lg = document.getElementById('pkg-legend');
-      if (lg) lg.innerHTML = pkgData.labels.map((l, i) => `<div style="display:flex;justify-content:space-between;align-items:center;padding:3px 0;"><div style="display:flex;align-items:center;gap:7px;"><span style="width:9px;height:9px;border-radius:2px;background:${pkgColors[i]};display:inline-block;"></span><span style="font-size:12px;color:var(--txmu);">${l}</span></div><span style="font-size:12px;font-weight:700;">${pkgData.data[i]}</span></div>`).join('');
-
-      /* Branch mini chart */
-      new Chart(document.getElementById('chart-home-branch'), {
-        type: 'bar',
-        data: { labels: ['CSE', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL'], datasets: [{ data: [97, 94, 88, 72, 61, 44], backgroundColor: [P, T, G, A, R, PU].map(c => c + 'cc'), borderRadius: 5, borderSkipped: false }] },
-        options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { grid: { color: grid }, ticks: { ...tick, callback: v => v + '%' }, max: 100 }, y: { grid: { display: false }, ticks: tick } } }
-      });
-    }
-
-    /* ══ ANALYTICS CHARTS ══ */
-    let analyticsDrawn = false;
-    function renderAnalytics() {
-      if (analyticsDrawn) { ['chart-monthly', 'chart-branch', 'chart-salary', 'chart-companies', 'chart-trend', 'chart-roles'].forEach(id => { const c = Chart.getChart(document.getElementById(id)); if (c) c.destroy(); }); }
-      analyticsDrawn = true;
-      const P = '#1759d6', T = '#0aada0', G = '#16a34a', A = '#d97706', R = '#dc2626', PU = '#7c3aed';
-      const grid = 'rgba(23,89,214,0.07)', tick = { color: '#4a6070', font: { size: 11 } };
-      const base = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { color: grid }, ticks: tick }, y: { grid: { color: grid }, ticks: tick } } };
-
-      new Chart(document.getElementById('chart-monthly'), { type: 'bar', data: { labels: ['Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'], datasets: [{ label: 'Offers', data: [8, 22, 45, 62, 38, 55, 71, 48, 30, 12], backgroundColor: P + 'cc', borderRadius: 5, borderSkipped: false }, { label: 'Drives', data: [2, 5, 8, 12, 7, 10, 14, 9, 6, 3], backgroundColor: T + 'cc', borderRadius: 5, borderSkipped: false }] }, options: { ...base } });
-      new Chart(document.getElementById('chart-branch'), { type: 'bar', data: { labels: ['CSE', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL'], datasets: [{ data: [97, 94, 88, 72, 61, 44], backgroundColor: [P, T, G, A, R, PU].map(c => c + 'dd'), borderRadius: 5, borderSkipped: false }] }, options: { ...base, indexAxis: 'y', scales: { x: { ...base.scales.x, max: 100, ticks: { ...tick, callback: v => v + '%' } }, y: { ...base.scales.y, grid: { display: false } } } } });
-      new Chart(document.getElementById('chart-salary'), { type: 'bar', data: { labels: ['3–6', '6–10', '10–15', '15–20', '20–30', '30+'], datasets: [{ data: [42, 78, 96, 54, 28, 9], backgroundColor: [R, A, T, G, P, PU].map(c => c + 'bb'), borderRadius: 6, borderSkipped: false }] }, options: { ...base } });
-      new Chart(document.getElementById('chart-companies'), { type: 'doughnut', data: { labels: ['TCS', 'Infosys', 'Microsoft', 'Amazon', 'Wipro', 'Others'], datasets: [{ data: [45, 38, 22, 18, 15, 55], backgroundColor: [P, T, G, A, R, PU], borderWidth: 3, borderColor: '#fff', hoverOffset: 6 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, cutout: '62%' } });
-      new Chart(document.getElementById('chart-trend'), { type: 'line', data: { labels: ['2021', '2022', '2023', '2024', '2025'], datasets: [{ data: [9.8, 12.4, 14.1, 15.2, 18.4], borderColor: P, backgroundColor: P + '18', fill: true, tension: .4, pointRadius: 5, pointBackgroundColor: P, borderWidth: 2.5 }, { data: [8.5, 10.2, 11.8, 13.0, 15.6], borderColor: T, backgroundColor: 'transparent', borderDash: [5, 4], tension: .4, pointRadius: 4, pointBackgroundColor: T, borderWidth: 2 }] }, options: { ...base } });
-      const roles = { labels: ['SDE / SWE', 'Data / ML', 'DevOps', 'QA Testing', 'PM / Consulting', 'Others'], data: [42, 22, 12, 8, 10, 6] };
-      const rColors = [P, T, G, A, PU, R + '99'];
-      new Chart(document.getElementById('chart-roles'), { type: 'doughnut', data: { datasets: [{ data: roles.data, backgroundColor: rColors, borderWidth: 3, borderColor: '#fff', hoverOffset: 5 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, cutout: '55%' } });
-      const rl = document.getElementById('roles-legend');
-      if (rl) rl.innerHTML = roles.labels.map((l, i) => `<div style="display:flex;align-items:center;gap:7px;"><span style="width:9px;height:9px;border-radius:2px;background:${rColors[i]};flex-shrink:0;"></span><span style="color:var(--txmu);">${l} <strong style="color:var(--tx);">${roles.data[i]}%</strong></span></div>`).join('');
-    }
-
-    /* ══ COUNTDOWN ══ */
-    function updateCountdown() {
-      const target = new Date('2025-03-20T10:00:00'), now = new Date();
-      let diff = Math.max(0, target - now);
-      const d = Math.floor(diff / 86400000); diff %= 86400000;
-      const h = Math.floor(diff / 3600000); diff %= 3600000;
-      const m = Math.floor(diff / 60000); diff %= 60000;
-      const s = Math.floor(diff / 1000);
-      const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = String(v).padStart(2, '0'); };
-      set('cd-d', d); set('cd-h', h); set('cd-m', m); set('cd-s', s);
-    }
-
-    /* ══ NAV ══ */
-    const TITLES = { home: 'Home', jobs: 'Job Listings', applications: 'My Applications', drives: 'Campus Drives', tests: 'Tests & Exams', resume: 'Resume Builder', resources: 'Prep Resources', analytics: 'Placement Stats', profile: 'My Profile', settings: 'Settings' };
-    function go(page, btn) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
-      document.querySelectorAll('.nl').forEach(b => b.classList.remove('on'));
-      document.getElementById('pg-' + page).classList.add('on');
-      if (btn) btn.classList.add('on');
-      document.getElementById('tb-title').textContent = TITLES[page] || page;
-      if (page === 'analytics' && !analyticsDrawn) setTimeout(renderAnalytics, 80);
-    }
-    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('col'); document.getElementById('main-content').classList.toggle('exp'); }
-    function toggleNotif() { document.getElementById('notif-panel').classList.toggle('on'); }
-    function toggleEdit() {
-      const v = document.getElementById('profile-view'), e = document.getElementById('profile-edit');
-      const editing = e.style.display !== 'none'; v.style.display = editing ? 'block' : 'none'; e.style.display = editing ? 'none' : 'block';
-    }
-    function saveProfile() {
-      const name = document.getElementById('edit-name').value;
-      ['pg-name', 'pv-fname', 'sb-name'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = name; });
-      const tn = document.getElementById('tb-name'); if (tn) tn.textContent = name.split(' ')[0];
-      const av1 = document.getElementById('pg-av'), av2 = document.getElementById('home-pw-av'), av3 = document.getElementById('tb-av');
-      const initials = name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
-      [av1, av2, av3].forEach(a => { if (a) a.textContent = initials; });
-      document.getElementById('profile-view').style.display = 'block'; document.getElementById('profile-edit').style.display = 'none';
-    }
-    function logout() { if (confirm('Log out of CampusPlace?')) alert('Logged out.'); }
-    function toggleDarkMode(el) {
-      if (!el) {
-        el = document.getElementById('dark-mode-toggle');
-        el.checked = !el.checked;
-      }
-      document.body.classList.toggle('dark', el.checked);
-      localStorage.setItem('cp_dark_mode', el.checked);
-      const icon = document.getElementById('theme-icon');
-      if (el.checked) {
-        icon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line>';
-      } else {
-        icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
-      }
-    }
-    function initDarkMode() {
-      const darkPref = localStorage.getItem('cp_dark_mode') === 'true';
-      const el = document.getElementById('dark-mode-toggle');
-      if (el) el.checked = darkPref;
-      document.body.classList.toggle('dark', darkPref);
-      const icon = document.getElementById('theme-icon');
-      if (darkPref && icon) {
-        icon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line>';
-      }
-    }
-
-    function switchTab(group, tab, btn) {
-      const pgId = 'pg-' + (group === 'jobs' ? 'jobs' : group === 'apps' ? 'applications' : 'drives');
-      document.querySelectorAll('#' + pgId + ' .tab-panel').forEach(p => p.classList.remove('on'));
-      document.querySelectorAll('#' + pgId + ' .tab').forEach(b => b.classList.remove('on'));
-      document.getElementById((group === 'jobs' ? 'jobs-' : group === 'apps' ? 'apps-' : '') + tab).classList.add('on');
-      btn.classList.add('on');
-    }
-    function rbGo(step) {
-      for (let i = 0; i < 5; i++) {
-        const s = document.getElementById('rs' + i), p = document.getElementById('rbp' + i);
-        if (s) { s.classList.toggle('on', i === step); s.classList.toggle('done', i < step); }
-        if (p) p.classList.toggle('on', i === step);
-      }
-    }
-    function addSkill(e, wrapId, inputId) {
-      if (e.key !== 'Enter' && e.key !== ',') return; e.preventDefault();
-      const inp = document.getElementById(inputId); const val = inp.value.trim().replace(',', ''); if (!val) return;
-      const span = document.createElement('span'); span.className = 'skill-tag';
-      span.innerHTML = val + `<button onclick="this.parentElement.remove()">×</button>`;
-      document.getElementById(wrapId).insertBefore(span, inp); inp.value = '';
-    }
-
-    /* ══ INIT ══ */
-    window.addEventListener('DOMContentLoaded', () => {
-      const h = new Date().getHours();
-      const greet = document.getElementById('greet-msg');
-
-      // Read from session storage (set by signup or login)
-      const studentName = sessionStorage.getItem('studentName') || 'Student';
-      const firstName = studentName.split(' ')[0];
-      const initials = studentName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-
-      if (greet) greet.innerHTML = (h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening') + `, ${firstName} 👋`;
-
-      // Update sidebar user name + avatar
-      const sbName = document.getElementById('sb-name');
-      const sbAv = document.getElementById('sb-av');
-      const tbName = document.getElementById('tb-name');
-      const tbAv = document.getElementById('tb-av');
-      const homePwName = document.getElementById('home-pw-name');
-      const homePwAv = document.getElementById('home-pw-av');
-      if (sbName) sbName.textContent = studentName;
-      if (sbAv) sbAv.textContent = initials;
-      if (tbName) tbName.textContent = firstName;
-      if (tbAv) tbAv.textContent = initials;
-      if (homePwName) homePwName.textContent = studentName;
-      if (homePwAv) homePwAv.textContent = initials;
-
-      initDarkMode();
-
-      // Render all page content
-      renderHomeJobs();
-      renderHomeApps();
-      renderDeadlines();
-      renderAllTabs();
-      renderApplications();
-      renderDrives();
-      renderTests();
-      renderCompanyPrep();
-
-      // Home charts (deferred slightly so DOM paints first)
-      setTimeout(renderHomeCharts, 120);
-
-      // Countdown timer
-      updateCountdown();
-      setInterval(updateCountdown, 1000);
-
-      // Close notif panel on outside click
-      document.addEventListener('click', e => {
-        const panel = document.getElementById('notif-panel');
-        if (panel && panel.classList.contains('on') && !panel.contains(e.target) && !e.target.closest('[onclick*=toggleNotif]'))
-          panel.classList.remove('on');
-        const modal = document.getElementById('job-modal');
-        if (modal && modal.classList.contains('on') && e.target === modal)
-          modal.classList.remove('on');
-      });
-    });
-  </script>
+  <script src="../js/campus-api.js"></script>
+  <script src="../js/student-dashboard-app.js"></script>
 </body>
 
 </html>

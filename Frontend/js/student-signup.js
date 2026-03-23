@@ -5,7 +5,7 @@ let selectedRole = 'student';
 let resendTimer = null;
 
 // ── CONFIG ──
-const SERVER_URL = 'http://localhost:5001';
+const SERVER_URL = 'http://localhost:5000';
 
 // Store pending student data and OTP in memory
 // DB is only written AFTER OTP is verified
@@ -365,6 +365,23 @@ async function verifyOtp() {
 
     if (result.success) {
       window._currentOtp = null;
+      if (result.studentId) {
+        sessionStorage.setItem('studentId', result.studentId);
+        sessionStorage.setItem('isLoggedIn', 'true');
+        sessionStorage.setItem('userRole', 'student');
+        const d = window._pendingFormData;
+        if (d) {
+          sessionStorage.setItem('studentName', d.fullName || '');
+          sessionStorage.setItem('studentEmail', d.email || '');
+          sessionStorage.setItem('studentPhone', d.phone || '');
+          sessionStorage.setItem('studentBranch', d.branch || '');
+          sessionStorage.setItem('studentYear', d.year || '');
+          sessionStorage.setItem('studentCGPA', d.cgpa != null ? String(d.cgpa) : '');
+          sessionStorage.setItem('studentRoll', d.rollNumber || '');
+          sessionStorage.setItem('studentLinkedin', d.linkedin || '');
+          sessionStorage.setItem('studentSkills', d.skills || '[]');
+        }
+      }
       window._pendingFormData = null;
       goTo(4);
     } else {
