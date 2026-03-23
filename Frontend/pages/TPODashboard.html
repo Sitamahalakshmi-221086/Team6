@@ -141,7 +141,7 @@
       </div>
       <div style="display:flex;gap:8px;margin-top:4px;">
         <button class="btn lg" id="contact-send-btn"
-          onclick="closeModal('contact-modal');showToast('Outreach proposal sent to company. Awaiting response.')">
+          onclick="submitContactCompanyRequest()">
           <svg viewBox="0 0 24 24">
             <line x1="22" y1="2" x2="11" y2="13" />
             <polygon points="22 2 15 22 11 13 2 9 22 2" />
@@ -381,10 +381,10 @@
                 </svg></div>
               <div class="tfc-info">
                 <div class="tfc-top">Next Major Event</div>
-                <div class="tfc-main"><strong>Razorpay</strong> Campus Drive — Accepted</div>
-                <div class="tfc-sub">Schedule the drive now · 127 students eligible · Backend + Full Stack roles</div>
+                <div class="tfc-main" id="tpo-next-major-main"><strong>—</strong> Campus Drive — Accepted</div>
+                <div class="tfc-sub" id="tpo-next-major-sub">Schedule the drive now</div>
               </div>
-              <button class="btn sm" onclick="openModal('drive-modal')"
+              <button class="btn sm" id="tpo-next-major-schedule-btn"
                 style="margin-left:auto;background:#fff;color:var(--P);">Schedule Drive</button>
             </div>
           </div>
@@ -438,7 +438,7 @@
               </svg></div>
             <div class="stat-val" style="color:var(--T);" id="tpo-stat-companies">24</div>
             <div class="stat-lbl">Open Jobs (CareerSpace)</div>
-            <div class="stat-note info">5 outreach sent</div>
+            <div class="stat-note info" id="tpo-outreach-sent-note">0 outreach sent</div>
           </div>
         </div>
 
@@ -464,23 +464,8 @@
               <button class="sec-link" onclick="go('openjobs',document.querySelector('.nl[onclick*=openjobs]'))">View
                 All →</button>
             </div>
-            <div class="card" style="padding:0;margin-bottom:20px;">
-              <div class="req-card">
-                <div class="req-top"><span class="req-co">Razorpay – Backend Engineer</span><span
-                    class="pill confirmed">Accepted</span></div>
-                <div class="req-meta">Via CareerSpace · ₹18 LPA · CSE, IT · Outreach sent Mar 12 · Company confirmed
-                  dates</div>
-                <div class="req-actions"><button class="btn sm teal"
-                    onclick="openModal('drive-modal');showToast('Schedule the Razorpay drive.')">Schedule
-                    Drive</button><button class="btn sm sec">View Details</button></div>
-              </div>
-              <div class="req-card">
-                <div class="req-top"><span class="req-co">Infosys – Cloud Engineer</span><span
-                    class="pill confirmed">Accepted</span></div>
-                <div class="req-meta">Via CareerSpace · ₹16 LPA · All branches · Outreach sent Mar 14</div>
-                <div class="req-actions"><button class="btn sm teal" onclick="openModal('drive-modal')">Schedule
-                    Drive</button><button class="btn sm sec">View Details</button></div>
-              </div>
+            <div class="card" style="padding:0;margin-bottom:20px;" id="home-accepted-outreach-container">
+              <!-- Dynamically loaded from tpo.js -->
             </div>
 
             <div class="sec-hd">
@@ -761,13 +746,13 @@
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
             <button class="btn sm sec"
-              onclick="showToast('Syncing from CareerSpace…');setTimeout(()=>showToast('24 jobs synced. 8 new matches.'),1800)">
+              onclick="syncOpenJobsNow()">
               <svg viewBox="0 0 24 24">
                 <polyline points="23 4 23 10 17 10" />
                 <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
               </svg>Sync Now
             </button>
-            <button class="btn sm" onclick="openModal('contact-modal')">
+            <button class="btn sm" onclick="openContactCompanyModal()">
               <svg viewBox="0 0 24 24">
                 <line x1="22" y1="2" x2="11" y2="13" />
                 <polygon points="22 2 15 22 11 13 2 9 22 2" />
@@ -891,7 +876,7 @@
               <option>Live (all batches)</option>
               <option>2024–25</option>
               <option>2023–24</option>
-            </select><button class="btn sm" onclick="showToast('CSV exported.')">Export CSV</button></div>
+            </select></div>
         </div>
         <div class="stats-row" style="margin-bottom:22px;">
           <div class="stat-card">

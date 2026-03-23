@@ -1,0 +1,347 @@
+const https = require('https');
+const nodemailer = require('nodemailer');
+
+const OpenJob = require('../models/OpenJob');
+const OpenJobNotification = require('../models/OpenJobNotification');
+const OpenJobApplication = require('../models/OpenJobApplication');
+const Student = require('../models/Student');
+const CompanyRequest = require('../models/CompanyRequest');
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_PASS
+  }
+});
+
+async function getCollegeBranches() {
+  const branches = await Student.distinct('branch');
+  return branches.filter((b) => typeof b === 'string' && b.trim());
+}
+
+function deriveRequiredBranchesFromText(text, collegeBranches) {
+  const t = (text || '').toLowerCase();
+  const set = new Set();
+
+  // Simple heuristics. If nothing matches, we fall back to all college branches.
+  const hasAny = (arr) => arr.some((k) => t.includes(k));
+
+  const want = {
+    CSE: ['software', 'developer', 'react', 'node', 'javascript', 'typescript', 'python', 'java', 'sql', 'mongodb', 'rest', 'api', 'spring'],
+    IT: ['aws', 'devops', 'kubernetes', 'docker', 'linux', 'system', 'cloud', 'gcp', 'azure'],
+    ECE: ['embedded', 'vlsi', 'verilog', 'fpga', 'microcontroller', 'signal'],
+    EEE: ['power', 'electrical', 'control systems', 'electronics', 'transformer'],
+    MECH: ['mechanical', 'automotive', 'thermo', 'solidworks', 'cad', 'fluid'],
+    CIVIL: ['civil', 'structural', 'construction', 'survey']
+  };
+
+  collegeBranches.forEach((b) => {
+    const key = String(b).toUpperCase();
+    if (want[key] && hasAny(want[key])) set.add(key);
+  });
+
+  if (!set.size) {
+    // If we can't infer, allow all branches so the portal doesn't end up empty.
+    collegeBranches.forEach((b) => set.add(b));
+  }
+
+  return Array.from(set);
+}
+
+function mapOpenJobResponse(openJobs, opts) {
+  // opts: { studentId }
+  const studentId = opts && opts.studentId ? String(opts.studentId) : null;
+  return Promise.resolve(
+    Promise.all(
+      openJobs.map(async (oj) => {
+        const isNotified = studentId
+          ? await OpenJobNotification.exists({ openJobId: oj._id, studentId })
+          : await OpenJobNotification.exists({ openJobId: oj._id });
+        const isApplied = studentId
+          ? await OpenJobApplication.exists({ openJobId: oj._id, studentId })
+          : false;
+
+        const outreach = await CompanyRequest.findOne({ openJobId: oj._id }).select('status createdAt').lean();
+        return {
+          _id: oj._id,
+          title: oj.title,
+          companyName: oj.companyName,
+          description: oj.description,
+          location: oj.location,
+          package: oj.package,
+          requiredBranches: oj.requiredBranches,
+          applyLink: oj.applyLink,
+          createdAt: oj.createdAt,
+          isNotified: Boolean(isNotified),
+          isApplied: Boolean(isApplied),
+          outreachStatus: outreach ? outreach.status : null,
+          outreachCreatedAt: outreach ? outreach.createdAt : null
+        };
+      })
+    )
+  );
+}
+
+async function getOpenJobs(req, res) {
+  try {
+    const studentId = req.query.studentId ? String(req.query.studentId) : null;
+    const collegeBranches = await getCollegeBranches();
+
+    const filterByCollege = {
+      $or: [
+        { requiredBranches: { $exists: false } },
+        { requiredBranches: { $size: 0 } },
+        { requiredBranches: { $in: collegeBranches } }
+      ]
+    };
+
+    let jobsQuery = OpenJob.find(filterByCollege).sort({ createdAt: -1 });
+
+    // If we have a studentId, return only jobs that were notified to that student.
+    if (studentId) {
+      const notified = await OpenJobNotification.find({ studentId })
+        .select('openJobId')
+        .lean();
+      const openJobIds = notified.map((n) => n.openJobId).filter(Boolean);
+      jobsQuery = OpenJob.find(filterByCollege).where('_id').in(openJobIds).sort({ createdAt: -1 });
+    }
+
+    const openJobs = await jobsQuery.lean();
+    if (!openJobs.length) {
+      return res.status(200).json({ success: true, openJobs: [] });
+    }
+
+    const mapped = await mapOpenJobResponse(openJobs, { studentId });
+    res.status(200).json({ success: true, openJobs: mapped });
+  } catch (err) {
+    console.error('getOpenJobs error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch open jobs' });
+  }
+}
+
+async function notifyOpenJob(req, res) {
+  try {
+    const { openJobId, channels, sendEmail } = req.body || {};
+    if (!openJobId) return res.status(400).json({ success: false, message: 'openJobId is required' });
+
+    const openJob = await OpenJob.findById(openJobId);
+    if (!openJob) return res.status(404).json({ success: false, message: 'Open job not found' });
+
+    const selectedChannels = Array.isArray(channels)
+      ? channels
+      : typeof channels === 'string'
+        ? channels.split(',').map((x) => x.trim()).filter(Boolean)
+        : [];
+
+    const shouldEmail = Boolean(sendEmail) || selectedChannels.includes('email');
+    const shouldDashboard = selectedChannels.length === 0 || selectedChannels.includes('dashboard');
+
+    const collegeBranches = await getCollegeBranches();
+    const required = Array.isArray(openJob.requiredBranches) && openJob.requiredBranches.length ? openJob.requiredBranches : collegeBranches;
+    const eligibleStudents = await Student.find({ branch: { $in: required } }).select('_id email fullName').lean();
+
+    if (!eligibleStudents.length) {
+      return res.status(200).json({ success: true, message: 'No eligible students found', notifiedCount: 0 });
+    }
+
+    // Create notifications per student (unique index prevents duplicates).
+    const docs = eligibleStudents.map((st) => ({
+      openJobId: openJob._id,
+      studentId: st._id,
+      channels: [
+        ...(shouldEmail ? ['email'] : []),
+        ...(shouldDashboard ? ['dashboard'] : [])
+      ],
+      emailSent: false
+    }));
+
+    await OpenJobNotification.insertMany(docs, { ordered: false }).catch(() => {
+      // ignore duplicate key errors
+    });
+
+    let emailSentCount = 0;
+    if (shouldEmail) {
+      // Send email in a best-effort way (don't fail the whole request).
+      await Promise.all(
+        eligibleStudents.map(async (st) => {
+          try {
+            await transporter.sendMail({
+              from: `"CampusPlace" <${process.env.GMAIL_USER}>`,
+              to: st.email,
+              subject: `Open Job Alert: ${openJob.title} — ${openJob.companyName}`,
+              html: `
+                <div style="font-family:sans-serif;max-width:520px;margin:auto;padding:22px;border:1px solid #e2e8f0;border-radius:12px;">
+                  <h2 style="color:#1e3a8a;margin-bottom:6px;">${openJob.title}</h2>
+                  <p style="margin:0 0 12px;color:#334155;">${openJob.companyName} · ${openJob.location || ''}</p>
+                  <div style="background:#f8fafc;border:1px solid #e5e7eb;padding:14px;border-radius:10px;margin-bottom:14px;">
+                    <strong>Package:</strong> ${openJob.package || '—'}
+                  </div>
+                  <p style="margin:0 0 10px;color:#64748b;">You’ve been notified by your TPO. Log in to your dashboard to apply.</p>
+                  ${openJob.applyLink ? `<p style="margin:0;"><a href="${openJob.applyLink}" target="_blank">Apply link</a></p>` : ''}
+                </div>
+              `
+            });
+            emailSentCount += 1;
+          } catch (e) {
+            // ignore individual email errors
+          }
+        })
+      );
+      await OpenJobNotification.updateMany(
+        { openJobId: openJob._id, studentId: { $in: eligibleStudents.map((s) => s._id) } },
+        { $set: { emailSent: true } }
+      );
+    }
+
+    res.status(201).json({
+      success: true,
+      openJobId: openJob._id,
+      notifiedCount: eligibleStudents.length,
+      emailSentCount
+    });
+  } catch (err) {
+    console.error('notifyOpenJob error:', err);
+    res.status(500).json({ success: false, message: 'Failed to notify students' });
+  }
+}
+
+async function applyToOpenJob(req, res) {
+  try {
+    const openJobId = req.body.openJobId;
+    const studentId = req.body.studentId;
+
+    if (!openJobId || !studentId) {
+      return res.status(400).json({ success: false, message: 'openJobId and studentId are required' });
+    }
+
+    const openJob = await OpenJob.findById(openJobId);
+    if (!openJob) return res.status(404).json({ success: false, message: 'Open job not found' });
+
+    // Ensure the student was notified for this open job.
+    const notified = await OpenJobNotification.exists({ openJobId, studentId });
+    if (!notified) {
+      return res.status(403).json({ success: false, message: 'You are not notified for this open job' });
+    }
+
+    const existing = await OpenJobApplication.findOne({ openJobId, studentId });
+    if (existing) return res.status(400).json({ success: false, message: 'You already applied for this open job' });
+
+    // resume can be overridden by upload; otherwise use default student resume
+    let resume = undefined;
+    if (req.file) {
+      resume = {
+        filename: req.file.filename,
+        path: req.file.path,
+        contentType: req.file.mimetype
+      };
+    } else {
+      const st = await Student.findById(studentId).select('resume.filename resume.path resume.contentType');
+      if (st && st.resume && st.resume.filename) {
+        resume = {
+          filename: st.resume.filename,
+          path: st.resume.path,
+          contentType: st.resume.contentType
+        };
+      }
+    }
+
+    if (!resume) {
+      return res.status(400).json({ success: false, message: 'Resume is required to apply' });
+    }
+
+    const application = await OpenJobApplication.create({
+      openJobId,
+      studentId,
+      status: 'Applied',
+      resume
+    });
+
+    res.status(201).json({ success: true, message: 'Open job application submitted', application });
+  } catch (err) {
+    console.error('applyToOpenJob error:', err);
+    res.status(500).json({ success: false, message: 'Failed to apply to open job' });
+  }
+}
+
+async function syncOpenJobs(req, res) {
+  try {
+    // External import: GitHub Jobs (best-effort).
+    // This is not dummy data: it pulls the latest postings and stores them as OpenJob documents.
+    const collegeBranches = await getCollegeBranches();
+
+    const url = 'https://jobs.github.com/positions.json?description=&location=India';
+    const jobs = await new Promise((resolve, reject) => {
+      https
+        .get(url, (r) => {
+          let data = '';
+          r.on('data', (chunk) => (data += chunk));
+          r.on('end', () => {
+            try {
+              const parsed = JSON.parse(data);
+              resolve(parsed);
+            } catch (e) {
+              reject(e);
+            }
+          });
+        })
+        .on('error', reject);
+    });
+
+    if (!Array.isArray(jobs) || jobs.length === 0) {
+      return res.status(200).json({ success: true, syncedCount: 0, skippedCount: 0 });
+    }
+
+    let syncedCount = 0;
+    let skippedCount = 0;
+
+    // Up to a reasonable limit to keep sync fast.
+    const slice = jobs.slice(0, 30);
+
+    for (const j of slice) {
+      const title = String(j.title || '').trim();
+      const companyName = String(j.company || '').trim();
+      const description = String(j.description || '').trim();
+      const location = String(j.location || '').trim();
+      const applyLink = String(j.url || '').trim();
+
+      if (!title || !companyName || !description || !applyLink) {
+        skippedCount += 1;
+        continue;
+      }
+
+      const requiredBranches = deriveRequiredBranchesFromText(`${title}\n${description}`, collegeBranches);
+
+      // Avoid duplicates based on applyLink + title.
+      const exists = await OpenJob.exists({ applyLink, title });
+      if (exists) {
+        skippedCount += 1;
+        continue;
+      }
+
+      await OpenJob.create({
+        title,
+        companyName,
+        description,
+        location: location || '',
+        package: '', // salary not always provided by this source
+        requiredBranches,
+        applyLink
+      });
+      syncedCount += 1;
+    }
+
+    res.status(201).json({ success: true, syncedCount, skippedCount });
+  } catch (err) {
+    console.error('syncOpenJobs error:', err);
+    res.status(500).json({ success: false, message: 'Open job sync failed' });
+  }
+}
+
+module.exports = {
+  getOpenJobs,
+  notifyOpenJob,
+  applyToOpenJob,
+  syncOpenJobs
+};
+

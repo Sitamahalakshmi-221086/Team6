@@ -33,6 +33,7 @@ const transporter = nodemailer.createTransport({
 app.use('/api/students', require('./routes/studentRoutes'));
 app.use('/api/companies', require('./routes/companyRoutes'));
 app.use('/api/tpo', require('./routes/tpoRoutes'));
+app.use('/api/open-jobs', require('./routes/openJobsRoutes'));
 app.use('/api/jobs', require('./routes/jobsRoutes'));
 app.use('/api/drives', require('./routes/drivesPublicRoutes'));
 app.use('/api/applications', require('./routes/applicationRoutes'));
@@ -77,7 +78,7 @@ app.get('/', (req, res) => {
 });
 
 // Set PORT
-const PORT = process.env.PORT || 5005;
+const PORT = process.env.PORT || 5000;
 
 // Start Server
 app.listen(PORT, () => {

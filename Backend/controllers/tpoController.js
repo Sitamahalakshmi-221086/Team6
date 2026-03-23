@@ -5,6 +5,8 @@ const Job = require('../models/Job');
 const Student = require('../models/Student');
 const Company = require('../models/Company');
 const Application = require('../models/Application');
+const CompanyRequest = require('../models/CompanyRequest');
+const DriveApplication = require('../models/DriveApplication');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 
@@ -91,7 +93,7 @@ const scheduleDrive = async (req, res) => {
       roles,
       createdBy: tpoId,
       submittedBy: 'tpo',
-      status: 'Approved'
+      status: 'scheduled'
     });
 
     res.status(201).json({ success: true, message: 'Drive scheduled successfully', drive: newDrive });
@@ -104,7 +106,7 @@ const scheduleDrive = async (req, res) => {
 const approveDrive = async (req, res) => {
   try {
     const { id } = req.params;
-    const drive = await Drive.findByIdAndUpdate(id, { status: 'Approved' }, { new: true });
+    const drive = await Drive.findByIdAndUpdate(id, { status: 'scheduled' }, { new: true });
     
     if(!drive) return res.status(404).json({ success: false, message: 'Drive not found' });
     res.status(200).json({ success: true, message: 'Drive approved successfully', drive });
@@ -239,10 +241,61 @@ const getPlacementRequests = async (req, res) => {
       .populate('companyId', 'companyName email')
       .sort({ createdAt: -1 })
       .lean();
-    res.status(200).json({ success: true, pendingJobs, pendingDrives });
+    const pendingCompanyRequests = await CompanyRequest.find({ status: 'pending' })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    res.status(200).json({ success: true, pendingJobs, pendingDrives, pendingCompanyRequests });
   } catch (err) {
     console.error('Get Placement Requests Error:', err);
     res.status(500).json({ success: false, message: 'Failed to fetch requests' });
+  }
+};
+
+// Module 3: TPO outreach company request flow
+const requestCompany = async (req, res) => {
+  try {
+    const { companyName, role, message, openJobId } = req.body || {};
+
+    if (!companyName || !role || !message) {
+      return res.status(400).json({ success: false, message: 'companyName, role, and message are required' });
+    }
+
+    const companyRequest = await CompanyRequest.create({
+      companyName: String(companyName).trim(),
+      role: String(role).trim(),
+      message: String(message).trim(),
+      openJobId: openJobId || null,
+      status: 'pending'
+    });
+
+    res.status(201).json({ success: true, companyRequest });
+  } catch (err) {
+    console.error('requestCompany error:', err);
+    res.status(500).json({ success: false, message: 'Failed to create company request' });
+  }
+};
+
+const updateCompanyRequestStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body || {};
+
+    if (!status || !['pending', 'accepted', 'rejected'].includes(status)) {
+      return res.status(400).json({ success: false, message: 'status must be one of pending/accepted/rejected' });
+    }
+
+    const companyRequest = await CompanyRequest.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+
+    if (!companyRequest) return res.status(404).json({ success: false, message: 'Company request not found' });
+    res.status(200).json({ success: true, companyRequest });
+  } catch (err) {
+    console.error('updateCompanyRequestStatus error:', err);
+    res.status(500).json({ success: false, message: 'Failed to update company request' });
   }
 };
 
@@ -253,7 +306,7 @@ const approvePlacementRequest = async (req, res) => {
     if (resourceType === 'drive') {
       const drive = await Drive.findByIdAndUpdate(
         id,
-        { status: 'Approved' },
+        { status: 'scheduled' },
         { new: true }
       );
       if (!drive) return res.status(404).json({ success: false, message: 'Drive not found' });
@@ -302,7 +355,7 @@ const getTPOAnalytics = async (req, res) => {
   try {
     const totalStudents = await Student.countDocuments();
     const totalCompanies = await Company.countDocuments();
-    const totalDrives = await Drive.countDocuments({ status: 'Approved' });
+    const totalDrives = await Drive.countDocuments({ status: { $in: ['scheduled', 'Approved'] } });
     const totalApplications = await Application.countDocuments();
     const shortlisted = await Application.countDocuments({ status: 'Shortlisted' });
     const interviews = await Application.countDocuments({ status: 'Interview' });
@@ -372,6 +425,31 @@ const getTPOAnalytics = async (req, res) => {
   } catch (err) {
     console.error('TPO Analytics Error:', err);
     res.status(500).json({ success: false, message: 'Failed to fetch analytics' });
+  }
+};
+
+// Module 5: Unified dashboard stats
+const getTPODashboard = async (req, res) => {
+  try {
+    const totalStudents = await Student.countDocuments();
+    const totalCompanies = await Company.countDocuments();
+
+    // Scheduled drives: support both legacy 'Approved' and new 'scheduled'
+    const totalDrives = await Drive.countDocuments({ status: { $in: ['scheduled', 'Approved'] } });
+    const totalApplications = await DriveApplication.countDocuments();
+
+    res.status(200).json({
+      success: true,
+      stats: {
+        totalStudents,
+        totalCompanies,
+        totalDrives,
+        totalApplications
+      }
+    });
+  } catch (err) {
+    console.error('getTPODashboard error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch dashboard stats' });
   }
 };
 
@@ -458,8 +536,11 @@ module.exports = {
   approvePlacementRequest,
   rejectPlacementRequest,
   getTPOAnalytics,
+  getTPODashboard,
   getTPONotices,
   getTPOStudentsDirectory,
   getTPOCompaniesDirectory,
-  getTPOPlacementRecords
+  getTPOPlacementRecords,
+  requestCompany,
+  updateCompanyRequestStatus
 };

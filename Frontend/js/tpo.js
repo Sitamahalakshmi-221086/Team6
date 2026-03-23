@@ -51,7 +51,6 @@ window.addEventListener('DOMContentLoaded', async () => {
             window.__tpoStats = ad.stats;
             [
                 ['tpo-stat-students', ad.stats.totalStudents],
-                ['tpo-stat-companies', ad.stats.totalCompanies],
                 ['tpo-stat-drives', ad.stats.totalDrives],
                 ['tpo-greet-students', ad.stats.totalStudents],
                 ['tpo-greet-drives', ad.stats.totalDrives]
@@ -61,6 +60,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             });
             updateHomeBatchUI(ad.stats);
             syncTPOProfileHeaderStats();
+            await updateHomeOpenJobsStats();
         }
     } catch (e) {
         console.error(e);
@@ -79,7 +79,6 @@ window.addEventListener('DOMContentLoaded', async () => {
                 window.__tpoStats = ad.stats;
                 [
                     ['tpo-stat-students', ad.stats.totalStudents],
-                    ['tpo-stat-companies', ad.stats.totalCompanies],
                     ['tpo-stat-drives', ad.stats.totalDrives],
                     ['tpo-greet-students', ad.stats.totalStudents],
                     ['tpo-greet-drives', ad.stats.totalDrives]
@@ -89,6 +88,7 @@ window.addEventListener('DOMContentLoaded', async () => {
                 });
                 updateHomeBatchUI(ad.stats);
                 syncTPOProfileHeaderStats();
+                await updateHomeOpenJobsStats();
                 renderHomeChartsLive();
             }
         } catch (e) { }
@@ -900,7 +900,7 @@ document.addEventListener('click', e => {
 });
 
 // ── API INTEGRATION ──
-const API_ROOT = (window.CAMPUS_API_BASE || sessionStorage.getItem('CAMPUS_API_BASE') || 'http://localhost:5000').replace(/\/$/, '');
+const API_ROOT = (window.CAMPUS_API_BASE || sessionStorage.getItem('CAMPUS_API_BASE') || 'http://127.0.0.1:5000').replace(/\/$/, '');
 const API_BASE = `${API_ROOT}/api/tpo`;
 
 function getTpoId() {
@@ -1070,26 +1070,37 @@ async function loadDrives() {
         const reqData = await reqRes.json();
         const pendingJobs = reqData.success ? reqData.pendingJobs || [] : [];
         const pendingDrivesReq = reqData.success ? reqData.pendingDrives || [] : [];
-        const pendingCount = pendingJobs.length + pendingDrivesReq.length;
+        const pendingCompanyRequests = reqData.success ? reqData.pendingCompanyRequests || [] : [];
+        const pendingCount = pendingJobs.length + pendingDrivesReq.length + pendingCompanyRequests.length;
+        window.__tpoPendingRequestsCount = pendingCount;
         const pe = document.getElementById('tpo-stat-pending');
         if (pe) pe.textContent = String(pendingCount);
         const gr = document.getElementById('tpo-greet-requests');
         if (gr) gr.textContent = String(pendingCount);
+        const gs = document.getElementById('greet-sub');
+        if (gs) gs.textContent = `${pendingCount} requests pending`;
 
         if (jobsBox) {
-            if (!pendingJobs.length) {
-                jobsBox.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txmu);">No pending job postings</div>';
+            if (!pendingCompanyRequests.length) {
+                jobsBox.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txmu);">No company requests</div>';
             } else {
-                pendingJobs.forEach((j) => {
-                    const co = j.companyId && j.companyId.companyName ? j.companyId.companyName : j.companyName || 'Company';
+                pendingCompanyRequests.forEach((cr) => {
+                    const dateObj = cr.createdAt ? new Date(cr.createdAt) : null;
+                    const dateStr = dateObj && !isNaN(dateObj.getTime())
+                        ? dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                        : '—';
+
+                    const msg = cr.message ? String(cr.message).trim() : '';
+                    const snippet = msg.length > 120 ? msg.slice(0, 120) + '…' : msg;
+
                     jobsBox.innerHTML += `
                     <div class="req-card">
-                        <div class="req-top"><span class="req-co">${co}</span><span class="pill pending">Job</span></div>
-                        <div class="req-meta">${j.title || ''} &middot; ${j.location || ''}</div>
-                        <div class="req-actions">
-                            <button class="btn sm green" onclick="approveTPO('job','${j._id}',this)">Approve</button>
-                            <button class="btn sm red" onclick="rejectTPO('job','${j._id}',this)">Reject</button>
+                        <div class="req-top">
+                          <span class="req-co">${cr.companyName || 'Company'}</span>
+                          <span class="pill pending">Pending</span>
                         </div>
+                        <div class="req-meta">${cr.role || ''} &middot; Requested ${dateStr}</div>
+                        ${snippet ? `<div style="color:var(--txmu);font-size:12px;line-height:1.35;margin-top:6px;">${snippet}</div>` : ''}
                     </div>`;
                 });
             }
@@ -1237,21 +1248,12 @@ async function saveTPOProfile() {
 // ════════════════════════════════
 // ── OPEN JOBS ENGINE (CareerSpace) ──
 // ════════════════════════════════
-const OPEN_JOBS = [
-    { id: 1, logo: '🔵', co: 'Google', title: 'Software Engineer Intern', ctc: '₹20 LPA', type: 'Full Time', mode: 'Online', branches: ['CSE', 'IT'], cgpa: '7.5', dl: 'Apr 10', skills: ['DSA', 'System Design', 'Python'], shortlisted: false, outreachSent: false },
-    { id: 2, logo: '🟠', co: 'Amazon', title: 'Data Analyst', ctc: '₹18 LPA', type: 'Full Time', mode: 'Online', branches: ['CSE', 'IT', 'EEE'], cgpa: '7.0', dl: 'Apr 8', skills: ['SQL', 'Python', 'Tableau'], shortlisted: true, outreachSent: false },
-    { id: 3, logo: '🟣', co: 'Razorpay', title: 'Backend Engineer', ctc: '₹18 LPA', type: 'Full Time', mode: 'Online', branches: ['CSE', 'IT'], cgpa: '7.0', dl: 'Apr 15', skills: ['Node.js', 'Java', 'MongoDB'], shortlisted: true, outreachSent: true },
-    { id: 4, logo: '🔴', co: 'Zomato', title: 'Frontend Developer Intern', ctc: '₹8 LPA', type: 'Internship', mode: 'Remote', branches: ['CSE', 'IT', 'ECE'], cgpa: '6.0', dl: 'Apr 5', skills: ['React', 'TypeScript', 'CSS'], shortlisted: true, outreachSent: false },
-    { id: 5, logo: '🟤', co: 'Flipkart', title: 'ML Engineer', ctc: '₹22 LPA', type: 'Full Time', mode: 'Online', branches: ['CSE', 'IT'], cgpa: '8.0', dl: 'Apr 20', skills: ['Python', 'TensorFlow', 'Pandas'], shortlisted: false, outreachSent: false },
-    { id: 6, logo: '🟢', co: 'Infosys', title: 'Cloud Engineer', ctc: '₹16 LPA', type: 'Full Time', mode: 'Online', branches: ['All'], cgpa: '6.0', dl: 'Apr 12', skills: ['AWS', 'DevOps', 'Linux'], shortlisted: false, outreachSent: true },
-    { id: 7, logo: '🔷', co: 'Swiggy', title: 'Full Stack Developer', ctc: '₹14 LPA', type: 'Full Time', mode: 'Hybrid', branches: ['CSE', 'ECE'], cgpa: '6.5', dl: 'Apr 18', skills: ['React', 'Node.js', 'MongoDB'], shortlisted: false, outreachSent: true },
-    { id: 8, logo: '🟡', co: 'Paytm', title: 'React Developer Intern', ctc: '₹6 LPA', type: 'Internship', mode: 'Remote', branches: ['CSE', 'IT'], cgpa: '6.0', dl: 'Apr 22', skills: ['React', 'JavaScript'], shortlisted: true, outreachSent: false },
-    { id: 9, logo: '🔵', co: 'Microsoft', title: 'SDE-2', ctc: '₹25 LPA', type: 'Full Time', mode: 'Hybrid', branches: ['CSE', 'IT', 'ECE'], cgpa: '7.5', dl: 'Apr 7', skills: ['C++', 'System Design', 'Azure'], shortlisted: true, outreachSent: false },
-    { id: 10, logo: '🟠', co: 'KPMG', title: 'Data Analyst', ctc: '₹12 LPA', type: 'Full Time', mode: 'Online', branches: ['CSE', 'IT', 'ECE'], cgpa: '6.5', dl: 'Apr 25', skills: ['Excel', 'SQL', 'Power BI'], shortlisted: false, outreachSent: true }
-];
+// Open jobs are fetched from backend (no dummy data).
+const OPEN_JOBS = [];
 
 const COLLEGE_BRANCHES = ['CSE', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL'];
 let activeOJBranch = 'all';
+let openJobsCache = [];
 
 function filterByBranch(branch, btn) {
     activeOJBranch = branch;
@@ -1262,24 +1264,81 @@ function filterByBranch(branch, btn) {
 
 function jobMatchesBranch(job, branch) {
     if (branch === 'all') return true;
-    if (job.branches.includes('All')) return true;
-    return job.branches.includes(branch);
+    const req = Array.isArray(job.requiredBranches) ? job.requiredBranches : [];
+    if (!req.length) return true;
+    return req.includes(branch);
 }
 
-function renderOpenJobs() {
-    const q = (document.getElementById('oj-search')?.value || '').toLowerCase();
-    const allFiltered = OPEN_JOBS.filter(j => jobMatchesBranch(j, activeOJBranch) && (!q || (j.title + j.co + j.skills.join(' ')).toLowerCase().includes(q)));
-    const slFiltered = allFiltered.filter(j => j.shortlisted);
+async function renderOpenJobs() {
+    const q = (document.getElementById('oj-search')?.value || '').toLowerCase().trim();
+
+    try {
+        const res = await fetch(`${API_ROOT}/api/open-jobs`);
+        const data = await res.json();
+        openJobsCache = data && data.success && Array.isArray(data.openJobs) ? data.openJobs : [];
+    } catch (e) {
+        console.error(e);
+        openJobsCache = [];
+    }
+
+    const allFiltered = openJobsCache.filter((j) => {
+        const text = `${j.title || ''} ${j.companyName || ''} ${j.description || ''} ${j.location || ''} ${j.package || ''}`.toLowerCase();
+        return jobMatchesBranch(j, activeOJBranch) && (!q || text.includes(q));
+    });
+
+    const slFiltered = allFiltered.filter((j) => j.isNotified);
+    const sentFiltered = allFiltered.filter((j) => j.outreachStatus && j.outreachStatus !== 'rejected');
 
     const allList = document.getElementById('oj-all-list');
     const slList = document.getElementById('oj-shortlisted-list');
-    if (allList) allList.innerHTML = allFiltered.length ? allFiltered.map(ojCard).join('') : '<div class="empty-state">No jobs found for selected filter.</div>';
-    if (slList) slList.innerHTML = slFiltered.length ? slFiltered.map(ojCard).join('') : '<div class="empty-state">No jobs notified yet. Use "Notify Students" on any job.</div>';
+
+    if (allList) {
+        allList.innerHTML = allFiltered.length ? allFiltered.map(ojCard).join('') : '<div class="empty-state">No open jobs available</div>';
+    }
+    if (slList) {
+        slList.innerHTML = slFiltered.length ? slFiltered.map(ojCard).join('') : '<div class="empty-state">No open jobs notified yet</div>';
+    }
 
     const ac = document.getElementById('oj-all-count');
     const sc = document.getElementById('oj-sl-count');
+    const sentC = document.getElementById('oj-sent-count');
     if (ac) ac.textContent = `(${allFiltered.length})`;
     if (sc) sc.textContent = `(${slFiltered.length})`;
+    if (sentC) sentC.textContent = `(${sentFiltered.length})`;
+
+    // Render outreach/sent tab rows
+    const sentCard = document.querySelector('#oj-sent .card');
+    if (sentCard) {
+        const rows = sentFiltered
+            .map((j) => {
+                const status = j.outreachStatus || 'pending';
+                const pillClass = status === 'accepted' ? 'confirmed' : status === 'rejected' ? 'declined' : 'awaiting';
+                const branchStr = Array.isArray(j.requiredBranches) && j.requiredBranches.length ? j.requiredBranches.join(', ') : 'All branches';
+                const dt = j.outreachCreatedAt ? new Date(j.outreachCreatedAt) : null;
+                const sentOn = dt && !isNaN(dt.getTime()) ? dt.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '—';
+                const action =
+                    status === 'accepted'
+                        ? `<button class="btn sm teal" onclick="scheduleDriveFromAcceptedOpenJob('${j._id}', this)">Schedule Drive</button>`
+                        : `<span style="font-size:12px;color:var(--txmu);">Awaiting TPO response</span>`;
+
+                return `<div class="tbl-row outreach-table">
+                    <div>
+                      <div style="font-size:13px;font-weight:750;color:var(--txm);">${j.companyName || '—'} – ${j.title || ''}</div>
+                      <div class="tbl-sub">${j.package || ''} · ${branchStr}</div>
+                    </div>
+                    <span style="font-size:12px;color:var(--txmu);">${branchStr}</span>
+                    <span style="font-size:12px;">${sentOn}</span>
+                    <span class="pill ${pillClass}">${status === 'pending' ? 'Pending' : status === 'accepted' ? 'Accepted' : 'Rejected'}</span>
+                    <div style="display:flex;justify-content:flex-end;gap:8px;">${action}</div>
+                  </div>`;
+            })
+            .join('');
+
+        sentCard.innerHTML = `
+          <div class="tbl-head outreach-table"><span>Company · Role</span><span>Branches</span><span>Sent On</span><span>Status</span><span>Action</span></div>
+          ${rows || '<div style="padding:24px;text-align:center;color:var(--txmu);">No outreach requests yet</div>'}
+        `;
+    }
 }
 
 function modeColor(mode) {
@@ -1289,59 +1348,268 @@ function modeColor(mode) {
     return 'color:var(--P);';
 }
 
+async function updateHomeOpenJobsStats() {
+    const statEl = document.getElementById('tpo-stat-companies'); // Open Jobs count on home
+    const noteEl = document.getElementById('tpo-outreach-sent-note'); // outreach sent note on home
+    const acceptedBox = document.getElementById('home-accepted-outreach-container');
+    if (!statEl && !noteEl && !acceptedBox) return;
+
+    try {
+        const res = await fetch(`${API_ROOT}/api/open-jobs`);
+        const data = await res.json();
+        const jobs = data && data.success && Array.isArray(data.openJobs) ? data.openJobs : [];
+        openJobsCache = jobs;
+
+        const outreachSent = jobs.filter((j) => j.outreachStatus && j.outreachStatus !== 'rejected').length;
+        if (statEl) statEl.textContent = String(jobs.length);
+        if (noteEl) noteEl.textContent = `${outreachSent} outreach sent`;
+
+        if (acceptedBox) {
+            const accepted = jobs.filter((j) => j.outreachStatus === 'accepted');
+            if (!accepted.length) {
+                acceptedBox.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txmu);">No outreach accepted yet</div>';
+                const mainEl = document.getElementById('tpo-next-major-main');
+                const subEl = document.getElementById('tpo-next-major-sub');
+                const btnEl = document.getElementById('tpo-next-major-schedule-btn');
+                if (mainEl) mainEl.innerHTML = '<strong>—</strong> Campus Drive — Accepted';
+                if (subEl) subEl.textContent = 'No accepted outreach yet';
+                if (btnEl) { btnEl.onclick = null; btnEl.disabled = true; }
+            } else {
+                acceptedBox.innerHTML = accepted.map((j) => {
+                    const branchStr = Array.isArray(j.requiredBranches) && j.requiredBranches.length ? j.requiredBranches.join(', ') : 'All branches';
+                    const dt = j.outreachCreatedAt ? new Date(j.outreachCreatedAt) : null;
+                    const sentOn = dt && !isNaN(dt.getTime()) ? dt.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '—';
+                    return `
+                    <div class="req-card">
+                      <div class="req-top">
+                        <span class="req-co">${j.companyName || '—'} – ${j.title || ''}</span>
+                        <span class="pill confirmed">Accepted</span>
+                      </div>
+                      <div class="req-meta">Via CareerSpace · ${j.package || ''} · ${branchStr} · Outreach sent ${sentOn}</div>
+                      <div class="req-actions">
+                        <button class="btn sm teal" onclick="scheduleDriveFromAcceptedOpenJob('${String(j._id)}')">Schedule Drive</button>
+                      </div>
+                    </div>`;
+                }).join('');
+
+                const mainEl = document.getElementById('tpo-next-major-main');
+                const subEl = document.getElementById('tpo-next-major-sub');
+                const btnEl = document.getElementById('tpo-next-major-schedule-btn');
+                const first = accepted[0];
+                const firstBranch = Array.isArray(first.requiredBranches) && first.requiredBranches.length ? first.requiredBranches.join(', ') : 'All branches';
+                if (mainEl) mainEl.innerHTML = `<strong>${first.companyName || '—'}</strong> Campus Drive — Accepted`;
+                if (subEl) subEl.textContent = `Schedule the drive now · ${firstBranch}`;
+                if (btnEl) { btnEl.onclick = () => scheduleDriveFromAcceptedOpenJob(String(first._id)); btnEl.disabled = false; }
+            }
+
+            const gs = document.getElementById('greet-sub');
+            if (gs) {
+                const pendingCount = window.__tpoPendingRequestsCount ?? 0;
+                const placedStudents = window.__tpoStats?.placedStudents ?? 0;
+                gs.textContent = `${pendingCount} requests pending · ${accepted.length} outreach accepted · ${placedStudents} students placed`;
+            }
+        }
+    } catch (e) {
+        console.error(e);
+        if (statEl) statEl.textContent = '0';
+        if (noteEl) noteEl.textContent = `0 outreach sent`;
+        if (acceptedBox) acceptedBox.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txmu);">No outreach accepted yet</div>';
+    }
+}
+
 function ojCard(j) {
-    const branchTags = (j.branches[0] === 'All' ? COLLEGE_BRANCHES : j.branches).map(b => `<span class="oj-tag branch">${b}</span>`).join('');
-    const skillTags = j.skills.slice(0, 3).map(s => `<span class="oj-tag">${s}</span>`).join('');
-    const notifyBtn = j.shortlisted
+    const company = j.companyName || '—';
+    const pkg = j.package || '—';
+    const loc = j.location || '—';
+
+    const notifyBtn = j.isNotified
         ? `<span class="pill notified" style="font-size:10px;">✓ Notified</span>`
-        : `<button class="btn sm green" onclick="notifyStudents(${j.id})"><svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:#fff;fill:none;stroke-width:2.2;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notify Students</button>`;
-    const outreachBtn = j.outreachSent
-        ? `<span class="pill awaiting" style="font-size:10px;">Outreach Sent</span>`
-        : `<button class="btn sm sec" onclick="sendOutreach(${j.id})"><svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:var(--P);fill:none;stroke-width:2.2;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Contact Co.</button>`;
-    return `<div class="oj-card" id="ojc-${j.id}">
+        : `<button class="btn sm green" onclick="notifyStudents('${String(j._id)}')">Notify Students</button>`;
+
+    let outreachBtn = '';
+    if (j.outreachStatus) {
+        const label = j.outreachStatus === 'accepted' ? 'Accepted' : j.outreachStatus === 'rejected' ? 'Rejected' : 'Pending';
+        const pillClass = j.outreachStatus === 'accepted' ? 'confirmed' : j.outreachStatus === 'rejected' ? 'declined' : 'awaiting';
+        outreachBtn = `<span class="pill ${pillClass}" style="font-size:10px;">${label}</span>`;
+    } else {
+        outreachBtn = `<button class="btn sm sec" onclick="sendOutreach('${String(j._id)}')">Contact Company</button>`;
+    }
+
+    return `<div class="oj-card" id="ojc-${String(j._id)}">
         <div class="oj-top">
-            <div class="oj-logo">${j.logo}</div>
             <div class="oj-info">
-                <div class="oj-title">${j.title}</div>
-                <div class="oj-co">${j.co} · <span style="${modeColor(j.mode)};font-weight:700;">${j.mode}</span> · Closes ${j.dl} · Min CGPA ${j.cgpa}</div>
-                <div class="oj-tags"><span class="oj-tag ctc">${j.ctc}</span><span class="oj-tag">${j.type}</span>${branchTags}${skillTags}</div>
+                <div class="oj-title">${j.title || '—'}</div>
+                <div class="oj-co">${company}</div>
+                <div class="oj-tags">
+                  <span class="oj-tag ctc">${pkg}</span>
+                  <span class="oj-tag">${loc}</span>
+                </div>
             </div>
             <div class="oj-actions">${notifyBtn}${outreachBtn}</div>
         </div>
-        <div class="oj-source-note">Scraped from <strong style="color:var(--P);">CareerSpace</strong> · Auto-matched to college branches</div>
     </div>`;
 }
 
-function notifyStudents(id) {
-    const j = OPEN_JOBS.find(x => x.id === id);
+function notifyStudents(openJobId) {
+    const j = openJobsCache.find((x) => String(x._id) === String(openJobId));
     if (!j) return;
+
     const el = document.getElementById('notify-job-info');
-    if (el) el.innerHTML = `<strong style="font-size:14px;">${j.title}</strong> <span style="color:var(--txmu);">at</span> <strong>${j.co}</strong><br><span style="color:var(--G);font-weight:700;">${j.ctc}</span> · ${j.type} · Branches: <strong>${j.branches.join(', ')}</strong><br><span style="color:var(--txmu);font-size:11.5px;">Students can apply using their default profile or upload a custom resume for this role.</span>`;
+    if (el) {
+        const branches = Array.isArray(j.requiredBranches) && j.requiredBranches.length ? j.requiredBranches.join(', ') : 'All branches';
+        el.innerHTML = `<strong style="font-size:14px;">${j.title}</strong> <span style="color:var(--txmu);">at</span> <strong>${j.companyName}</strong><br>` +
+            `<span style="color:var(--G);font-weight:700;">${j.package || '—'}</span> · ${j.location || '—'}<br>` +
+            `Branches: <strong>${branches}</strong>`;
+    }
+
     const btn = document.getElementById('notify-send-btn');
-    if (btn) btn.onclick = () => {
-        j.shortlisted = true;
-        closeModal('notify-modal');
-        renderOpenJobs();
-        showToast(`${j.co} job pushed to eligible students via email & dashboard.`);
-    };
+    if (btn) {
+        btn.onclick = async () => {
+            try {
+                const modal = document.getElementById('notify-modal');
+                const checks = modal ? modal.querySelectorAll('.cb-item input[type="checkbox"]') : [];
+                const channels = [];
+                let sendEmail = false;
+                checks.forEach((input) => {
+                    const label = input.closest('label');
+                    const text = (label ? label.textContent : '').toLowerCase();
+                    if (!input.checked) return;
+                    if (text.includes('email')) {
+                        sendEmail = true;
+                        channels.push('email');
+                    } else {
+                        // dashboard / notice board both show in dashboard
+                        channels.push('dashboard');
+                    }
+                });
+
+                const res = await fetch(`${API_ROOT}/api/open-jobs/notify`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ openJobId: j._id, channels, sendEmail })
+                });
+                const data = await res.json();
+                if (!data.success) throw new Error(data.message || 'Notify failed');
+
+                closeModal('notify-modal');
+                showToast(`Students notified for ${j.companyName} — ${j.title}`);
+                await renderOpenJobs();
+            } catch (e) {
+                console.error(e);
+                showToast('Failed to notify students');
+            }
+        };
+    }
+
     openModal('notify-modal');
 }
 
-function sendOutreach(id) {
-    const j = OPEN_JOBS.find(x => x.id === id);
+function scheduleDriveFromAcceptedOpenJob(openJobId) {
+    const j = openJobsCache.find((x) => String(x._id) === String(openJobId));
     if (!j) return;
+
+    const companyEl = document.getElementById('drive-company');
+    const rolesEl = document.getElementById('drive-roles');
+    const dateEl = document.getElementById('drive-date');
+    const eligEl = document.getElementById('drive-eligibility');
+
+    if (companyEl) companyEl.value = j.companyName || '';
+    if (rolesEl) rolesEl.value = j.title || '';
+    if (dateEl) dateEl.value = dateEl.value || new Date().toISOString().slice(0, 10);
+    if (eligEl) eligEl.value = (j.requiredBranches || []).join(', ') || '';
+
+    openModal('drive-modal');
+}
+
+let contactOpenJobId = null;
+
+function openContactCompanyModal() {
+    contactOpenJobId = null;
     const coEl = document.getElementById('c-company');
     const roleEl = document.getElementById('c-role');
     const msgEl = document.getElementById('c-msg');
-    if (coEl) coEl.value = j.co;
-    if (roleEl) roleEl.value = j.title;
-    if (msgEl) msgEl.value = `Dear Hiring Team at ${j.co},\n\nWe at JNTU Hyderabad T&P Cell would like to invite your organization to participate in a campus recruitment drive for the role of ${j.title}.\n\nWe have ${j.branches[0] === 'All' ? 'students from all branches' : j.branches.join(', ') + ' students'} with strong academics (CGPA ≥ ${j.cgpa}) who are excellent candidates for this role.\n\nWe would appreciate your confirmation of availability and preferred dates to conduct the drive.\n\nWarm Regards,\nDr. Ramesh Kumar\nTPO, JNTU Hyderabad`;
-    const sendBtn = document.getElementById('contact-send-btn');
-    if (sendBtn) sendBtn.onclick = () => {
-        j.outreachSent = true;
-        closeModal('contact-modal');
-        renderOpenJobs();
-        showToast(`Outreach proposal sent to ${j.co}. Awaiting response.`);
-    };
+    if (coEl) coEl.value = '';
+    if (roleEl) roleEl.value = '';
+    if (msgEl) msgEl.value = '';
     openModal('contact-modal');
+}
+
+async function submitContactCompanyRequest() {
+    try {
+        const coEl = document.getElementById('c-company');
+        const roleEl = document.getElementById('c-role');
+        const msgEl = document.getElementById('c-msg');
+
+        const companyName = (coEl?.value || '').trim();
+        const role = (roleEl?.value || '').trim();
+        let message = (msgEl?.value || '').trim();
+        if (!message) message = (msgEl?.placeholder || '').trim(); // fallback to placeholder text
+
+        if (!companyName || !role || !message) {
+            showToast('Please fill company name, role, and message.');
+            return;
+        }
+
+        const payload = {
+            companyName,
+            role,
+            message,
+            openJobId: contactOpenJobId || null
+        };
+
+        const res = await fetch(`${API_ROOT}/api/tpo/request-company`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message || 'Request failed');
+
+        closeModal('contact-modal');
+        showToast(`Company request sent: ${companyName}`);
+        await renderOpenJobs();
+    } catch (e) {
+        console.error(e);
+        showToast('Failed to send company request');
+    }
+}
+
+function sendOutreach(openJobId) {
+    const j = openJobsCache.find((x) => String(x._id) === String(openJobId));
+    if (!j) return;
+    contactOpenJobId = openJobId;
+
+    const coEl = document.getElementById('c-company');
+    const roleEl = document.getElementById('c-role');
+    const msgEl = document.getElementById('c-msg');
+
+    if (coEl) coEl.value = j.companyName || '';
+    if (roleEl) roleEl.value = j.title || '';
+
+    if (msgEl) {
+        const branches = Array.isArray(j.requiredBranches) && j.requiredBranches.length ? j.requiredBranches.join(', ') : 'eligible branches';
+        msgEl.value =
+            `Dear Hiring Team at ${j.companyName},\n\n` +
+            `We at our T&P Cell would like to invite your organization to conduct a campus recruitment drive for the role of ${j.title}.\n\n` +
+            `This opportunity has been matched to students from: ${branches}.\n` +
+            `${j.location ? `Location preference: ${j.location}.\n` : ''}\n` +
+            `We would appreciate your confirmation of availability and preferred dates.\n\n` +
+            `Warm regards,\nTPO / Placement Office`;
+    }
+
+    openModal('contact-modal');
+}
+
+async function syncOpenJobsNow() {
+    try {
+        showToast('Syncing open jobs…');
+        const res = await fetch(`${API_ROOT}/api/open-jobs/sync`, { method: 'POST' });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message || 'Sync failed');
+        await renderOpenJobs();
+        showToast(`Open jobs synced (${data.syncedCount || 0}).`);
+    } catch (e) {
+        console.error(e);
+        showToast('Open jobs sync failed');
+    }
 }

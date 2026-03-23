@@ -14,17 +14,30 @@ const driveSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
+  // New fields (spec-aligned)
+  location: {
+    type: String,
+    default: ''
+  },
   eligibility: {
     type: String,
     required: true
+  },
+  eligibleBranches: {
+    type: [String],
+    default: []
   },
   roles: {
     type: String,
     required: true
   },
+  role: {
+    type: String,
+    default: ''
+  },
   status: {
     type: String,
-    enum: ['Pending', 'Approved', 'Rejected'],
+    enum: ['Pending', 'Approved', 'Rejected', 'scheduled'],
     default: 'Pending'
   },
   submittedBy: {
