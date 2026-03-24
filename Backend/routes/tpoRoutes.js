@@ -13,6 +13,7 @@ const {
   updateTPOProfile,
   getTPOProfile,
   getPlacementRequests,
+  getTPORequestsCount,
   approvePlacementRequest,
   rejectPlacementRequest,
   getTPOAnalytics,
@@ -33,6 +34,7 @@ router.get('/profile/:id', getTPOProfile);
 router.put('/profile/:id', updateTPOProfile);
 
 router.get('/requests', getPlacementRequests);
+router.get('/requests/count', getTPORequestsCount);
 router.patch('/approve/:id', approvePlacementRequest);
 router.patch('/reject/:id', rejectPlacementRequest);
 router.get('/analytics', getTPOAnalytics);

@@ -34,6 +34,7 @@ app.use('/api/students', require('./routes/studentRoutes'));
 app.use('/api/companies', require('./routes/companyRoutes'));
 app.use('/api/tpo', require('./routes/tpoRoutes'));
 app.use('/api/open-jobs', require('./routes/openJobsRoutes'));
+app.use('/api/notifications', require('./routes/notificationsRoutes'));
 app.use('/api/jobs', require('./routes/jobsRoutes'));
 app.use('/api/drives', require('./routes/drivesPublicRoutes'));
 app.use('/api/applications', require('./routes/applicationRoutes'));

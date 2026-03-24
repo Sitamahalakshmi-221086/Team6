@@ -26,4 +26,14 @@ const getApprovedDrivesForStudents = async (req, res) => {
   }
 };
 
-module.exports = { getApprovedDrivesForStudents };
+const getDrivesCount = async (req, res) => {
+  try {
+    const count = await Drive.countDocuments({ status: { $in: ['scheduled', 'Approved'] } });
+    res.status(200).json({ success: true, count });
+  } catch (error) {
+    console.error('getDrivesCount error:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch drives count' });
+  }
+};
+
+module.exports = { getApprovedDrivesForStudents, getDrivesCount };

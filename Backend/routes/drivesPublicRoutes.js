@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 
-const { getApprovedDrivesForStudents } = require('../controllers/driveListingController');
+const { getApprovedDrivesForStudents, getDrivesCount } = require('../controllers/driveListingController');
 const { createCompanyDrive } = require('../controllers/companyController');
 const { applyToDrive, updateDrive } = require('../controllers/driveApplicationController');
 
@@ -14,6 +14,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } });
 
 router.get('/', getApprovedDrivesForStudents);
+router.get('/count', getDrivesCount);
 router.post('/create', createCompanyDrive);
 
 // PATCH /api/drives/update/:id

@@ -24,6 +24,45 @@ const baseChartOptions = {
     }
 };
 
+function setBadgeCount(id, count) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const n = Number(count) || 0;
+    if (n > 0) {
+        el.textContent = String(n);
+        el.style.display = 'inline-flex';
+    } else {
+        el.style.display = 'none';
+    }
+}
+
+async function refreshSidebarCounters() {
+    try {
+        const [notifRes, reqRes, drivesRes] = await Promise.all([
+            fetch(`${API_ROOT}/api/notifications/count`),
+            fetch(`${API_ROOT}/api/tpo/requests/count`),
+            fetch(`${API_ROOT}/api/drives/count`)
+        ]);
+
+        const notifData = await notifRes.json();
+        const reqData = await reqRes.json();
+        const drivesData = await drivesRes.json();
+
+        const notifCount = notifData && notifData.success ? Number(notifData.count || 0) : 0;
+        const reqCount = reqData && reqData.success ? Number(reqData.count || 0) : 0;
+        const driveCount = drivesData && drivesData.success ? Number(drivesData.count || 0) : 0;
+
+        setBadgeCount('sb-badge-notifications', notifCount);
+        setBadgeCount('sb-badge-requests', reqCount);
+        setBadgeCount('sb-badge-drives', driveCount);
+
+        const dot = document.querySelector('.icon-btn .rdot');
+        if (dot) dot.style.display = notifCount > 0 ? 'block' : 'none';
+    } catch (e) {
+        console.error('refreshSidebarCounters error:', e);
+    }
+}
+
 // ── INIT ──
 window.addEventListener('DOMContentLoaded', async () => {
     if (!getTpoId() || sessionStorage.getItem('userRole') !== 'tpo' || sessionStorage.getItem('isLoggedIn') !== 'true') {
@@ -38,30 +77,36 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (greetMsg) greetMsg.textContent = `${g}, ${nm.split(' ')[0]} 👋`;
 
     try {
-        const pr = await fetch(`${API_BASE}/api/tpo/profile/${getTpoId()}`);
+        const pr = await fetch(`${API_BASE}/profile/${getTpoId()}`);
         const pd = await pr.json();
         if (pd.success && pd.tpo) {
             applyTPOProfileToDOM(pd.tpo);
             const fn = pd.tpo.fullName || nm;
             if (greetMsg) greetMsg.textContent = `${g}, ${fn.split(' ')[0]} 👋`;
         }
-        const ar = await fetch(`${API_BASE}/api/tpo/analytics`);
+        const [dr, ar] = await Promise.all([
+            fetch(`${API_BASE}/dashboard`),
+            fetch(`${API_BASE}/analytics`)
+        ]);
+        const dd = await dr.json();
         const ad = await ar.json();
-        if (ad.success && ad.stats) {
-            window.__tpoStats = ad.stats;
+        if (ad.success && ad.stats && dd.success && dd.stats) {
+            window.__tpoStats = { ...ad.stats, ...dd.stats };
             [
-                ['tpo-stat-students', ad.stats.totalStudents],
-                ['tpo-stat-drives', ad.stats.totalDrives],
-                ['tpo-greet-students', ad.stats.totalStudents],
-                ['tpo-greet-drives', ad.stats.totalDrives]
+                ['tpo-stat-students', dd.stats.totalStudents],
+                ['tpo-stat-placed', ad.stats.placedStudents || 0],
+                ['tpo-stat-drives', dd.stats.totalDrives],
+                ['tpo-greet-students', dd.stats.totalStudents],
+                ['tpo-greet-drives', dd.stats.totalDrives]
             ].forEach(([id, v]) => {
                 const el = document.getElementById(id);
                 if (el) el.textContent = String(v ?? 0);
             });
-            updateHomeBatchUI(ad.stats);
+            updateHomeBatchUI(window.__tpoStats);
             syncTPOProfileHeaderStats();
             await updateHomeOpenJobsStats();
         }
+        await refreshSidebarCounters();
     } catch (e) {
         console.error(e);
     }
@@ -73,22 +118,28 @@ window.addEventListener('DOMContentLoaded', async () => {
     window.__tpoHomePollTimer = setInterval(async () => {
         if (document.visibilityState !== 'visible') return;
         try {
-            const ar = await fetch(`${API_BASE}/api/tpo/analytics`);
+            const [dr, ar] = await Promise.all([
+                fetch(`${API_BASE}/dashboard`),
+                fetch(`${API_BASE}/analytics`)
+            ]);
+            const dd = await dr.json();
             const ad = await ar.json();
-            if (ad.success && ad.stats) {
-                window.__tpoStats = ad.stats;
+            if (ad.success && ad.stats && dd.success && dd.stats) {
+                window.__tpoStats = { ...ad.stats, ...dd.stats };
                 [
-                    ['tpo-stat-students', ad.stats.totalStudents],
-                    ['tpo-stat-drives', ad.stats.totalDrives],
-                    ['tpo-greet-students', ad.stats.totalStudents],
-                    ['tpo-greet-drives', ad.stats.totalDrives]
+                    ['tpo-stat-students', dd.stats.totalStudents],
+                    ['tpo-stat-placed', ad.stats.placedStudents || 0],
+                    ['tpo-stat-drives', dd.stats.totalDrives],
+                    ['tpo-greet-students', dd.stats.totalStudents],
+                    ['tpo-greet-drives', dd.stats.totalDrives]
                 ].forEach(([id, v]) => {
                     const el = document.getElementById(id);
                     if (el) el.textContent = String(v ?? 0);
                 });
-                updateHomeBatchUI(ad.stats);
+                updateHomeBatchUI(window.__tpoStats);
                 syncTPOProfileHeaderStats();
                 await updateHomeOpenJobsStats();
+                await refreshSidebarCounters();
                 renderHomeChartsLive();
             }
         } catch (e) { }
@@ -583,7 +634,7 @@ async function loadTPOStudentsDirectory() {
     const unplaced = document.getElementById('tpo-st-unplaced-rows');
     if (!all) return;
     try {
-        const res = await fetch(`${API_BASE}/api/tpo/students`);
+        const res = await fetch(`${API_BASE}/students`);
         const data = await res.json();
         const list = data.success && data.students ? data.students : [];
         const c = { placed: 0, active: 0, unplaced: 0 };
@@ -669,8 +720,8 @@ async function loadTPOCompaniesTabs() {
     const badge = document.getElementById('tpo-ct-req-badge');
     try {
         const [reqRes, coRes] = await Promise.all([
-            fetch(`${API_BASE}/api/tpo/requests`),
-            fetch(`${API_BASE}/api/tpo/companies-list`)
+            fetch(`${API_BASE}/requests`),
+            fetch(`${API_BASE}/companies-list`)
         ]);
         const reqData = await reqRes.json();
         const coData = await coRes.json();
@@ -681,7 +732,7 @@ async function loadTPOCompaniesTabs() {
 
         if (reqEl) {
             if (n === 0) {
-                reqEl.innerHTML = '<div style="padding:24px;text-align:center;color:var(--txmu);font-size:13px;">No pending job or drive requests</div>';
+                reqEl.innerHTML = '<div style="padding:24px;text-align:center;color:var(--txmu);font-size:13px;">No pending requests</div>';
             } else {
                 let html = '';
                 pendingJ.forEach((j) => {
@@ -746,7 +797,7 @@ async function loadTPOFullDrivesPage() {
     const ds3 = document.getElementById('tpo-ds-pkg');
     if (!up || !done) return;
     try {
-        const res = await fetch(`${API_BASE}/api/tpo/drives`);
+        const res = await fetch(`${API_BASE}/drives`);
         const data = await res.json();
         const drives = data.success && data.drives ? data.drives : [];
         const now = new Date();
@@ -781,7 +832,7 @@ async function loadTPOPlacementsPage() {
     const tb = document.getElementById('tpo-placements-tbody');
     if (!tb) return;
     try {
-        const res = await fetch(`${API_BASE}/api/tpo/placement-records`);
+        const res = await fetch(`${API_BASE}/placement-records`);
         const data = await res.json();
         const rows = data.success && data.records ? data.records : [];
         const set = (id, v) => {
@@ -826,7 +877,7 @@ async function loadTPONotices() {
     const past = document.getElementById('tpo-notices-past');
     if (!act) return;
     try {
-        const res = await fetch(`${API_BASE}/api/notices`);
+        const res = await fetch(`${API_BASE}/notices`);
         const data = await res.json();
         const list = data.success && data.notices ? data.notices : [];
 
@@ -862,11 +913,17 @@ async function loadTPONotices() {
 async function loadNotifications() {
     const list = document.getElementById('tpo-notifications-list');
     if (!list) return;
+    try {
+        const res = await fetch(`${API_ROOT}/api/notifications/count`);
+        const data = await res.json();
+        const count = data && data.success ? Number(data.count || 0) : 0;
 
-    // For now, we simulate an empty state or use static items.
-    const hasNotifications = list.children.length > 0;
-
-    if (!hasNotifications) {
+        if (count > 0) {
+            list.innerHTML = `<div class="notif-item unread"><span class="n-dot u"></span><div><div class="n-text"><strong>${count}</strong> pending placement updates</div><div class="n-time">Live</div></div></div>`;
+        } else {
+            list.innerHTML = '<div style="padding:24px;text-align:center;color:var(--txmu);font-size:12px;font-weight:500;">No new notifications</div>';
+        }
+    } catch (e) {
         list.innerHTML = '<div style="padding:24px;text-align:center;color:var(--txmu);font-size:12px;font-weight:500;">No new notifications</div>';
     }
 }
@@ -1082,7 +1139,7 @@ async function loadDrives() {
 
         if (jobsBox) {
             if (!pendingCompanyRequests.length) {
-                jobsBox.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txmu);">No company requests</div>';
+                jobsBox.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txmu);">No pending requests</div>';
             } else {
                 pendingCompanyRequests.forEach((cr) => {
                     const dateObj = cr.createdAt ? new Date(cr.createdAt) : null;
@@ -1144,12 +1201,12 @@ async function loadDrives() {
             }
         }
 
-        const res = await fetch(`${API_BASE}/api/tpo/drives`);
+        const res = await fetch(`${API_BASE}/drives`);
         const data = await res.json();
         if (data.success && approvedContainer) {
-            const approved = (data.drives || []).filter((d) => d.status === 'Approved');
+            const approved = (data.drives || []).filter((d) => d.status === 'Approved' || d.status === 'scheduled');
             if (approved.length === 0) {
-                approvedContainer.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txmu);">No upcoming drives</div>';
+                approvedContainer.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txmu);">No drives scheduled</div>';
             } else {
                 approved.forEach((d) => {
                     const dateObj = new Date(d.date);
@@ -1162,7 +1219,7 @@ async function loadDrives() {
                             <div class="dr-name">${d.companyName}</div>
                             <div class="dr-meta">Roles: ${d.roles} &middot; Eligibility: ${d.eligibility}</div>
                         </div>
-                        <span class="pill active">Approved</span>
+                        <span class="pill active">Scheduled</span>
                     </div>`;
                 });
             }
@@ -1293,7 +1350,7 @@ async function renderOpenJobs() {
     const slList = document.getElementById('oj-shortlisted-list');
 
     if (allList) {
-        allList.innerHTML = allFiltered.length ? allFiltered.map(ojCard).join('') : '<div class="empty-state">No open jobs available</div>';
+        allList.innerHTML = allFiltered.length ? allFiltered.map(ojCard).join('') : '<div class="empty-state">No jobs available</div>';
     }
     if (slList) {
         slList.innerHTML = slFiltered.length ? slFiltered.map(ojCard).join('') : '<div class="empty-state">No open jobs notified yet</div>';

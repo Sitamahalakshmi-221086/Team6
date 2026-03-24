@@ -252,6 +252,24 @@ const getPlacementRequests = async (req, res) => {
   }
 };
 
+const getTPORequestsCount = async (req, res) => {
+  try {
+    const [pendingJobs, pendingDrives, pendingCompanyRequests] = await Promise.all([
+      Job.countDocuments({ tpoApproval: 'pending' }),
+      Drive.countDocuments({ submittedBy: 'company', status: 'Pending' }),
+      CompanyRequest.countDocuments({ status: 'pending' })
+    ]);
+
+    res.status(200).json({
+      success: true,
+      count: pendingJobs + pendingDrives + pendingCompanyRequests
+    });
+  } catch (err) {
+    console.error('getTPORequestsCount error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch requests count' });
+  }
+};
+
 // Module 3: TPO outreach company request flow
 const requestCompany = async (req, res) => {
   try {
@@ -533,6 +551,7 @@ module.exports = {
   updateTPOProfile,
   getTPOProfile,
   getPlacementRequests,
+  getTPORequestsCount,
   approvePlacementRequest,
   rejectPlacementRequest,
   getTPOAnalytics,
