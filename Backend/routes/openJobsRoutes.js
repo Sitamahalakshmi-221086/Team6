@@ -6,7 +6,6 @@ const path = require('path');
 const {
   getOpenJobs,
   notifyOpenJob,
-  applyToOpenJob,
   syncOpenJobs
 } = require('../controllers/openJobsController');
 
@@ -27,8 +26,6 @@ router.get('/', getOpenJobs);
 // POST /api/open-jobs/notify
 router.post('/notify', notifyOpenJob);
 
-// POST /api/open-jobs/apply (student apply flow)
-router.post('/apply', upload.single('resume'), applyToOpenJob);
 
 // POST /api/open-jobs/sync (CareerSpace sync / external import)
 router.post('/sync', syncOpenJobs);

@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const ApplicationSchema = new mongoose.Schema({
   jobId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Job',
     required: true
   },
   studentId: {
@@ -13,13 +12,18 @@ const ApplicationSchema = new mongoose.Schema({
   },
   companyId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Company',
-    required: true
+    ref: 'Company'
+    // optional — open-job applications may not have a registered company
   },
   status: {
     type: String,
     enum: ['applied', 'New', 'Reviewed', 'Shortlisted', 'Interview', 'Offered', 'Hired', 'Rejected'],
     default: 'applied'
+  },
+  type: {
+    type: String,
+    enum: ['open', 'drive'],
+    default: 'drive'
   },
   resume: {
     filename: String,

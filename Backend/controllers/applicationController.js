@@ -1,18 +1,35 @@
 const Application = require('../models/Application');
 const Job = require('../models/Job');
+const OpenJob = require('../models/OpenJob');
 const Student = require('../models/Student');
+const Company = require('../models/Company');
 const { studentJobMatch } = require('./jobsController');
 
 const applyToJob = async (req, res) => {
   try {
-    const { jobId, studentId } = req.body;
+    const { jobId, studentId, type } = req.body;
     if (!jobId || !studentId) {
       return res.status(400).json({ success: false, message: 'jobId and studentId are required' });
     }
 
-    const job = await Job.findOne({ _id: jobId, ...studentJobMatch });
-    if (!job) {
-      return res.status(400).json({ success: false, message: 'Job is not available for applications' });
+    const applicationType = type === 'open' ? 'open' : 'drive';
+    let job;
+    let companyId;
+
+    if (applicationType === 'open') {
+      job = await OpenJob.findById(jobId);
+      if (!job) {
+        return res.status(400).json({ success: false, message: 'Open Job not found' });
+      }
+      // Derive companyId by matching companyName — null if company is not yet registered
+      const company = await Company.findOne({ companyName: new RegExp('^' + job.companyName + '$', 'i') });
+      companyId = company ? company._id : null;
+    } else {
+      job = await Job.findOne({ _id: jobId, ...studentJobMatch });
+      if (!job) {
+        return res.status(400).json({ success: false, message: 'Job is not available for applications' });
+      }
+      companyId = job.companyId;
     }
 
     const student = await Student.findById(studentId);
@@ -46,12 +63,15 @@ const applyToJob = async (req, res) => {
     const application = await Application.create({
       jobId,
       studentId,
-      companyId: job.companyId,
+      companyId: companyId || undefined, // null for unregistered open-job companies
+      type: applicationType,
       status: 'applied',
       resume
     });
 
-    await Job.findByIdAndUpdate(jobId, { $inc: { applicantsCount: 1 } });
+    if (applicationType === 'drive') {
+      await Job.findByIdAndUpdate(jobId, { $inc: { applicantsCount: 1 } });
+    }
 
     res.status(201).json({ success: true, message: 'Application submitted', application });
   } catch (error) {

@@ -1484,11 +1484,12 @@
     if (currentJob.isOpenJob) {
       try {
         const payload = new FormData();
-        payload.append('openJobId', currentJob.openJobId);
+        payload.append('jobId', currentJob.openJobId);
         payload.append('studentId', studentId());
+        payload.append('type', 'open');
         const resumeFile = document.getElementById('m-resume-upload')?.files?.[0];
         if (resumeFile) payload.append('resume', resumeFile);
-        const res = await fetch(`${API}/api/open-jobs/apply`, {
+        const res = await fetch(`${API}/api/applications/apply`, {
           method: 'POST',
           body: payload
         });

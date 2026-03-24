@@ -148,25 +148,24 @@ async function fetchAndStoreJobs() {
     }
 
     const requiredBranches = deriveRequiredBranchesFromText(`${title}\n${description}`, fallbackBranches);
-    const exists = await OpenJob.exists({
-      title: { $regex: `^${title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, $options: 'i' },
-      companyName: { $regex: `^${companyName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, $options: 'i' }
-    });
 
-    if (exists) {
-      skippedCount += 1;
-      continue;
-    }
-
-    await OpenJob.create({
-      title,
-      companyName,
-      description,
-      location,
-      package: pkg,
-      requiredBranches,
-      applyLink
-    });
+    await OpenJob.updateOne(
+      { title, companyName },
+      {
+        $set: {
+          description,
+          location,
+          package: pkg,
+          requiredBranches,
+          applyLink,
+          lastSyncedAt: new Date()
+        },
+        $setOnInsert: {
+          createdAt: new Date()
+        }
+      },
+      { upsert: true }
+    );
     syncedCount += 1;
   }
 
@@ -311,63 +310,6 @@ async function notifyOpenJob(req, res) {
   }
 }
 
-async function applyToOpenJob(req, res) {
-  try {
-    const openJobId = req.body.openJobId;
-    const studentId = req.body.studentId;
-
-    if (!openJobId || !studentId) {
-      return res.status(400).json({ success: false, message: 'openJobId and studentId are required' });
-    }
-
-    const openJob = await OpenJob.findById(openJobId);
-    if (!openJob) return res.status(404).json({ success: false, message: 'Open job not found' });
-
-    // Ensure the student was notified for this open job.
-    const notified = await OpenJobNotification.exists({ openJobId, studentId });
-    if (!notified) {
-      return res.status(403).json({ success: false, message: 'You are not notified for this open job' });
-    }
-
-    const existing = await OpenJobApplication.findOne({ openJobId, studentId });
-    if (existing) return res.status(400).json({ success: false, message: 'You already applied for this open job' });
-
-    // resume can be overridden by upload; otherwise use default student resume
-    let resume = undefined;
-    if (req.file) {
-      resume = {
-        filename: req.file.filename,
-        path: req.file.path,
-        contentType: req.file.mimetype
-      };
-    } else {
-      const st = await Student.findById(studentId).select('resume.filename resume.path resume.contentType');
-      if (st && st.resume && st.resume.filename) {
-        resume = {
-          filename: st.resume.filename,
-          path: st.resume.path,
-          contentType: st.resume.contentType
-        };
-      }
-    }
-
-    if (!resume) {
-      return res.status(400).json({ success: false, message: 'Resume is required to apply' });
-    }
-
-    const application = await OpenJobApplication.create({
-      openJobId,
-      studentId,
-      status: 'Applied',
-      resume
-    });
-
-    res.status(201).json({ success: true, message: 'Open job application submitted', application });
-  } catch (err) {
-    console.error('applyToOpenJob error:', err);
-    res.status(500).json({ success: false, message: 'Failed to apply to open job' });
-  }
-}
 
 async function syncOpenJobs(req, res) {
   try {
@@ -382,7 +324,6 @@ async function syncOpenJobs(req, res) {
 module.exports = {
   getOpenJobs,
   notifyOpenJob,
-  applyToOpenJob,
   syncOpenJobs
 };
 

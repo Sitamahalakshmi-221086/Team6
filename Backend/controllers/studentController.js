@@ -137,9 +137,16 @@ const Application = require('../models/Application');
 
 const getStudentProfile = async (req, res) => {
   try {
-    const student = await Student.findById(req.params.id).select('-password');
+    const student = await Student.findById(req.params.id).select('-password').lean();
     if (!student) return res.status(404).json({ success: false, message: 'Student not found' });
-    return res.status(200).json({ success: true, student });
+
+    // Join applications with job/company details
+    const applications = await Application.find({ studentId: req.params.id })
+      .populate('jobId', 'title companyName salary location jobType')
+      .sort({ appliedAt: -1 })
+      .lean();
+
+    return res.status(200).json({ success: true, student: { ...student, applications } });
   } catch (error) {
     console.error('Get Profile Error:', error.message);
     return res.status(500).json({ success: false, message: 'Internal Server Error' });

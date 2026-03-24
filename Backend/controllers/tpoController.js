@@ -311,37 +311,46 @@ const updateCompanyRequestStatus = async (req, res) => {
 
     if (!companyRequest) return res.status(404).json({ success: false, message: 'Company request not found' });
 
-    if (status === 'accepted' && date) {
-      const Drive = require('../models/Drive');
-      const Notification = require('../models/Notification');
-      const Student = require('../models/Student');
-      
-      const newDrive = await Drive.create({
-        companyName: companyRequest.companyName,
-        date: new Date(date),
-        location: location || '',
-        eligibility: eligibility || 'None',
-        roles: roles || companyRequest.role || 'Various',
-        status: 'scheduled',
-        submittedBy: 'company',
-        createdBy: null
-      });
+    let newDrive = null;
 
-      const students = await Student.find({}, '_id');
-      const notificationsToInsert = students.map(st => ({
-        studentId: st._id,
-        type: 'drive',
-        driveId: newDrive._id,
-        message: `New Campus Drive: ${companyRequest.companyName} on ${new Date(date).toLocaleDateString()}`
-      }));
-      if (notificationsToInsert.length > 0) {
-         await Notification.insertMany(notificationsToInsert, { ordered: false }).catch(err => {
-           console.error('Notification insertion error (ignoring duplicates):', err.message);
-         });
+    if (status === 'accepted' && date) {
+      try {
+        const DriveModel = require('../models/Drive');
+        const Notification = require('../models/Notification');
+        const StudentModel = require('../models/Student');
+
+        newDrive = await DriveModel.create({
+          companyName: companyRequest.companyName,
+          date: new Date(date),
+          location: location || '',
+          eligibility: eligibility || 'None',
+          roles: roles || companyRequest.role || 'Various',
+          status: 'scheduled',
+          submittedBy: 'company',
+          createdBy: null
+        });
+
+        const students = await StudentModel.find({}, '_id');
+        const notificationsToInsert = students.map(st => ({
+          studentId: st._id,
+          type: 'drive',
+          driveId: newDrive._id,
+          message: `New Campus Drive: ${companyRequest.companyName} on ${new Date(date).toLocaleDateString()}`
+        }));
+        if (notificationsToInsert.length > 0) {
+          await Notification.insertMany(notificationsToInsert, { ordered: false }).catch(err => {
+            console.error('Notification insertion error (ignoring duplicates):', err.message);
+          });
+        }
+      } catch (driveErr) {
+        // Atomic rollback: revert request status so state stays consistent
+        console.error('Drive creation failed, rolling back request status:', driveErr.message);
+        await CompanyRequest.findByIdAndUpdate(id, { status: 'pending' });
+        return res.status(500).json({ success: false, message: 'Failed to create drive — request status rolled back' });
       }
     }
 
-    res.status(200).json({ success: true, companyRequest });
+    res.status(200).json({ success: true, companyRequest, drive: newDrive });
   } catch (err) {
     console.error('updateCompanyRequestStatus error:', err);
     res.status(500).json({ success: false, message: 'Failed to update company request' });
@@ -485,7 +494,7 @@ const getTPODashboard = async (req, res) => {
 
     // Scheduled drives: support both legacy 'Approved' and new 'scheduled'
     const totalDrives = await Drive.countDocuments({ status: { $in: ['scheduled', 'Approved'] } });
-    const totalApplications = await DriveApplication.countDocuments();
+    const totalApplications = await Application.countDocuments();
 
     res.status(200).json({
       success: true,
