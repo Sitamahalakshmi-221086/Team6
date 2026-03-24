@@ -242,4 +242,4 @@ async function resendOtp() {
   Object.assign(toast.style, { position:'fixed', bottom:'32px', left:'50%', transform:'translateX(-50%)', background:'#059669', color:'#fff', padding:'10px 24px', borderRadius:'100px', fontSize:'14px', fontWeight:'600', zIndex:'9999', boxShadow:'0 4px 16px rgba(5,150,105,.4)' });
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 2500);
-}
+} /*need to modify */
