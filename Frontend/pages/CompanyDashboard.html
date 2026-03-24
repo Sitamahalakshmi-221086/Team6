@@ -3113,27 +3113,27 @@
     /* ── DYNAMIC DATA FETCHING ── */
     async function fetchDashboardStats() {
       try {
-        const res = await fetch(`${API_ROOT}/api/companies/stats/${companyId}`);
+        const res = await fetch(`${API_ROOT}/api/companies/dashboard/${companyId}`);
         const data = await res.json();
         if (data.success) {
           const s = data.stats;
           document.getElementById('stat-total-applicants').textContent = s.totalApplicants;
-          document.getElementById('stat-active-jobs').textContent = s.activeJobs;
+          document.getElementById('stat-active-jobs').textContent = s.totalJobs ?? 0;
           document.getElementById('card-total-applicants').textContent = s.totalApplicants;
-          document.getElementById('card-active-jobs').textContent = s.activeJobs;
+          document.getElementById('card-active-jobs').textContent = s.totalJobs ?? 0;
           document.getElementById('card-shortlisted').textContent = s.shortlisted;
-          document.getElementById('card-hired').textContent = s.hired;
-          document.getElementById('greet-sub-text').innerHTML = `You have <strong>${s.totalApplicants}</strong> total applicants and <strong>${s.approvedJobs ?? s.activeJobs}</strong> TPO-approved active jobs.`;
+          document.getElementById('card-hired').textContent = s.selected ?? 0;
+          document.getElementById('greet-sub-text').innerHTML = `You have <strong>${s.totalApplicants ?? 0}</strong> total applicants and <strong>${s.totalJobs ?? 0}</strong> jobs posted.`;
           const jb = document.getElementById('co-sb-jobs-badge');
           const ab = document.getElementById('co-sb-apps-badge');
-          if (jb) jb.textContent = String(s.totalJobsPosted ?? s.activeJobs ?? 0);
+          if (jb) jb.textContent = String(s.totalJobs ?? 0);
           if (ab) ab.textContent = String(s.totalApplicants ?? 0);
           const cj = document.getElementById('cph-stat-jobs');
           const ca = document.getElementById('cph-stat-apps');
           const co = document.getElementById('cph-stat-offers');
-          if (cj) cj.textContent = String(s.approvedJobs ?? s.activeJobs ?? 0);
+          if (cj) cj.textContent = String(s.totalJobs ?? 0);
           if (ca) ca.textContent = String(s.totalApplicants ?? 0);
-          if (co) co.textContent = String(s.hired ?? 0);
+          if (co) co.textContent = String(s.selected ?? 0);
           window.__coStats = s;
         }
       } catch (err) { console.error('Stats fetch error:', err); }

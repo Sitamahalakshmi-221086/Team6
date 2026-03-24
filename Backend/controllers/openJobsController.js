@@ -5,6 +5,7 @@ const OpenJobNotification = require('../models/OpenJobNotification');
 const OpenJobApplication = require('../models/OpenJobApplication');
 const Student = require('../models/Student');
 const CompanyRequest = require('../models/CompanyRequest');
+const Notification = require('../models/Notification');
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -250,6 +251,17 @@ async function notifyOpenJob(req, res) {
     }));
 
     await OpenJobNotification.insertMany(docs, { ordered: false }).catch(() => {
+      // ignore duplicate key errors
+    });
+
+    // Student-facing notification feed (for dashboard "Open Jobs" section)
+    const notifDocs = eligibleStudents.map((st) => ({
+      studentId: st._id,
+      type: 'open_job',
+      jobId: openJob._id,
+      message: `New open job: ${openJob.title} at ${openJob.companyName}`
+    }));
+    await Notification.insertMany(notifDocs, { ordered: false }).catch(() => {
       // ignore duplicate key errors
     });
 

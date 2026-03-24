@@ -10,7 +10,8 @@ const {
   getCompanyDrives,
   getJobApplications,
   updateApplicationStatus,
-  getCompanyStats
+  getCompanyStats,
+  getCompanyDashboard
 } = require('../controllers/companyController');
 
 // POST /api/companies/signup
@@ -26,6 +27,9 @@ router.get('/profile/:id', getCompanyProfile);
 
 // GET /api/companies/stats/:companyId
 router.get('/stats/:companyId', getCompanyStats);
+
+// Alias for company analytics cards
+router.get('/dashboard/:companyId', getCompanyDashboard);
 
 // POST /api/companies/post-job
 router.post('/post-job', postJob);

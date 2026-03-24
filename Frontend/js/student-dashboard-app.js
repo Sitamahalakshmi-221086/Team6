@@ -3,6 +3,7 @@
   const API = typeof CAMPUS_API_BASE !== 'undefined' ? CAMPUS_API_BASE : 'http://127.0.0.1:5000';
 
   let jobs = [];
+  let openJobs = [];
   let applications = [];
   let drives = [];
   let analyticsStats = { totalApplications: 0, shortlisted: 0, interviews: 0, offers: 0 };
@@ -409,19 +410,50 @@
 
   async function loadData() {
     const sid = studentId();
-    const [jobsRes, appsRes, drivesRes, anRes] = await Promise.all([
+    const [jobsRes, openRes, appsRes, drivesRes, anRes] = await Promise.all([
       fetch(`${API}/api/jobs`),
+      fetch(`${API}/api/open-jobs?studentId=${sid}`),
       fetch(`${API}/api/applications/student/${sid}`),
       fetch(`${API}/api/drives`),
       fetch(`${API}/api/students/analytics/${sid}`)
     ]);
     const jobsData = await jobsRes.json();
+    const openData = await openRes.json();
     const appsData = await appsRes.json();
     const drivesData = await drivesRes.json();
     const anData = await anRes.json();
 
     const skills = studentProfile?.skills || [];
     jobs = (jobsData.jobs || []).map((j) => mapApiJob(j, skills));
+    openJobs =
+      openData && openData.success && Array.isArray(openData.openJobs)
+        ? openData.openJobs.map((j) => ({
+            id: String(j._id),
+            title: j.title,
+            company: j.companyName,
+            loc: j.location || '—',
+            type: 'Open Job',
+            ctc: j.package || '—',
+            ctcVal: parseSalaryNum(j.package),
+            dl: j.createdAt ? `Posted ${formatShortDate(j.createdAt)}` : 'Open',
+            deadlineDate: null,
+            cgpa: '—',
+            branch:
+              Array.isArray(j.requiredBranches) && j.requiredBranches.length ? j.requiredBranches.join(', ') : 'All branches',
+            desc: j.description || '',
+            skills: [],
+            reco: false,
+            intern: false,
+            applied: Boolean(j.isApplied),
+            saved: false,
+            logo: (j.companyName || 'CO').slice(0, 3).toUpperCase(),
+            col: '#0aada0',
+            applicantsCount: 0,
+            isOpenJob: true,
+            openJobId: String(j._id),
+            applyLink: j.applyLink || ''
+          }))
+        : [];
     applications = (appsData.applications || []).map(mapApplication);
     drives = drivesData.drives || [];
     if (anData.success && anData.stats) analyticsStats = anData.stats;
@@ -434,13 +466,13 @@
   }
 
   function updateStatsUI() {
-    const openJobs = jobs.length;
+    const openJobsCount = openJobs.length;
     const apps = analyticsStats.totalApplications || 0;
     const interviews = analyticsStats.interviews || 0;
     const greetMatch = document.querySelector('.greet-stat:nth-child(1) .greet-stat-val');
     const greetInt = document.querySelector('.greet-stat:nth-child(2) .greet-stat-val');
     const greetDrive = document.querySelector('.greet-stat:nth-child(3) .greet-stat-val');
-    if (greetMatch) greetMatch.textContent = String(openJobs);
+    if (greetMatch) greetMatch.textContent = String(openJobsCount);
     if (greetInt) greetInt.textContent = String(interviews);
     if (greetDrive) {
       const next = drives[0]?.date ? formatShortDate(drives[0].date) : '—';
@@ -448,7 +480,7 @@
     }
 
     const statRow = document.querySelectorAll('#pg-home .stats-row .stat-val');
-    if (statRow[0]) statRow[0].textContent = String(openJobs);
+    if (statRow[0]) statRow[0].textContent = String(openJobsCount);
     if (statRow[1]) statRow[1].textContent = String(apps);
     if (statRow[2]) statRow[2].textContent = String(interviews);
     if (statRow[3]) {
@@ -457,7 +489,7 @@
 
     const sbj = document.getElementById('sb-badge-jobs');
     const sba = document.getElementById('sb-badge-apps');
-    if (sbj) sbj.textContent = String(openJobs);
+    if (sbj) sbj.textContent = String(openJobsCount);
     if (sba) sba.textContent = String(applications.length);
 
     const hAvg = document.getElementById('home-stat-avg');
@@ -475,8 +507,8 @@
     const greetSub = document.getElementById('greet-sub');
     if (greetSub) {
       greetSub.innerHTML =
-        openJobs > 0
-          ? `<strong>${openJobs} open role${openJobs === 1 ? '' : 's'}</strong> approved by your TPO.`
+        openJobsCount > 0
+          ? `<strong>${openJobsCount} open job${openJobsCount === 1 ? '' : 's'}</strong> notified by your TPO.`
           : 'No approved jobs yet — check back after your TPO approves company postings.';
     }
 
@@ -998,6 +1030,45 @@
     document.getElementById('job-modal').classList.add('on');
   };
 
+  window.__sdOpenOpenJobModal = function (openJobId) {
+    const j = openJobs.find((x) => x.openJobId === String(openJobId));
+    if (!j) return;
+    currentJob = j;
+    document.getElementById('m-title').textContent = j.title;
+    document.getElementById('m-company').textContent = `${j.company} · ${j.loc}`;
+    document.getElementById('m-ctc').textContent = j.ctc;
+    document.getElementById('m-type').textContent = 'Open Job';
+    document.getElementById('m-loc').textContent = j.loc;
+    document.getElementById('m-dl').textContent = j.dl;
+    document.getElementById('m-cgpa').textContent = '—';
+    document.getElementById('m-branch').textContent = j.branch;
+    document.getElementById('m-desc').textContent = j.desc;
+    document.getElementById('m-apps').textContent = '—';
+    document.getElementById('m-short').textContent = '—';
+    document.getElementById('m-hired').textContent = '—';
+    const logo = document.getElementById('m-logo');
+    logo.textContent = j.logo;
+    logo.style.background = j.col + '18';
+    logo.style.color = j.col;
+    document.getElementById('m-badges').innerHTML = `<span class="pill review">${j.loc}</span>`;
+    document.getElementById('m-skills').innerHTML = '';
+    document.getElementById('m-pipeline').innerHTML = '';
+    const btn = document.getElementById('m-apply-btn');
+    const note = document.getElementById('m-applied-note');
+    if (j.applied) {
+      btn.textContent = 'Applied ✓';
+      btn.disabled = true;
+      btn.style.opacity = '.6';
+      note.textContent = 'Application submitted';
+    } else {
+      btn.innerHTML = 'Apply Now →';
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      note.textContent = '';
+    }
+    document.getElementById('job-modal').classList.add('on');
+  };
+
   window.__sdToggleSave = function (id) {
     const j = jobs.find((x) => x.id === id);
     if (!j) return;
@@ -1135,6 +1206,32 @@
       <div style="text-align:right;flex-shrink:0;">
         <div style="font-size:13px;font-weight:700;color:var(--G);">${j.ctc}</div>
         <div style="font-size:11px;color:var(--txmu);">${j.dl}</div>
+      </div>
+    </div>`
+      )
+      .join('');
+  }
+
+  function renderNotifiedOpenJobs() {
+    const el = document.getElementById('home-openjobs-notified');
+    if (!el) return;
+    if (!openJobs.length) {
+      showEmpty(el, 'No jobs available');
+      return;
+    }
+    el.innerHTML = openJobs
+      .slice(0, 6)
+      .map(
+        (j) => `
+    <div class="app-row" onclick="window.__sdOpenOpenJobModal('${j.openJobId}')" style="cursor:pointer;">
+      <div class="co-logo" style="width:36px;height:36px;border-radius:9px;background:${j.col}18;color:${j.col};font-size:10px;font-weight:800;">${j.logo}</div>
+      <div class="app-info">
+        <div class="app-title">${j.title}</div>
+        <div class="app-meta">${j.company} · ${j.loc}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <div style="font-size:13px;font-weight:700;color:var(--G);">${j.ctc}</div>
+        <div style="font-size:11px;color:var(--txmu);">${j.applied ? 'Applied ✓' : 'Not applied'}</div>
       </div>
     </div>`
       )
@@ -1345,7 +1442,29 @@
 
   window.applyFromModal = async function () {
     if (!currentJob || currentJob.applied) return;
-    await window.__sdQuickApply(currentJob.id, document.getElementById('m-apply-btn'));
+    if (currentJob.isOpenJob) {
+      try {
+        const res = await fetch(`${API}/api/open-jobs/apply`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ openJobId: currentJob.openJobId, studentId: studentId() })
+        });
+        const data = await res.json();
+        if (!data.success) {
+          alert(data.message || 'Could not apply');
+          return;
+        }
+        currentJob.applied = true;
+        await loadData();
+        updateStatsUI();
+        renderNotifiedOpenJobs();
+      } catch {
+        alert('Network error');
+        return;
+      }
+    } else {
+      await window.__sdQuickApply(currentJob.id, document.getElementById('m-apply-btn'));
+    }
     const note = document.getElementById('m-applied-note');
     if (note && currentJob.applied) note.textContent = 'Application submitted!';
   };
@@ -1540,6 +1659,7 @@
     updateStatsUI();
     renderNotifs();
     renderHomeJobs();
+    renderNotifiedOpenJobs();
     renderHomeApps();
     renderDeadlines();
     renderAllJobTabs();

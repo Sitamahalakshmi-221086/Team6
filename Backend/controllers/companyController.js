@@ -357,6 +357,26 @@ const getCompanyStats = async (req, res) => {
   }
 };
 
+// Alias for "Company Analytics" requirement:
+// GET /api/company/dashboard/:companyId
+const getCompanyDashboard = async (req, res) => {
+  try {
+    const companyId = req.params.companyId;
+    const totalJobs = await Job.countDocuments({ companyId });
+    const totalApplicants = await Application.countDocuments({ companyId });
+    const shortlisted = await Application.countDocuments({ companyId, status: 'Shortlisted' });
+    const selected = await Application.countDocuments({ companyId, status: { $in: ['Offered', 'Hired'] } });
+
+    res.status(200).json({
+      success: true,
+      stats: { totalJobs, totalApplicants, shortlisted, selected }
+    });
+  } catch (error) {
+    console.error('getCompanyDashboard error:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
 module.exports = {
   companySignup,
   companyLogin,
@@ -368,5 +388,6 @@ module.exports = {
   getCompanyDrives,
   getJobApplications,
   updateApplicationStatus,
-  getCompanyStats
+  getCompanyStats,
+  getCompanyDashboard
 };
