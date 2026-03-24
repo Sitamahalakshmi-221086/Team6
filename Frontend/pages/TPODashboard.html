@@ -23,37 +23,10 @@
   <div class="notif-panel" id="notif-panel">
     <div class="notif-hdr">
       <span class="notif-hdr-title">Notifications</span>
-      <span style="font-size:12px;color:var(--P);font-weight:600;cursor:pointer;">Mark all read</span>
+      <span style="font-size:12px;color:var(--P);font-weight:600;cursor:pointer;" onclick="document.querySelector('.icon-btn .rdot').style.display='none'">Mark all read</span>
     </div>
-    <div class="notif-item unread"><span class="n-dot u"></span>
-      <div>
-        <div class="n-text"><strong>Microsoft</strong> requested a campus drive for Apr 5.</div>
-        <div class="n-time">20 min ago</div>
-      </div>
-    </div>
-    <div class="notif-item unread"><span class="n-dot u"></span>
-      <div>
-        <div class="n-text"><strong>Arjun Sharma</strong> submitted a new resume update.</div>
-        <div class="n-time">1 hour ago</div>
-      </div>
-    </div>
-    <div class="notif-item unread"><span class="n-dot u"></span>
-      <div>
-        <div class="n-text"><strong>4 students</strong> approved for TCS drive on Mar 22.</div>
-        <div class="n-time">3 hours ago</div>
-      </div>
-    </div>
-    <div class="notif-item"><span class="n-dot r"></span>
-      <div>
-        <div class="n-text">Placement report for Feb 2025 is due.</div>
-        <div class="n-time">Yesterday</div>
-      </div>
-    </div>
-    <div class="notif-item"><span class="n-dot r"></span>
-      <div>
-        <div class="n-text">Infosys confirmed drive at your college for Mar 18.</div>
-        <div class="n-time">Yesterday</div>
-      </div>
+    <div id="notif-list-container">
+      <!-- Dynamically populated notifications -->
     </div>
   </div>
 
@@ -63,9 +36,9 @@
       <button class="modal-close" onclick="closeModal('notice-modal')">✕</button>
       <div class="modal-title">Post a Notice</div>
       <div class="modal-sub">Notices are visible to all students on the portal.</div>
-      <div class="fg"><label>Notice Title *</label><input placeholder="e.g. Microsoft Drive – Eligibility Update" />
+      <div class="fg"><label>Notice Title *</label><input id="notice-title" placeholder="e.g. Microsoft Drive – Eligibility Update" />
       </div>
-      <div class="fg"><label>Category</label><select>
+      <div class="fg"><label>Category</label><select id="notice-dept">
           <option>General</option>
           <option>Company Drive</option>
           <option>Exam / Test</option>
@@ -77,11 +50,11 @@
           <option>CSE Only</option>
           <option>Shortlisted Students</option>
         </select></div>
-      <div class="fg"><label>Message *</label><textarea placeholder="Write the full notice content here…"
+      <div class="fg"><label>Message *</label><textarea id="notice-content" placeholder="Write the full notice content here…"
           style="min-height:100px;"></textarea></div>
       <div class="fg"><label>Attachment (optional)</label><input type="file" style="padding:6px;" /></div>
       <div style="display:flex;gap:8px;margin-top:4px;">
-        <button class="btn lg" onclick="closeModal('notice-modal');showToast('Notice posted to all students.')">
+        <button class="btn lg" onclick="postNoticeData()">
           <svg viewBox="0 0 24 24" width="18" height="18">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
             <path d="M13.73 21a2 2 0 0 1-3.46 0" />
@@ -100,13 +73,13 @@
       <div class="modal-title">Schedule Campus Drive</div>
       <div class="modal-sub">Create and publish a new campus recruitment drive.</div>
       <div class="form-grid">
-        <div class="fg"><label>Company Name *</label><input placeholder="e.g. Infosys Technologies" /></div>
-        <div class="fg"><label>Drive Date *</label><input type="date" /></div>
+        <div class="fg"><label>Company Name *</label><input id="drive-company" placeholder="e.g. Infosys Technologies" /></div>
+        <div class="fg"><label>Drive Date *</label><input id="drive-date" type="date" /></div>
         <div class="fg"><label>Venue / Mode *</label><input placeholder="e.g. Seminar Hall A / Online – Zoom" /></div>
         <div class="fg"><label>Reporting Time</label><input placeholder="e.g. 9:00 AM" /></div>
-        <div class="fg"><label>Roles Offered</label><input placeholder="e.g. SDE, Data Analyst" /></div>
+        <div class="fg"><label>Roles Offered</label><input id="drive-roles" placeholder="e.g. SDE, Data Analyst" /></div>
         <div class="fg"><label>Expected Intake</label><input placeholder="e.g. 15" /></div>
-        <div class="fg"><label>Min CGPA</label><input placeholder="e.g. 7.0" /></div>
+        <div class="fg"><label>Min CGPA</label><input id="drive-eligibility" placeholder="e.g. 7.0" /></div>
         <div class="fg"><label>Package Offered</label><input placeholder="e.g. ₹12 LPA" /></div>
         <div class="fg full"><label>Eligible Branches</label>
           <div class="cb-grid">
@@ -123,7 +96,7 @@
       </div>
       <div style="display:flex;gap:8px;margin-top:4px;">
         <button class="btn lg"
-          onclick="closeModal('drive-modal');showToast('Drive scheduled and notified to students.')">
+          onclick="scheduleDriveData()">
           <svg viewBox="0 0 24 24" width="18" height="18">
             <path d="M5 13l4 4L19 7" />
           </svg>
@@ -491,34 +464,8 @@
               </div>
               <button class="sec-link" onclick="go('companies',document.querySelector('.nl[onclick*=companies]'))">View All →</button>
             </div>
-            <div class="card" style="padding:0;">
-              <div class="req-card">
-                <div class="req-top"><span class="req-co">Microsoft India</span><span class="pill pending">Pending</span></div>
-                <div class="req-meta">Drive request · Apr 5 · 18–25 LPA · CSE, IT</div>
-                <div class="req-actions">
-                  <button class="btn sm green" onclick="showToast('Microsoft drive approved.')">Approve</button>
-                  <button class="btn sm red">Decline</button>
-                  <button class="btn sm sec">Details</button>
-                </div>
-              </div>
-              <div class="req-card">
-                <div class="req-top"><span class="req-co">Amazon Centre</span><span class="pill pending">Pending</span></div>
-                <div class="req-meta">Job approval · Data Analyst · 18 LPA · CSE, IT</div>
-                <div class="req-actions">
-                  <button class="btn sm green" onclick="showToast('Amazon approved.')">Approve</button>
-                  <button class="btn sm red">Decline</button>
-                  <button class="btn sm sec">Details</button>
-                </div>
-              </div>
-              <div class="req-card">
-                <div class="req-top"><span class="req-co">Wipro Tech</span><span class="pill pending">Pending</span></div>
-                <div class="req-meta">Drive request · Apr 12 · 10 LPA · All branches</div>
-                <div class="req-actions">
-                  <button class="btn sm green" onclick="showToast('Wipro approved.')">Approve</button>
-                  <button class="btn sm red">Decline</button>
-                  <button class="btn sm sec">Details</button>
-                </div>
-              </div>
+            <div class="card" style="padding:0;" id="pending-drives-container">
+              <!-- Dynamically populated from JS -->
             </div>
           </div>
 
@@ -536,31 +483,8 @@
               </div>
               <button class="sec-link" onclick="go('drives',document.querySelector('.nl[onclick*=drives]'))">View All →</button>
             </div>
-            <div class="card" style="padding:0;margin-bottom:20px;">
-              <div class="drive-row">
-                <div class="dr-date"><div class="dr-dd">18</div><div class="dr-dm">Mar</div></div>
-                <div class="dr-info">
-                  <div class="dr-name">Infosys Technologies</div>
-                  <div class="dr-meta">10:00 AM · Blok Hall A · 120 eligible</div>
-                </div>
-                <span class="pill active">Confirmed</span>
-              </div>
-              <div class="drive-row">
-                <div class="dr-date"><div class="dr-dd">22</div><div class="dr-dm">Mar</div></div>
-                <div class="dr-info">
-                  <div class="dr-name">TCS Prime Drive</div>
-                  <div class="dr-meta">9:00 AM · Auditorium · All eligible</div>
-                </div>
-                <span class="pill active">Confirmed</span>
-              </div>
-              <div class="drive-row">
-                <div class="dr-date"><div class="dr-dd">28</div><div class="dr-dm">Mar</div></div>
-                <div class="dr-info">
-                  <div class="dr-name">Wipro Connect</div>
-                  <div class="dr-meta">Online · Zoom · CSE, IT</div>
-                </div>
-                <span class="pill pending">Pending</span>
-              </div>
+            <div class="card" style="padding:0;margin-bottom:20px;" id="upcoming-drives-container">
+              <!-- Dynamically populated from JS -->
             </div>
 
             <div class="sec-hd">
@@ -761,14 +685,14 @@
                 <div class="tbl-name">Karan Patel</div>
                 <div class="tbl-sub">Roll: 21IT022</div>
               </div><span style="font-size:12.5px;color:var(--txmu);">IT · 7.8</span><button class="btn sm"
-                onclick="showToast('Reminder sent to Karan Patel.')">Send Reminder</button>
+                onclick="sendReminderData('Karan Patel', 'karan@example.com', this)">Send Reminder</button>
             </div>
             <div class="tbl-row g3">
               <div>
                 <div class="tbl-name">Raj Mehta</div>
                 <div class="tbl-sub">Roll: 21MECH08</div>
               </div><span style="font-size:12.5px;color:var(--txmu);">Mech · 6.9</span><button class="btn sm"
-                onclick="showToast('Reminder sent to Raj Mehta.')">Send Reminder</button>
+                onclick="sendReminderData('Raj Mehta', 'raj@example.com', this)">Send Reminder</button>
             </div>
           </div>
         </div>
@@ -1416,7 +1340,7 @@
                   <div class="fg full"><label>Official Email</label><input value="ramesh@jntu.ac.in" /></div>
                 </div>
                 <div style="display:flex;gap:8px;margin-top:12px;">
-                  <button class="btn lg" onclick="togglePfEdit();showToast('Profile updated.')">Save Changes</button>
+                  <button class="btn lg" onclick="saveTPOProfile()">Save Changes</button>
                   <button class="btn sec lg" onclick="togglePfEdit()">Cancel</button>
                 </div>
               </div>

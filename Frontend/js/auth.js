@@ -226,8 +226,8 @@ async function doLogin(role, event) {
 
   try {
     const apiMap = {
-      student: 'http://localhost:5001/api/students/login',
-      company: 'http://localhost:5001/api/companies/login'
+      student: 'http://localhost:5000/api/students/login',
+      company: 'http://localhost:5000/api/companies/login'
     };
 
     if (apiMap[role]) {
@@ -249,6 +249,7 @@ async function doLogin(role, event) {
         sessionStorage.setItem('userRole', role);
         
         if (role === 'student') {
+          sessionStorage.setItem('studentId', result.student.id);
           sessionStorage.setItem('studentName', result.student.fullName);
           sessionStorage.setItem('studentEmail', result.student.email);
           sessionStorage.setItem('studentPhone', result.student.phone || '');
@@ -262,6 +263,7 @@ async function doLogin(role, event) {
           sessionStorage.setItem('studentSkills', JSON.stringify(result.student.skills || []));
           sessionStorage.setItem('studentResume', result.student.resume || '');
         } else if (role === 'company') {
+          sessionStorage.setItem('companyId', result.company.id);
           sessionStorage.setItem('companyName', result.company.companyName);
           sessionStorage.setItem('companyEmail', result.company.email);
           sessionStorage.setItem('companyContact', result.company.contactPerson);

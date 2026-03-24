@@ -6,21 +6,59 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CampusPlace – Sign Up (Student)</title>
   <link
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=DM+Sans:wght@300;400;500;600;700&family=Satisfy&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="../css/signupstyle.css" />
-  <link rel="stylesheet" href="../css/student-signup.css" />
+  <link rel="stylesheet" href="../css/signupstyle.css">
+  <style>
+    /* Prevent FOUC and ensure roles are properly applied in split files */
+    #left-panel,
+    #accent-strip,
+    .step-num.is-active {
+      transition: none;
+    }
+  </style>
 </head>
 <body>
   <div id="accent-strip" class="role-student"></div>
+  <div id="accent-strip" class="role-student"></div>
   <div class="page-wrap">
 
-    <!-- ── LEFT PANEL ── -->
-    <aside class="left-panel">
-      <div class="left-content">
-        <a href="../index.html" class="logo">
-          <div class="logo-icon">🎓</div>
-          <span class="logo-text">Campus<span class="logo-accent">Place</span></span>
+    <!-- ══════════════════════ LEFT PANEL ══════════════════════ -->
+    <aside id="left-panel" class="role-student">
+      <div class="lp-glow"></div>
+      <div class="lp-blob lb1"></div>
+      <div class="lp-blob lb2"></div>
+      <div class="lp-inner">
+        <!-- Logo -->
+        <a href="../index.html" class="lp-logo">
+          <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="logo-bg-student-signup" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#1e3a8a" />
+                <stop offset="100%" stop-color="#2563eb" />
+              </linearGradient>
+            </defs>
+            <rect width="48" height="48" rx="11" fill="url(#logo-bg-student-signup)" />
+            <rect x="1" y="1" width="46" height="23" rx="10" fill="rgba(255,255,255,0.06)" />
+            <polygon points="24,11.5 39.5,19 24,26.5 8.5,19" fill="white" />
+            <polygon points="8.5,19 8.5,22 24,29.5 24,26.5" fill="rgba(255,255,255,0.42)" />
+            <polygon points="39.5,19 39.5,22 24,29.5 24,26.5" fill="rgba(255,255,255,0.58)" />
+            <path d="M16.5 21 L16.5 26.5 Q16.5 29.5 24 29.5 Q31.5 29.5 31.5 26.5 L31.5 21 Z" fill="white" />
+            <path d="M39.5 19 Q43 19 43 23 L43 29.5" stroke="white" stroke-width="1.5" fill="none"
+              stroke-linecap="round" />
+            <circle cx="43" cy="29.5" r="2" fill="white" />
+            <line x1="41.1" y1="31.2" x2="40" y2="36.5" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+            <line x1="42.3" y1="31.4" x2="41.8" y2="37" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+            <line x1="43.6" y1="31.4" x2="44" y2="37" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+            <line x1="44.8" y1="31.2" x2="46" y2="36.5" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+            <path d="M40 36 Q43 37 46 36" stroke="rgba(255,255,255,0.55)" stroke-width="1.1" fill="none"
+              stroke-linecap="round" />
+          </svg>
+          <div class="lp-brand">
+            <div class="lp-wm"><span class="lp-campus">Campus</span><span class="lp-dot">.</span><span
+                class="lp-place">Place</span></div>
+            <div class="lp-tag">Placement Portal</div>
+          </div>
         </a>
         <div class="left-badge"><span class="left-badge-dot"></span> <span id="sidebar-role-label">Student Registration</span>
         </div>
@@ -35,11 +73,14 @@
             <div class="step-col"><div class="step-num is-done" id="sn-1">✓</div><div class="step-vline"></div></div>
             <div class="step-body"><div class="step-name">Select Role</div><div class="step-desc">Choose your user type</div></div>
           </div>
-          <div class="progress-step active-step" id="sidebar-step-2">
-            <div class="step-circle active" id="circle-2">2</div>
-            <div class="step-info">
-              <div class="step-name">Personal Details</div>
-              <div class="step-desc" id="sidebar-step2-desc">Academic & contact info</div>
+          <div class="step-row is-active" id="sr-2">
+            <div class="step-col">
+              <div class="step-num is-active" id="sn-2">2</div>
+              <div class="step-vline"></div>
+            </div>
+            <div class="step-body">
+              <div class="step-name" id="s2-name">Academic Details</div>
+              <div class="step-desc" id="s2-desc">Branch, CGPA &amp; resume</div>
             </div>
           </div>
           <div class="step-row" id="sr-3">
@@ -52,10 +93,18 @@
           </div>
         </div>
 
-        <div style="margin-top:auto; padding-top:32px;">
-          <div class="progress-bar-wrap">
-            <div class="progress-bar-fill" id="progress-bar" style="width:50%;"></div>
+        <div class="lp-clock">
+          <div class="lp-time" id="lp-time">--:-- --</div>
+          <div class="lp-date" id="lp-date">Loading…</div>
+        </div>
+
+        <div class="lp-prog">
+          <div class="lp-prog-meta">
+            <span class="lp-prog-lbl" id="prog-lbl">Step 2 of 4</span>
+            <span class="lp-prog-pct" id="prog-pct">50%</span>
           </div>
+          <div class="lp-prog-track">
+            <div class="lp-prog-fill" id="prog-fill" style="width:50%"></div>
           <div class="lp-prog-track">
             <div class="lp-prog-fill" id="prog-fill" style="width:50%"></div>
           </div>
@@ -63,32 +112,32 @@
       </div>
     </aside>
 
-    <!-- ── RIGHT PANEL ── -->
-    <main class="right-panel">
+    <!-- ══════════════════════ RIGHT PANEL ══════════════════════ -->
+    <main id="right-panel">
 
-      <!-- ══ STAGE 2 – STUDENT PERSONAL DETAILS ══ -->
-      <div class="form-stage active" id="stage-2-student">
-        <div class="stage-header">
-          <div class="stage-num">Stage 02 / 04</div>
-          <h1 class="stage-title">Your <span class="shimmer-text">Details</span></h1>
-          <p class="stage-sub">Fill in your academic and personal information to build your profile.</p>
-        </div>
+      <!-- STAGE 2: Details -->
+      <div class="stage active" id="stage-2-student">
+        <div class="s-badge">Stage 02 / 04</div>
+        <h1 class="s-title" id="s2-title">Your Profile <span class="shimmer-text">Details</span></h1>
+        <p class="s-sub" id="s2-sub">Fill in your information so companies can find you.</p>
 
-        <div
-          style="display:inline-flex;align-items:center;gap:8px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:100px;padding:6px 16px;margin-bottom:24px;">
-          <span>🎓</span><span style="font-size:13px;font-weight:600;color:#1d4ed8;">Student Registration</span>
-        </div>
-
-        <form onsubmit="return false;">
+        <form id="student-signup-form" onsubmit="return false;">
+          <div class="sec-head">Personal Information</div>
           <div class="form-grid">
+            <div class="fg">
+              <label>Full Name <span class="req">*</span></label>
             <div class="fg">
               <label>Full Name <span class="req">*</span></label>
               <input type="text" id="s-name" placeholder="e.g. Arjun Sharma" oninput="clearErr(this)" />
               <div class="err-msg" id="err-s-name">Please enter your full name.</div>
+              <div class="err-msg" id="err-s-name">Please enter your full name.</div>
             </div>
             <div class="fg">
               <label>College Email <span class="req">*</span></label>
+            <div class="fg">
+              <label>College Email <span class="req">*</span></label>
               <input type="email" id="s-email" placeholder="you@college.edu" oninput="clearErr(this)" />
+              <div class="err-msg" id="err-s-email">Enter a valid email address.</div>
               <div class="err-msg" id="err-s-email">Enter a valid email address.</div>
             </div>
             <div class="fg">
@@ -115,7 +164,18 @@
               <input type="text" id="s-linkedin" placeholder="https://linkedin.com/in/yourname" />
             </div>
           </div>
+              <div class="err-msg" id="err-s-phone">Enter a valid phone number.</div>
+            </div>
+            <div class="fg">
+              <label>LinkedIn Profile</label>
+              <input type="text" id="s-linkedin" placeholder="https://linkedin.com/in/yourname" />
+            </div>
+          </div>
 
+          <div class="sec-head">Academic Details</div>
+          <div class="form-grid">
+            <div class="fg">
+              <label>Branch / Department <span class="req">*</span></label>
           <div class="sec-head">Academic Details</div>
           <div class="form-grid">
             <div class="fg">
@@ -133,7 +193,10 @@
                 <option>Other</option>
               </select>
               <div class="err-msg" id="err-s-branch">Please select your branch.</div>
+              <div class="err-msg" id="err-s-branch">Please select your branch.</div>
             </div>
+            <div class="fg">
+              <label>Year of Study <span class="req">*</span></label>
             <div class="fg">
               <label>Year of Study <span class="req">*</span></label>
               <select id="s-year" onchange="clearErr(this)">
@@ -143,6 +206,7 @@
                 <option>3rd Year</option>
                 <option>4th Year</option>
               </select>
+              <div class="err-msg" id="err-s-year">Please select your year.</div>
               <div class="err-msg" id="err-s-year">Please select your year.</div>
             </div>
             <div class="fg">
@@ -156,113 +220,162 @@
               <label>College Name <span class="req">*</span></label>
               <input type="text" id="s-college" placeholder="e.g. JNTU Hyderabad" oninput="clearErr(this)" />
               <div class="err-msg" id="err-s-college">Please enter your college name.</div>
+              <div class="err-msg" id="err-s-cgpa">Enter a valid CGPA (0–10).</div>
             </div>
+            <div class="fg">
+              <label>College Name <span class="req">*</span></label>
+              <input type="text" id="s-college" placeholder="e.g. JNTU Hyderabad" oninput="clearErr(this)" />
+              <div class="err-msg" id="err-s-college">Please enter your college name.</div>
+            </div>
+            <div class="fg">
             <div class="fg">
               <label>Roll Number</label>
               <input type="text" id="s-roll" placeholder="e.g. 21CSE045" />
             </div>
+          </div>
           </div>
 
           <div class="sec-head">Skills &amp; Resume</div>
           <div class="form-grid">
             <div class="fg full">
               <label>Skills <span class="req">*</span></label>
+          <div class="sec-head">Skills &amp; Resume</div>
+          <div class="form-grid">
+            <div class="fg full">
+              <label>Skills <span class="req">*</span></label>
               <div class="skills-wrap" id="skills-wrap" onclick="document.getElementById('skill-input').focus()">
-                <input type="text" id="skill-input" class="skills-input" placeholder="Type a skill and press Enter…"
+                <input class="skills-inp" id="skill-input" placeholder="Type a skill and press Enter…"
                   onkeydown="addSkill(event)" />
               </div>
               <div class="skills-hint">E.g. Java, React, Python — press <kbd
                   style="background:#f1f5f9;border:1px solid #cbd5e1;border-radius:4px;padding:1px 5px;font-size:11px;">Enter</kbd>
                 after each skill</div>
-              <span class="error-msg" id="err-s-skills">Add at least one skill.</span>
+              <div class="err-msg" id="err-s-skills">Add at least one skill.</div>
             </div>
             <div class="fg full">
               <label>Resume / CV <span class="req">*</span></label>
+            <div class="fg full">
+              <label>Resume / CV <span class="req">*</span></label>
               <div class="upload-zone" id="upload-zone">
+                <input type="file" accept=".pdf,.doc,.docx" id="resume-input" onchange="handleFile(this)" />
                 <input type="file" accept=".pdf,.doc,.docx" id="resume-input" onchange="handleFile(this)" />
                 <div class="upload-icon">📄</div>
                 <div class="upload-title">Drop your resume here or <span style="color:var(--P);font-weight:600">browse</span></div>
                 <div class="upload-sub">PDF, DOC, DOCX · Max 5 MB</div>
               </div>
               <div class="upload-done" id="upload-done">
-                <span class="upload-done-icon">✅</span>
-                <span class="upload-done-name" id="upload-name">resume.pdf</span>
-                <button onclick="removeFile()"
+                <span>✅</span><span class="upload-done-name" id="upload-name">resume.pdf</span>
+                <button type="button" onclick="removeFile()"
                   style="margin-left:auto;background:none;border:none;cursor:pointer;color:#ef4444;font-size:18px;">×</button>
               </div>
-              <span class="error-msg" id="err-s-resume">Please upload your resume.</span>
+              <div class="err-msg" id="err-s-resume">Please upload your resume.</div>
             </div>
-
           </div>
+
+          <div class="sec-head">Security</div>
+          <div class="form-grid">
+            <div class="fg full">
+              <label>Password <span class="req">*</span></label>
+              <div class="pwd-wrap">
+                <input type="password" id="s-pwd" placeholder="Create a strong password"
+                  oninput="checkPwd(this,'spb','s-pwd-label');clearErr(this)" />
+                <button class="show-pwd" type="button" onclick="togglePwd('s-pwd',this)">👁️</button>
+              </div>
+              <div class="pwd-bars">
+                <div class="pwd-bar" id="spb1"></div>
+                <div class="pwd-bar" id="spb2"></div>
+                <div class="pwd-bar" id="spb3"></div>
+                <div class="pwd-bar" id="spb4"></div>
+              </div>
+              <div class="pwd-lbl" id="s-pwd-label">Enter a password</div>
+              <div class="err-msg" id="err-s-pwd">Password must be at least 8 characters.</div>
+            </div>
+          </div>
+
           <div class="form-nav">
-            <button class="btn-prev" onclick="window.location.href='Signup.html'">← Back</button>
+            <button type="button" class="btn-prev" onclick="window.location.href='Signup.html'">← Back</button>
             <button type="button" class="btn-next" onclick="goNext(2, event)">Save &amp; Continue →</button>
           </div>
         </form>
       </div>
 
-      <!-- ══ STAGE 3 – EMAIL VERIFICATION ══ -->
-      <div class="form-stage" id="stage-3">
-        <div class="stage-header">
-          <div class="stage-num">Stage 03 / 04</div>
-          <h1 class="stage-title">Verify Your Email</h1>
-          <p class="stage-sub">We've sent a 6-digit OTP to your email. Enter it below to activate your account.</p>
-        </div>
-
+      <!-- STAGE 3: OTP -->
+      <div class="stage" id="stage-3">
+        <div class="s-badge">Stage 03 / 04</div>
+        <h1 class="s-title">Verify Your <span class="shimmer-text">Email</span></h1>
+        <p class="s-sub">We've sent a 6-digit code to your email address. Enter it below to confirm your identity.</p>
         <div class="verify-center">
-          <div class="email-illustration">📧</div>
-          <div class="verify-email-display" id="verify-email-show">you@example.com</div>
-          <p style="font-size:13px;color:var(--muted);margin-bottom:28px;">Check your inbox (and spam folder just in
-            case)</p>
-
-          <div class="otp-row">
-            <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,0)"
-              oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
-            <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,1)"
-              oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
-            <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,2)"
-              oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
-            <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,3)"
-              oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
-            <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,4)"
-              oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
-            <input type="text" class="otp-input" maxlength="1" onkeyup="otpMove(this,5)"
-              oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+          <span class="email-illus">📬</span>
+          <div class="verify-email" id="verify-email-show">you@college.edu</div>
+          <div class="verify-note">Check your inbox (and spam folder). The code expires in <strong>10 minutes</strong>.
           </div>
-
-          <div id="otp-error" style="display:none;color:#ef4444;font-size:13px;margin-bottom:16px;">Incorrect OTP.
-            Please try again.</div>
-
+          <div class="otp-row">
+            <input class="otp-box otp-input" type="text" maxlength="1" onkeyup="otpMove(this,0)"
+              oninput="this.value=this.value.replace(/[^0-9]/g,''); otpFill(this);" />
+            <input class="otp-box otp-input" type="text" maxlength="1" onkeyup="otpMove(this,1)"
+              oninput="this.value=this.value.replace(/[^0-9]/g,''); otpFill(this);" />
+            <input class="otp-box otp-input" type="text" maxlength="1" onkeyup="otpMove(this,2)"
+              oninput="this.value=this.value.replace(/[^0-9]/g,''); otpFill(this);" />
+            <input class="otp-box otp-input" type="text" maxlength="1" onkeyup="otpMove(this,3)"
+              oninput="this.value=this.value.replace(/[^0-9]/g,''); otpFill(this);" />
+            <input class="otp-box otp-input" type="text" maxlength="1" onkeyup="otpMove(this,4)"
+              oninput="this.value=this.value.replace(/[^0-9]/g,''); otpFill(this);" />
+            <input class="otp-box otp-input" type="text" maxlength="1" onkeyup="otpMove(this,5)"
+              oninput="this.value=this.value.replace(/[^0-9]/g,''); otpFill(this);" />
+          </div>
+          <div id="otp-error" style="display:none;font-size:12.5px;color:var(--R);font-weight:600;margin-bottom:14px;">
+            Incorrect code. Please try again.</div>
           <div class="resend-row">
-            Didn't receive it?
-            <button class="resend-btn" onclick="resendOtp()" id="resend-btn">Resend OTP</button>
-            <span class="timer-badge" id="timer-badge">⏱ Resend in <span id="timer-count">30</span>s</span>
+            <span class="timer-badge" id="timer-badge">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              Resend in <span id="timer-count">30</span>s
+            </span>
+            <span id="resend-btn" style="display:none">Didn't get it? <button type="button" class="resend-btn"
+                onclick="resendOtp()">Resend code</button></span>
           </div>
         </div>
-
         <div class="form-nav">
-          <button class="btn-prev" onclick="goTo(2)">← Back</button>
-          <button class="btn-next" onclick="verifyOtp()">
+          <button type="button" class="btn-prev" onclick="goTo(2)">← Back</button>
+          <button type="button" class="btn-next" id="btn-verify" onclick="verifyOtp()">
             <span id="verify-spinner" class="spinner"></span>
-            Verify &amp; Activate →
+            Verify &amp; Continue
           </button>
         </div>
       </div>
 
-      <!-- ══ STAGE 4 – SUCCESS ══ -->
-      <div class="form-stage" id="stage-4">
+      <!-- STAGE 4: Success -->
+      <div class="stage" id="stage-4">
         <div class="success-wrap">
           <div class="success-circle" id="success-icon">✓</div>
           <h1 class="success-title" id="success-title">You're All Set! 🎉</h1>
-          <p class="success-sub" id="success-sub">Your student account has been verified. Your placement dashboard is ready.</p>
+          <p class="success-sub" id="success-sub">Your student account has been verified. Your placement dashboard is
+            ready.</p>
           <div class="success-items" id="success-items">
-            <div class="success-item"><span class="success-item-icon">🎯</span><span>Smart job matching enabled based on your skills</span></div>
-            <div class="success-item"><span class="success-item-icon">📊</span><span>Real-time application tracking activated</span></div>
-            <div class="success-item"><span class="success-item-icon">🔔</span><span>Email notifications turned on for new drives</span></div>
-            <div class="success-item"><span class="success-item-icon">📄</span><span>Resume visible to verified recruiters</span></div>
+            <div class="success-item">
+              <div class="success-ico">🎯</div>
+              <div>Smart job matching enabled based on your skills</div>
+            </div>
+            <div class="success-item">
+              <div class="success-ico">📊</div>
+              <div>Real-time application tracking activated</div>
+            </div>
+            <div class="success-item">
+              <div class="success-ico">🔔</div>
+              <div>Email notifications turned on for new drives</div>
+            </div>
+            <div class="success-item">
+              <div class="success-ico">📄</div>
+              <div>Resume visible to verified recruiters</div>
+            </div>
           </div>
-          <a href="Login.html" class="btn-dashboard" id="success-cta">Go to My Dashboard →</a>
-          <p style="margin-top:16px;font-size:13px;color:var(--muted);">You'll receive a welcome email with next steps
+          <a href="StudentDashboard.html" class="btn-dashboard" id="success-cta"
+            style="background:linear-gradient(135deg,#0b2e7a,#1759d6);box-shadow:0 8px 24px rgba(23,89,214,.35);">Go to
+            My Dashboard →</a>
+          <p style="margin-top:16px;font-size:13px;color:var(--txmu);">You'll receive a welcome email with next steps
             shortly.</p>
         </div>
       </div>
@@ -271,8 +384,56 @@
   </div>
 
   <script src="../js/student-signup.js"></script>
+  <script>
+    function updateCgpa(el) {
+      if (!el.value) return;
+      var v = parseFloat(el.value);
+      var fill = document.getElementById('cgpa-fill');
+      if (isNaN(v) || v < 0) { fill.style.width = '0%'; return; }
+      v = Math.min(v, 10);
+      fill.style.width = (v / 10 * 100) + '%';
+    }
+    function checkPwd(el, barPfx, lblId) {
+      var val = el.value;
+      var bars = [1, 2, 3, 4].map(i => document.getElementById(barPfx + i));
+      var lbl = document.getElementById(lblId);
+      if (!val) { bars.forEach(b => b.className = 'pwd-bar'); if (lbl) lbl.textContent = 'Enter a password'; return; }
+      var score = 0;
+      if (val.length >= 8) score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+      var cls = ['', 'lv1', 'lv1', 'lv2', 'lv3', 'lv4'];
+      var name = ['', 'Weak', 'Weak', 'Fair', 'Good', 'Strong'];
+      var col = ['', 'var(--R)', 'var(--R)', 'var(--A)', 'var(--P)', 'var(--G)'];
+      var c = (score === 4) ? 'lv4' : cls[score];
+      bars.forEach((b, i) => b.className = 'pwd-bar' + (i < score ? ' ' + c : ''));
+      if (lbl) { lbl.textContent = name[score] || ''; lbl.style.color = col[score] || ''; }
+    }
+    function togglePwd(id, btn) {
+      var inp = document.getElementById(id);
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+      btn.textContent = inp.type === 'password' ? '👁️' : '🙈';
+    }
+    function otpFill(el) { el.classList.toggle('filled', el.value.length > 0); }
+
+    function tickClock() {
+      var pT = document.getElementById('lp-time');
+      var pD = document.getElementById('lp-date');
+      if (pT && pD) {
+        var now = new Date(), h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+        var ampm = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12;
+        var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        pT.textContent = h + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0') + ' ' + ampm;
+        pD.textContent = DAYS[now.getDay()] + ', ' + MONTHS[now.getMonth()] + ' ' + now.getDate() + ' ' + now.getFullYear();
+      }
+    }
+    tickClock(); setInterval(tickClock, 1000);
+
+    // Polyfill for goNext so we map to the JS's goTo
+    window.goTo = window.goTo || function () { };
+  </script>
 </body>
 
 </html>
-
-

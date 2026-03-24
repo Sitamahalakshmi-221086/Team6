@@ -1927,8 +1927,7 @@
             placeholder="e.g. Online Test → Technical Round → HR Round" /></div>
       </div>
       <div style="display:flex;gap:8px;margin-top:18px;">
-        <button class="btn lg"
-          onclick="document.getElementById('post-modal').classList.remove('on');showToast('Job posted successfully!')">
+        <button class="btn lg" onclick="handlePostJob()">
           <svg viewBox="0 0 24 24">
             <path d="M5 13l4 4L19 7" />
           </svg> Post Job
@@ -2103,8 +2102,8 @@
 
         <div class="greet-banner">
           <div style="flex:1;">
-            <div class="greet-hi" id="greet-msg">Good morning, Infosys 👋</div>
-            <div class="greet-sub">You have <strong>3 new applicants</strong> and 1 drive pending approval.</div>
+            <div class="greet-hi" id="greet-msg">Welcome, <span id="company-name-span">Company</span> 👋</div>
+            <div class="greet-sub" id="greet-sub-text">Loading your dashboard stats...</div>
             <div class="co-action-card">
               <div class="cac-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
               <div class="cac-info">
@@ -2117,15 +2116,15 @@
           </div>
           <div class="greet-right">
             <div class="greet-stat">
-              <div class="greet-stat-val">24</div>
+              <div class="greet-stat-val" id="stat-total-applicants">0</div>
               <div class="greet-stat-lbl">Applicants</div>
             </div>
             <div class="greet-stat">
-              <div class="greet-stat-val">5</div>
+              <div class="greet-stat-val" id="stat-active-jobs">0</div>
               <div class="greet-stat-lbl">Active Jobs</div>
             </div>
             <div class="greet-stat">
-              <div class="greet-stat-val">Mar 18</div>
+              <div class="greet-stat-val" id="stat-next-drive">None</div>
               <div class="greet-stat-lbl">Next Drive</div>
             </div>
           </div>
@@ -2142,7 +2141,7 @@
                 <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
               </svg>
             </div>
-            <div class="stat-val" style="color:var(--P);">5</div>
+            <div class="stat-val" style="color:var(--P);" id="card-active-jobs">0</div>
             <div class="stat-lbl">Active Job Posts</div>
             <div class="stat-note warn">
               <svg viewBox="0 0 24 24">
@@ -2163,7 +2162,7 @@
                 <path d="M16 3.13a4 4 0 0 1 0 7.75" />
               </svg>
             </div>
-            <div class="stat-val" style="color:var(--T);">24</div>
+            <div class="stat-val" style="color:var(--T);" id="card-total-applicants">0</div>
             <div class="stat-lbl">Total Applicants</div>
             <div class="stat-note up">
               <svg viewBox="0 0 24 24">
@@ -2182,7 +2181,7 @@
                   points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
               </svg>
             </div>
-            <div class="stat-val" style="color:var(--A);">9</div>
+            <div class="stat-val" style="color:var(--A);" id="card-shortlisted">0</div>
             <div class="stat-lbl">Shortlisted</div>
             <div class="stat-note warn">
               <svg viewBox="0 0 24 24">
@@ -2200,7 +2199,7 @@
                 <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
               </svg>
             </div>
-            <div class="stat-val" style="color:var(--G);">3</div>
+            <div class="stat-val" style="color:var(--G);" id="card-hired">0</div>
             <div class="stat-lbl">Offers Extended</div>
             <div class="stat-note up">
               <svg viewBox="0 0 24 24">
@@ -2265,40 +2264,8 @@
                 onclick="go('candidates',document.querySelector('.nl[onclick*=candidates]'))">View all →</button>
             </div>
             <div class="card" style="padding:0;">
-              <div class="cand-card">
-                <div class="cand-av">RS</div>
-                <div>
-                  <div class="cand-name">Riya Sharma</div>
-                  <div class="cand-meta">CSE · CGPA 8.9 · JNTU Hyderabad · Frontend Developer</div>
-                </div>
-                <div class="cand-right"><span class="pill new">New</span><button class="btn sm">Review</button></div>
-              </div>
-              <div class="cand-card">
-                <div class="cand-av" style="background:linear-gradient(135deg,#14532d,#0aada0);">AK</div>
-                <div>
-                  <div class="cand-name">Arjun Kumar</div>
-                  <div class="cand-meta">IT · CGPA 8.2 · Osmania University · Data Analyst</div>
-                </div>
-                <div class="cand-right"><span class="pill short">Shortlisted</span><button
-                    class="btn sm">Review</button></div>
-              </div>
-              <div class="cand-card">
-                <div class="cand-av" style="background:linear-gradient(135deg,#16a34a,#0aada0);">PM</div>
-                <div>
-                  <div class="cand-name">Priya Menon</div>
-                  <div class="cand-meta">CSE · CGPA 9.1 · IIT Hyderabad · Backend Engineer</div>
-                </div>
-                <div class="cand-right"><span class="pill interview">Interview</span><button
-                    class="btn sm">Review</button></div>
-              </div>
-              <div class="cand-card">
-                <div class="cand-av" style="background:linear-gradient(135deg,#7c3aed,#15803d);">VR</div>
-                <div>
-                  <div class="cand-name">Vikram Reddy</div>
-                  <div class="cand-meta">ECE · CGPA 7.6 · NIT Warangal · Cloud Engineer</div>
-                </div>
-                <div class="cand-right"><span class="pill review">Reviewing</span><button class="btn sm">Review</button>
-                </div>
+              <div id="recent-applicants-list">
+                <!-- Recent applicants will be injected here -->
               </div>
             </div>
           </div>
@@ -2473,101 +2440,24 @@
         </div>
         <div class="tab-panel on" id="jt-active">
           <div class="card" style="padding:0;">
-            <div class="tbl-head job-grid"><span>Role &
-                Location</span><span>Type</span><span>Applicants</span><span>Deadline</span><span>Status</span></div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">Frontend Developer</div>
-                <div class="tbl-sub">Bangalore · ₹12 LPA · CSE, IT</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;color:var(--G);">11</span><span
-                style="font-size:12px;color:var(--txmu);">Mar 20</span>
-              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
-                  class="btn sm sec">Edit</button></div>
-            </div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">Data Analyst</div>
-                <div class="tbl-sub">Hyderabad · ₹18 LPA · CSE, IT, EEE</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;color:var(--G);">8</span><span
-                style="font-size:12px;color:var(--R);font-weight:700;">Mar 15</span>
-              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
-                  class="btn sm sec">Edit</button></div>
-            </div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">Cloud Engineer</div>
-                <div class="tbl-sub">Remote · ₹16 LPA · All branches</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;color:var(--G);">5</span><span
-                style="font-size:12px;color:var(--txmu);">Apr 5</span>
-              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
-                  class="btn sm sec">Edit</button></div>
-            </div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">Backend Engineer</div>
-                <div class="tbl-sub">Pune · ₹14 LPA · CSE, IT</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;color:var(--txmu);">0</span><span
-                style="font-size:12px;color:var(--txmu);">Apr 12</span>
-              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
-                  class="btn sm sec">Edit</button></div>
-            </div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">React Developer Intern</div>
-                <div class="tbl-sub">Remote · ₹25k/mo · CSE, IT</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Internship</span><span
-                style="font-size:13px;font-weight:700;color:var(--txmu);">0</span><span
-                style="font-size:12px;color:var(--txmu);">Apr 18</span>
-              <div style="display:flex;gap:6px;"><span class="pill active">Active</span><button
-                  class="btn sm sec">Edit</button></div>
+            <div class="tbl-head job-grid"><span>Role & Location</span><span>Type</span><span>Applicants</span><span>Deadline</span><span>Status</span></div>
+            <div id="active-jobs-list">
+              <!-- Active jobs will be injected here -->
             </div>
           </div>
         </div>
         <div class="tab-panel" id="jt-closed">
           <div class="card" style="padding:0;">
-            <div class="tbl-head job-grid"><span>Role &
-                Location</span><span>Type</span><span>Applicants</span><span>Closed On</span><span>Status</span></div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">ML Engineer</div>
-                <div class="tbl-sub">Bangalore · ₹22 LPA</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;">18</span><span style="font-size:12px;color:var(--txmu);">Mar
-                1</span><span class="pill closed">Closed</span>
-            </div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">DevOps Engineer</div>
-                <div class="tbl-sub">Hyderabad · ₹20 LPA</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;">12</span><span style="font-size:12px;color:var(--txmu);">Feb
-                20</span><span class="pill closed">Closed</span>
-            </div>
-            <div class="tbl-row job-grid">
-              <div>
-                <div class="tbl-name">Systems Engineer</div>
-                <div class="tbl-sub">Chennai · ₹10 LPA</div>
-              </div><span style="font-size:12.5px;color:var(--txmu);">Full Time</span><span
-                style="font-size:13px;font-weight:700;">22</span><span style="font-size:12px;color:var(--txmu);">Feb
-                10</span><span class="pill closed">Closed</span>
+            <div class="tbl-head job-grid"><span>Role & Location</span><span>Type</span><span>Applicants</span><span>Closed On</span><span>Status</span></div>
+            <div id="closed-jobs-list">
+              <!-- Closed jobs will be injected here -->
             </div>
           </div>
         </div>
         <div class="tab-panel" id="jt-draft">
-          <div class="card" style="padding:14px 16px;">
-            <div style="display:flex;align-items:center;gap:14px;">
-              <div style="flex:1;">
-                <div class="tbl-name">Full Stack Developer</div>
-                <div class="tbl-sub">Not published · Created Mar 7</div>
-              </div>
-              <button class="btn sm teal">Publish</button>
-              <button class="btn sm sec">Edit</button>
+            <div id="draft-jobs-list">
+              <!-- Draft jobs will be injected here -->
             </div>
-          </div>
         </div>
       </div><!-- /pg-jobs -->
 
@@ -2592,125 +2482,34 @@
         </div>
         <div class="tab-panel on" id="at-all">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
-                CGPA</span><span>Status</span></div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Riya Sharma</div>
-                <div class="tbl-sub">Mar 10 · Resume attached</div>
-              </div><span style="font-size:13px;">Frontend Developer</span><span
-                style="font-size:12.5px;color:var(--txmu);">JNTU Hyd · 8.9</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill new">New</span><button
-                  class="btn sm">Review</button></div>
-            </div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Arjun Kumar</div>
-                <div class="tbl-sub">Mar 8 · Resume attached</div>
-              </div><span style="font-size:13px;">Data Analyst</span><span
-                style="font-size:12.5px;color:var(--txmu);">Osmania · 8.2</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill short">Shortlisted</span><button
-                  class="btn sm">Review</button></div>
-            </div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Priya Menon</div>
-                <div class="tbl-sub">Mar 7 · Resume attached</div>
-              </div><span style="font-size:13px;">Backend Engineer</span><span
-                style="font-size:12.5px;color:var(--txmu);">IIT Hyd · 9.1</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill interview">Interview</span><button
-                  class="btn sm">Review</button></div>
-            </div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Vikram Reddy</div>
-                <div class="tbl-sub">Mar 7 · Resume attached</div>
-              </div><span style="font-size:13px;">Cloud Engineer</span><span
-                style="font-size:12.5px;color:var(--txmu);">NIT Warangal · 7.6</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill review">Reviewing</span><button
-                  class="btn sm">Review</button></div>
-            </div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Sneha Rao</div>
-                <div class="tbl-sub">Mar 6 · Resume attached</div>
-              </div><span style="font-size:13px;">Data Analyst</span><span
-                style="font-size:12.5px;color:var(--txmu);">CBIT · 8.5</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill hired">Hired</span><button
-                  class="btn sm sec">View</button></div>
-            </div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Karan Patel</div>
-                <div class="tbl-sub">Mar 5 · Resume attached</div>
-              </div><span style="font-size:13px;">Frontend Developer</span><span
-                style="font-size:12.5px;color:var(--txmu);">VIT Chennai · 7.8</span>
-              <div style="display:flex;gap:6px;align-items:center;"><span class="pill rejected">Rejected</span><button
-                  class="btn sm sec">View</button></div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Status</span></div>
+            <div id="all-applicants-list">
+              <!-- All applicants will be injected here -->
             </div>
           </div>
         </div>
         <div class="tab-panel" id="at-new">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
-                CGPA</span><span>Action</span></div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Riya Sharma</div>
-                <div class="tbl-sub">Mar 10</div>
-              </div><span>Frontend Developer</span><span style="font-size:12.5px;color:var(--txmu);">JNTU Hyd ·
-                8.9</span>
-              <div style="display:flex;gap:6px;"><button class="btn sm">Shortlist</button><button
-                  class="btn sm red">Reject</button></div>
-            </div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Lakshmi V</div>
-                <div class="tbl-sub">Mar 10</div>
-              </div><span>React Intern</span><span style="font-size:12.5px;color:var(--txmu);">Osmania · 8.0</span>
-              <div style="display:flex;gap:6px;"><button class="btn sm">Shortlist</button><button
-                  class="btn sm red">Reject</button></div>
-            </div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Action</span></div>
+            <div id="new-applicants-list"></div>
           </div>
         </div>
         <div class="tab-panel" id="at-short">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
-                CGPA</span><span>Action</span></div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Arjun Kumar</div>
-                <div class="tbl-sub">Mar 8</div>
-              </div><span>Data Analyst</span><span style="font-size:12.5px;color:var(--txmu);">Osmania · 8.2</span>
-              <div style="display:flex;gap:6px;"><button class="btn sm teal">Schedule Interview</button></div>
-            </div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Action</span></div>
+            <div id="shortlisted-applicants-list"></div>
           </div>
         </div>
         <div class="tab-panel" id="at-interview">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
-                CGPA</span><span>Action</span></div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Priya Menon</div>
-                <div class="tbl-sub">Mar 18, 10 AM</div>
-              </div><span>Backend Engineer</span><span style="font-size:12.5px;color:var(--txmu);">IIT Hyd · 9.1</span>
-              <div style="display:flex;gap:6px;"><button class="btn sm">Mark Hired</button><button
-                  class="btn sm red">Reject</button></div>
-            </div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Action</span></div>
+            <div id="interview-applicants-list"></div>
           </div>
         </div>
         <div class="tab-panel" id="at-hired">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
-                CGPA</span><span>Status</span></div>
-            <div class="tbl-row cand-grid">
-              <div>
-                <div class="tbl-name">Sneha Rao</div>
-                <div class="tbl-sub">Offer sent Mar 6</div>
-              </div><span>Data Analyst</span><span style="font-size:12.5px;color:var(--txmu);">CBIT · 8.5</span><span
-                class="pill hired">Hired</span>
-            </div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Status</span></div>
+            <div id="hired-applicants-list"></div>
           </div>
         </div>
       </div><!-- /pg-candidates -->
@@ -2960,24 +2759,24 @@
             </div>
             <div id="cp-edit" style="display:none;margin-top:14px;">
               <div class="form-grid">
-                <div class="fg"><label>Company Name</label><input value="Infosys Technologies Ltd." /></div>
-                <div class="fg"><label>Industry</label><input value="IT Services & Consulting" /></div>
-                <div class="fg"><label>Company Size</label><select>
+                <div class="fg"><label>Company Name</label><input id="company-name-input" value="Infosys Technologies Ltd." /></div>
+                <div class="fg"><label>Industry</label><input id="industry-input" value="IT Services & Consulting" /></div>
+                <div class="fg"><label>Company Size</label><select id="company-size-select">
                     <option>1–50</option>
                     <option>51–200</option>
                     <option>201–1000</option>
                     <option>1001–10,000</option>
                     <option selected>10,000+</option>
                   </select></div>
-                <div class="fg"><label>Headquarters</label><input value="Bangalore, Karnataka" /></div>
-                <div class="fg"><label>Website</label><input value="infosys.com" /></div>
-                <div class="fg"><label>HR Email</label><input value="hr@infosys.com" /></div>
-                <div class="fg full"><label>About</label><textarea
+                <div class="fg"><label>Headquarters</label><input id="headquarters-input" value="Bangalore, Karnataka" /></div>
+                <div class="fg"><label>Website</label><input id="website-input" value="infosys.com" /></div>
+                <div class="fg"><label>HR Email</label><input id="hr-email-input" value="hr@infosys.com" /></div>
+                <div class="fg full"><label>About</label><textarea id="about-input"
                     style="min-height:80px;">Infosys is a global leader in next-generation digital services and consulting.</textarea>
                 </div>
               </div>
               <div style="display:flex;gap:8px;margin-top:14px;">
-                <button class="btn lg" onclick="toggleCpEdit();showToast('Profile updated successfully.')">Save
+                <button class="btn lg" onclick="saveCompanyProfileAndClose()">Save
                   Changes</button>
                 <button class="btn sec lg" onclick="toggleCpEdit()">Cancel</button>
               </div>
@@ -3293,6 +3092,16 @@
       btn.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
       document.getElementById(`${group}-${id}`).classList.add('on');
       btn.classList.add('on');
+    }
+
+    function go(id, btn) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+      document.getElementById('pg-' + id).classList.add('on');
+      document.querySelectorAll('.nl').forEach(l => l.classList.remove('on'));
+      if (btn) btn.classList.add('on');
+      document.getElementById('tb-title').textContent = id.charAt(0).toUpperCase() + id.slice(1);
+      if (id === 'profile') renderProfileChart();
+      if (id === 'stats') renderStatsCharts();
     }
 
     // ── NOTIF ──

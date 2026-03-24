@@ -5,7 +5,7 @@ let selectedRole = 'company';
 let resendTimer = null;
 
 // ── CONFIG ──
-const SERVER_URL = 'http://localhost:5001';
+const SERVER_URL = 'http://localhost:5000';
 
 // Store pending company data and OTP in memory
 // DB is only written AFTER OTP is verified
@@ -82,12 +82,19 @@ function goTo(stage) {
   // Hide current stage
   const curEl = document.getElementById('stage-' + (currentStage === 2 ? '2-company' : currentStage));
   if (curEl) curEl.classList.remove('active');
+  // Hide current stage
+  const curEl = document.getElementById('stage-' + (currentStage === 2 ? '2-company' : currentStage));
+  if (curEl) curEl.classList.remove('active');
 
+  currentStage = stage;
   currentStage = stage;
 
   const nextEl = document.getElementById('stage-' + (stage === 2 ? '2-company' : stage));
   if (nextEl) nextEl.classList.add('active');
 
+  updateSidebar(stage);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
   updateSidebar(stage);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -131,7 +138,18 @@ function updateSidebar(stage) {
   }
 }
 
+    }
+  }
+}
+
 /* ── VALIDATION ── */
+function runCheck(c, fail) {
+  const el = document.getElementById(c.id);
+  const errEl = document.getElementById(c.err);
+  if (!el || !errEl) return;
+  if (!c.test(el.value)) { el.classList.add('error'); errEl.classList.add('show'); fail(); }
+}
+
 function validateStage2() {
   let ok = true;
   let checks = [
@@ -155,6 +173,9 @@ function validateStage2() {
     }
   });
 
+    }
+  });
+
   const rolesErr = document.getElementById('err-c-roles');
   if (hiringRoles.length === 0) {
     if (rolesErr) rolesErr.classList.add('show');
@@ -165,6 +186,15 @@ function validateStage2() {
   return ok;
 }
 
+  if (!ok) document.querySelector('.error')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  return ok;
+}
+
+function clearErr(el) {
+  el.classList.remove('error');
+  const errEl = document.getElementById('err-' + el.id);
+  if (errEl) errEl.classList.remove('show');
+}
 function clearErr(el) {
   el.classList.remove('error');
   const errEl = document.getElementById('err-' + el.id);
@@ -204,6 +234,11 @@ function togglePwd(id, btn) {
   if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
   else { inp.type = 'password'; btn.textContent = '👁'; }
 }
+function togglePwd(id, btn) {
+  const inp = document.getElementById(id);
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+  else { inp.type = 'password'; btn.textContent = '👁'; }
+}
 
 /* ── HIRING ROLES ── */
 function addRole(e) {
@@ -217,7 +252,23 @@ function addRole(e) {
   input.value = '';
   document.getElementById('err-c-roles').classList.remove('show');
 }
+/* ── HIRING ROLES ── */
+function addRole(e) {
+  if (e.key !== 'Enter' && e.key !== ',') return;
+  e.preventDefault();
+  const input = document.getElementById('role-input');
+  const val = input.value.trim().replace(/,$/, '');
+  if (!val || hiringRoles.includes(val)) { input.value = ''; return; }
+  hiringRoles.push(val);
+  renderRoles();
+  input.value = '';
+  document.getElementById('err-c-roles').classList.remove('show');
+}
 
+function removeRoleTag(s) {
+  hiringRoles = hiringRoles.filter(x => x !== s);
+  renderRoles();
+}
 function removeRoleTag(s) {
   hiringRoles = hiringRoles.filter(x => x !== s);
   renderRoles();
@@ -319,6 +370,11 @@ function startResendTimer() {
     if (tCount) tCount.textContent = t;
     if (t <= 0) {
       clearInterval(resendTimer);
+      if (resendBtn) resendBtn.style.display = 'inline';
+      if (tBadge) tBadge.style.display = 'none';
+    }
+  }, 1000);
+}
       if (resendBtn) resendBtn.style.display = 'inline';
       if (tBadge) tBadge.style.display = 'none';
     }

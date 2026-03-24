@@ -175,8 +175,9 @@
           <div id="login-err-student"
             style="display:none;background:var(--RL,#fef2f2);border:1px solid #fecaca;border-radius:var(--rads);padding:10px 14px;font-size:13px;color:var(--R);margin-bottom:16px;">
             ❌ Invalid email or password. Please try again.</div>
-          <button type="button" class="btn-login student" onclick="doLogin('student', event)"><span class="spinner"
-              id="spin-student"></span>Sign In to Student Dashboard →</button>
+          <button type="button" class="btn-login student" onclick="doLogin('student',event)">
+            <span class="spinner" id="spin-student"></span>Sign In to Student Dashboard →
+          </button>
         </form>
         <div class="divider">
           <hr /><span>or</span>
@@ -196,17 +197,23 @@
         </div>
         <div class="role-badge company">🏢 Recruiter Account</div>
         <form onsubmit="return false;">
-          <div class="form-group"><label>Company Email <span>*</span></label><input type="email" id="cl-email"
-              placeholder="hr@company.com" oninput="clearErr(this)" /><span class="error-msg" id="err-cl-email">Enter a
-              valid email address.</span></div>
-          <div class="form-group"><label>Company Name <span>*</span></label><input type="text" id="cl-company"
-              placeholder="e.g. Infosys Technologies" oninput="clearErr(this)" /><span class="error-msg"
-              id="err-cl-company">Please enter your company name.</span></div>
-          <div class="form-group"><label>Password <span>*</span></label>
-            <div class="pwd-wrap"><input type="password" id="cl-pwd" placeholder="Enter your password"
-                oninput="clearErr(this)" /><button type="button" class="show-pwd"
-                onclick="togglePwd('cl-pwd',this)">👁</button></div><span class="error-msg" id="err-cl-pwd">Please enter
-              your password.</span>
+          <div class="form-group">
+            <label>Company Email <span>*</span></label>
+            <input type="email" id="cl-email" placeholder="hr@company.com" oninput="clearErr(this)" />
+            <span class="error-msg" id="err-cl-email">Enter a valid email address.</span>
+          </div>
+          <div class="form-group">
+            <label>Company Name <span>*</span></label>
+            <input type="text" id="cl-company" placeholder="e.g. Infosys Technologies" oninput="clearErr(this)" />
+            <span class="error-msg" id="err-cl-company">Please enter your company name.</span>
+          </div>
+          <div class="form-group">
+            <label>Password <span>*</span></label>
+            <div class="pwd-wrap">
+              <input type="password" id="cl-pwd" placeholder="Enter your password" oninput="clearErr(this)" />
+              <button type="button" class="show-pwd" onclick="togglePwd('cl-pwd',this)">👁</button>
+            </div>
+            <span class="error-msg" id="err-cl-pwd">Please enter your password.</span>
           </div>
           <div class="forgot-row"><span class="forgot-link" onclick="showForgot('company')">Forgot password?</span>
           </div>
@@ -219,8 +226,9 @@
           <div id="login-err-company"
             style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:var(--rads);padding:10px 14px;font-size:13px;color:var(--R);margin-bottom:16px;">
             ❌ Invalid credentials. Please try again.</div>
-          <button type="button" class="btn-login company" onclick="doLogin('company', event)"><span class="spinner"
-              id="spin-company"></span>Sign In to Recruiter Dashboard →</button>
+          <button type="button" class="btn-login company" onclick="doLogin('company',event)">
+            <span class="spinner" id="spin-company"></span>Sign In to Recruiter Dashboard →
+          </button>
         </form>
         <div class="divider">
           <hr /><span>or</span>
@@ -240,17 +248,23 @@
         </div>
         <div class="role-badge tpo">🛡️ TPO / Admin Account</div>
         <form onsubmit="return false;">
-          <div class="form-group"><label>Institutional Email <span>*</span></label><input type="email" id="tl-email"
-              placeholder="tpo@college.edu" oninput="clearErr(this)" /><span class="error-msg" id="err-tl-email">Enter a
-              valid email address.</span></div>
-          <div class="form-group"><label>Institution Name <span>*</span></label><input type="text" id="tl-college"
-              placeholder="e.g. IIT Bombay" oninput="clearErr(this)" /><span class="error-msg"
-              id="err-tl-college">Please enter your institution name.</span></div>
-          <div class="form-group"><label>Password <span>*</span></label>
-            <div class="pwd-wrap"><input type="password" id="tl-pwd" placeholder="Enter your password"
-                oninput="clearErr(this)" /><button type="button" class="show-pwd"
-                onclick="togglePwd('tl-pwd',this)">👁</button></div><span class="error-msg" id="err-tl-pwd">Please enter
-              your password.</span>
+          <div class="form-group">
+            <label>Institutional Email <span>*</span></label>
+            <input type="email" id="tl-email" placeholder="tpo@college.edu" oninput="clearErr(this)" />
+            <span class="error-msg" id="err-tl-email">Enter a valid email address.</span>
+          </div>
+          <div class="form-group">
+            <label>Institution Name <span>*</span></label>
+            <input type="text" id="tl-college" placeholder="e.g. IIT Bombay" oninput="clearErr(this)" />
+            <span class="error-msg" id="err-tl-college">Please enter your institution name.</span>
+          </div>
+          <div class="form-group">
+            <label>Password <span>*</span></label>
+            <div class="pwd-wrap">
+              <input type="password" id="tl-pwd" placeholder="Enter your password" oninput="clearErr(this)" />
+              <button type="button" class="show-pwd" onclick="togglePwd('tl-pwd',this)">👁</button>
+            </div>
+            <span class="error-msg" id="err-tl-pwd">Please enter your password.</span>
           </div>
           <div class="forgot-row"><span class="forgot-link" onclick="showForgot('tpo')">Forgot password?</span></div>
           <div id="forgot-tpo" class="forgot-panel" style="display:none;">
@@ -262,9 +276,9 @@
           <div id="login-err-tpo"
             style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:var(--rads);padding:10px 14px;font-size:13px;color:var(--R);margin-bottom:16px;">
             ❌ Invalid credentials. Contact your admin if the problem persists.</div>
-          <button type="button" class="btn-login tpo" onclick="doLogin('tpo', event)"><span class="spinner"
-              id="spin-tpo"></span>Sign In to
-            TPO Dashboard →</button>
+          <button type="button" class="btn-login tpo" onclick="doLogin('tpo',event)">
+            <span class="spinner" id="spin-tpo"></span>Sign In to TPO Dashboard →
+          </button>
         </form>
         <div class="divider">
           <hr /><span>or</span>
