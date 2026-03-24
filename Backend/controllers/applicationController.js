@@ -25,19 +25,29 @@ const applyToJob = async (req, res) => {
       return res.status(400).json({ success: false, message: 'You have already applied for this job' });
     }
 
-    const resume = student.resume && student.resume.filename
+    const resume = req.file
       ? {
-          filename: student.resume.filename,
-          path: student.resume.path,
-          contentType: student.resume.contentType
+          filename: req.file.filename,
+          path: req.file.path,
+          contentType: req.file.mimetype
         }
-      : undefined;
+      : student.resume && student.resume.filename
+        ? {
+            filename: student.resume.filename,
+            path: student.resume.path,
+            contentType: student.resume.contentType
+          }
+        : undefined;
+
+    if (!resume) {
+      return res.status(400).json({ success: false, message: 'Resume is required to apply' });
+    }
 
     const application = await Application.create({
       jobId,
       studentId,
       companyId: job.companyId,
-      status: 'New',
+      status: 'applied',
       resume
     });
 
@@ -64,4 +74,24 @@ const getStudentApplications = async (req, res) => {
   }
 };
 
-module.exports = { applyToJob, getStudentApplications };
+const getTPOApplications = async (req, res) => {
+  try {
+    const { jobId } = req.query || {};
+    const filter = {};
+    if (jobId) filter.jobId = jobId;
+
+    const applications = await Application.find(filter)
+      .populate('studentId', 'fullName email phone branch cgpa skills')
+      .populate('jobId', 'title companyName salary location description')
+      .sort({ appliedAt: -1 })
+      .limit(500)
+      .lean();
+
+    res.status(200).json({ success: true, applications });
+  } catch (error) {
+    console.error('Get TPO Applications Error:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+module.exports = { applyToJob, getStudentApplications, getTPOApplications };

@@ -18,8 +18,8 @@ const ApplicationSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['New', 'Reviewed', 'Shortlisted', 'Interview', 'Offered', 'Hired', 'Rejected'],
-    default: 'New'
+    enum: ['applied', 'New', 'Reviewed', 'Shortlisted', 'Interview', 'Offered', 'Hired', 'Rejected'],
+    default: 'applied'
   },
   resume: {
     filename: String,

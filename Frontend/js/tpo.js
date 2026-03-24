@@ -150,6 +150,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         loadTPOCompaniesTabs();
         loadTPOFullDrivesPage();
         loadTPOPlacementsPage();
+        loadTPOApplicationsSection();
         loadTPONotices();
         loadNotifications();
         renderOpenJobs(); // New feature
@@ -869,6 +870,43 @@ async function loadTPOPlacementsPage() {
             .join('');
     } catch (e) {
         tb.innerHTML = '<p class="empty-state" style="padding:24px;">No data available</p>';
+    }
+}
+
+async function loadTPOApplicationsSection() {
+    const tb = document.getElementById('tpo-applications-tbody');
+    const countEl = document.getElementById('tpo-applications-count');
+    if (!tb) return;
+    try {
+        const res = await fetch(`${API_ROOT}/api/applications/tpo`);
+        const data = await res.json();
+        const rows = data.success && data.applications ? data.applications : [];
+        if (countEl) countEl.textContent = String(rows.length || 0);
+        if (!rows.length) {
+            tb.innerHTML = '<p class="empty-state" style="padding:20px;text-align:center;">No applications yet</p>';
+            return;
+        }
+        tb.innerHTML = rows
+            .map((r) => {
+                const st = r.studentId || {};
+                const job = r.jobId || {};
+                const resumeHref = r.resume && r.resume.path ? `${API_ROOT}/${String(r.resume.path).replace(/\\/g, '/')}` : '';
+                const resumeLabel = r.resume && r.resume.filename ? r.resume.filename : 'Not available';
+                const status = r.status || 'applied';
+                return `<div class="tbl-row g4">
+                    <div>
+                      <div class="tbl-name">${st.fullName || '—'}</div>
+                      <div class="tbl-sub">${st.branch || '—'}${st.email ? ` · ${st.email}` : ''}</div>
+                    </div>
+                    <span>${job.title || '—'}</span>
+                    <span>${resumeHref ? `<a href="${resumeHref}" target="_blank" rel="noopener noreferrer">${resumeLabel}</a>` : resumeLabel}</span>
+                    <span class="pill active">${status}</span>
+                </div>`;
+            })
+            .join('');
+    } catch (e) {
+        console.error(e);
+        tb.innerHTML = '<p class="empty-state" style="padding:20px;text-align:center;">No applications yet</p>';
     }
 }
 

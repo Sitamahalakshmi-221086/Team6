@@ -81,6 +81,7 @@
 
   function appStatusMeta(status) {
     const map = {
+      applied: { label: 'Applied', cls: 'review', stage: 1 },
       New: { label: 'Under Review', cls: 'review', stage: 1 },
       Reviewed: { label: 'Under Review', cls: 'review', stage: 1 },
       Shortlisted: { label: 'Shortlisted', cls: 'short', stage: 2 },
@@ -924,9 +925,10 @@
   }
 
   function renderAllJobTabs() {
-    renderList(jobs, 'jobs-list-container');
-    const reco = jobs.filter((j) => j.reco);
-    const intern = jobs.filter((j) => j.intern);
+    const listingJobs = [...openJobs, ...jobs];
+    renderList(listingJobs, 'jobs-list-container');
+    const reco = listingJobs.filter((j) => j.reco);
+    const intern = listingJobs.filter((j) => j.intern);
     if (!reco.length) {
       const el = document.getElementById('reco-list-container');
       if (el) showEmpty(el, 'No data available');
@@ -936,7 +938,7 @@
       if (el) showEmpty(el, 'No data available');
     } else renderList(intern, 'intern-list-container');
 
-    const sv = jobs.filter((j) => j.saved);
+    const sv = listingJobs.filter((j) => j.saved);
     document.getElementById('tc-saved').textContent = String(sv.length);
     const ee = document.getElementById('saved-empty');
     if (!sv.length) {
@@ -949,12 +951,12 @@
     }
 
     ['all', 'reco', 'intern'].forEach((k, i) => {
-      const counts = [jobs.length, reco.length, intern.length];
+      const counts = [listingJobs.length, reco.length, intern.length];
       const t = document.getElementById('tc-' + k);
       if (t) t.textContent = String(counts[i]);
     });
     const jc = document.getElementById('job-count');
-    if (jc) jc.textContent = `Showing ${jobs.length} jobs`;
+    if (jc) jc.textContent = `Showing ${listingJobs.length} jobs`;
   }
 
   function filterJobs() {
@@ -963,7 +965,8 @@
     const type = (document.getElementById('filter-type') || { value: '' }).value;
     const ctcMin = parseFloat((document.getElementById('filter-ctc') || { value: '' }).value) || 0;
     const branch = (document.getElementById('filter-branch') || { value: '' }).value;
-    const f = jobs.filter((j) => {
+    const listingJobs = [...openJobs, ...jobs];
+    const f = listingJobs.filter((j) => {
       const mQ = !q || (j.title + j.company + j.skills.join(' ')).toLowerCase().includes(q);
       return mQ && (!loc || (j.loc && j.loc.includes(loc))) && (!type || j.type === type) && j.ctcVal >= ctcMin && (!branch || (j.branch && j.branch.includes(branch)));
     });
@@ -976,7 +979,7 @@
   }
 
   window.__sdOpenModal = function (id) {
-    const j = jobs.find((x) => x.id === id);
+    const j = [...openJobs, ...jobs].find((x) => x.id === id);
     if (!j) return;
     currentJob = j;
     document.getElementById('m-title').textContent = j.title;
@@ -1027,6 +1030,8 @@
     }
     const sb = document.getElementById('m-save-btn');
     sb.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--P)" stroke-width="2" stroke-linecap="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg> ${j.saved ? 'Saved' : 'Save'}`;
+    sb.style.display = j.isOpenJob ? 'none' : 'inline-flex';
+    bindApplyFormStudentData();
     document.getElementById('job-modal').classList.add('on');
   };
 
@@ -1053,6 +1058,8 @@
     document.getElementById('m-badges').innerHTML = `<span class="pill review">${j.loc}</span>`;
     document.getElementById('m-skills').innerHTML = '';
     document.getElementById('m-pipeline').innerHTML = '';
+    const sb = document.getElementById('m-save-btn');
+    if (sb) sb.style.display = 'none';
     const btn = document.getElementById('m-apply-btn');
     const note = document.getElementById('m-applied-note');
     if (j.applied) {
@@ -1067,7 +1074,35 @@
       note.textContent = '';
     }
     document.getElementById('job-modal').classList.add('on');
+    bindApplyFormStudentData();
   };
+
+  async function bindApplyFormStudentData() {
+    try {
+      const sid = studentId();
+      if (!sid) return;
+      const res = await fetch(`${API}/api/students/profile/${sid}`);
+      const data = await res.json();
+      if (!data.success || !data.student) return;
+      studentProfile = data.student;
+    } catch (e) {
+      console.error(e);
+    }
+
+    const s = studentProfile || {};
+    const set = (id, value) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value || '—';
+    };
+
+    set('m-st-name', s.fullName || '—');
+    set('m-st-email', s.email || '—');
+    set('m-st-phone', s.phone || '—');
+    set('m-st-branch', s.branch || '—');
+    set('m-st-cgpa', s.cgpa != null ? String(s.cgpa) : '—');
+    set('m-st-skills', Array.isArray(s.skills) && s.skills.length ? s.skills.join(', ') : '—');
+    set('m-st-resume', s.resume && s.resume.filename ? s.resume.filename : 'No resume uploaded');
+  }
 
   window.__sdToggleSave = function (id) {
     const j = jobs.find((x) => x.id === id);
@@ -1084,10 +1119,14 @@
     const j = jobs.find((x) => x.id === id);
     if (!j || j.applied) return;
     try {
+      const payload = new FormData();
+      payload.append('jobId', id);
+      payload.append('studentId', studentId());
+      const resumeFile = document.getElementById('m-resume-upload')?.files?.[0];
+      if (resumeFile) payload.append('resume', resumeFile);
       const res = await fetch(`${API}/api/applications/apply`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ jobId: id, studentId: studentId() })
+        body: payload
       });
       const data = await res.json();
       if (!data.success) {
@@ -1444,10 +1483,14 @@
     if (!currentJob || currentJob.applied) return;
     if (currentJob.isOpenJob) {
       try {
+        const payload = new FormData();
+        payload.append('openJobId', currentJob.openJobId);
+        payload.append('studentId', studentId());
+        const resumeFile = document.getElementById('m-resume-upload')?.files?.[0];
+        if (resumeFile) payload.append('resume', resumeFile);
         const res = await fetch(`${API}/api/open-jobs/apply`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ openJobId: currentJob.openJobId, studentId: studentId() })
+          body: payload
         });
         const data = await res.json();
         if (!data.success) {
@@ -1467,6 +1510,8 @@
     }
     const note = document.getElementById('m-applied-note');
     if (note && currentJob.applied) note.textContent = 'Application submitted!';
+    const uploadInput = document.getElementById('m-resume-upload');
+    if (uploadInput) uploadInput.value = '';
   };
 
   window.saveJob = function () {

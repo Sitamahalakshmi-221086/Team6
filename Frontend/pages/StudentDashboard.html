@@ -246,6 +246,28 @@
             </div>
           </div>
         </div>
+        <div
+          style="background:var(--bg);border:1px solid var(--brs);border-radius:var(--rs);padding:12px 16px;margin-top:12px;">
+          <div
+            style="font-size:11px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">
+            Application Form</div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+            <div class="mf"><div class="mf-l">Name</div><div class="mf-v" id="m-st-name">—</div></div>
+            <div class="mf"><div class="mf-l">Email</div><div class="mf-v" id="m-st-email">—</div></div>
+            <div class="mf"><div class="mf-l">Phone</div><div class="mf-v" id="m-st-phone">—</div></div>
+            <div class="mf"><div class="mf-l">Branch</div><div class="mf-v" id="m-st-branch">—</div></div>
+            <div class="mf"><div class="mf-l">CGPA</div><div class="mf-v" id="m-st-cgpa">—</div></div>
+            <div class="mf"><div class="mf-l">Skills</div><div class="mf-v" id="m-st-skills">—</div></div>
+          </div>
+          <div style="margin-top:10px;">
+            <div class="mf-l" style="margin-bottom:6px;">Current Resume</div>
+            <div class="mf-v" id="m-st-resume">No resume uploaded</div>
+          </div>
+          <div style="margin-top:10px;">
+            <label for="m-resume-upload" class="mf-l" style="display:block;margin-bottom:6px;">Upload New Resume (Optional)</label>
+            <input id="m-resume-upload" type="file" accept=".pdf,.doc,.docx" />
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <div style="display:flex;align-items:center;gap:8px;">
