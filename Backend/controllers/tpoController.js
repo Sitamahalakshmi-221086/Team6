@@ -241,11 +241,11 @@ const getPlacementRequests = async (req, res) => {
       .populate('companyId', 'companyName email')
       .sort({ createdAt: -1 })
       .lean();
-    const pendingCompanyRequests = await CompanyRequest.find({ status: 'pending' })
+    const companyRequests = await CompanyRequest.find()
       .sort({ createdAt: -1 })
       .lean();
 
-    res.status(200).json({ success: true, pendingJobs, pendingDrives, pendingCompanyRequests });
+    res.status(200).json({ success: true, pendingJobs, pendingDrives, pendingCompanyRequests: companyRequests });
   } catch (err) {
     console.error('Get Placement Requests Error:', err);
     res.status(500).json({ success: false, message: 'Failed to fetch requests' });
@@ -297,7 +297,7 @@ const requestCompany = async (req, res) => {
 const updateCompanyRequestStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body || {};
+    const { status, date, location, details, roles, eligibility } = req.body || {};
 
     if (!status || !['pending', 'accepted', 'rejected'].includes(status)) {
       return res.status(400).json({ success: false, message: 'status must be one of pending/accepted/rejected' });
@@ -305,11 +305,42 @@ const updateCompanyRequestStatus = async (req, res) => {
 
     const companyRequest = await CompanyRequest.findByIdAndUpdate(
       id,
-      { status },
+      { status, driveDate: date, location, details },
       { new: true }
     );
 
     if (!companyRequest) return res.status(404).json({ success: false, message: 'Company request not found' });
+
+    if (status === 'accepted' && date) {
+      const Drive = require('../models/Drive');
+      const Notification = require('../models/Notification');
+      const Student = require('../models/Student');
+      
+      const newDrive = await Drive.create({
+        companyName: companyRequest.companyName,
+        date: new Date(date),
+        location: location || '',
+        eligibility: eligibility || 'None',
+        roles: roles || companyRequest.role || 'Various',
+        status: 'scheduled',
+        submittedBy: 'company',
+        createdBy: null
+      });
+
+      const students = await Student.find({}, '_id');
+      const notificationsToInsert = students.map(st => ({
+        studentId: st._id,
+        type: 'drive',
+        driveId: newDrive._id,
+        message: `New Campus Drive: ${companyRequest.companyName} on ${new Date(date).toLocaleDateString()}`
+      }));
+      if (notificationsToInsert.length > 0) {
+         await Notification.insertMany(notificationsToInsert, { ordered: false }).catch(err => {
+           console.error('Notification insertion error (ignoring duplicates):', err.message);
+         });
+      }
+    }
+
     res.status(200).json({ success: true, companyRequest });
   } catch (err) {
     console.error('updateCompanyRequestStatus error:', err);

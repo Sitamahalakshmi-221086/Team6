@@ -212,6 +212,38 @@
     </div>
   </div>
 
+  <!-- ══ STUDENT DETAIL MODAL ══ -->
+  <div class="overlay" id="student-detail-modal" onclick="if(event.target===this)closeModal('student-detail-modal')">
+    <div class="modal" style="max-width: 600px;">
+      <button class="modal-close" onclick="closeModal('student-detail-modal')">✕</button>
+      <div class="modal-title" id="sd-modal-name">Student Name</div>
+      <div class="modal-sub" id="sd-modal-branch">Branch - Roll No</div>
+      
+      <div class="form-grid">
+        <div class="fg"><label>Email</label><div class="ro-val" id="sd-modal-email">—</div></div>
+        <div class="fg"><label>Phone</label><div class="ro-val" id="sd-modal-phone">—</div></div>
+        <div class="fg"><label>CGPA</label><div class="ro-val" id="sd-modal-cgpa">—</div></div>
+        <div class="fg"><label>Skills</label><div class="ro-val" id="sd-modal-skills">—</div></div>
+      </div>
+      <div class="fg" style="margin-top:12px;">
+        <label>Resume</label>
+        <div id="sd-modal-resume">—</div>
+      </div>
+
+      <div style="margin-top: 20px; border-top: 1px solid var(--brs); padding-top: 16px;">
+        <div style="font-weight: 700; color: var(--txm); margin-bottom: 8px;">Job Applications (<span id="sd-modal-app-count">0</span>)</div>
+        <div style="max-height: 200px; overflow-y: auto;" id="sd-modal-app-list">
+          <div style="font-size: 13px; color: var(--txmu);">Loading applications...</div>
+        </div>
+      </div>
+      
+      <div style="margin-top: 16px;">
+        <button class="btn sec lg" onclick="closeModal('student-detail-modal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+
   <!-- ════ SIDEBAR ════ -->
   <aside class="sidebar" id="sidebar">
     <div class="sb-logo" onclick="toggleSidebar()" title="Toggle sidebar">

@@ -659,35 +659,38 @@ async function loadTPOStudentsDirectory() {
                         ? '<span class="pill active">In process</span>'
                         : '<span class="pill closed">Not applied</span>';
             return `<div class="tbl-row g5">
-              <div><div class="tbl-name">${st.fullName || '—'}</div><div class="tbl-sub">Roll: ${st.rollNumber || '—'}</div></div>
+              <div><div class="tbl-name" style="cursor:pointer;" onclick="openStudentDetail('${st._id}')">${st.fullName || '—'}</div><div class="tbl-sub">Roll: ${st.rollNumber || '—'}</div></div>
               <span style="font-size:12.5px;color:var(--txmu);">${st.branch || '—'} · ${st.year || '—'}</span>
               <span style="font-weight:600;">${st.cgpa != null ? st.cgpa : '—'}</span>
               ${extra || status}
-              <button class="btn sm sec" type="button">View</button>
+              <button class="btn sm sec" type="button" onclick="openStudentDetail('${st._id}')">View</button>
             </div>`;
         };
 
         const rowPlaced = (st) =>
-            `<div class="tbl-row g4">
-              <div><div class="tbl-name">${st.fullName || '—'}</div><div class="tbl-sub">Roll: ${st.rollNumber || '—'}</div></div>
+            `<div class="tbl-row g5">
+              <div><div class="tbl-name" style="cursor:pointer;" onclick="openStudentDetail('${st._id}')">${st.fullName || '—'}</div><div class="tbl-sub">Roll: ${st.rollNumber || '—'}</div></div>
               <span style="font-size:12.5px;color:var(--txmu);">${st.branch || '—'} · ${st.cgpa != null ? st.cgpa : '—'}</span>
               <span style="font-weight:600;">—</span>
               <span style="font-weight:700;color:var(--G);">—</span>
+              <button class="btn sm sec" type="button" onclick="openStudentDetail('${st._id}')">View</button>
             </div>`;
 
         const rowActive = (st) =>
-            `<div class="tbl-row g4">
-              <div><div class="tbl-name">${st.fullName || '—'}</div><div class="tbl-sub">Roll: ${st.rollNumber || '—'}</div></div>
+            `<div class="tbl-row g5">
+              <div><div class="tbl-name" style="cursor:pointer;" onclick="openStudentDetail('${st._id}')">${st.fullName || '—'}</div><div class="tbl-sub">Roll: ${st.rollNumber || '—'}</div></div>
               <span style="font-size:12.5px;color:var(--txmu);">${st.branch || '—'} · ${st.cgpa != null ? st.cgpa : '—'}</span>
               <span>Applications: ${st.applicationCount || 0}</span>
               <span class="pill active">In process</span>
+              <button class="btn sm sec" type="button" onclick="openStudentDetail('${st._id}')">View</button>
             </div>`;
 
         const rowUn = (st) =>
-            `<div class="tbl-row g3">
-              <div><div class="tbl-name">${st.fullName || '—'}</div><div class="tbl-sub">Roll: ${st.rollNumber || '—'}</div></div>
+            `<div class="tbl-row g4">
+              <div><div class="tbl-name" style="cursor:pointer;" onclick="openStudentDetail('${st._id}')">${st.fullName || '—'}</div><div class="tbl-sub">Roll: ${st.rollNumber || '—'}</div></div>
               <span style="font-size:12.5px;color:var(--txmu);">${st.branch || '—'} · ${st.cgpa != null ? st.cgpa : '—'}</span>
               <button class="btn sm" type="button" onclick="sendReminderData('${(st.fullName || '').replace(/'/g, "\\'")}', '${st.email || ''}', this)">Send Reminder</button>
+              <button class="btn sm sec" type="button" onclick="openStudentDetail('${st._id}')">View</button>
             </div>`;
 
         all.innerHTML = list.length
@@ -728,7 +731,8 @@ async function loadTPOCompaniesTabs() {
         const coData = await coRes.json();
         const pendingJ = reqData.success ? reqData.pendingJobs || [] : [];
         const pendingD = reqData.success ? reqData.pendingDrives || [] : [];
-        const n = pendingJ.length + pendingD.length;
+        const companyReqs = reqData.success && reqData.pendingCompanyRequests ? reqData.pendingCompanyRequests : [];
+        const n = pendingJ.length + pendingD.length + companyReqs.filter(r => r.status === 'pending').length;
         if (badge) badge.textContent = String(n);
 
         if (reqEl) {
@@ -756,6 +760,29 @@ async function loadTPOCompaniesTabs() {
                         <button class="btn sm green" type="button" onclick="approveTPO('drive','${d._id}',this)">Approve</button>
                         <button class="btn sm red" type="button" onclick="rejectTPO('drive','${d._id}',this)">Decline</button>
                       </div>
+                    </div>`;
+                });
+                companyReqs.forEach((r) => {
+                    const statusPill = r.status === 'accepted' ? '<span class="pill confirmed">Accepted</span>' : 
+                                       r.status === 'rejected' ? '<span class="pill declined">Rejected</span>' : 
+                                       '<span class="pill pending">Pending</span>';
+                    
+                    let actionsHtml = r.status === 'pending' ? `
+                      <div class="req-actions">
+                        <button class="btn sm green" type="button" onclick="updateCompanyReqStatus('${r._id}', 'accepted', this)">Accept</button>
+                        <button class="btn sm red" type="button" onclick="updateCompanyReqStatus('${r._id}', 'rejected', this)">Decline</button>
+                      </div>` : '';
+                      
+                    let extraInfo = '';
+                    if (r.status === 'accepted' && r.driveDate) {
+                        extraInfo = `<div style="margin-top:8px;font-size:12px;color:var(--G);">📅 Drive: ${new Date(r.driveDate).toLocaleDateString()} | 📍 ${r.location || 'N/A'}</div>`;
+                    }
+
+                    html += `<div class="req-card">
+                      <div class="req-top"><span class="req-co">${r.companyName}</span>${statusPill}</div>
+                      <div class="req-meta">Outreach Request · Role: ${r.role}</div>
+                      ${extraInfo}
+                      ${actionsHtml}
                     </div>`;
                 });
                 reqEl.innerHTML = html;
@@ -1706,5 +1733,153 @@ async function syncOpenJobsNow() {
     } catch (e) {
         console.error(e);
         showToast('Open jobs sync failed');
+    }
+}
+
+// --- NEW FUNCTIONS FOR TPO DASHBOARD REFINEMENTS ---
+
+async function loadTPOApplicationsSection() {
+    const tbody = document.getElementById('tpo-applications-tbody');
+    const countEl = document.getElementById('tpo-applications-count');
+    if (!tbody) return;
+    
+    try {
+        const res = await fetch(`${API_ROOT}/api/applications/tpo`);
+        const data = await res.json();
+        const apps = data.success && data.applications ? data.applications : [];
+        if (countEl) countEl.textContent = String(apps.length);
+        
+        if (apps.length === 0) {
+            tbody.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txmu);font-size:13px;">No applications yet</div>';
+            return;
+        }
+        
+        let html = '';
+        apps.forEach(a => {
+            const stName = a.studentId ? a.studentId.fullName : '—';
+            const jt = a.jobId ? a.jobId.title : '—';
+            const co = a.jobId ? a.jobId.companyName : '—';
+            const resLink = a.resume && a.resume.path ? `<a href="${API_ROOT}/${a.resume.path}" target="_blank" style="color:var(--P);text-decoration:underline;">View Resume</a>` : 'No Resume';
+            const statusLabel = a.status || 'Applied';
+            
+            html += `<div class="tbl-row g4">
+              <div><div class="tbl-name">${stName}</div></div>
+              <div><div class="tbl-name">${jt}</div><div class="tbl-sub">${co}</div></div>
+              <span style="font-size:12px;">${resLink}</span>
+              <span class="pill" style="font-size:11px;">${statusLabel}</span>
+            </div>`;
+        });
+        tbody.innerHTML = html;
+    } catch(e) {
+        console.error('Failed to load TPO applications', e);
+        tbody.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txmu);font-size:13px;">Failed to load applications</div>';
+    }
+}
+
+async function openStudentDetail(studentId) {
+    try {
+        const [profRes, appRes] = await Promise.all([
+            fetch(`${API_ROOT}/api/students/profile/${studentId}`),
+            fetch(`${API_ROOT}/api/applications/student/${studentId}`)
+        ]);
+        
+        const profData = await profRes.json();
+        const appData = await appRes.json();
+        
+        if (profData.success && profData.student) {
+            const st = profData.student;
+            document.getElementById('sd-modal-name').textContent = st.fullName || '—';
+            document.getElementById('sd-modal-branch').textContent = `${st.branch || '—'} - ${st.rollNumber || '—'}`;
+            document.getElementById('sd-modal-email').textContent = st.email || '—';
+            document.getElementById('sd-modal-phone').textContent = st.phone || '—';
+            document.getElementById('sd-modal-cgpa').textContent = st.cgpa != null ? st.cgpa : '—';
+            
+            const skills = Array.isArray(st.skills) ? st.skills.join(', ') : st.skills || '—';
+            document.getElementById('sd-modal-skills').textContent = skills;
+            
+            const resumeEl = document.getElementById('sd-modal-resume');
+            if (st.resume && st.resume.path) {
+                resumeEl.innerHTML = `<a href="${API_ROOT}/${st.resume.path}" target="_blank" style="color:var(--P);text-decoration:underline;">View Resume</a>`;
+            } else {
+                resumeEl.textContent = '—';
+            }
+        }
+        
+        const appListEl = document.getElementById('sd-modal-app-list');
+        const appCountEl = document.getElementById('sd-modal-app-count');
+        
+        if (appData.success && appData.applications) {
+            const apps = appData.applications;
+            if (appCountEl) appCountEl.textContent = apps.length;
+            
+            if (apps.length === 0) {
+                appListEl.innerHTML = '<div style="font-size:13px;padding:12px;text-align:center;color:var(--txmu);">No applications found for this student.</div>';
+            } else {
+                let html = '';
+                apps.forEach(a => {
+                    const jt = a.jobId ? a.jobId.title : '—';
+                    const co = a.jobId ? a.jobId.companyName : '—';
+                    html += `<div style="padding: 10px; border: 1px solid var(--br); border-radius: var(--rs); margin-bottom: 8px;">
+                      <div style="display:flex; justify-content: space-between; margin-bottom: 4px;">
+                        <span style="font-weight: 600; font-size: 13px;">${jt}</span>
+                        <span class="pill" style="font-size: 10px;">${a.status || 'Applied'}</span>
+                      </div>
+                      <div style="font-size: 12px; color: var(--txmu);">${co}</div>
+                    </div>`;
+                });
+                appListEl.innerHTML = html;
+            }
+        }
+        
+        openModal('student-detail-modal');
+    } catch(e) {
+        console.error('Failed to load student details', e);
+        showToast('Failed to load student details');
+    }
+}
+
+async function updateCompanyReqStatus(reqId, status, btn) {
+    if (status === 'accepted') {
+        const driveDate = prompt("Enter drive date (YYYY-MM-DD):", new Date().toISOString().split('T')[0]);
+        if (!driveDate) return;
+        const loc = prompt("Enter venue/location:", "College Campus");
+        const details = prompt("Enter any extra details/instructions:", "");
+        
+        try {
+            const res = await fetch(`${API_ROOT}/api/tpo/request-company/${reqId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status, date: driveDate, location: loc, details })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showToast('Company request accepted and Drive generated!');
+                loadTPOCompaniesTabs();
+                loadTPOFullDrivesPage();
+                refreshSidebarCounters();
+            } else {
+                showToast(data.message || 'Failed to accept request');
+            }
+        } catch(e) {
+            console.error(e);
+            showToast('Error updating request');
+        }
+    } else {
+        try {
+            const res = await fetch(`${API_ROOT}/api/tpo/request-company/${reqId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showToast('Company request rejected');
+                loadTPOCompaniesTabs();
+                refreshSidebarCounters();
+            }
+        } catch(e) {
+            console.error(e);
+            showToast('Error updating request');
+        }
     }
 }

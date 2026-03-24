@@ -10,6 +10,9 @@ const companyRequestSchema = new mongoose.Schema(
       enum: ['pending', 'accepted', 'rejected'],
       default: 'pending'
     },
+    driveDate: { type: Date, default: null },
+    location: { type: String, default: '' },
+    details: { type: String, default: '' },
 
     // Optional link so the TPO can tie outreach to a specific open job card.
     openJobId: { type: mongoose.Schema.Types.ObjectId, ref: 'OpenJob', default: null }
