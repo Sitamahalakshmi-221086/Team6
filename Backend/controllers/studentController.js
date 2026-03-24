@@ -211,6 +211,37 @@ const getAllStudents = async (req, res) => {
   }
 };
 
+const getPrepResources = async (req, res) => {
+  try {
+    const { q } = req.query;
+    const query = (q || '').toLowerCase();
+
+    const mockResources = [
+      { id: 1, title: 'Top 50 Node.js Interview Questions', type: 'MCQs', category: 'Node.js', difficulty: 'Medium', link: 'https://www.interviewbit.com/node-js-interview-questions/' },
+      { id: 2, title: 'Two Sum Problem - Arrays', type: 'Coding Problem', category: 'DSA', difficulty: 'Easy', link: 'https://leetcode.com/problems/two-sum/' },
+      { id: 3, title: 'React Hooks Lifecycle Explained', type: 'Examples & Guide', category: 'React', difficulty: 'Advanced', link: 'https://react.dev/reference/react' },
+      { id: 4, title: 'Quantitative Aptitude - Time & Work', type: 'Practice Set', category: 'Aptitude', difficulty: 'Medium', link: 'https://www.indiabix.com/aptitude/time-and-work/' },
+      { id: 5, title: 'Reverse a Linked List', type: 'Coding Problem', category: 'DSA', difficulty: 'Medium', link: 'https://leetcode.com/problems/reverse-linked-list/' },
+      { id: 6, title: 'Express Middleware Flow', type: 'Examples', category: 'Node.js', difficulty: 'Beginner', link: 'https://expressjs.com/en/guide/using-middleware.html' },
+      { id: 7, title: 'React State Management (Redux vs Context)', type: 'Guide + MCQs', category: 'React', difficulty: 'Medium', link: 'https://redux.js.org/introduction/getting-started' },
+      { id: 8, title: 'Logical Reasoning - Puzzles', type: 'Practice Set', category: 'Aptitude', difficulty: 'Hard', link: 'https://www.indiabix.com/logical-reasoning/puzzles/' }
+    ];
+
+    const filtered = (query === 'all' || query === 'placement preparation')
+      ? mockResources
+      : mockResources.filter(r => 
+          r.category.toLowerCase().includes(query) || 
+          r.title.toLowerCase().includes(query) ||
+          r.type.toLowerCase().includes(query)
+        );
+
+    return res.status(200).json({ success: true, resources: filtered });
+  } catch (error) {
+    console.error('Prep Resources Error:', error.message);
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
 module.exports = {
   studentSignup,
   studentLogin,
@@ -219,5 +250,6 @@ module.exports = {
   getStudentProfile,
   updateStudentProfile,
   getStudentAnalytics,
-  getAllStudents
+  getAllStudents,
+  getPrepResources
 };

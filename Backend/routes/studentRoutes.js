@@ -8,7 +8,8 @@ const {
   getStudentProfile,
   updateStudentProfile,
   getStudentAnalytics,
-  getAllStudents
+  getAllStudents,
+  getPrepResources
 } = require('../controllers/studentController');
 
 // Multer Storage Configuration
@@ -41,6 +42,9 @@ router.get('/', getAllStudents);
 router.get('/profile/:id', getStudentProfile);
 router.put('/profile/:id', updateStudentProfile);
 router.get('/analytics/:id', getStudentAnalytics);
+
+// GET /api/students/prep-resources
+router.get('/prep-resources', getPrepResources);
 
 module.exports = router;
 
