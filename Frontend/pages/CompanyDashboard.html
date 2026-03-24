@@ -3266,7 +3266,7 @@
 
     async function fetchJobs() {
       try {
-        const res = await fetch(`${API_ROOT}/api/companies/jobs/${companyId}`);
+        const res = await fetch(`${API_ROOT}/api/jobs/company/${companyId}`);
         const data = await res.json();
         if (data.success) {
           renderJobs(data.jobs);

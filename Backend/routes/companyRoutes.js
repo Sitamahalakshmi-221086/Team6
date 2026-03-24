@@ -9,9 +9,12 @@ const {
   getCompanyJobs,
   getCompanyDrives,
   getJobApplications,
+  getCompanyApplications,
   updateApplicationStatus,
   getCompanyStats,
-  getCompanyDashboard
+  getCompanyDashboard,
+  getCompanyRequests,
+  acceptCompanyRequest
 } = require('../controllers/companyController');
 
 // POST /api/companies/signup
@@ -41,6 +44,9 @@ router.get('/drives/:companyId', getCompanyDrives);
 
 // GET /api/companies/applications/:jobId
 router.get('/applications/:jobId', getJobApplications);
+router.get('/applications/company/:companyId', getCompanyApplications);
+router.get('/requests', getCompanyRequests);
+router.patch('/request/:id', acceptCompanyRequest);
 
 // PUT /api/companies/application-status/:applicationId
 router.put('/application-status/:applicationId', updateApplicationStatus);

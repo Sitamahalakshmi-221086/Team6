@@ -19,4 +19,15 @@ const getApprovedJobsForStudents = async (req, res) => {
   }
 };
 
-module.exports = { getApprovedJobsForStudents, studentJobMatch };
+const getJobsByCompany = async (req, res) => {
+  try {
+    const { companyId } = req.params;
+    const jobs = await Job.find({ companyId }).sort({ createdAt: -1 }).lean();
+    res.status(200).json({ success: true, jobs });
+  } catch (error) {
+    console.error('Get Jobs By Company Error:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+module.exports = { getApprovedJobsForStudents, getJobsByCompany, studentJobMatch };

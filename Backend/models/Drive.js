@@ -50,6 +50,11 @@ const driveSchema = new mongoose.Schema({
     ref: 'TPO',
     required: false
   },
+  companyRequestId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'CompanyRequest',
+    default: null
+  },
   createdAt: {
     type: Date,
     default: Date.now

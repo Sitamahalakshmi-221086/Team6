@@ -1,35 +1,28 @@
 const Application = require('../models/Application');
 const Job = require('../models/Job');
-const OpenJob = require('../models/OpenJob');
 const Student = require('../models/Student');
-const Company = require('../models/Company');
+const Notification = require('../models/Notification');
+const nodemailer = require('nodemailer');
 const { studentJobMatch } = require('./jobsController');
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_PASS
+  }
+});
 
 const applyToJob = async (req, res) => {
   try {
-    const { jobId, studentId, type } = req.body;
+    const { jobId, studentId } = req.body;
     if (!jobId || !studentId) {
       return res.status(400).json({ success: false, message: 'jobId and studentId are required' });
     }
 
-    const applicationType = type === 'open' ? 'open' : 'drive';
-    let job;
-    let companyId;
-
-    if (applicationType === 'open') {
-      job = await OpenJob.findById(jobId);
-      if (!job) {
-        return res.status(400).json({ success: false, message: 'Open Job not found' });
-      }
-      // Derive companyId by matching companyName — null if company is not yet registered
-      const company = await Company.findOne({ companyName: new RegExp('^' + job.companyName + '$', 'i') });
-      companyId = company ? company._id : null;
-    } else {
-      job = await Job.findOne({ _id: jobId, ...studentJobMatch });
-      if (!job) {
-        return res.status(400).json({ success: false, message: 'Job is not available for applications' });
-      }
-      companyId = job.companyId;
+    const job = await Job.findOne({ _id: jobId, ...studentJobMatch });
+    if (!job) {
+      return res.status(400).json({ success: false, message: 'Job is not available for applications' });
     }
 
     const student = await Student.findById(studentId);
@@ -63,14 +56,26 @@ const applyToJob = async (req, res) => {
     const application = await Application.create({
       jobId,
       studentId,
-      companyId: companyId || undefined, // null for unregistered open-job companies
-      type: applicationType,
+      companyId: job.companyId,
       status: 'applied',
       resume
     });
 
-    if (applicationType === 'drive') {
-      await Job.findByIdAndUpdate(jobId, { $inc: { applicantsCount: 1 } });
+    await Job.findByIdAndUpdate(jobId, { $inc: { applicantsCount: 1 } });
+
+    await Notification.create({
+      studentId,
+      type: 'drive',
+      message: `Application submitted: ${job.title} at ${job.companyName}`
+    }).catch(() => {});
+
+    if (student.email) {
+      await transporter.sendMail({
+        from: `"CampusPlace" <${process.env.GMAIL_USER}>`,
+        to: student.email,
+        subject: `Application Submitted: ${job.title}`,
+        html: `<p>Hello ${student.fullName || 'Student'},</p><p>Your application for <strong>${job.title}</strong> at <strong>${job.companyName}</strong> has been submitted.</p>`
+      }).catch(() => {});
     }
 
     res.status(201).json({ success: true, message: 'Application submitted', application });
@@ -114,4 +119,20 @@ const getTPOApplications = async (req, res) => {
   }
 };
 
-module.exports = { applyToJob, getStudentApplications, getTPOApplications };
+const getCompanyApplications = async (req, res) => {
+  try {
+    const { companyId } = req.params;
+    const applications = await Application.find({ companyId })
+      .populate('studentId', 'fullName email phone branch cgpa skills')
+      .populate('jobId', 'title companyName salary location description')
+      .sort({ appliedAt: -1 })
+      .limit(500)
+      .lean();
+    res.status(200).json({ success: true, applications });
+  } catch (error) {
+    console.error('Get Company Applications Error:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+module.exports = { applyToJob, getStudentApplications, getTPOApplications, getCompanyApplications };

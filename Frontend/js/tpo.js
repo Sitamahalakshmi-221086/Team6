@@ -1725,7 +1725,9 @@ function sendOutreach(openJobId) {
 async function syncOpenJobsNow() {
     try {
         showToast('Syncing open jobs…');
-        const res = await fetch(`${API_ROOT}/api/open-jobs/sync`, { method: 'POST' });
+        const res = await fetch(`${API_ROOT}/api/open-jobs/sync`, {
+            method: 'POST'
+        });
         const data = await res.json();
         if (!data.success) throw new Error(data.message || 'Sync failed');
         await renderOpenJobs();

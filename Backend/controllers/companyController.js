@@ -3,8 +3,19 @@ const Job = require('../models/Job');
 const Application = require('../models/Application');
 const Student = require('../models/Student');
 const Drive = require('../models/Drive');
+const CompanyRequest = require('../models/CompanyRequest');
+const Notification = require('../models/Notification');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_PASS
+  }
+});
 
 const companySignup = async (req, res) => {
   try {
@@ -310,6 +321,21 @@ const getJobApplications = async (req, res) => {
   }
 };
 
+const getCompanyApplications = async (req, res) => {
+  try {
+    const { companyId } = req.params;
+    const applications = await Application.find({ companyId })
+      .populate('studentId', 'fullName email phone branch year cgpa skills resume')
+      .populate('jobId', 'title companyName salary location')
+      .sort({ appliedAt: -1 })
+      .lean();
+    res.status(200).json({ success: true, applications });
+  } catch (error) {
+    console.error('Get Company Applications Error:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
 const updateApplicationStatus = async (req, res) => {
   try {
     const { status } = req.body;
@@ -377,6 +403,87 @@ const getCompanyDashboard = async (req, res) => {
   }
 };
 
+const getCompanyRequests = async (req, res) => {
+  try {
+    const { companyId } = req.query || {};
+    let companyName = (req.query?.companyName || '').trim();
+    if (companyId && mongoose.Types.ObjectId.isValid(companyId)) {
+      const company = await Company.findById(companyId).select('companyName').lean();
+      if (company && company.companyName) companyName = company.companyName;
+    }
+    const filter = companyName ? { companyName: new RegExp(`^${companyName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') } : {};
+    const requests = await CompanyRequest.find(filter).sort({ createdAt: -1 }).lean();
+    res.status(200).json({ success: true, requests });
+  } catch (error) {
+    console.error('getCompanyRequests error:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+const acceptCompanyRequest = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const companyRequest = await CompanyRequest.findById(id);
+    if (!companyRequest) return res.status(404).json({ success: false, message: 'Request not found' });
+
+    if (companyRequest.status === 'accepted') {
+      const existingDrive = await Drive.findOne({ companyRequestId: companyRequest._id }).lean();
+      return res.status(200).json({ success: true, companyRequest, drive: existingDrive || null });
+    }
+
+    companyRequest.status = 'accepted';
+    await companyRequest.save();
+
+    let companyId = null;
+    const company = await Company.findOne({
+      companyName: new RegExp(`^${String(companyRequest.companyName || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i')
+    }).select('_id').lean();
+    if (company) companyId = company._id;
+
+    const drive = await Drive.create({
+      companyId,
+      companyName: companyRequest.companyName,
+      date: companyRequest.driveDate || new Date(),
+      location: companyRequest.location || '',
+      eligibility: companyRequest.details || 'As per request',
+      eligibleBranches: [],
+      roles: companyRequest.role,
+      role: companyRequest.role,
+      status: 'scheduled',
+      submittedBy: 'company',
+      companyRequestId: companyRequest._id
+    });
+
+    const students = await Student.find().select('_id email fullName').lean();
+    if (students.length) {
+      const docs = students.map((st) => ({
+        studentId: st._id,
+        type: 'drive',
+        driveId: drive._id,
+        message: `New drive scheduled: ${drive.companyName} - ${drive.roles}`
+      }));
+      await Notification.insertMany(docs, { ordered: false }).catch(() => {});
+      await Promise.all(
+        students.map(async (st) => {
+          try {
+            await transporter.sendMail({
+              from: `"CampusPlace" <${process.env.GMAIL_USER}>`,
+              to: st.email,
+              subject: `New Drive Scheduled: ${drive.companyName}`,
+              html: `<p>Hello ${st.fullName || 'Student'},</p><p>A new drive has been scheduled for <strong>${drive.companyName}</strong> (${drive.roles}). Please check your dashboard.</p>`
+            });
+          } catch (e) {}
+        })
+      );
+    }
+
+    res.status(200).json({ success: true, companyRequest, drive });
+  } catch (error) {
+    console.error('acceptCompanyRequest error:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
 module.exports = {
   companySignup,
   companyLogin,
@@ -387,7 +494,10 @@ module.exports = {
   getCompanyJobs,
   getCompanyDrives,
   getJobApplications,
+  getCompanyApplications,
   updateApplicationStatus,
   getCompanyStats,
-  getCompanyDashboard
+  getCompanyDashboard,
+  getCompanyRequests,
+  acceptCompanyRequest
 };

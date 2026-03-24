@@ -1023,10 +1023,10 @@
       btn.style.opacity = '.6';
       note.textContent = 'Application submitted';
     } else {
-      btn.innerHTML = 'Apply Now →';
+      btn.innerHTML = j.applyLink ? 'Open Apply Link →' : 'Not Available';
       btn.disabled = false;
       btn.style.opacity = '1';
-      note.textContent = '';
+      note.textContent = j.applyLink ? 'Use external company link to apply.' : 'Application link not available.';
     }
     const sb = document.getElementById('m-save-btn');
     sb.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--P)" stroke-width="2" stroke-linecap="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg> ${j.saved ? 'Saved' : 'Save'}`;
@@ -1482,30 +1482,8 @@
   window.applyFromModal = async function () {
     if (!currentJob || currentJob.applied) return;
     if (currentJob.isOpenJob) {
-      try {
-        const payload = new FormData();
-        payload.append('jobId', currentJob.openJobId);
-        payload.append('studentId', studentId());
-        payload.append('type', 'open');
-        const resumeFile = document.getElementById('m-resume-upload')?.files?.[0];
-        if (resumeFile) payload.append('resume', resumeFile);
-        const res = await fetch(`${API}/api/applications/apply`, {
-          method: 'POST',
-          body: payload
-        });
-        const data = await res.json();
-        if (!data.success) {
-          alert(data.message || 'Could not apply');
-          return;
-        }
-        currentJob.applied = true;
-        await loadData();
-        updateStatsUI();
-        renderNotifiedOpenJobs();
-      } catch {
-        alert('Network error');
-        return;
-      }
+      if (currentJob.applyLink) window.open(currentJob.applyLink, '_blank');
+      return;
     } else {
       await window.__sdQuickApply(currentJob.id, document.getElementById('m-apply-btn'));
     }

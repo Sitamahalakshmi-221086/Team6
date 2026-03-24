@@ -32,6 +32,7 @@ const transporter = nodemailer.createTransport({
 // Routes
 app.use('/api/students', require('./routes/studentRoutes'));
 app.use('/api/companies', require('./routes/companyRoutes'));
+app.use('/api/company', require('./routes/companyRoutes'));
 app.use('/api/tpo', require('./routes/tpoRoutes'));
 app.use('/api/open-jobs', require('./routes/openJobsRoutes'));
 app.use('/api/notifications', require('./routes/notificationsRoutes'));

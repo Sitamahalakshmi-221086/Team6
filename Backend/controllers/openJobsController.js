@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer');
+const https = require('https');
 
 const OpenJob = require('../models/OpenJob');
 const OpenJobNotification = require('../models/OpenJobNotification');
-const OpenJobApplication = require('../models/OpenJobApplication');
 const Student = require('../models/Student');
 const CompanyRequest = require('../models/CompanyRequest');
 const Notification = require('../models/Notification');
@@ -18,6 +18,26 @@ const transporter = nodemailer.createTransport({
 async function getCollegeBranches() {
   const branches = await Student.distinct('branch');
   return branches.filter((b) => typeof b === 'string' && b.trim());
+}
+
+function fetchJson(url) {
+  return new Promise((resolve, reject) => {
+    https
+      .get(url, (resp) => {
+        let data = '';
+        resp.on('data', (chunk) => {
+          data += chunk;
+        });
+        resp.on('end', () => {
+          try {
+            resolve(JSON.parse(data));
+          } catch (e) {
+            reject(e);
+          }
+        });
+      })
+      .on('error', reject);
+  });
 }
 
 function deriveRequiredBranchesFromText(text, collegeBranches) {
@@ -58,9 +78,6 @@ function mapOpenJobResponse(openJobs, opts) {
         const isNotified = studentId
           ? await OpenJobNotification.exists({ openJobId: oj._id, studentId })
           : await OpenJobNotification.exists({ openJobId: oj._id });
-        const isApplied = studentId
-          ? await OpenJobApplication.exists({ openJobId: oj._id, studentId })
-          : false;
 
         const outreach = await CompanyRequest.findOne({ openJobId: oj._id }).select('status createdAt').lean();
         return {
@@ -74,7 +91,7 @@ function mapOpenJobResponse(openJobs, opts) {
           applyLink: oj.applyLink,
           createdAt: oj.createdAt,
           isNotified: Boolean(isNotified),
-          isApplied: Boolean(isApplied),
+          isApplied: false,
           outreachStatus: outreach ? outreach.status : null,
           outreachCreatedAt: outreach ? outreach.createdAt : null
         };
@@ -83,58 +100,28 @@ function mapOpenJobResponse(openJobs, opts) {
   );
 }
 
-async function fetchAndStoreJobs() {
+async function fetchAndStoreJobs(sourceJobs = []) {
   const collegeBranches = await getCollegeBranches();
   const fallbackBranches = collegeBranches.length ? collegeBranches : ['CSE', 'IT', 'ECE', 'EEE', 'MECH', 'CIVIL'];
 
-  // Simulated structured source feed (backend only) to avoid flaky direct scraping.
-  const sourceJobs = [
-    {
-      title: 'Software Engineer Intern',
-      companyName: 'Razorpay',
-      description: 'Backend and API development with Node.js, MongoDB, and system design.',
-      location: 'Bengaluru',
-      package: '₹18 LPA',
-      applyLink: 'https://careers.razorpay.com/jobs/software-engineer-intern'
-    },
-    {
-      title: 'Cloud Engineer',
-      companyName: 'Infosys',
-      description: 'Cloud operations on AWS/Azure, Linux administration, and DevOps support.',
-      location: 'Hyderabad',
-      package: '₹12 LPA',
-      applyLink: 'https://careers.infosys.com/jobs/cloud-engineer'
-    },
-    {
-      title: 'Embedded Systems Engineer',
-      companyName: 'Bosch',
-      description: 'Embedded C, microcontrollers, and signal processing for automotive systems.',
-      location: 'Pune',
-      package: '₹10 LPA',
-      applyLink: 'https://bosch.com/careers/embedded-systems-engineer'
-    },
-    {
-      title: 'Data Analyst',
-      companyName: 'KPMG',
-      description: 'SQL, dashboards, analytics, and reporting for business teams.',
-      location: 'Gurugram',
-      package: '₹11 LPA',
-      applyLink: 'https://kpmg.com/in/careers/data-analyst'
-    },
-    {
-      title: 'Graduate Trainee Engineer',
-      companyName: 'L&T',
-      description: 'Mechanical and civil engineering graduate trainee program for core projects.',
-      location: 'Chennai',
-      package: '₹8 LPA',
-      applyLink: 'https://larsentoubrocareers.com/jobs/graduate-trainee-engineer'
-    }
-  ];
+  let jobsToSync = Array.isArray(sourceJobs) ? sourceJobs.filter(Boolean) : [];
+  if (!jobsToSync.length) {
+    const remote = await fetchJson('https://www.arbeitnow.com/api/job-board-api');
+    const remoteJobs = Array.isArray(remote?.data) ? remote.data : [];
+    jobsToSync = remoteJobs.slice(0, 100).map((j) => ({
+      title: j.title || '',
+      companyName: j.company_name || '',
+      description: j.description || '',
+      location: Array.isArray(j.location) ? j.location.join(', ') : j.location || '',
+      package: 'Not disclosed',
+      applyLink: j.url || ''
+    }));
+  }
 
   let syncedCount = 0;
   let skippedCount = 0;
 
-  for (const j of sourceJobs) {
+  for (const j of jobsToSync) {
     const title = String(j.title || '').trim();
     const companyName = String(j.companyName || '').trim();
     const description = String(j.description || '').trim();
@@ -196,11 +183,7 @@ async function getOpenJobs(req, res) {
       jobsQuery = OpenJob.find(filterByCollege).where('_id').in(openJobIds).sort({ createdAt: -1 });
     }
 
-    let openJobs = await jobsQuery.lean();
-    if (!openJobs.length) {
-      await fetchAndStoreJobs();
-      openJobs = await jobsQuery.lean();
-    }
+    const openJobs = await jobsQuery.lean();
     if (!openJobs.length) {
       return res.status(200).json({ success: true, openJobs: [] });
     }
@@ -313,7 +296,11 @@ async function notifyOpenJob(req, res) {
 
 async function syncOpenJobs(req, res) {
   try {
-    const { syncedCount, skippedCount } = await fetchAndStoreJobs();
+    const payloadJobs = Array.isArray(req.body?.jobs) ? req.body.jobs : [];
+    if (!payloadJobs.length) {
+      return res.status(200).json({ success: true, syncedCount: 0, skippedCount: 0, message: 'No jobs payload provided' });
+    }
+    const { syncedCount, skippedCount } = await fetchAndStoreJobs(payloadJobs);
     res.status(201).json({ success: true, syncedCount, skippedCount });
   } catch (err) {
     console.error('syncOpenJobs error:', err);
