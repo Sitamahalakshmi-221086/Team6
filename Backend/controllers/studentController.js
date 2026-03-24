@@ -1,5 +1,6 @@
 const Student = require('../models/Student');
 const bcrypt = require('bcryptjs');
+const axios = require('axios');
 
 const studentSignup = async (req, res) => {
   try {
@@ -106,7 +107,35 @@ const studentLogin = async (req, res) => {
   }
 };
 
+const getPrepResources = async (req, res) => {
+  try {
+    const query = req.query.query || 'placement preparation';
+    const apiKey = process.env.YOUTUBE_API_KEY;
+
+    if (!apiKey) {
+      return res.status(500).json({ success: false, message: 'YouTube API key is missing in backend configuration.' });
+    }
+
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=6&q=${encodeURIComponent(query)}&type=video&key=${apiKey}`;
+    
+    const response = await axios.get(url);
+    const videos = response.data.items.map(item => ({
+      videoId: item.id.videoId,
+      title: item.snippet.title,
+      description: item.snippet.description,
+      thumbnail: item.snippet.thumbnails.high.url,
+      channelTitle: item.snippet.channelTitle
+    }));
+
+    res.status(200).json({ success: true, videos });
+  } catch (error) {
+    console.error('Error fetching prep resources:', error.response ? error.response.data : error.message);
+    res.status(500).json({ success: false, message: 'Failed to fetch preparation resources' });
+  }
+};
+
 module.exports = {
   studentSignup,
-  studentLogin
+  studentLogin,
+  getPrepResources
 };
