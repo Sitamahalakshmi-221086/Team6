@@ -6,30 +6,103 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CampusPlace – Student Log In</title>
   <link
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=DM+Sans:wght@300;400;500;600;700&family=Satisfy&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="../css/loginstyle.css" />
   <link rel="stylesheet" href="../css/studentlogin.css" />
+  <style>
+    /* ── Google OAuth Button ── */
+    .oauth-section { margin: 20px 0 4px 0; }
+    .oauth-google-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 13px 24px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1.5px solid #dadce0;
+      font-family: 'DM Sans', sans-serif;
+      background: #ffffff;
+      color: #1e293b;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+      letter-spacing: 0.01em;
+      outline: none;
+    }
+    .oauth-google-btn:hover {
+      background: #f8fafc;
+      border-color: #b0b8c4;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      transform: translateY(-1px);
+    }
+    .oauth-google-btn:active { transform: translateY(0); }
+    .oauth-google-btn:disabled { opacity: 0.72; cursor: not-allowed; transform: none; }
+
+    /* ── Divider ── */
+    .oauth-divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 20px 0;
+    }
+    .oauth-divider-line { flex: 1; height: 1px; background: #e2e8f0; }
+    .oauth-divider-text {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: #94a3b8;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+  </style>
 </head>
 
 <body>
 
+  <div class="env-strip role-student"></div>
+
   <div class="page-wrap">
 
     <!-- ── LEFT PANEL ── -->
-    <aside class="left-panel">
+    <aside class="left-panel role-student">
       <div class="left-content">
-        <a href="../index.html" class="logo"
-          style="margin-bottom: 40px; display: inline-flex; align-items: center; gap: 10px; text-decoration: none;">
-          <div class="logo-icon"
-            style="width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #1e3a8a, #2563eb); display: flex; align-items: center; justify-content: center; font-size: 17px; box-shadow: 0 4px 10px rgba(0,0,0,.2);">
-            🎓</div>
-          <span class="logo-text"
-            style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.25rem; color: #fff; letter-spacing: -0.02em;">Campus<span
-              style="color: #67e8f9;">Place</span></span>
+        <a href="../index.html" class="logo">
+          <div class="logo-icon">
+            <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="logo-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#1e3a8a" />
+                  <stop offset="100%" stop-color="#2563eb" />
+                </linearGradient>
+              </defs>
+              <rect width="48" height="48" rx="11" fill="url(#logo-bg)" />
+              <rect x="1" y="1" width="46" height="23" rx="10" fill="rgba(255,255,255,0.06)" />
+              <polygon points="24,11.5 39.5,19 24,26.5 8.5,19" fill="white" />
+              <polygon points="8.5,19 8.5,22 24,29.5 24,26.5" fill="rgba(255,255,255,0.42)" />
+              <polygon points="39.5,19 39.5,22 24,29.5 24,26.5" fill="rgba(255,255,255,0.58)" />
+              <path d="M16.5 21 L16.5 26.5 Q16.5 29.5 24 29.5 Q31.5 29.5 31.5 26.5 L31.5 21 Z" fill="white" />
+              <path d="M39.5 19 Q43 19 43 23 L43 29.5" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" />
+              <circle cx="43" cy="29.5" r="2" fill="white" />
+              <line x1="41.1" y1="31.2" x2="40" y2="36.5" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <line x1="42.3" y1="31.4" x2="41.8" y2="37" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <line x1="43.6" y1="31.4" x2="44" y2="37" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <line x1="44.8" y1="31.2" x2="46" y2="36.5" stroke="white" stroke-width="1.35" stroke-linecap="round" />
+              <path d="M40 36 Q43 37 46 36" stroke="rgba(255,255,255,0.55)" stroke-width="1.1" fill="none" stroke-linecap="round" />
+            </svg>
+          </div>
+          <div class="logo-brand">
+            <div class="logo-wordmark">
+              <span class="logo-campus">Campus</span><span class="logo-sep">.</span><span class="logo-place">Place</span>
+            </div>
+            <div class="logo-tagline">Placement Portal</div>
+          </div>
         </a>
         <div class="left-badge"><span class="left-badge-dot"></span> Welcome Back</div>
-        <h2 class="left-title">Log Back<br />Into Your<br /><span style="color:#67e8f9;">Dashboard</span></h2>
+        <h2 class="left-title">Log Back<br />Into Your<br /><span class="left-title-accent">Dashboard</span></h2>
         <p class="left-sub">Access your personalised placement portal. Pick your role and sign in to continue.</p>
 
         <div class="role-info-list" style="pointer-events: none;">
@@ -43,18 +116,9 @@
         </div>
 
         <div style="margin-top:auto;" class="left-stats">
-          <div class="left-stat">
-            <div class="left-stat-num">500+</div>
-            <div class="left-stat-label">Colleges</div>
-          </div>
-          <div class="left-stat">
-            <div class="left-stat-num">12k+</div>
-            <div class="left-stat-label">Students</div>
-          </div>
-          <div class="left-stat">
-            <div class="left-stat-num">800+</div>
-            <div class="left-stat-label">Recruiters</div>
-          </div>
+          <div class="left-stat"><div class="left-stat-num">500+</div><div class="left-stat-label">Colleges</div></div>
+          <div class="left-stat"><div class="left-stat-num">12k+</div><div class="left-stat-label">Students</div></div>
+          <div class="left-stat"><div class="left-stat-num">800+</div><div class="left-stat-label">Recruiters</div></div>
         </div>
       </div>
     </aside>
@@ -73,6 +137,26 @@
         </div>
 
         <div class="role-badge student">🎓 Student Account</div>
+
+        <!-- ══ GOOGLE BUTTON — above the form ══ -->
+        <div class="oauth-section">
+          <button type="button" class="oauth-google-btn" id="google-login-btn" onclick="oauthLogin('google')">
+            <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.35-8.16 2.35-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
+            <span id="google-login-text">Continue with Google</span>
+          </button>
+        </div>
+
+        <!-- ══ DIVIDER ══ -->
+        <div class="oauth-divider">
+          <span class="oauth-divider-line"></span>
+          <span class="oauth-divider-text">or sign in with email</span>
+          <span class="oauth-divider-line"></span>
+        </div>
 
         <form onsubmit="return false;">
           <div class="form-group">
@@ -106,15 +190,14 @@
             ❌ Invalid email or password. Please try again.
           </div>
 
-          <button type="button" class="btn-login student" onclick="doLogin('student', event)">
+          <button type="button" class="btn-login student ripple-btn" onclick="doLogin('student', event)">
             <span class="spinner" id="spin-student"></span>
             Sign In to Dashboard →
           </button>
         </form>
 
         <div class="divider">
-          <hr /><span>or</span>
-          <hr />
+          <hr /><span>or</span><hr />
         </div>
         <div class="already">New student? <a href="StudentSignup.html">Create an account</a></div>
       </div>
@@ -133,9 +216,19 @@
   </div>
 
   <script src="../js/student-auth.js"></script>
+  <script>
+    /* ── Google OAuth for Student Login ── */
+    function oauthLogin(provider) {
+      const btn  = document.getElementById('google-login-btn');
+      const text = document.getElementById('google-login-text');
+      if (btn)  { btn.disabled = true; btn.style.opacity = '0.75'; }
+      if (text) text.textContent = 'Connecting to Google…';
+      sessionStorage.setItem('oauthRole', 'student');
+      setTimeout(() => {
+        window.location.href = 'http://localhost:5000/auth/' + provider + '?role=student';
+      }, 350);
+    }
+  </script>
 </body>
 
 </html>
-
-
-
