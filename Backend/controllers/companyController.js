@@ -1,5 +1,6 @@
  const Company = require('../models/Company');
 const bcrypt = require('bcryptjs');
+const mongoose = require('mongoose');
 
 const companySignup = async (req, res) => {
   try {
@@ -156,21 +157,119 @@ const updateCompanyProfile = async (req, res) => {
 
 const postJob = async (req, res) => {
   try {
-    const { companyId, companyName, title, description, requirements, salary, location, jobType, status } = req.body;
-    const newJob = await Job.create({
+    const {
       companyId,
       companyName,
       title,
       description,
-      requirements: Array.isArray(requirements) ? requirements : [],
+      requirements,
       salary,
+      package: packageCtc,
       location,
       jobType,
-      status: status || 'Active'
-    });
-    res.status(201).json({ success: true, message: 'Job posted successfully', job: newJob });
+      workMode,
+      deadline,
+      status
+    } = req.body;
+
+    if (!companyId || !mongoose.Types.ObjectId.isValid(companyId)) {
+      return res.status(400).json({ success: false, message: 'Valid companyId is required' });
+    }
+    if (!title || !String(title).trim()) {
+      return res.status(400).json({ success: false, message: 'Job title is required' });
+    }
+    if (!description || !String(description).trim()) {
+      return res.status(400).json({ success: false, message: 'Job description is required' });
+    }
+
+    let safeCompanyName = (companyName || '').trim();
+    if (!safeCompanyName) {
+      const company = await Company.findById(companyId).select('companyName').lean();
+      if (!company) {
+        return res.status(404).json({ success: false, message: 'Company not found for provided companyId' });
+      }
+      safeCompanyName = company.companyName || 'Company';
+    }
+
+    const payload = {
+      companyId,
+      companyName: safeCompanyName,
+      title: String(title).trim(),
+      description: String(description).trim(),
+      requirements: Array.isArray(requirements)
+        ? requirements.map((r) => String(r).trim()).filter(Boolean)
+        : [],
+      salary: salary || packageCtc,
+      location: location ? String(location).trim() : '',
+      jobType,
+      workMode,
+      deadline,
+      status: status || 'Active',
+      tpoApproval: 'pending'
+    };
+
+    let newJob;
+    try {
+      newJob = await Job.create(payload);
+    } catch (err) {
+      const isLegacyIdIndexDup =
+        err &&
+        err.code === 11000 &&
+        ((err.keyPattern && err.keyPattern.id) ||
+          (typeof err.message === 'string' && err.message.includes('index:id_1')));
+
+      if (!isLegacyIdIndexDup) throw err;
+
+      // Self-heal: remove legacy unique index on "id" and retry once.
+      try {
+        await Job.collection.dropIndex('id_1');
+      } catch (dropErr) {
+        const indexMissing =
+          dropErr && (dropErr.codeName === 'IndexNotFound' || /index not found/i.test(dropErr.message || ''));
+        if (!indexMissing) throw dropErr;
+      }
+
+      newJob = await Job.create(payload);
+    }
+    res.status(201).json({ success: true, message: 'Job submitted for TPO approval', job: newJob });
   } catch (error) {
     console.error('Post Job Error:', error);
+    res.status(500).json({
+      success: false,
+      message: error?.message || 'Internal Server Error'
+    });
+  }
+};
+
+const getCompanyProfile = async (req, res) => {
+  try {
+    const company = await Company.findById(req.params.id).select('-password');
+    if (!company) return res.status(404).json({ success: false, message: 'Company not found' });
+    res.status(200).json({ success: true, company });
+  } catch (error) {
+    console.error('Get Company Profile Error:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+const createCompanyDrive = async (req, res) => {
+  try {
+    const { companyId, companyName, date, eligibility, roles } = req.body;
+    if (!companyId || !companyName || !date) {
+      return res.status(400).json({ success: false, message: 'companyId, companyName, and date are required' });
+    }
+    const drive = await Drive.create({
+      companyId,
+      companyName,
+      date: new Date(date),
+      eligibility: eligibility || '—',
+      roles: roles || '—',
+      status: 'Pending',
+      submittedBy: 'company'
+    });
+    res.status(201).json({ success: true, message: 'Drive request submitted for TPO approval', drive });
+  } catch (error) {
+    console.error('Create Company Drive Error:', error);
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
@@ -181,6 +280,16 @@ const getCompanyJobs = async (req, res) => {
     res.status(200).json({ success: true, jobs });
   } catch (error) {
     console.error('Get Company Jobs Error:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+const getCompanyDrives = async (req, res) => {
+  try {
+    const drives = await Drive.find({ companyId: req.params.companyId }).sort({ createdAt: -1 });
+    res.status(200).json({ success: true, drives });
+  } catch (error) {
+    console.error('Get Company Drives Error:', error);
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
@@ -216,7 +325,12 @@ const updateApplicationStatus = async (req, res) => {
 const getCompanyStats = async (req, res) => {
   try {
     const companyId = req.params.companyId;
-    const activeJobsCount = await Job.countDocuments({ companyId, status: 'Active' });
+    const totalJobsPosted = await Job.countDocuments({ companyId });
+    const approvedJobs = await Job.countDocuments({
+      companyId,
+      $or: [{ tpoApproval: 'approved' }, { tpoApproval: { $exists: false } }]
+    });
+    const pendingJobs = await Job.countDocuments({ companyId, tpoApproval: 'pending' });
     const totalApplicantsCount = await Application.countDocuments({ companyId });
     const shortlistedCount = await Application.countDocuments({ companyId, status: 'Shortlisted' });
     const hiredCount = await Application.countDocuments({ companyId, status: 'Hired' });
@@ -224,7 +338,10 @@ const getCompanyStats = async (req, res) => {
     res.status(200).json({
       success: true,
       stats: {
-        activeJobs: activeJobsCount,
+        totalJobsPosted,
+        approvedJobs,
+        pendingJobs,
+        activeJobs: approvedJobs,
         totalApplicants: totalApplicantsCount,
         shortlisted: shortlistedCount,
         hired: hiredCount
@@ -240,8 +357,11 @@ module.exports = {
   companySignup,
   companyLogin,
   updateCompanyProfile,
+  getCompanyProfile,
   postJob,
+  createCompanyDrive,
   getCompanyJobs,
+  getCompanyDrives,
   getJobApplications,
   updateApplicationStatus,
   getCompanyStats

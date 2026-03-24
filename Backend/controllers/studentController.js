@@ -132,13 +132,55 @@ const startTest = async (req, res) => {
   }
 };
 
+const Application = require('../models/Application');
+
 const getStudentProfile = async (req, res) => {
   try {
-    const student = await Student.findById(req.params.id);
+    const student = await Student.findById(req.params.id).select('-password');
     if (!student) return res.status(404).json({ success: false, message: 'Student not found' });
     return res.status(200).json({ success: true, student });
   } catch (error) {
     console.error('Get Profile Error:', error.message);
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+const updateStudentProfile = async (req, res) => {
+  try {
+    const updates = { ...req.body };
+    delete updates.password;
+    delete updates.email;
+    const student = await Student.findByIdAndUpdate(req.params.id, updates, {
+      new: true,
+      runValidators: true
+    }).select('-password');
+    if (!student) return res.status(404).json({ success: false, message: 'Student not found' });
+    return res.status(200).json({ success: true, student });
+  } catch (error) {
+    console.error('Update Student Profile Error:', error.message);
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+const getStudentAnalytics = async (req, res) => {
+  try {
+    const studentId = req.params.id;
+    const apps = await Application.find({ studentId });
+    const totalApplications = apps.length;
+    const shortlisted = apps.filter((a) => a.status === 'Shortlisted').length;
+    const interviews = apps.filter((a) => a.status === 'Interview').length;
+    const offers = apps.filter((a) => a.status === 'Offered' || a.status === 'Hired').length;
+    return res.status(200).json({
+      success: true,
+      stats: {
+        totalApplications,
+        shortlisted,
+        interviews,
+        offers
+      }
+    });
+  } catch (error) {
+    console.error('Student Analytics Error:', error.message);
     return res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
@@ -148,5 +190,7 @@ module.exports = {
   studentLogin,
   sendPasswordResetEmail,
   startTest,
-  getStudentProfile
+  getStudentProfile,
+  updateStudentProfile,
+  getStudentAnalytics
 };

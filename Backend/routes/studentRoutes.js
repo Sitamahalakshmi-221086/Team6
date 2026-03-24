@@ -2,7 +2,15 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
-const { studentSignup, studentLogin } = require('../controllers/studentController');
+const {
+  studentSignup,
+  studentLogin,
+  getStudentProfile,
+  updateStudentProfile,
+  getStudentAnalytics,
+  sendPasswordResetEmail,
+  startTest
+} = require('../controllers/studentController');
 
 // Multer Storage Configuration
 const storage = multer.diskStorage({
@@ -24,5 +32,11 @@ router.post('/signup', upload.single('resume'), studentSignup);
 
 // POST /api/students/login
 router.post('/login', studentLogin);
+
+router.get('/profile/:id', getStudentProfile);
+router.put('/profile/:id', updateStudentProfile);
+router.get('/analytics/:id', getStudentAnalytics);
+router.post('/forgot-password', sendPasswordResetEmail);
+router.post('/start-test', startTest);
 
 module.exports = router;

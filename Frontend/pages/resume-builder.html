@@ -777,29 +777,22 @@
         <div class="rb-step" id="rs4" onclick="rbGo(4)">5. Preview</div>
       </div>
 
-      <!-- Step 1 -->
-      <div class="rb-panel on" id="rbp0">
-        <div class="detail-block">
-          <div class="detail-title">Personal Information</div>
-          <div class="form-grid">
-            <div class="fg"><label>Full Name</label><input id="rb-name" placeholder="Arjun Sharma" /></div>
-            <div class="fg"><label>Email</label><input id="rb-email" placeholder="arjun@college.edu" /></div>
-            <div class="fg"><label>Phone</label><input id="rb-phone" placeholder="+91 98765 43210" /></div>
-            <div class="fg"><label>LinkedIn URL</label><input id="rb-linkedin" placeholder="linkedin.com/in/arjun" />
-            </div>
-            <div class="fg"><label>GitHub (optional)</label><input id="rb-github" placeholder="github.com/arjun" />
-            </div>
-            <div class="fg"><label>Location</label><input id="rb-location" placeholder="Hyderabad, India" /></div>
-            <div class="fg full"><label>Objective / Summary</label><textarea id="rb-obj"
-                placeholder="A passionate CSE student seeking…"></textarea></div>
-          </div>
-          <button class="btn lg" style="margin-top:14px;" onclick="rbGo(1)">Next: Education <svg viewBox="0 0 24 24"
-              style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2;vertical-align:middle;margin-left:4px;">
-              <line x1="5" y1="12" x2="19" y2="12" />
-              <polyline points="12 5 19 12 12 19" />
-            </svg></button>
+    <!-- Step 1: Personal -->
+    <div class="rb-panel on" id="rbp0">
+      <div class="detail-block">
+        <div class="detail-title">Personal Information</div>
+        <div class="form-grid">
+          <div class="fg"><label>Full Name</label><input id="rb-name" placeholder="Arjun Sharma" /></div>
+          <div class="fg"><label>Email</label><input id="rb-email" placeholder="arjun@college.edu" /></div>
+          <div class="fg"><label>Phone</label><input id="rb-phone" placeholder="+91 98765 43210" /></div>
+          <div class="fg"><label>LinkedIn URL</label><input id="rb-linkedin" placeholder="linkedin.com/in/arjun" /></div>
+          <div class="fg"><label>GitHub (optional)</label><input id="rb-github" placeholder="github.com/arjun" /></div>
+          <div class="fg"><label>Location</label><input id="rb-location" placeholder="Hyderabad, India" /></div>
+          <div class="fg full"><label>Objective / Summary</label><textarea id="rb-obj" placeholder="A passionate CSE student seeking…"></textarea></div>
         </div>
+        <button class="btn lg" style="margin-top:14px;" onclick="rbGo(1)">Next: Education <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2;vertical-align:middle;margin-left:4px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
       </div>
+    </div>
 
       <!-- Step 2 -->
       <div class="rb-panel" id="rbp1">

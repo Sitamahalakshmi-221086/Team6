@@ -56,18 +56,80 @@
       gap: 12px;
       animation: fadeIn .4s ease both;
     }
-    .cac-icon { width: 36px; height: 36px; background: #fff; color: var(--P); border-radius: 10px; display: grid; place-items: center; }
-    .cac-top { font-size: 10px; font-weight: 700; text-transform: uppercase; opacity: 0.8; }
-    .cac-sub { font-size: 11px; opacity: 0.7; }
 
-    .hiring-steps { display: flex; flex-direction: column; gap: 8px; }
-    .hstep { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--txm); }
-    .hnum { width: 22px; height: 22px; background: var(--PL); color: var(--P); border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 800; }
+    .cac-icon {
+      width: 36px;
+      height: 36px;
+      background: #fff;
+      color: var(--P);
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+    }
 
-    .vibe-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
-    .vibe-card { padding: 10px; background: var(--bgs); border: 1px solid var(--brs); border-radius: var(--rs); font-size: 12.5px; }
+    .cac-top {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    .cac-sub {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+
+    .hiring-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .hstep {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--txm);
+    }
+
+    .hnum {
+      width: 22px;
+      height: 22px;
+      background: var(--PL);
+      color: var(--P);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .vibe-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .vibe-card {
+      padding: 10px;
+      background: var(--bgs);
+      border: 1px solid var(--brs);
+      border-radius: var(--rs);
+      font-size: 12.5px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
 
     body.dark {
       --bg: #051009;
@@ -1864,7 +1926,7 @@
     </div>
     <div class="notif-item"><span class="n-dot r"></span>
       <div>
-        <div class="n-text">Interview with <strong>Arjun Reddy</strong> confirmed.</div>
+        <div class="n-text">Interview reminder: <strong>pending candidate</strong> — check your calendar.</div>
         <div class="n-time">Yesterday</div>
       </div>
     </div>
@@ -1972,7 +2034,7 @@
         </svg>
       </div>
       <div>
-        <div class="sb-uname" id="sb-uname">Infosys Technologies</div>
+        <div class="sb-uname" id="sb-uname">—</div>
         <div class="sb-udept">Recruiter Account</div>
       </div>
     </div>
@@ -1992,7 +2054,7 @@
             <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
           </svg></span>
         <span class="sb-label">Job Postings</span>
-        <span class="sb-badge teal">5</span>
+        <span class="sb-badge teal" id="co-sb-jobs-badge">0</span>
       </button>
       <button class="nl" onclick="go('candidates',this)">
         <span class="ic"><svg viewBox="0 0 24 24">
@@ -2002,7 +2064,7 @@
             <path d="M16 3.13a4 4 0 0 1 0 7.75" />
           </svg></span>
         <span class="sb-label">Applicants</span>
-        <span class="sb-badge">24</span>
+        <span class="sb-badge" id="co-sb-apps-badge">0</span>
       </button>
       <button class="nl" onclick="go('drives',this)">
         <span class="ic"><svg viewBox="0 0 24 24">
@@ -2084,13 +2146,14 @@
           <span class="rdot"></span>
         </div>
         <div class="icon-btn" onclick="toggleDarkMode()" id="top-dark-toggle">
-          <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
           </svg>
         </div>
         <div class="tb-chip" onclick="go('profile',document.querySelector('.nl[onclick*=profile]'))">
           <div class="tb-av">IN</div>
-          <span id="tb-name">Infosys</span>
+          <span id="tb-name"></span>
         </div>
       </div>
     </header>
@@ -2105,13 +2168,18 @@
             <div class="greet-hi" id="greet-msg">Welcome, <span id="company-name-span">Company</span> 👋</div>
             <div class="greet-sub" id="greet-sub-text">Loading your dashboard stats...</div>
             <div class="co-action-card">
-              <div class="cac-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+              <div class="cac-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg></div>
               <div class="cac-info">
                 <div class="cac-top">Upcoming Action</div>
                 <div class="cac-main"><strong>JNTU Campus Drive</strong> Preparation</div>
                 <div class="cac-sub">Mar 18 · Ensure all student assessments are ready.</div>
               </div>
-              <button class="btn sm" onclick="go('drives',document.querySelector('.nl[onclick*=drives]'))" style="margin-left:auto;background:#fff;color:var(--P);">Manage Drive</button>
+              <button class="btn sm" onclick="go('drives',document.querySelector('.nl[onclick*=drives]'))"
+                style="margin-left:auto;background:#fff;color:var(--P);">Manage Drive</button>
             </div>
           </div>
           <div class="greet-right">
@@ -2440,7 +2508,8 @@
         </div>
         <div class="tab-panel on" id="jt-active">
           <div class="card" style="padding:0;">
-            <div class="tbl-head job-grid"><span>Role & Location</span><span>Type</span><span>Applicants</span><span>Deadline</span><span>Status</span></div>
+            <div class="tbl-head job-grid"><span>Role &
+                Location</span><span>Type</span><span>Applicants</span><span>Deadline</span><span>Status</span></div>
             <div id="active-jobs-list">
               <!-- Active jobs will be injected here -->
             </div>
@@ -2448,16 +2517,17 @@
         </div>
         <div class="tab-panel" id="jt-closed">
           <div class="card" style="padding:0;">
-            <div class="tbl-head job-grid"><span>Role & Location</span><span>Type</span><span>Applicants</span><span>Closed On</span><span>Status</span></div>
+            <div class="tbl-head job-grid"><span>Role &
+                Location</span><span>Type</span><span>Applicants</span><span>Closed On</span><span>Status</span></div>
             <div id="closed-jobs-list">
               <!-- Closed jobs will be injected here -->
             </div>
           </div>
         </div>
         <div class="tab-panel" id="jt-draft">
-            <div id="draft-jobs-list">
-              <!-- Draft jobs will be injected here -->
-            </div>
+          <div id="draft-jobs-list">
+            <!-- Draft jobs will be injected here -->
+          </div>
         </div>
       </div><!-- /pg-jobs -->
 
@@ -2482,7 +2552,8 @@
         </div>
         <div class="tab-panel on" id="at-all">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Status</span></div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
+                CGPA</span><span>Status</span></div>
             <div id="all-applicants-list">
               <!-- All applicants will be injected here -->
             </div>
@@ -2490,25 +2561,29 @@
         </div>
         <div class="tab-panel" id="at-new">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Action</span></div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
+                CGPA</span><span>Action</span></div>
             <div id="new-applicants-list"></div>
           </div>
         </div>
         <div class="tab-panel" id="at-short">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Action</span></div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
+                CGPA</span><span>Action</span></div>
             <div id="shortlisted-applicants-list"></div>
           </div>
         </div>
         <div class="tab-panel" id="at-interview">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Action</span></div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
+                CGPA</span><span>Action</span></div>
             <div id="interview-applicants-list"></div>
           </div>
         </div>
         <div class="tab-panel" id="at-hired">
           <div class="card" style="padding:0;">
-            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College · CGPA</span><span>Status</span></div>
+            <div class="tbl-head cand-grid"><span>Candidate</span><span>Applied For</span><span>College ·
+                CGPA</span><span>Status</span></div>
             <div id="hired-applicants-list"></div>
           </div>
         </div>
@@ -2527,74 +2602,36 @@
             </svg>
             Campus Drives
           </div>
-          <button class="btn" onclick="showToast('Schedule drive feature coming soon.')">
+          <button class="btn" type="button" onclick="openDriveRequestForm()">
             <svg viewBox="0 0 24 24">
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
-            Schedule Drive
+            Request drive (TPO approval)
           </button>
+        </div>
+        <div id="drive-request-card" class="card" style="display:none;padding:16px 18px;margin-bottom:16px;">
+          <div style="font-weight:700;margin-bottom:10px;">Submit campus drive request</div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;">
+            <div class="fg"><label>Date</label><input type="date" id="co-drive-date" /></div>
+            <div class="fg" style="min-width:160px;"><label>Roles</label><input id="co-drive-roles"
+                placeholder="e.g. SDE, Analyst" /></div>
+            <div class="fg" style="min-width:160px;"><label>Eligibility</label><input id="co-drive-elig"
+                placeholder="e.g. CGPA 7+" /></div>
+            <button class="btn" type="button" onclick="submitDriveRequest()">Submit</button>
+          </div>
         </div>
         <div class="card" style="padding:0;margin-bottom:16px;">
           <div
             style="padding:12px 16px;border-bottom:1px solid var(--brs);font-size:12px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.06em;background:var(--bgs);">
             Upcoming Drives</div>
-          <div class="drive-row">
-            <div class="dr-date">
-              <div class="dr-dd">18</div>
-              <div class="dr-dm">Mar</div>
-            </div>
-            <div class="dr-info">
-              <div class="dr-name">JNTU Hyderabad</div>
-              <div class="dr-meta">10:00 AM · CSE Block Hall · 120 registered students · Roles: SDE, Systems Engineer
-              </div>
-            </div><span class="pill active">Confirmed</span>
-          </div>
-          <div class="drive-row">
-            <div class="dr-date">
-              <div class="dr-dd">25</div>
-              <div class="dr-dm">Mar</div>
-            </div>
-            <div class="dr-info">
-              <div class="dr-name">Osmania University</div>
-              <div class="dr-meta">9:00 AM · Seminar Hall B · 80 students · Roles: Data Analyst</div>
-            </div><span class="pill pending">Pending TPO</span>
-          </div>
-          <div class="drive-row">
-            <div class="dr-date">
-              <div class="dr-dd">3</div>
-              <div class="dr-dm">Apr</div>
-            </div>
-            <div class="dr-info">
-              <div class="dr-name">NIT Warangal</div>
-              <div class="dr-meta">Online · Zoom · 200 students · All roles</div>
-            </div><span class="pill pending">Pending TPO</span>
-          </div>
+          <div id="company-drives-upcoming-list"></div>
         </div>
         <div class="card" style="padding:0;">
           <div
             style="padding:12px 16px;border-bottom:1px solid var(--brs);font-size:12px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.06em;background:var(--bgs);">
-            Completed Drives</div>
-          <div class="drive-row">
-            <div class="dr-date" style="background:var(--bgs);">
-              <div class="dr-dd" style="color:var(--txmu);">10</div>
-              <div class="dr-dm" style="color:var(--txmu);">Mar</div>
-            </div>
-            <div class="dr-info">
-              <div class="dr-name">VIT Chennai</div>
-              <div class="dr-meta">Completed · 95 attended · 8 selected</div>
-            </div><span class="pill closed">Done</span>
-          </div>
-          <div class="drive-row">
-            <div class="dr-date" style="background:var(--bgs);">
-              <div class="dr-dd" style="color:var(--txmu);">28</div>
-              <div class="dr-dm" style="color:var(--txmu);">Feb</div>
-            </div>
-            <div class="dr-info">
-              <div class="dr-name">CBIT Hyderabad</div>
-              <div class="dr-meta">Completed · 60 attended · 5 selected</div>
-            </div><span class="pill closed">Done</span>
-          </div>
+            Completed / Past Drives</div>
+          <div id="company-drives-completed-list"></div>
         </div>
       </div><!-- /pg-drives -->
 
@@ -2629,8 +2666,8 @@
           </div>
           <!-- Name + email + tags below banner on white -->
           <div class="cph-nameblock">
-            <div class="cph-name" id="pg-coname">Infosys Technologies Ltd.</div>
-            <div class="cph-email" id="pg-coemail">hr@infosys.com</div>
+            <div class="cph-name" id="pg-coname">—</div>
+            <div class="cph-email" id="pg-coemail">—</div>
             <div class="cph-tags">
               <span class="cph-tag teal">
                 <svg viewBox="0 0 24 24">
@@ -2665,7 +2702,7 @@
                     <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
                   </svg>
                 </div>
-                <div class="cph-stat-val" style="color:var(--P);">5</div>
+                <div class="cph-stat-val" id="cph-stat-jobs" style="color:var(--P);">0</div>
                 <div class="cph-stat-lbl">Active Posts</div>
               </div>
               <div class="cph-stat">
@@ -2677,7 +2714,7 @@
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                   </svg>
                 </div>
-                <div class="cph-stat-val" style="color:var(--T);">24</div>
+                <div class="cph-stat-val" id="cph-stat-apps" style="color:var(--T);">0</div>
                 <div class="cph-stat-lbl">Total Applicants</div>
               </div>
               <div class="cph-stat">
@@ -2691,7 +2728,7 @@
                     <path d="M9 16l2 2 4-4" />
                   </svg>
                 </div>
-                <div class="cph-stat-val" style="color:var(--A);">2</div>
+                <div class="cph-stat-val" id="cph-stat-drives" style="color:var(--A);">0</div>
                 <div class="cph-stat-lbl">Campus Drives</div>
               </div>
               <div class="cph-stat">
@@ -2702,7 +2739,7 @@
                     <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
                   </svg>
                 </div>
-                <div class="cph-stat-val" style="color:var(--G);">3</div>
+                <div class="cph-stat-val" id="cph-stat-offers" style="color:var(--G);">0</div>
                 <div class="cph-stat-lbl">Offers Made</div>
               </div>
             </div>
@@ -2721,34 +2758,34 @@
             <div id="cp-view">
               <div class="dg">
                 <div class="df"><label>Company Name</label>
-                  <p>Infosys Technologies Ltd.</p>
+                  <p>—</p>
                 </div>
                 <div class="df"><label>Industry</label>
-                  <p>IT Services & Consulting</p>
+                  <p>—</p>
                 </div>
                 <div class="df"><label>Company Size</label>
-                  <p>10,000+ Employees</p>
+                  <p>—</p>
                 </div>
                 <div class="df"><label>Headquarters</label>
-                  <p>Bangalore, Karnataka</p>
+                  <p>—</p>
                 </div>
                 <div class="df"><label>Website</label>
-                  <p style="color:var(--T);">infosys.com</p>
+                  <p style="color:var(--T);">—</p>
                 </div>
                 <div class="df"><label>HR Email</label>
-                  <p>hr@infosys.com</p>
+                  <p>—</p>
                 </div>
               </div>
               <div style="margin-top:14px;">
                 <div
                   style="font-size:10.5px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;">
                   About</div>
-                <div style="font-size:13px;line-height:1.65;color:var(--txmu);">Infosys is a global leader in
-                  next-generation digital services and consulting, enabling clients in 50+ countries to navigate digital
-                  transformation.</div>
+                <div id="cp-about-text" style="font-size:13px;line-height:1.65;color:var(--txmu);">—</div>
               </div>
               <div style="margin-top:18px;">
-                <div style="font-size:10.5px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">Hiring Process</div>
+                <div
+                  style="font-size:10.5px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">
+                  Hiring Process</div>
                 <div class="hiring-steps">
                   <div class="hstep"><span class="hnum">1</span><span>Application Screen</span></div>
                   <div class="hstep"><span class="hnum">2</span><span>Aptitude Test</span></div>
@@ -2759,20 +2796,20 @@
             </div>
             <div id="cp-edit" style="display:none;margin-top:14px;">
               <div class="form-grid">
-                <div class="fg"><label>Company Name</label><input id="company-name-input" value="Infosys Technologies Ltd." /></div>
-                <div class="fg"><label>Industry</label><input id="industry-input" value="IT Services & Consulting" /></div>
+                <div class="fg"><label>Company Name</label><input id="company-name-input" value="" /></div>
+                <div class="fg"><label>Industry</label><input id="industry-input" value="" /></div>
                 <div class="fg"><label>Company Size</label><select id="company-size-select">
-                    <option>1–50</option>
-                    <option>51–200</option>
-                    <option>201–1000</option>
-                    <option>1001–10,000</option>
-                    <option selected>10,000+</option>
+                    <option value="">—</option>
+                    <option>1–50 employees</option>
+                    <option>51–200 employees</option>
+                    <option>201–1000 employees</option>
+                    <option>1001–5000 employees</option>
+                    <option>5000+ employees</option>
                   </select></div>
-                <div class="fg"><label>Headquarters</label><input id="headquarters-input" value="Bangalore, Karnataka" /></div>
-                <div class="fg"><label>Website</label><input id="website-input" value="infosys.com" /></div>
-                <div class="fg"><label>HR Email</label><input id="hr-email-input" value="hr@infosys.com" /></div>
-                <div class="fg full"><label>About</label><textarea id="about-input"
-                    style="min-height:80px;">Infosys is a global leader in next-generation digital services and consulting.</textarea>
+                <div class="fg"><label>Headquarters</label><input id="headquarters-input" value="" /></div>
+                <div class="fg"><label>Website</label><input id="website-input" value="" /></div>
+                <div class="fg"><label>HR Email</label><input id="hr-email-input" value="" /></div>
+                <div class="fg full"><label>About</label><textarea id="about-input" style="min-height:80px;"></textarea>
                 </div>
               </div>
               <div style="display:flex;gap:8px;margin-top:14px;">
@@ -2793,21 +2830,27 @@
               <div style="display:flex;flex-direction:column;gap:8px;">
                 <div
                   style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 12px;background:var(--bgs);border-radius:var(--rs);border:1px solid var(--brs);">
-                  <span>JNTU Hyderabad</span><span class="pill active">Active</span></div>
+                  <span>JNTU Hyderabad</span><span class="pill active">Active</span>
+                </div>
                 <div
                   style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 12px;background:var(--bgs);border-radius:var(--rs);border:1px solid var(--brs);">
-                  <span>Osmania University</span><span class="pill active">Active</span></div>
+                  <span>Osmania University</span><span class="pill active">Active</span>
+                </div>
                 <div
                   style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 12px;background:var(--bgs);border-radius:var(--rs);border:1px solid var(--brs);">
-                  <span>NIT Warangal</span><span class="pill pending">Pending</span></div>
+                  <span>NIT Warangal</span><span class="pill pending">Pending</span>
+                </div>
                 <div
                   style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 12px;background:var(--bgs);border-radius:var(--rs);border:1px solid var(--brs);">
-                  <span>VIT Chennai</span><span class="pill active">Active</span></div>
+                  <span>VIT Chennai</span><span class="pill active">Active</span>
+                </div>
               </div>
             </div>
             <!-- Hiring pipeline mini chart -->
             <div class="db" style="margin-bottom:14px;">
-              <div class="db-title"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Company Vibe</div>
+              <div class="db-title"><svg viewBox="0 0 24 24">
+                  <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                </svg>Company Vibe</div>
               <div class="vibe-grid">
                 <div class="vibe-card">🚀 <strong>Innovation</strong> Focus</div>
                 <div class="vibe-card">🏠 <strong>Hybrid</strong> Friendly</div>
@@ -3040,7 +3083,16 @@
   </div>
 
   <script>
-    // ── INIT ──
+    const TITLES = { home: 'Dashboard', jobs: 'Job Postings', candidates: 'Applicants', drives: 'Campus Drives', profile: 'Company Profile', stats: 'Analytics', settings: 'Settings' };
+    const API_ROOT = (window.CAMPUS_API_BASE || sessionStorage.getItem('CAMPUS_API_BASE') || 'http://localhost:5001').replace(/\/$/, '');
+
+    const companyId = sessionStorage.getItem('companyId') || sessionStorage.getItem('cp_company_id');
+    const companyName = sessionStorage.getItem('companyName') || sessionStorage.getItem('cp_company_name') || 'Company';
+
+    if (!companyId || sessionStorage.getItem('userRole') !== 'company' || sessionStorage.getItem('isLoggedIn') !== 'true') {
+      window.location.href = 'Login.html';
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       const email = sessionStorage.getItem('cp_company_email') || 'hr@infosys.com';
       const co = sessionStorage.getItem('cp_company_name') || 'Infosys Technologies';
@@ -3054,28 +3106,17 @@
 
       const h = new Date().getHours();
       const g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
-      document.getElementById('greet-msg').textContent = `${g}, ${co}`;
+      document.getElementById('greet-msg').textContent = `${g}, ${companyName} 👋`;
+      initDarkMode();
+      setTimeout(renderCharts, 100);
     });
 
     // ── SIDEBAR COLLAPSE ──
-    let sidebarOpen = true;
-    function toggleSidebar() {
-      sidebarOpen = !sidebarOpen;
-      document.getElementById('sidebar').classList.toggle('collapsed', !sidebarOpen);
-      document.getElementById('main-content').classList.toggle('expanded', !sidebarOpen);
-      document.getElementById('logo-mark').style.transform = sidebarOpen ? 'rotate(0deg)' : 'rotate(180deg)';
-    }
-
-    // ── NAV ──
-    const TITLES = {
-      home: 'Dashboard', jobs: 'Job Postings', candidates: 'Applicants',
-      drives: 'Campus Drives', profile: 'Company Profile', settings: 'Settings'
-    };
-
     function go(id, btn) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
       document.querySelectorAll('.nl').forEach(n => n.classList.remove('on'));
-      document.getElementById('pg-' + id).classList.add('on');
+      const pg = document.getElementById('pg-' + id);
+      if (pg) pg.classList.add('on');
       if (btn) btn.classList.add('on');
       document.getElementById('tb-title').textContent = TITLES[id] || id;
       document.getElementById('notif-panel').classList.remove('on');

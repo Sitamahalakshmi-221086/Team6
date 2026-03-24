@@ -1819,47 +1819,42 @@
     </main>
   </div>
 
-  <!-- ══ FOOTER ══ -->
-  <footer>
-    <div class="footer-inner">
-      <div class="footer-top">
-        <div class="footer-logo">
-          <div class="footer-logo-row">
-            <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"
-              style="flex-shrink:0">
-              <defs>
-                <linearGradient id="fbg" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stop-color="#1a4fd6" />
-                  <stop offset="100%" stop-color="#0f3ab8" />
-                </linearGradient>
-              </defs>
-              <rect width="48" height="48" rx="11" fill="url(#fbg)" />
-              <rect x="1" y="1" width="46" height="23" rx="10" fill="rgba(255,255,255,0.06)" />
-              <path d="M16.5 21 L16.5 26.5 Q16.5 29.5 24 29.5 Q31.5 29.5 31.5 26.5 L31.5 21 Z" fill="white" />
-              <polygon points="24,11.5 39.5,19 24,26.5 8.5,19" fill="white" />
-              <polygon points="8.5,19 8.5,22 24,29.5 24,26.5" fill="rgba(255,255,255,0.42)" />
-              <polygon points="39.5,19 39.5,22 24,29.5 24,26.5" fill="rgba(255,255,255,0.58)" />
-              <path d="M39.5 19 Q43 19 43 23 L43 29.5" stroke="white" stroke-width="1.5" fill="none"
-                stroke-linecap="round" />
-              <circle cx="43" cy="29.5" r="2" fill="white" />
-              <line x1="41.1" y1="31.2" x2="40" y2="36.5" stroke="white" stroke-width="1.35" stroke-linecap="round" />
-              <line x1="42.3" y1="31.4" x2="41.8" y2="37" stroke="white" stroke-width="1.35" stroke-linecap="round" />
-              <line x1="43.6" y1="31.4" x2="44" y2="37" stroke="white" stroke-width="1.35" stroke-linecap="round" />
-              <line x1="44.8" y1="31.2" x2="46" y2="36.5" stroke="white" stroke-width="1.35" stroke-linecap="round" />
-              <path d="M40 36 Q43 37 46 36" stroke="rgba(255,255,255,0.55)" stroke-width="1.1" fill="none"
-                stroke-linecap="round" />
-            </svg>
-            <div style="display:flex;flex-direction:column;gap:3px;">
-              <div style="display:flex;align-items:baseline;gap:2px;line-height:1;">
-                <span
-                  style="font-family:'Satisfy',cursive;font-weight:400;font-size:1.3rem;color:#c8d8f4;letter-spacing:0.01em;">Campus</span><span
-                  style="font-family:'Playfair Display',serif;font-weight:700;font-size:1.05rem;color:#3ecfc3;">.</span><span
-                  style="font-family:'Playfair Display',serif;font-weight:800;font-size:1.25rem;color:#3ecfc3;letter-spacing:-0.01em;">Place</span>
-              </div>
-              <div
-                style="font-family:'DM Sans',sans-serif;font-size:9px;color:#2e4460;letter-spacing:0.18em;text-transform:uppercase;">
-                Placement Portal</div>
-            </div>
+<div class="overlay" id="overlay"></div>
+
+<div class="page-wrap">
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-label">Main</div>
+    <button class="sb-btn active" data-panel="contact"><span class="sb-icon">✉️</span> Contact Us</button>
+    <button class="sb-btn" data-panel="map"><span class="sb-icon">📍</span> Our Location</button>
+    <button class="sb-btn" data-panel="departments"><span class="sb-icon">🏢</span> Departments</button>
+    <div class="sb-divider"></div>
+    <div class="sb-label">Support</div>
+    <button class="sb-btn" data-panel="faq"><span class="sb-icon">❓</span> FAQ <span class="sb-badge">5</span></button>
+    <button class="sb-btn" data-panel="social"><span class="sb-icon">🌐</span> Social Media</button>
+    <div class="sb-divider"></div>
+    <div class="sb-label">Links</div>
+    <a class="sb-btn" href="Frontend/index.html"><span class="sb-icon">🏠</span> Home</a>
+    <a class="sb-btn" href="Login.html"><span class="sb-icon">🔑</span> Log In</a>
+    <a class="sb-btn" href="Signup.html"><span class="sb-icon">🚀</span> Join Now</a>
+  </aside>
+
+  <main class="main">
+
+    <!-- CONTACT PANEL -->
+    <div class="panel active" id="panel-contact">
+      <section class="hero">
+        <div class="blob1"></div><div class="blob2"></div>
+        <div class="hero-badge fu1"><span class="bdot"></span> We typically respond within 24 hours</div>
+        <h1 class="fu2">Get in <span class="shimmer">Touch With Us</span></h1>
+        <p class="fu3">Have a question, partnership request, or just want to say hello? We'd love to hear from you.</p>
+      </section>
+      <div class="cw">
+        <div class="form-card">
+          <div class="fc-title">Send Us a Message</div>
+          <div class="fc-sub">Fill in the form below and our team will respond within 1 business day.</div>
+          <div class="form-row">
+            <div class="fg"><label>First Name *</label><input type="text" id="fname" placeholder="First name" /></div>
+            <div class="fg"><label>Last Name *</label><input type="text" id="lname" placeholder="e.g. Sharma" /></div>
           </div>
           <p class="footer-desc">A centralized placement portal for smarter campus recruitment, connecting students and
             companies seamlessly.</p>

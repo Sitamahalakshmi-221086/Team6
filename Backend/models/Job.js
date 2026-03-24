@@ -46,6 +46,11 @@ const JobSchema = new mongoose.Schema({
     enum: ['Active', 'Draft', 'Closed'],
     default: 'Active'
   },
+  tpoApproval: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending'
+  },
   applicantsCount: {
     type: Number,
     default: 0

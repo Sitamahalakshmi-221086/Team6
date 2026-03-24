@@ -1,4 +1,5 @@
-/* ── DO LOGIN ── */
+/* ── company-login.js ── */
+
 async function doLogin(role, event) {
   if (event) event.preventDefault();
 
@@ -13,7 +14,7 @@ async function doLogin(role, event) {
   const spinner = document.getElementById('spin-' + role);
 
   if (!emailEl || !companyEl || !pwdEl || !errBox || !spinner) {
-    console.error('Required elements not found');
+    console.error('Required elements not found for company login');
     return;
   }
 
@@ -43,12 +44,15 @@ async function doLogin(role, event) {
   
   if (!ok) return;
 
+  // Show spinner
   spinner.style.display = 'block';
   const btn = spinner.parentElement;
   btn.disabled = true;
 
   try {
-    const response = await fetch('http://127.0.0.1:5000/api/companies/login', {
+    const API_ROOT = (window.CAMPUS_API_BASE || 'http://localhost:5001').replace(/\/$/, '');
+    
+    const response = await fetch(`${API_ROOT}/api/companies/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -67,17 +71,9 @@ async function doLogin(role, event) {
       const email = company.email || emailEl.value.trim();
       const id = company.id || company._id || company.companyId;
 
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('userRole', 'company');
-      localStorage.setItem('userName', companyName);
-      localStorage.setItem('userEmail', email);
-      if (id) localStorage.setItem('userId', String(id));
-
-      localStorage.setItem('companyName', companyName);
-      localStorage.setItem('companyEmail', email);
-
       sessionStorage.setItem('isLoggedIn', 'true');
       sessionStorage.setItem('userRole', 'company');
+      sessionStorage.setItem('companyId', String(id));
       sessionStorage.setItem('companyName', companyName);
       sessionStorage.setItem('companyEmail', email);
       
@@ -88,7 +84,7 @@ async function doLogin(role, event) {
     }
   } catch (error) {
     console.error('Login Error:', error);
-    errBox.textContent = '❌ Login failed. Please try again.';
+    errBox.textContent = '❌ Could not connect to server at port 5001.';
     errBox.style.display = 'block';
   } finally {
     spinner.style.display = 'none';
@@ -96,7 +92,6 @@ async function doLogin(role, event) {
   }
 }
 
-/* ── SUCCESS ── */
 function showSuccess(role, email) {
   const stage2 = document.getElementById('stage-2-' + role);
   const stage3 = document.getElementById('stage-3');
@@ -105,25 +100,24 @@ function showSuccess(role, email) {
   if (stage3) stage3.classList.add('active');
 
   const titles = { company: 'Welcome Back! 🏢' };
-  const subs = { company: `Signed in as ${email}. Redirecting to your dashboard…` };
+  const subs = { company: `Signed in as ${email}. Redirecting to your recruiter dashboard…` };
   const ctas = { company: 'Go to Recruiter Dashboard →' };
 
-  document.getElementById('success-title').textContent = titles[role];
-  document.getElementById('success-sub').textContent = subs[role];
+  document.getElementById('success-title').textContent = titles[role] || titles.company;
+  document.getElementById('success-sub').textContent = subs[role] || subs.company;
   const successCta = document.getElementById('success-cta');
-  successCta.textContent = ctas[role];
-  successCta.href = 'CompanyDashboard.html';
-  successCta.classList.remove('student', 'tpo');
-  successCta.classList.add('company');
-
-  setTimeout(() => {
-    window.location.href = 'CompanyDashboard.html';
-  }, 1500);
+  if (successCta) {
+    successCta.textContent = ctas[role] || ctas.company;
+    successCta.href = 'CompanyDashboard.html';
+    
+    setTimeout(() => {
+      window.location.href = 'CompanyDashboard.html';
+    }, 1500);
+  }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-/* ── FORGOT PASSWORD ── */
 function showForgot(role) {
   const panel = document.getElementById('forgot-' + role);
   if (panel) panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
@@ -149,12 +143,12 @@ function sendReset(btn) {
   }, 1000);
 }
 
-/* ── HELPERS ── */
 function togglePwd(id, btn) {
   const inp = document.getElementById(id);
   if (!inp) return;
-  inp.type = inp.type === 'password' ? 'text' : 'password';
-  btn.textContent = inp.type === 'password' ? '👁' : '🙈';
+  const isPwd = inp.type === 'password';
+  inp.type = isPwd ? 'text' : 'password';
+  btn.textContent = isPwd ? '🙈' : '👁';
 }
 
 function clearErr(el) {

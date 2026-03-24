@@ -64,32 +64,46 @@ async function refreshSidebarCounters() {
 }
 
 // ── INIT ──
-window.addEventListener('DOMContentLoaded', () => {
-    // Auth gate
-    const isLoggedIn = (localStorage.getItem('isLoggedIn') || sessionStorage.getItem('isLoggedIn')) === 'true';
-    const role = localStorage.getItem('userRole') || sessionStorage.getItem('userRole');
-    if (!isLoggedIn || role !== 'tpo') {
+window.addEventListener('DOMContentLoaded', async () => {
+    if (!getTpoId() || sessionStorage.getItem('userRole') !== 'tpo' || sessionStorage.getItem('isLoggedIn') !== 'true') {
         window.location.href = 'Login.html';
         return;
     }
 
-    // Session Greeting
     const h = new Date().getHours();
     const g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
     const greetMsg = document.getElementById('greet-msg');
-    const storedName = localStorage.getItem('tpoName') || sessionStorage.getItem('tpoName') || localStorage.getItem('userName') || 'TPO / Admin';
-    const storedCollege = localStorage.getItem('tpoCollege') || sessionStorage.getItem('tpoCollege') || 'Your Institution';
-    
-    if (greetMsg) greetMsg.textContent = `${g}, ${storedName} 👋`;
-    
-    // Update sidebar and topbar names
-    const sbName = document.getElementById('sb-uname');
-    const tbName = document.getElementById('tb-name');
-    const sbDept = document.querySelector('.sb-udept');
-    
-    if (sbName) sbName.textContent = storedName;
-    if (tbName) tbName.textContent = storedName.split(' ')[0]; // Just first name
-    if (sbDept) sbDept.textContent = `TPO · ${storedCollege}`;
+    const nm = sessionStorage.getItem('tpoName') || 'TPO';
+    if (greetMsg) greetMsg.textContent = `${g}, ${nm.split(' ')[0]} 👋`;
+
+    try {
+        const pr = await fetch(`${API_BASE}/profile/${getTpoId()}`);
+        const pd = await pr.json();
+        if (pd.success && pd.tpo) {
+            applyTPOProfileToDOM(pd.tpo);
+            const fn = pd.tpo.fullName || nm;
+            if (greetMsg) greetMsg.textContent = `${g}, ${fn.split(' ')[0]} 👋`;
+        }
+        const ar = await fetch(`${API_BASE}/analytics`);
+        const ad = await ar.json();
+        if (ad.success && ad.stats) {
+            window.__tpoStats = ad.stats;
+            [
+                ['tpo-stat-students', ad.stats.totalStudents],
+                ['tpo-stat-companies', ad.stats.totalCompanies],
+                ['tpo-stat-drives', ad.stats.totalDrives],
+                ['tpo-greet-students', ad.stats.totalStudents],
+                ['tpo-greet-drives', ad.stats.totalDrives]
+            ].forEach(([id, v]) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = String(v ?? 0);
+            });
+            updateHomeBatchUI(ad.stats);
+            syncTPOProfileHeaderStats();
+        }
+    } catch (e) {
+        console.error(e);
+    }
 
     initDarkMode();
     lucide.createIcons();
@@ -150,6 +164,7 @@ function go(id, btn) {
     document.getElementById('notif-panel').classList.remove('on');
 
     if (id === 'analytics') setTimeout(() => renderAnalytics(true), 80);
+    if (id === 'analytics') setTimeout(() => renderAnalytics(true), 80);
     if (id === 'profile' && !window.profilePipeDone) setTimeout(renderProfilePipe, 80);
 }
 
@@ -171,6 +186,80 @@ function togglePfEdit() {
     const editing = e.style.display !== 'none';
     v.style.display = editing ? 'block' : 'none';
     e.style.display = editing ? 'none' : 'block';
+}
+
+function dash() {
+    return '—';
+}
+
+function applyTPOProfileToDOM(t) {
+    if (!t) return;
+    const d = (v) => (v != null && String(v).trim() !== '' ? String(v).trim() : dash());
+
+    sessionStorage.setItem('tpoName', t.fullName || '');
+
+    const sb = document.getElementById('sb-uname');
+    if (sb) sb.textContent = d(t.fullName);
+    const tb = document.getElementById('tb-name');
+    if (tb) {
+        const first = (t.fullName || '').trim().split(/\s+/).filter(Boolean)[0];
+        tb.textContent = first || dash();
+    }
+    const sbd = document.getElementById('sb-udept');
+    if (sbd) {
+        const meta = [t.designation, t.college].filter((x) => x && String(x).trim());
+        sbd.textContent = meta.length ? meta.join(' · ') : dash();
+    }
+
+    const hname = document.getElementById('tpo-header-name');
+    if (hname) hname.textContent = d(t.fullName);
+    const hrole = document.getElementById('tpo-header-role-text');
+    if (hrole) {
+        const line = [t.designation, t.college].filter((x) => x && String(x).trim());
+        hrole.textContent = line.length ? line.join(' · ') : dash();
+    }
+
+    const map = [
+        ['tpo-pf-fullname', t.fullName],
+        ['tpo-pf-designation', t.designation],
+        ['tpo-pf-college', t.college],
+        ['tpo-pf-department', t.department],
+        ['tpo-pf-phone', t.phone],
+        ['tpo-pf-location', t.location],
+        ['tpo-pf-email', t.email],
+        ['tpo-pf-code', t.collegeCode]
+    ];
+    map.forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = d(val);
+    });
+
+    const setIn = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val != null ? String(val) : '';
+    };
+    setIn('pf-in-name', t.fullName);
+    setIn('pf-in-designation', t.designation);
+    setIn('pf-in-college', t.college);
+    setIn('pf-in-department', t.department);
+    setIn('pf-in-phone', t.phone);
+    setIn('pf-in-location', t.location);
+    setIn('pf-in-email', t.email);
+}
+
+function syncTPOProfileHeaderStats() {
+    const s = window.__tpoStats || {};
+    const total = s.totalStudents ?? 0;
+    const placed = s.placedStudents ?? 0;
+    const rate = total ? Math.round((placed / total) * 100) : 0;
+    const set = (id, v) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = v;
+    };
+    set('tpo-tph-stat-students', String(total));
+    set('tpo-tph-stat-placed', String(placed));
+    set('tpo-tph-stat-pkg', dash());
+    set('tpo-tph-stat-rate', `${rate}%`);
 }
 
 function dash() {
@@ -383,6 +472,42 @@ function renderHomeChartsLive() {
                 options: baseChartOptions
             });
         }
+    if (progCtx && progCtx.parentElement) {
+        if (sum === 0) {
+            progCtx.style.display = 'none';
+            let msg = progCtx.parentElement.querySelector('.chart-empty-state');
+            if (!msg) {
+                msg = document.createElement('p');
+                msg.className = 'empty-state chart-empty-state';
+                msg.style.padding = '20px';
+                msg.style.textAlign = 'center';
+                msg.style.color = 'var(--txmu)';
+                msg.textContent = 'No analytics data available';
+                progCtx.parentElement.appendChild(msg);
+            } else {
+                msg.style.display = 'block';
+            }
+        } else {
+            progCtx.style.display = 'block';
+            const msg = progCtx.parentElement.querySelector('.chart-empty-state');
+            if (msg) msg.remove();
+            new Chart(progCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Students', 'Companies', 'Drives'],
+                    datasets: [
+                        {
+                            label: 'Live',
+                            data: [s.totalStudents || 0, s.totalCompanies || 0, s.totalDrives || 0],
+                            backgroundColor: [P + 'bb', T + 'bb', G + 'bb'],
+                            borderRadius: 6,
+                            borderSkipped: false
+                        }
+                    ]
+                },
+                options: baseChartOptions
+            });
+        }
     }
 
     const branchCtx = document.getElementById('chart-home-branch');
@@ -555,7 +680,124 @@ function renderAnalytics(force) {
     }
 
     fillAnalyticsChartWrap('tpo-wrap-a-yoy', 'chart-a-yoy', 200, 'No analytics data available');
+    destroyTPOAnalyticsCharts();
+
+    const s = window.__tpoStats || {};
+    const setTxt = (id, v) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = v;
+    };
+    setTxt('tpo-an-eligible', String(s.totalStudents ?? 0));
+    setTxt('tpo-an-placed', String(s.placedStudents ?? 0));
+    setTxt('tpo-an-pkg', '—');
+    setTxt('tpo-an-cos', String(s.totalCompanies ?? 0));
+    const donut = document.getElementById('tpo-an-placed-donut');
+    if (donut) donut.textContent = String(s.placedStudents ?? 0);
+
+    const newC = awaitOrSyncCounts(s);
+    const trendCtx = fillAnalyticsChartWrap(
+        'tpo-wrap-a-trend',
+        'chart-a-trend',
+        210,
+        newC.sumPipe === 0 ? 'No analytics data available' : ''
+    );
+    if (trendCtx) {
+        window.__tpoAnCharts.push(
+            new Chart(trendCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Applied', 'Shortlisted', 'Interview', 'Offers'],
+                    datasets: [
+                        {
+                            label: 'Live',
+                            data: [newC.applied, s.shortlisted || 0, s.interviews || 0, s.offers || 0],
+                            backgroundColor: [P + 'bb', B + 'bb', A + 'bb', G + 'bb'],
+                            borderRadius: 6,
+                            borderSkipped: false
+                        }
+                    ]
+                },
+                options: { ...baseChartOptions, plugins: { legend: { display: false } } }
+            })
+        );
+    }
+
+    const br = s.branchPlacement || [];
+    const brSum = br.reduce((a, b) => a + (b.rate || 0), 0);
+    const branchCtx = fillAnalyticsChartWrap(
+        'tpo-wrap-a-branch',
+        'chart-a-branch',
+        250,
+        !br.length || brSum === 0 ? 'No analytics data available' : ''
+    );
+    if (branchCtx) {
+        window.__tpoAnCharts.push(
+            new Chart(branchCtx, {
+                type: 'bar',
+                data: {
+                    labels: br.map((x) => x.branch),
+                    datasets: [
+                        {
+                            data: br.map((x) => x.rate),
+                            backgroundColor: br.map((_, i) => [P, T, G, A, B, R][i % 6] + 'cc'),
+                            borderRadius: 5,
+                            borderSkipped: false
+                        }
+                    ]
+                },
+                options: {
+                    ...baseChartOptions,
+                    indexAxis: 'y',
+                    scales: {
+                        x: { grid: { color: grid }, ticks: tick, max: 100, beginAtZero: true },
+                        y: { grid: { display: false }, ticks: tick }
+                    }
+                }
+            })
+        );
+    }
+
+    const pkgLeg = document.getElementById('pkg-legend-a');
+    if (pkgLeg) pkgLeg.innerHTML = '';
+    fillAnalyticsChartWrap('tpo-wrap-a-pkg', 'chart-a-pkg', 160, 'No analytics data available');
+
+    const hires = s.companyHires || [];
+    const coCtx = fillAnalyticsChartWrap(
+        'tpo-wrap-a-companies',
+        'chart-a-companies',
+        180,
+        !hires.length ? 'No analytics data available' : ''
+    );
+    if (coCtx) {
+        window.__tpoAnCharts.push(
+            new Chart(coCtx, {
+                type: 'bar',
+                data: {
+                    labels: hires.map((x) => x.name),
+                    datasets: [
+                        {
+                            data: hires.map((x) => x.hires),
+                            backgroundColor: hires.map((_, i) => [P, T, G, A, B, R][i % 6] + 'bb'),
+                            borderRadius: 6,
+                            borderSkipped: false
+                        }
+                    ]
+                },
+                options: baseChartOptions
+            })
+        );
+    }
+
+    fillAnalyticsChartWrap('tpo-wrap-a-yoy', 'chart-a-yoy', 200, 'No analytics data available');
     const rl = document.getElementById('roles-legend-a');
+    if (rl) rl.innerHTML = '';
+    fillAnalyticsChartWrap('tpo-wrap-a-roles', 'chart-a-roles', 180, 'No analytics data available');
+}
+
+function awaitOrSyncCounts(s) {
+    const applied = s.totalApplications || 0;
+    const sumPipe = applied + (s.shortlisted || 0) + (s.interviews || 0) + (s.offers || 0);
+    return { applied, sumPipe };
     if (rl) rl.innerHTML = '';
     fillAnalyticsChartWrap('tpo-wrap-a-roles', 'chart-a-roles', 180, 'No analytics data available');
 }
@@ -1022,6 +1264,7 @@ async function postNoticeData() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ title, department: dept || 'General', priority: 'Normal', content, tpoId: getTpoId() })
+            body: JSON.stringify({ title, department: dept || 'General', priority: 'Normal', content, tpoId: getTpoId() })
         });
         const data = await res.json();
         if (data.success) {
@@ -1029,6 +1272,7 @@ async function postNoticeData() {
             showToast('Notice posted successfully!');
             document.getElementById('notice-title').value = '';
             document.getElementById('notice-content').value = '';
+            loadTPONotices();
             loadTPONotices();
         } else {
             showToast(data.message || 'Error posting notice');
@@ -1051,12 +1295,14 @@ async function scheduleDriveData() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ companyName, date, eligibility, roles, tpoId: getTpoId() })
+            body: JSON.stringify({ companyName, date, eligibility, roles, tpoId: getTpoId() })
         });
         const data = await res.json();
         if (data.success) {
             closeModal('drive-modal');
             showToast('Drive scheduled successfully!');
             if (typeof loadDrives === 'function') setTimeout(loadDrives, 500);
+            loadTPOFullDrivesPage();
             loadTPOFullDrivesPage();
         } else {
             showToast(data.message || 'Error scheduling drive');
@@ -1091,6 +1337,7 @@ async function approveDriveData(id, btn) {
 }
 
 async function approveTPO(resourceType, id, btn) {
+async function approveTPO(resourceType, id, btn) {
     try {
         if (btn) {
             btn.disabled = true;
@@ -1101,7 +1348,82 @@ async function approveTPO(resourceType, id, btn) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ resourceType })
         });
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = '…';
+        }
+        const res = await fetch(`${API_BASE}/approve/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ resourceType })
+        });
         const data = await res.json();
+        if (data.success) {
+            showToast('Approved');
+            loadDrives();
+            loadTPOFullDrivesPage();
+            loadTPOCompaniesTabs();
+        } else {
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = 'Approve';
+            }
+            showToast(data.message || 'Error');
+        }
+    } catch (err) {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Approve';
+        }
+        showToast('Network error');
+    }
+}
+
+async function rejectTPO(resourceType, id, btn) {
+    try {
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = '…';
+        }
+        const res = await fetch(`${API_BASE}/reject/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ resourceType })
+        });
+        const data = await res.json();
+        if (data.success) {
+            showToast('Rejected');
+            loadDrives();
+            loadTPOFullDrivesPage();
+            loadTPOCompaniesTabs();
+        } else {
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = 'Reject';
+            }
+            showToast(data.message || 'Error');
+        }
+    } catch (err) {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Reject';
+        }
+        showToast('Network error');
+    }
+}
+
+async function loadDrives() {
+    try {
+        const jobsBox = document.getElementById('pending-jobs-container');
+        const pendingContainer = document.getElementById('pending-drives-container');
+        const approvedContainer = document.getElementById('upcoming-drives-container');
+        const notifContainer = document.getElementById('notif-list-container');
+        const notifDot = document.querySelector('.icon-btn .rdot');
+
+        if (jobsBox) jobsBox.innerHTML = '';
+        if (pendingContainer) pendingContainer.innerHTML = '';
+        if (approvedContainer) approvedContainer.innerHTML = '';
+        if (notifContainer) notifContainer.innerHTML = '';
         if (data.success) {
             showToast('Approved');
             loadDrives();
@@ -1219,12 +1541,18 @@ async function loadDrives() {
                     pendingContainer.innerHTML += `
                     <div class="req-card">
                         <div class="req-top"><span class="req-co">${d.companyName}</span><span class="pill pending">Drive</span></div>
+                        <div class="req-top"><span class="req-co">${d.companyName}</span><span class="pill pending">Drive</span></div>
                         <div class="req-meta">Drive request &middot; ${dateStr} &middot; Roles: ${d.roles}</div>
                         <div class="req-actions">
                             <button class="btn sm green" onclick="approveTPO('drive','${d._id}',this)">Approve</button>
                             <button class="btn sm red" onclick="rejectTPO('drive','${d._id}',this)">Reject</button>
+                            <button class="btn sm green" onclick="approveTPO('drive','${d._id}',this)">Approve</button>
+                            <button class="btn sm red" onclick="rejectTPO('drive','${d._id}',this)">Reject</button>
                         </div>
                     </div>`;
+                });
+            }
+        }
                 });
             }
         }
@@ -1255,6 +1583,7 @@ async function loadDrives() {
                 approvedContainer.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txmu);">No drives scheduled</div>';
             } else {
                 approved.forEach((d) => {
+                approved.forEach((d) => {
                     const dateObj = new Date(d.date);
                     const dd = dateObj.getDate();
                     const dm = dateObj.toLocaleDateString('en-US', { month: 'short' });
@@ -1281,12 +1610,21 @@ async function sendReminderData(studentName, email, btn) {
             showToast('Student email missing');
             return;
         }
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showToast('Student email missing');
+            return;
+        }
         btn.textContent = 'Sending...';
         btn.disabled = true;
+
 
         const res = await fetch(`${API_BASE}/reminders`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email,
+                studentName,
+                message: 'Please update your placement profile and check pending drive registrations.'
             body: JSON.stringify({
                 email,
                 studentName,
@@ -1317,7 +1655,21 @@ async function saveTPOProfile() {
     }
     const gv = (id) => (document.getElementById(id)?.value ?? '').trim();
 
+    const tpoId = getTpoId();
+    if (!tpoId) {
+        showToast('Session expired — please log in again');
+        return;
+    }
+    const gv = (id) => (document.getElementById(id)?.value ?? '').trim();
+
     const updates = {
+        fullName: gv('pf-in-name'),
+        designation: gv('pf-in-designation'),
+        college: gv('pf-in-college'),
+        department: gv('pf-in-department'),
+        phone: gv('pf-in-phone'),
+        location: gv('pf-in-location'),
+        email: gv('pf-in-email')
         fullName: gv('pf-in-name'),
         designation: gv('pf-in-designation'),
         college: gv('pf-in-college'),
@@ -1337,6 +1689,7 @@ async function saveTPOProfile() {
 
         if (data.success && data.tpo) {
             showToast('Profile updated successfully!');
+            applyTPOProfileToDOM(data.tpo);
             applyTPOProfileToDOM(data.tpo);
             togglePfEdit();
         } else {

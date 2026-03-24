@@ -1,4 +1,5 @@
-/* ── DO LOGIN ── */
+/* ── student-auth.js ── */
+
 async function doLogin(role, event) {
   if (event) event.preventDefault();
 
@@ -48,22 +49,20 @@ async function doLogin(role, event) {
     // Explicitly targeting port 5000 for the team's standard
     const response = await fetch('http://localhost:5000/api/students/login', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: emailEl.value,
+        email: emailEl.value.trim(),
         password: pwdEl.value
       })
     });
 
     const result = await response.json();
-    console.log('Login result:', result);
 
     if (result.success) {
       // Store student data in session
       sessionStorage.setItem('isLoggedIn', 'true');
-      sessionStorage.setItem('userRole', role); // Use the role passed in
+      sessionStorage.setItem('userRole', 'student');
+      sessionStorage.setItem('studentId', result.student.id || result.student._id);
       sessionStorage.setItem('studentName', result.student.fullName);
       sessionStorage.setItem('studentEmail', result.student.email);
       
@@ -74,7 +73,7 @@ async function doLogin(role, event) {
     }
   } catch (error) {
     console.error('Login Error:', error);
-    errBox.textContent = '❌ Could not connect to server. Please check if the backend is running.';
+    errBox.textContent = '❌ Could not connect to server at port 5001.';
     errBox.style.display = 'block';
   } finally {
     spinner.style.display = 'none';
@@ -82,7 +81,9 @@ async function doLogin(role, event) {
   }
 }
 
+
 /* ── SUCCESS ── */
+
 function showSuccess(role, email) {
   const stage2 = document.getElementById('stage-2-' + role);
   const stage3 = document.getElementById('stage-3');
@@ -90,40 +91,34 @@ function showSuccess(role, email) {
   if (stage2) stage2.classList.remove('active');
   if (stage3) stage3.classList.add('active');
 
-  const titles = {
-    student: 'Welcome Back! 👋',
-  };
-  const subs = {
-    student: `Signed in as ${email}. Redirecting to your student dashboard…`,
-  };
-  const ctas = {
-    student: 'Go to Student Dashboard →',
-  };
+  const titles = { student: 'Welcome Back! 👋' };
+  const subs = { student: `Signed in as ${email}. Redirecting to your student dashboard…` };
+  const ctas = { student: 'Go to Student Dashboard →' };
+
 
   const titleEl = document.getElementById('success-title');
   const subEl = document.getElementById('success-sub');
   const successCta = document.getElementById('success-cta');
 
-  if (titleEl) titleEl.textContent = titles[role];
-  if (subEl) subEl.textContent = subs[role];
+  if (titleEl) titleEl.textContent = titles[role] || titles.student;
+  if (subEl) subEl.textContent = subs[role] || subs.student;
   
   if (successCta) {
-    successCta.textContent = ctas[role];
-    if (role === 'student') {
-      successCta.href = 'StudentDashboard.html';
-      // Redirect automatically
-      setTimeout(() => {
-        window.location.href = 'StudentDashboard.html';
-      }, 1500);
-    } else {
-      successCta.href = '#';
-    }
+    successCta.textContent = ctas[role] || ctas.student;
+    successCta.href = 'StudentDashboard.html';
+    
+    // Redirect automatically after a short delay
+    setTimeout(() => {
+      window.location.href = 'StudentDashboard.html';
+    }, 1500);
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+
 /* ── FORGOT PASSWORD ── */
+
 function showForgot(role) {
   const panel = document.getElementById('forgot-' + role);
   if (panel) panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
@@ -150,17 +145,13 @@ function sendReset(btn) {
   }, 1000);
 }
 
-/* ── HELPERS ── */
 function togglePwd(id, btn) {
   const inp = document.getElementById(id);
   if (!inp) return;
-  if (inp.type === 'password') { 
-    inp.type = 'text'; 
-    btn.textContent = '🙈'; 
-  } else { 
-    inp.type = 'password'; 
-    btn.textContent = '👁'; 
-  }
+  const isPwd = inp.type === 'password';
+  inp.type = isPwd ? 'text' : 'password';
+  btn.textContent = isPwd ? '🙈' : '👁';
+
 }
 
 function clearErr(el) {

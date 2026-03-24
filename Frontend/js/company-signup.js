@@ -5,7 +5,7 @@ let selectedRole = 'company';
 let resendTimer = null;
 
 // ── CONFIG ──
-const SERVER_URL = 'http://localhost:5000';
+const SERVER_URL = 'http://localhost:5001';
 
 // Store pending company data and OTP in memory
 // DB is only written AFTER OTP is verified
@@ -337,6 +337,16 @@ async function verifyOtp() {
 
     if (result.success) {
       window._currentOtp = null;
+      if (result.companyId) {
+        sessionStorage.setItem('companyId', result.companyId);
+        sessionStorage.setItem('isLoggedIn', 'true');
+        sessionStorage.setItem('userRole', 'company');
+        const d = window._pendingCompanyData;
+        if (d) {
+          sessionStorage.setItem('companyName', d.companyName || '');
+          sessionStorage.setItem('companyEmail', d.email || '');
+        }
+      }
       window._pendingCompanyData = null;
       goTo(4);
     } else {

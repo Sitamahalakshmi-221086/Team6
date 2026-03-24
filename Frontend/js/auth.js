@@ -226,8 +226,9 @@ async function doLogin(role, event) {
 
   try {
     const apiMap = {
-      student: 'http://localhost:5000/api/students/login',
-      company: 'http://localhost:5000/api/companies/login'
+      student: 'http://localhost:5001/api/students/login',
+      company: 'http://localhost:5001/api/companies/login',
+      tpo: 'http://localhost:5001/api/tpo/login'
     };
 
     if (apiMap[role]) {
@@ -274,33 +275,26 @@ async function doLogin(role, event) {
           sessionStorage.setItem('companyAddress', result.company.address);
           sessionStorage.setItem('companyRoles', JSON.stringify(result.company.hiringRoles || []));
           sessionStorage.setItem('companyDesc', result.company.description);
+        } else if (role === 'tpo' && result.tpo) {
+          sessionStorage.setItem('tpoId', result.tpo.id);
+          sessionStorage.setItem('tpoName', result.tpo.fullName);
+          sessionStorage.setItem('tpoEmail', result.tpo.email);
+          sessionStorage.setItem('tpoCollege', result.tpo.college || '');
         }
-        
+
         showSuccess(role, emailEl.value);
       } else {
         errBox.textContent = '❌ ' + (result.message || 'Invalid email or password.');
         errBox.style.display = 'block';
       }
-    } else {
-      // Demo logic for TPO until backend is ready
-      setTimeout(() => {
-        const hrefs = { tpo: 'TPODashboard.html' };
-        sessionStorage.setItem('isLoggedIn', 'true');
-        sessionStorage.setItem('userRole', role);
-        sessionStorage.setItem(role + 'Email', emailEl.value);
-        sessionStorage.setItem(role + 'Name', emailEl.value.split('@')[0].replace(/\b\w/g, c => c.toUpperCase()));
-        showSuccess(role, emailEl.value);
-      }, 1200);
     }
   } catch (error) {
     console.error('Login Error:', error);
     errBox.textContent = '❌ Could not connect to server.';
     errBox.style.display = 'block';
   } finally {
-    if (apiMap[role]) {
-      spinner.style.display = 'none';
-      btn.disabled = false;
-    }
+    spinner.style.display = 'none';
+    btn.disabled = false;
   }
 }
 

@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const driveSchema = new mongoose.Schema({
+  companyId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Company'
+  },
   companyName: {
     type: String,
     required: true,
@@ -23,10 +27,15 @@ const driveSchema = new mongoose.Schema({
     enum: ['Pending', 'Approved', 'Rejected'],
     default: 'Pending'
   },
+  submittedBy: {
+    type: String,
+    enum: ['company', 'tpo'],
+    default: 'tpo'
+  },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'TPO',
-    required: true
+    ref: 'Admin',
+    required: false
   },
   createdAt: {
     type: Date,

@@ -1,4 +1,5 @@
-/* ── DO LOGIN ── */
+/* ── tpo-login.js ── */
+
 async function doLogin(role, event) {
   if (event) event.preventDefault();
   const emailMap = { tpo: 'tl-email' };
@@ -11,25 +12,33 @@ async function doLogin(role, event) {
   const errBox = document.getElementById('login-err-' + role);
   const spinner = document.getElementById('spin-' + role);
 
+  if (!emailEl || !pwdEl || !collegeEl || !errBox || !spinner) {
+    console.error('Required elements not found for TPO login');
+    return;
+  }
+
   let ok = true;
   errBox.style.display = 'none';
 
   // Validate email
   if (!emailEl.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value)) {
     emailEl.classList.add('err');
-    document.getElementById('err-' + emailMap[role]).classList.add('show');
+    const err = document.getElementById('err-' + emailMap[role]);
+    if (err) err.classList.add('show');
     ok = false;
   }
   // Validate college
   if (!collegeEl.value) {
     collegeEl.classList.add('err');
-    document.getElementById('err-' + collegeMap[role]).classList.add('show');
+    const err = document.getElementById('err-' + collegeMap[role]);
+    if (err) err.classList.add('show');
     ok = false;
   }
   // Validate password
   if (!pwdEl.value) {
     pwdEl.classList.add('err');
-    document.getElementById('err-' + pwdMap[role]).classList.add('show');
+    const err = document.getElementById('err-' + pwdMap[role]);
+    if (err) err.classList.add('show');
     ok = false;
   }
   if (!ok) return;
@@ -40,7 +49,9 @@ async function doLogin(role, event) {
   btn.disabled = true;
 
   try {
-    const response = await fetch('http://127.0.0.1:5000/api/tpo/login', {
+    const API_ROOT = (window.CAMPUS_API_BASE || 'http://localhost:5001').replace(/\/$/, '');
+    
+    const response = await fetch(`${API_ROOT}/api/tpo/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -52,9 +63,6 @@ async function doLogin(role, event) {
     if (!response.ok) throw new Error('Server error');
     const result = await response.json();
 
-    spinner.style.display = 'none';
-    btn.disabled = false;
-
     if (result.success) {
       const tpo = result.tpo || {};
       const fullName = tpo.fullName || '';
@@ -62,18 +70,9 @@ async function doLogin(role, event) {
       const college = tpo.college || collegeEl.value.trim();
       const id = tpo.id || tpo._id || tpo.tpoId;
 
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('userRole', 'tpo');
-      localStorage.setItem('userName', fullName);
-      localStorage.setItem('userEmail', email);
-      if (id) localStorage.setItem('userId', String(id));
-
-      localStorage.setItem('tpoName', fullName);
-      localStorage.setItem('tpoEmail', email);
-      localStorage.setItem('tpoCollege', college);
-
       sessionStorage.setItem('isLoggedIn', 'true');
       sessionStorage.setItem('userRole', 'tpo');
+      sessionStorage.setItem('tpoId', String(id));
       sessionStorage.setItem('tpoName', fullName);
       sessionStorage.setItem('tpoEmail', email);
       sessionStorage.setItem('tpoCollege', college);
@@ -85,61 +84,54 @@ async function doLogin(role, event) {
     }
   } catch (error) {
     console.error('Login Error:', error);
+    errBox.textContent = '❌ Could not connect to server at port 5001.';
+    errBox.style.display = 'block';
+  } finally {
     spinner.style.display = 'none';
     btn.disabled = false;
-    errBox.textContent = '❌ Login failed. Please try again.';
-    errBox.style.display = 'block';
   }
 }
 
-/* ── SUCCESS ── */
 function showSuccess(role, email) {
-  document.getElementById('stage-2-' + role).classList.remove('active');
-  document.getElementById('stage-3').classList.add('active');
+  const stage2 = document.getElementById('stage-2-' + role);
+  const stage3 = document.getElementById('stage-3');
+  
+  if (stage2) stage2.classList.remove('active');
+  if (stage3) stage3.classList.add('active');
 
-  const titles = {
-    tpo: 'Welcome Back! 🛡️',
-  };
-  const subs = {
-    tpo: `Signed in as ${email}. Redirecting to your TPO dashboard…`,
-  };
-  const ctas = {
-    tpo: 'Go to TPO Dashboard →',
-  };
+  const titles = { tpo: 'Welcome Back! 🛡️' };
+  const subs = { tpo: `Signed in as ${email}. Redirecting to your TPO dashboard…` };
+  const ctas = { tpo: 'Go to TPO Dashboard →' };
 
-  document.getElementById('success-title').textContent = titles[role];
-  document.getElementById('success-sub').textContent = subs[role];
+  const titleEl = document.getElementById('success-title');
+  const subEl = document.getElementById('success-sub');
   const successCta = document.getElementById('success-cta');
-  successCta.textContent = ctas[role];
 
-
-  if (role === 'tpo') {
+  if (titleEl) titleEl.textContent = titles[role] || titles.tpo;
+  if (subEl) subEl.textContent = subs[role] || subs.tpo;
+  
+  if (successCta) {
+    successCta.textContent = ctas[role] || ctas.tpo;
     successCta.href = 'TPODashboard.html';
-    successCta.classList.remove('student', 'company');
-    successCta.classList.add('tpo');
-
-    // redirect automatically for better UX
+    
     setTimeout(() => {
       window.location.href = 'TPODashboard.html';
-    }, 1500)
-  } else {
-    successCta.href = '#';
+    }, 1500);
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-/* ── FORGOT PASSWORD ── */
 function showForgot(role) {
   const panel = document.getElementById('forgot-' + role);
-  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+  if (panel) panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
 }
 
 function sendReset(btn) {
   const input = btn.previousElementSibling;
-  if (!input.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)) {
-    input.style.borderColor = '#ef4444';
-    setTimeout(() => input.style.borderColor = '', 1500);
+  if (!input || !input.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)) {
+    if (input) input.style.borderColor = '#ef4444';
+    setTimeout(() => { if (input) input.style.borderColor = ''; }, 1500);
     return;
   }
   btn.textContent = 'Sending…';
@@ -156,11 +148,12 @@ function sendReset(btn) {
   }, 1000);
 }
 
-/* ── HELPERS ── */
 function togglePwd(id, btn) {
   const inp = document.getElementById(id);
-  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
-  else { inp.type = 'password'; btn.textContent = '👁'; }
+  if (!inp) return;
+  const isPwd = inp.type === 'password';
+  inp.type = isPwd ? 'text' : 'password';
+  btn.textContent = isPwd ? '🙈' : '👁';
 }
 
 function clearErr(el) {

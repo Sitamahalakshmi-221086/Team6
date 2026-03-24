@@ -1,14 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const { 
-  companySignup, 
-  companyLogin, 
+const {
+  companySignup,
+  companyLogin,
   updateCompanyProfile,
+  getCompanyProfile,
   postJob,
   getCompanyJobs,
+  getCompanyDrives,
   getJobApplications,
   updateApplicationStatus,
-  getCompanyStats
+  getCompanyStats,
+  createCompanyDrive
 } = require('../controllers/companyController');
 
 // POST /api/companies/signup
@@ -20,6 +23,8 @@ router.post('/login', companyLogin);
 // PUT /api/companies/profile
 router.put('/profile', updateCompanyProfile);
 
+router.get('/profile/:id', getCompanyProfile);
+
 // GET /api/companies/stats/:companyId
 router.get('/stats/:companyId', getCompanyStats);
 
@@ -29,10 +34,13 @@ router.post('/post-job', postJob);
 // GET /api/companies/jobs/:companyId
 router.get('/jobs/:companyId', getCompanyJobs);
 
+router.get('/drives/:companyId', getCompanyDrives);
+
 // GET /api/companies/applications/:jobId
 router.get('/applications/:jobId', getJobApplications);
 
 // PUT /api/companies/application-status/:applicationId
 router.put('/application-status/:applicationId', updateApplicationStatus);
+router.post('/create-drive', createCompanyDrive);
 
 module.exports = router;

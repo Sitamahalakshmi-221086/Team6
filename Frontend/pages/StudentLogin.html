@@ -225,7 +225,7 @@
       if (text) text.textContent = 'Connecting to Google…';
       sessionStorage.setItem('oauthRole', 'student');
       setTimeout(() => {
-        window.location.href = 'http://localhost:5000/auth/' + provider + '?role=student';
+        window.location.href = 'http://localhost:5001/auth/' + provider + '?role=student';
       }, 350);
     }
   </script>

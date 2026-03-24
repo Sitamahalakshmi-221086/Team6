@@ -567,6 +567,13 @@ module.exports = {
   scheduleDrive,
   approveDrive,
   sendReminder,
+module.exports = {
+  tpoSignup,
+  tpoLogin,
+  postNotice,
+  scheduleDrive,
+  approveDrive,
+  sendReminder,
   getDrives,
   sendOTP,
   verifyOTP,
