@@ -41,6 +41,61 @@ app.use('/api/drives', require('./routes/drivesPublicRoutes'));
 app.use('/api/applications', require('./routes/applicationRoutes'));
 
 // OTP Email Route
+app.get('/api/drive-response/:token/accept', async (req, res) => {
+  try {
+    const CompanyRequest = require('./models/DriveRequest'); // Support both naming variants if needed or stick to the one in project
+    // Actually project uses 'CompanyRequest' model
+    const CR = require('./models/CompanyRequest');
+    const request = await CR.findOne({ token: req.params.token });
+    if (!request) return res.status(404).send('Invalid or expired token.');
+
+    // We can call our internal controller logic or just perform the update here for simplicity in server.js
+    const { updateCompanyRequestStatus } = require('./controllers/tpoController');
+    req.params.id = request._id;
+    req.body = { status: 'accepted', date: request.driveDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) };
+    
+    // Simulate a res object to capture the response or just do it directly
+    request.status = 'accepted';
+    await request.save();
+    
+    // Re-trigger the same logic as the controller
+    const Drive = require('./models/Drive');
+    await Drive.create({
+      companyName: request.companyName,
+      date: request.driveDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      status: 'scheduled',
+      submittedBy: 'company',
+      companyRequestId: request._id
+    });
+
+    res.send(`
+      <div style="font-family:sans-serif;text-align:center;padding:50px;">
+        <h1 style="color:#16a34a;">✅ Drive Confirmed!</h1>
+        <p>Thank you for accepting the campus recruitment drive at JNTU Hyderabad.</p>
+        <p>Our TPO office will contact you shortly with further details.</p>
+      </div>
+    `);
+  } catch (err) {
+    res.status(500).send('Error processing response: ' + err.message);
+  }
+});
+
+app.get('/api/drive-response/:token/reject', async (req, res) => {
+  try {
+    const CR = require('./models/CompanyRequest');
+    const request = await CR.findOneAndUpdate({ token: req.params.token }, { status: 'rejected' });
+    if (!request) return res.status(404).send('Invalid or expired token.');
+    res.send(`
+      <div style="font-family:sans-serif;text-align:center;padding:50px;">
+        <h1 style="color:#dc2626;">Drive Declined</h1>
+        <p>We've recorded your response. Thank you for your time.</p>
+      </div>
+    `);
+  } catch (err) {
+    res.status(500).send('Error processing response.');
+  }
+});
+
 app.post("/send-email", async (req, res) => {
   const { email, name, otp } = req.body;
   console.log("📩 Sending OTP to:", email);

@@ -23,7 +23,14 @@ const {
   getTPOCompaniesDirectory,
   getTPOPlacementRecords,
   requestCompany,
-  updateCompanyRequestStatus
+  updateCompanyRequestStatus,
+  sendDriveRequest,
+  getScrapedJobs,
+  saveScrapedJobs,
+  shortlistStudentsForDrive,
+  sendShortlistEmails,
+  getTPONotifications,
+  getCompanyRequests
 } = require('../controllers/tpoController');
 
 router.post('/signup', tpoSignup);
@@ -53,5 +60,14 @@ router.put('/drives/:id/approve', approveDrive);
 router.post('/request-company', requestCompany);
 router.patch('/request-company/:id', updateCompanyRequestStatus);
 router.post('/reminders', sendReminder);
+
+// ── NEW: Placement Drive System Extensions ──
+router.post('/send-drive-request', sendDriveRequest);
+router.get('/scraped-jobs', getScrapedJobs);
+router.post('/save-scraped-jobs', saveScrapedJobs);
+router.get('/shortlisted-drives', getCompanyRequests);
+router.post('/shortlist/:driveId', shortlistStudentsForDrive);
+router.post('/shortlist/:driveId/notify', sendShortlistEmails);
+router.get('/notifications', getTPONotifications);
 
 module.exports = router;
