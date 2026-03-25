@@ -1541,14 +1541,14 @@ textarea {
 }
 
 /* ─── PROFILE PAGE ─── */
-.ph-banner {
+.pph-banner {
     height: 110px;
     background: linear-gradient(110deg, var(--PD), var(--P) 55%, var(--T));
     border-radius: var(--r) var(--r) 0 0;
     position: relative;
 }
 
-.ph-edit-btn {
+.pph-edit-btn {
     position: absolute;
     right: 16px;
     bottom: 12px;
@@ -1568,11 +1568,11 @@ textarea {
     transition: background .15s;
 }
 
-.ph-edit-btn:hover {
+.pph-edit-btn:hover {
     background: rgba(255, 255, 255, .3);
 }
 
-.ph-hdr {
+.pph-hdr {
     background: var(--sur);
     border: 1px solid var(--br);
     border-radius: var(--r);
@@ -1581,7 +1581,7 @@ textarea {
     box-shadow: var(--sh);
 }
 
-.ph-av-row {
+.pph-av-row {
     display: flex;
     align-items: flex-end;
     gap: 14px;
@@ -1590,7 +1590,7 @@ textarea {
     margin-bottom: 14px;
 }
 
-.ph-av {
+.pph-av {
     width: 64px;
     height: 64px;
     border-radius: 50%;
@@ -1604,14 +1604,14 @@ textarea {
     flex-shrink: 0;
 }
 
-.ph-name {
+.pph-name {
     font-family: 'Playfair Display', serif;
     font-size: 1.2rem;
     font-weight: 800;
     margin-bottom: 3px;
 }
 
-.ph-tags {
+.pph-tags {
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
@@ -1643,11 +1643,11 @@ textarea {
     color: var(--A);
 }
 
-.ph-str {
+.pph-str {
     padding: 0 22px 18px;
 }
 
-.ph-s-lbl {
+.pph-s-lbl {
     display: flex;
     justify-content: space-between;
     font-size: 12px;
@@ -1655,38 +1655,38 @@ textarea {
     margin-bottom: 5px;
 }
 
-.ph-s-bar {
+.pph-s-bar {
     height: 7px;
     background: var(--bg);
     border-radius: 4px;
     overflow: hidden;
 }
 
-.ph-s-fill {
+.pph-s-fill {
     height: 100%;
     background: linear-gradient(90deg, var(--P), var(--T));
     border-radius: 4px;
 }
 
-.ph-chks {
+.pph-chks {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
     margin-top: 10px;
 }
 
-.ph-chk {
+.pph-chk {
     display: flex;
     align-items: center;
     gap: 5px;
     font-size: 12px;
 }
 
-.ph-chk.done {
+.pph-chk.done {
     color: var(--G);
 }
 
-.ph-chk.todo {
+.pph-chk.todo {
     color: var(--txmu);
 }
 
@@ -2554,7 +2554,7 @@ textarea {
 }
 
 /* ─── PROFILE BANNER BRAND ─── */
-.ph-brand {
+.pph-brand {
     position: absolute;
     left: 18px;
     top: 50%;
@@ -2564,7 +2564,7 @@ textarea {
     gap: 0;
 }
 
-.ph-banner {
+.pph-banner {
     position: relative;
 }
 

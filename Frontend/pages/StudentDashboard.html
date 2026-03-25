@@ -1024,75 +1024,28 @@
             <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
           </svg>Prep Resources</div>
-        <div class="res-grid" style="margin-bottom:24px;">
-          <div class="res-card" onclick="alert('Opening Aptitude Practice…')">
-            <div class="res-ico" style="background:var(--PL);"><svg width="20" height="20" viewBox="0 0 24 24"
-                fill="none" stroke="#1759d6" stroke-width="2" stroke-linecap="round">
-                <rect x="4" y="2" width="16" height="20" rx="2" />
-                <line x1="8" y1="6" x2="16" y2="6" />
-                <line x1="8" y1="10" x2="16" y2="10" />
-                <line x1="8" y1="14" x2="12" y2="14" />
-              </svg></div>
-            <div class="res-title">Aptitude Practice</div>
-            <div class="res-desc">Quantitative, logical, verbal – 2000+ questions with solutions.</div>
-          </div>
-          <div class="res-card" onclick="alert('Opening Coding Practice…')">
-            <div class="res-ico" style="background:var(--TL);"><svg width="20" height="20" viewBox="0 0 24 24"
-                fill="none" stroke="#0aada0" stroke-width="2" stroke-linecap="round">
-                <polyline points="16 18 22 12 16 6" />
-                <polyline points="8 6 2 12 8 18" />
-              </svg></div>
-            <div class="res-title">Coding Practice</div>
-            <div class="res-desc">DSA problems curated by company difficulty. LeetCode links.</div>
-          </div>
-          <div class="res-card" onclick="alert('Opening Interview Prep…')">
-            <div class="res-ico" style="background:var(--GL);"><svg width="20" height="20" viewBox="0 0 24 24"
-                fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round">
-                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
-                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                <line x1="12" y1="19" x2="12" y2="23" />
-                <line x1="8" y1="23" x2="16" y2="23" />
-              </svg></div>
-            <div class="res-title">Interview Prep</div>
-            <div class="res-desc">HR questions, technical rounds, STAR method answers and tips.</div>
-          </div>
-          <div class="res-card" onclick="alert('Opening Interview Experiences…')">
-            <div class="res-ico" style="background:var(--AL);"><svg width="20" height="20" viewBox="0 0 24 24"
-                fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-              </svg></div>
-            <div class="res-title">Interview Experiences</div>
-            <div class="res-desc">Real experiences from seniors at top companies.</div>
-          </div>
-          <div class="res-card" onclick="alert('Opening GD Guide…')">
-            <div class="res-ico" style="background:var(--PUL);"><svg width="20" height="20" viewBox="0 0 24 24"
-                fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                <circle cx="9" cy="7" r="4" />
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-              </svg></div>
-            <div class="res-title">Group Discussion</div>
-            <div class="res-desc">GD tips, current topics, and practice strategies.</div>
-          </div>
-          <div class="res-card" onclick="alert('Opening Resume Tips…')">
-            <div class="res-ico" style="background:var(--RL);"><svg width="20" height="20" viewBox="0 0 24 24"
-                fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-                <line x1="16" y1="13" x2="8" y2="13" />
-                <line x1="16" y1="17" x2="8" y2="17" />
-              </svg></div>
-            <div class="res-title">Resume Tips</div>
-            <div class="res-desc">ATS-friendly resume writing guide with placement examples.</div>
-          </div>
+        <!-- New Search Bar & Category filters -->
+        <div class="filter-bar card" style="margin-bottom:20px;display:flex;gap:12px;align-items:center;">
+          <input class="s-input" style="flex:1;min-width:200px;" placeholder="Search topic (e.g. DSA, Aptitude)..." id="prep-search-input" onkeydown="if(event.key==='Enter') fetchPrepResources()" />
+          <button class="btn" id="prep-search-btn" onclick="fetchPrepResources()">Search</button>
         </div>
-        <div
-          style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:800;color:var(--txm);margin-bottom:12px;">
-          Company-Wise Preparation</div>
-        <div class="card" style="padding:0 14px;">
-          <div id="company-prep-list"></div>
+        <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;" id="prep-categories">
+          <button class="tab on" onclick="setPrepCategory('All', this)">All</button>
+          <button class="tab" onclick="setPrepCategory('Node.js', this)">Node.js</button>
+          <button class="tab" onclick="setPrepCategory('React', this)">React</button>
+          <button class="tab" onclick="setPrepCategory('Aptitude', this)">Aptitude</button>
+          <button class="tab" onclick="setPrepCategory('DSA', this)">DSA</button>
         </div>
+
+        <div id="prep-loading" style="display:none;text-align:center;padding:20px;color:var(--txmu);">
+           Loading resources...
+        </div>
+
+        <!-- Realtime Prep Results Grid -->
+        <div class="res-grid" id="prep-resources-grid" style="margin-bottom:24px; display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px;">
+          <!-- Dynamic Content Loads Here -->
+        </div>
+
       </div>
 
       <!-- ═══════════════════ ANALYTICS ═══════════════════ -->
@@ -1204,7 +1157,7 @@
         <div class="pph">
           <!-- Banner — no text, clean gradient with edit btn -->
           <div class="pph-banner">
-            <button type="button" class="ph-edit-btn" onclick="toggleEdit()">
+            <button type="button" class="pph-edit-btn" onclick="startEditProfile()">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -1434,47 +1387,53 @@
             </div>
           </div>
         </div>
-        <div id="profile-edit" style="display:none;margin-top:16px;">
-          <div class="db">
-            <div class="db-title">Edit Profile</div>
-            <div class="form-grid">
-              <div class="fg"><label>Full Name</label><input id="edit-name" value="" /></div>
-              <div class="fg"><label>Phone</label><input id="edit-phone" value="" /></div>
-              <div class="fg"><label>Roll No.</label><input id="edit-roll" value="" /></div>
-              <div class="fg"><label>Branch</label><select id="edit-branch">
-                  <option value="">—</option>
-                  <option value="Computer Science">Computer Science</option>
-                  <option value="IT">IT</option>
-                  <option value="ECE">ECE</option>
-                  <option value="Mechanical">Mechanical</option>
-                  <option value="CSE">CSE</option>
-                </select></div>
-              <div class="fg"><label>Year</label><select id="edit-year">
-                  <option value="">—</option>
-                  <option value="1st">1st</option>
-                  <option value="2nd">2nd</option>
-                  <option value="3rd">3rd</option>
-                  <option value="4th">4th</option>
-                </select></div>
-              <div class="fg"><label>CGPA</label><input id="edit-cgpa" value="" /></div>
-              <div class="fg"><label>Preferred Location</label><input id="edit-loc" value="" />
-              </div>
-              <div class="fg full"><label>LinkedIn URL</label><input id="edit-linkedin"
-                  placeholder="https://linkedin.com/in/…" /></div>
-              <div class="fg full"><label>GitHub URL</label><input id="edit-github" placeholder="https://github.com/…" /></div>
-              <div class="fg full"><label>Skills</label>
-                <div class="skill-tags" id="p-skills-wrap" onclick="document.getElementById('p-sk-inp').focus()"><input
-                    class="skill-input" id="p-sk-inp" placeholder="Add skill…"
-                    onkeydown="addSkill(event,'p-skills-wrap','p-sk-inp')" /></div>
-              </div>
-              <div class="fg full"><label>Bio</label><textarea id="edit-bio" placeholder="Brief intro for recruiters…"
-                  style="min-height:70px;"></textarea></div>
-            </div>
-            <div style="display:flex;gap:8px;margin-top:14px;"><button class="btn lg" onclick="saveProfile()">Save
-                Changes</button><button class="btn sec lg" onclick="toggleEdit()">Cancel</button></div>
-          </div>
+      </div><!-- /pg-profile -->
+
+      <div class="page" id="pg-edit-profile">
+        <div class="page-hd">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Edit Profile
         </div>
-      </div>
+
+        <div class="db">
+          <div class="form-grid">
+            <div class="fg"><label>Full Name</label><input id="edit-name" value="" /></div>
+            <div class="fg"><label>Phone</label><input id="edit-phone" value="" /></div>
+            <div class="fg"><label>Roll No.</label><input id="edit-roll" value="" /></div>
+            <div class="fg"><label>Branch</label><select id="edit-branch">
+                <option value="">—</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                <option value="IT">IT</option>
+                <option value="ECE">ECE</option>
+                <option value="Mechanical">Mechanical</option>
+                <option value="CSE">CSE</option>
+              </select></div>
+            <div class="fg"><label>Year</label><select id="edit-year">
+                <option value="">—</option>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+              </select></div>
+            <div class="fg"><label>CGPA</label><input id="edit-cgpa" value="" /></div>
+            <div class="fg"><label>Preferred Location</label><input id="edit-loc" value="" />
+            </div>
+            <div class="fg full"><label>LinkedIn URL</label><input id="edit-linkedin"
+                placeholder="https://linkedin.com/in/…" /></div>
+            <div class="fg full"><label>GitHub URL</label><input id="edit-github" placeholder="https://github.com/…" /></div>
+            <div class="fg full"><label>Skills</label>
+              <div class="skill-tags" id="p-skills-wrap" onclick="document.getElementById('p-sk-inp').focus()"><input
+                  class="skill-input" id="p-sk-inp" placeholder="Add skill…"
+                  onkeydown="addSkill(event,'p-skills-wrap','p-sk-inp')" /></div>
+            </div>
+            <div class="fg full"><label>Bio</label><textarea id="edit-bio" placeholder="Brief intro for recruiters…"
+                style="min-height:70px;"></textarea></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:14px;"><button class="btn lg" onclick="saveProfile()">Save
+              Changes</button><button class="btn sec lg" onclick="go('profile')">Cancel</button></div>
+        </div>
+      </div><!-- /pg-edit-profile -->
 
       <!-- ═══════════════════ SETTINGS ═══════════════════ -->
       <div class="page" id="pg-settings">

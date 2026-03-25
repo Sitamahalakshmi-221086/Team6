@@ -1424,6 +1424,7 @@
     resources: 'Prep Resources',
     analytics: 'Placement Stats',
     profile: 'My Profile',
+    'edit-profile': 'Edit Profile',
     settings: 'Settings'
   };
 
@@ -1509,16 +1510,47 @@
     document.getElementById('main-content').classList.toggle('exp');
   };
 
-  window.toggleEdit = function () {
-    const v = document.getElementById('profile-view');
-    const e = document.getElementById('profile-edit');
-    if (!v || !e) return;
-    const editing = e.style.display !== 'none';
-    v.style.display = editing ? 'block' : 'none';
-    e.style.display = editing ? 'none' : 'block';
-    if (!editing && e.style.display === 'block') {
-      e.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  window.startEditProfile = function () {
+    if (!studentProfile) return;
+    document.getElementById('edit-name').value = studentProfile.fullName || '';
+    document.getElementById('edit-phone').value = studentProfile.phone || '';
+    document.getElementById('edit-roll').value = studentProfile.rollNumber || '';
+
+    // Robustly set select values
+    if (studentProfile.branch) {
+      document.getElementById('edit-branch').value = studentProfile.branch;
     }
+    if (studentProfile.year) {
+      document.getElementById('edit-year').value = studentProfile.year;
+    }
+
+    document.getElementById('edit-cgpa').value = studentProfile.cgpa != null ? studentProfile.cgpa : '';
+    document.getElementById('edit-loc').value = studentProfile.preferredLocation || '';
+    document.getElementById('edit-linkedin').value = studentProfile.linkedin || '';
+    document.getElementById('edit-github').value = studentProfile.github || '';
+    document.getElementById('edit-bio').value = studentProfile.bio || '';
+
+    // If there is a skills re-render needed, do it here. 
+    // Assuming skills are already handled by addSkill and collectProfileSkillsFromEdit
+    const wrap = document.getElementById('p-skills-wrap');
+    if (wrap) {
+      // Clear existing tags except input
+      const tags = wrap.querySelectorAll('.skill-tag');
+      tags.forEach(t => t.remove());
+      // Add existing profile skills
+      (studentProfile.skills || []).forEach(sk => {
+        const span = document.createElement('span');
+        span.className = 'skill-tag';
+        span.innerHTML = `${sk}<button type="button" onclick="this.parentElement.remove()">&times;</button>`;
+        wrap.insertBefore(span, document.getElementById('p-sk-inp'));
+      });
+    }
+
+    window.go('edit-profile');
+  };
+
+  window.toggleEdit = function () {
+    window.startEditProfile();
   };
 
   function collectProfileSkillsFromEdit() {
@@ -1542,7 +1574,7 @@
       fullName: document.getElementById('edit-name')?.value,
       phone: document.getElementById('edit-phone')?.value,
       rollNumber: document.getElementById('edit-roll')?.value,
-      cgpa: parseFloat(document.getElementById('edit-cgpa')?.value) || undefined,
+      cgpa: document.getElementById('edit-cgpa')?.value !== '' ? parseFloat(document.getElementById('edit-cgpa').value) : undefined,
       branch: document.getElementById('edit-branch')?.value,
       year: document.getElementById('edit-year')?.value,
       linkedin: document.getElementById('edit-linkedin')?.value,
@@ -1564,7 +1596,7 @@
       studentProfile = data.student;
       syncSessionFromProfile(studentProfile);
       applyProfileToDOM(studentProfile);
-      window.toggleEdit();
+      window.go('profile');
       await loadData();
       renderAllJobTabs();
       filterJobs();
@@ -1658,6 +1690,66 @@
     inp.value = '';
   };
 
+  window.setPrepCategory = function(query, btn) {
+    const tabs = document.getElementById('prep-categories').querySelectorAll('.tab');
+    tabs.forEach(t => t.classList.remove('on'));
+    btn.classList.add('on');
+    document.getElementById('prep-search-input').value = query === 'All' ? '' : query;
+    window.fetchPrepResources();
+  };
+
+  window.fetchPrepResources = async function() {
+    const q = document.getElementById('prep-search-input').value || 'All';
+    const grid = document.getElementById('prep-resources-grid');
+    const loading = document.getElementById('prep-loading');
+    
+    if (!grid || !loading) return;
+
+    grid.innerHTML = '';
+    loading.style.display = 'block';
+
+    try {
+      const res = await fetch(`${API}/api/students/prep-resources?q=${encodeURIComponent(q)}`);
+      
+      let data;
+      try {
+        data = await res.json();
+      } catch (parseError) {
+        // If it's not JSON (e.g. 404 HTML page), handle it gracefully
+        loading.style.display = 'none';
+        grid.innerHTML = `<div style="color:var(--R);grid-column:1/-1;text-align:center;">Error: Backend endpoint not found. Please ensure the backend server is restarted.</div>`;
+        return;
+      }
+
+      loading.style.display = 'none';
+
+      if (!res.ok || !data.success) {
+        grid.innerHTML = `<div style="color:var(--R);grid-column:1/-1;text-align:center;">Error: ${data.message || 'Error fetching resources'}</div>`;
+        return;
+      }
+
+      if (!data.resources || data.resources.length === 0) {
+        grid.innerHTML = `<div style="color:var(--txmu);grid-column:1/-1;text-align:center;">No resources found. Try another search.</div>`;
+        return;
+      }
+
+      grid.innerHTML = data.resources.map(item => `
+        <div class="card" style="padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:12px;transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+          <div style="font-family:'Playfair Display',serif;font-weight:800;font-size:16px;line-height:1.2;color:var(--P);">${item.title}</div>
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;">
+            <span class="pill review" style="font-size:10px;">${item.category}</span>
+            <span class="pill" style="font-size:10px;background:var(--TL);color:var(--T);">${item.type}</span>
+            <span class="pill ${item.difficulty === 'Easy' ? 'short' : item.difficulty === 'Medium' ? 'upcoming' : 'rejected'}" style="font-size:10px;">${item.difficulty}</span>
+          </div>
+          <button class="btn sec sm" style="margin-top:auto;" onclick="window.open('${item.link}', '_blank')">Start Practicing</button>
+        </div>
+      `).join('');
+    } catch (e) {
+      loading.style.display = 'none';
+      grid.innerHTML = `<div style="color:var(--R);grid-column:1/-1;text-align:center;">Network error fetching resources.</div>`;
+    }
+  };
+
   window.addEventListener('DOMContentLoaded', async () => {
     if (
       sessionStorage.getItem('isLoggedIn') !== 'true' ||
@@ -1691,6 +1783,7 @@
     renderDrives();
     renderTests();
     renderCompanyPrep();
+    window.fetchPrepResources();
 
     const h = new Date().getHours();
     const greet = document.getElementById('greet-msg');
