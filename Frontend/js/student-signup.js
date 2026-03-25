@@ -5,7 +5,7 @@ let selectedRole = 'student';
 let resendTimer = null;
 
 // ── CONFIG ──
-const SERVER_URL = 'http://127.0.0.1:5000';
+const SERVER_URL = 'http://localhost:5005';
 
 // Store pending student data and OTP in memory
 // DB is only written AFTER OTP is verified

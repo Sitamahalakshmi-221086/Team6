@@ -2,7 +2,7 @@
   const API_BASE =
     typeof global.CAMPUS_API_BASE === 'string' && global.CAMPUS_API_BASE
       ? global.CAMPUS_API_BASE.replace(/\/$/, '')
-      : 'http://127.0.0.1:5000';
+      : 'http://localhost:5005';
 
   function showEmpty(container, message) {
     if (!container) return;
