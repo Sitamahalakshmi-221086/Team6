@@ -1,29 +1,23 @@
 const mongoose = require('mongoose');
+const crypto = require('crypto');
 
-const companyRequestSchema = new mongoose.Schema(
-  {
-    companyName: { type: String, required: true, trim: true },
-    companyEmail: { type: String, required: true, trim: true },
-    role: { type: String, required: true, trim: true },
-    message: { type: String, required: true, trim: true },
-    status: {
-      type: String,
-      enum: ['pending', 'accepted', 'rejected'],
-      default: 'pending'
-    },
-    driveDate: { type: Date, default: null },
-    location: { type: String, default: '' },
-    package: { type: String, default: '' },
-    branches: { type: [String], default: [] },
-    token: {
-      type: String,
-      default: () => require('crypto').randomBytes(16).toString('hex'),
-      unique: true
-    },
-    openJobId: { type: mongoose.Schema.Types.ObjectId, ref: 'ScrapedJob', default: null },
-    tpoId: { type: mongoose.Schema.Types.ObjectId, ref: 'TPO', default: null }
-  },
-  { timestamps: true }
-);
+const CompanyRequestSchema = new mongoose.Schema({
+  companyName  : { type: String, required: true },
+  companyEmail : { type: String, default: '' },
+  role         : { type: String, default: '' },
+  message      : { type: String, default: '' },
+  driveDate    : { type: Date, default: null },
+  location     : { type: String, default: '' },
+  package      : { type: String, default: '' },
+  branches     : [String],
+  openJobId    : { type: mongoose.Schema.Types.ObjectId, default: null },
+  tpoId        : { type: mongoose.Schema.Types.ObjectId, ref: 'TPO', default: null },
+  studentIds   : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Student' }],
+  status       : { type: String, enum: ['pending','accepted','rejected'], default: 'pending' },
+  details      : { type: String, default: '' },
 
-module.exports = mongoose.model('CompanyRequest', companyRequestSchema);
+  // Token for email Accept/Reject links
+  token        : { type: String, default: () => crypto.randomBytes(32).toString('hex'), unique: true }
+}, { timestamps: true });
+
+module.exports = mongoose.model('CompanyRequest', CompanyRequestSchema);

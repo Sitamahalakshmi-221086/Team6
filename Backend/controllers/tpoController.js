@@ -1,3 +1,4 @@
+const OpenJob = require('../models/OpenJob');
 const TPO = require('../models/TPO');
 const Notice = require('../models/Notice');
 const Drive = require('../models/Drive');
@@ -12,6 +13,7 @@ const Notification = require('../models/Notification');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
+
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -591,117 +593,14 @@ const getTPOPlacementRecords = async (req, res) => {
 };
 
 // ── NEW: Send Drive Request to Company (with email) ──
-const sendDriveRequest = async (req, res) => {
-  try {
-    const { companyName, companyEmail, role, message, driveDate, location, package: pkg, branches, scrapedJobId, tpoId } = req.body;
 
-    if (!companyName || !companyEmail || !role) {
-      return res.status(400).json({ success: false, message: 'companyName, companyEmail, and role are required' });
-    }
 
-    const companyRequest = await CompanyRequest.create({
-      companyName: companyName.trim(),
-      companyEmail: companyEmail.trim(),
-      role: role.trim(),
-      message: (message || `We would like to invite ${companyName} for a campus recruitment drive.`).trim(),
-      driveDate: driveDate ? new Date(driveDate) : null,
-      location: location || '',
-      package: pkg || '',
-      branches: branches || [],
-      openJobId: scrapedJobId || null,
-      tpoId: tpoId || null,
-      status: 'pending'
-    });
 
-    if (scrapedJobId) {
-      await ScrapedJob.findByIdAndUpdate(scrapedJobId, { driveRequested: true, requestId: companyRequest._id });
-    }
 
-    const baseUrl = process.env.CALLBACK_BASE || `http://localhost:${process.env.PORT || 5005}`;
-    const acceptUrl = `${baseUrl}/api/drive-response/${companyRequest.token}/accept`;
-    const rejectUrl = `${baseUrl}/api/drive-response/${companyRequest.token}/reject`;
 
-    const mailOptions = {
-      from: `"CampusPlace – TPO Office" <${process.env.GMAIL_USER}>`,
-      to: companyEmail,
-      subject: `Campus Drive Request – ${role} at JNTU Hyderabad`,
-      html: `
-        <div style="font-family:'Segoe UI',Arial,sans-serif;max-width:620px;margin:auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.08);">
-          <div style="background:linear-gradient(135deg,#4c1d95,#7c3aed);color:#fff;padding:28px 32px;">
-            <h2 style="margin:0 0 4px;font-size:22px;">🎓 CampusPlace – JNTU Hyderabad</h2>
-            <p style="margin:0;opacity:.85;font-size:14px;">Campus Placement Office · Drive Request</p>
-          </div>
-          <div style="padding:28px 32px;">
-            <p style="font-size:15px;color:#334155;">Dear <strong>${companyName}</strong> HR Team,</p>
-            <p style="font-size:14px;color:#475569;line-height:1.7;">The Training & Placement Office of <strong>JNTU Hyderabad</strong> would like to invite your esteemed organization for a <strong>Campus Recruitment Drive</strong>.</p>
-            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:18px;margin:18px 0;">
-              <table style="width:100%;font-size:13.5px;color:#334155;">
-                <tr><td style="padding:5px 0;font-weight:600;width:140px;">Role:</td><td>${role}</td></tr>
-                ${driveDate ? `<tr><td style="padding:5px 0;font-weight:600;">Proposed Date:</td><td>${new Date(driveDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</td></tr>` : ''}
-                ${location ? `<tr><td style="padding:5px 0;font-weight:600;">Location:</td><td>${location}</td></tr>` : ''}
-                ${pkg ? `<tr><td style="padding:5px 0;font-weight:600;">Package:</td><td>${pkg}</td></tr>` : ''}
-                ${branches && branches.length ? `<tr><td style="padding:5px 0;font-weight:600;">Eligible Branches:</td><td>${branches.join(', ')}</td></tr>` : ''}
-              </table>
-            </div>
-            ${message ? `<p style="font-size:14px;color:#475569;line-height:1.6;"><strong>Message:</strong> ${message}</p>` : ''}
-            <p style="font-size:14px;color:#475569;margin-top:20px;">Please confirm your participation by clicking one of the options below:</p>
-            <div style="display:flex;gap:14px;margin:24px 0;">
-              <a href="${acceptUrl}" style="display:inline-block;background:#16a34a;color:#fff;padding:14px 36px;border-radius:8px;text-decoration:none;font-weight:700;font-size:15px;letter-spacing:.3px;">✅ Accept Drive</a>
-              <a href="${rejectUrl}" style="display:inline-block;background:#dc2626;color:#fff;padding:14px 36px;border-radius:8px;text-decoration:none;font-weight:700;font-size:15px;letter-spacing:.3px;">❌ Decline</a>
-            </div>
-            <p style="font-size:12px;color:#94a3b8;margin-top:22px;">For any queries, contact the TPO office at <a href="mailto:${process.env.GMAIL_USER}" style="color:#7c3aed;">${process.env.GMAIL_USER}</a></p>
-          </div>
-          <div style="background:#f1f5f9;padding:14px 32px;text-align:center;font-size:11px;color:#94a3b8;">© CampusPlace – JNTU Hyderabad Training & Placement Cell</div>
-        </div>
-      `
-    };
 
-    await transporter.sendMail(mailOptions);
-    res.status(201).json({ success: true, message: `Drive request sent to ${companyName}`, companyRequest });
-  } catch (err) {
-    console.error('sendDriveRequest error:', err);
-    res.status(500).json({ success: false, message: 'Failed to send drive request' });
-  }
-};
 
-const getScrapedJobs = async (req, res) => {
-  try {
-    const jobs = await ScrapedJob.find().sort({ scrapedAt: -1 }).lean();
-    res.status(200).json({ success: true, jobs });
-  } catch (err) {
-    console.error('getScrapedJobs error:', err);
-    res.status(500).json({ success: false, message: 'Failed to fetch scraped jobs' });
-  }
-};
 
-const saveScrapedJobs = async (req, res) => {
-  try {
-    const { jobs } = req.body;
-    if (!jobs || !Array.isArray(jobs) || jobs.length === 0) {
-      return res.status(400).json({ success: false, message: 'jobs array is required' });
-    }
-    const savedJobs = await ScrapedJob.insertMany(
-      jobs.map(j => ({
-        portal: j.portal || 'Unknown',
-        company: j.company,
-        title: j.title,
-        branches: j.branches || [],
-        type: j.type || 'Full-time',
-        stipend: j.stipend || '',
-        skills: j.skills || [],
-        location: j.location || '',
-        postedDate: j.postedDate || '',
-        companyEmail: j.companyEmail || '',
-        driveRequested: false
-      })),
-      { ordered: false }
-    );
-    res.status(201).json({ success: true, message: `${savedJobs.length} jobs saved`, count: savedJobs.length });
-  } catch (err) {
-    console.error('saveScrapedJobs error:', err);
-    res.status(500).json({ success: false, message: 'Failed to save scraped jobs' });
-  }
-};
 
 const shortlistStudentsForDrive = async (req, res) => {
   try {
@@ -798,15 +697,8 @@ const sendShortlistEmails = async (req, res) => {
   }
 };
 
-const getTPONotifications = async (req, res) => {
-  try {
-    const notifications = await Notification.find({ tpoId: { $ne: null } }).sort({ createdAt: -1 }).limit(30).lean();
-    res.status(200).json({ success: true, notifications });
-  } catch (err) {
-    console.error('getTPONotifications error:', err);
-    res.status(500).json({ success: false, message: 'Failed to fetch notifications' });
-  }
-};
+
+
 
 const getCompanyRequests = async (req, res) => {
   try {
@@ -817,6 +709,581 @@ const getCompanyRequests = async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to fetch company requests' });
   }
 };
+
+
+
+
+// --------- STAGE 1,2,3 ---------
+// ═══════════════════════════════════════════════════════════════════
+// STAGE 1 — GET scraped jobs (TPO sees them first)
+//   GET /api/tpo/scraped-jobs
+// ═══════════════════════════════════════════════════════════════════
+
+const getScrapedJobs = async (req, res) => {
+  try {
+    const jobs = await ScrapedJob.find().sort({ scrapedAt: -1 }).lean();
+    res.status(200).json({ success: true, jobs });
+  } catch (err) {
+    console.error('getScrapedJobs error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch scraped jobs' });
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// STAGE 1 — SAVE scraped jobs (called by scraper script)
+//   POST /api/tpo/save-scraped-jobs
+// ═══════════════════════════════════════════════════════════════════
+const saveScrapedJobs = async (req, res) => {
+  try {
+    const { jobs } = req.body;
+    if (!jobs || !Array.isArray(jobs) || jobs.length === 0) {
+      return res.status(400).json({ success: false, message: 'jobs array required' });
+    }
+    const saved = await ScrapedJob.insertMany(
+      jobs.map(j => ({
+        portal: j.portal || 'Unknown',
+        company: j.company,
+        title: j.title,
+        branches: j.branches || [],
+        type: j.type || 'Full-time',
+        stipend: j.stipend || '',
+        skills: j.skills || [],
+        location: j.location || '',
+        postedDate: j.postedDate || '',
+        companyEmail: j.companyEmail || '',
+        driveRequested: false,
+        publishedToStudents: false   // ← key new field
+      })),
+      { ordered: false }
+    );
+    res.status(201).json({ success: true, message: `${saved.length} jobs saved`, count: saved.length });
+  } catch (err) {
+    console.error('saveScrapedJobs error:', err);
+    res.status(500).json({ success: false, message: 'Failed to save scraped jobs' });
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// STAGE 2 — TPO publishes a scraped job to students
+//   POST /api/tpo/publish-job/:scrapedJobId
+//
+//  • Copies the ScrapedJob into the OpenJob collection
+//  • Marks ScrapedJob.publishedToStudents = true
+//  • Sends in-app notification to every student
+// ═══════════════════════════════════════════════════════════════════
+const publishJobToStudents = async (req, res) => {
+  try {
+    const { scrapedJobId } = req.params;
+    const { tpoId } = req.body;
+
+    const scraped = await ScrapedJob.findById(scrapedJobId);
+    if (!scraped) {
+      return res.status(404).json({ success: false, message: 'Scraped job not found' });
+    }
+    if (scraped.publishedToStudents) {
+      return res.status(400).json({ success: false, message: 'Job already published to students' });
+    }
+
+    // Create / upsert an OpenJob record visible to students
+    const OpenJob = require('../models/OpenJob');
+    const openJob = await OpenJob.create({
+      scrapedJobId: scraped._id,
+      companyName: scraped.company,
+      title: scraped.title,
+      description: scraped.stipend || '',
+      location: scraped.location || '',
+      requiredBranches: scraped.branches || [],
+      skills: scraped.skills || [],
+      type: scraped.type || 'Full-time',
+      package: scraped.stipend || '',
+      companyEmail: scraped.companyEmail || '',
+      portal: scraped.portal || '',
+      publishedBy: tpoId || null,
+      publishedAt: new Date(),
+      isNotified: false,
+      outreachStatus: 'none'
+    });
+
+    // Mark scraped job as published
+    scraped.publishedToStudents = true;
+    scraped.openJobId = openJob._id;
+    await scraped.save();
+
+    // Notify all students
+    const students = await Student.find({}, '_id').lean();
+    if (students.length) {
+      const notifs = students.map(st => ({
+        studentId: st._id,
+        type: 'job',
+        message: `New job posted: ${scraped.title} at ${scraped.company}`,
+        driveId: null
+      }));
+      await Notification.insertMany(notifs, { ordered: false }).catch(() => {});
+    }
+
+    res.status(201).json({
+      success: true,
+      message: `Job published to ${students.length} students`,
+      openJob
+    });
+  } catch (err) {
+    console.error('publishJobToStudents error:', err);
+    res.status(500).json({ success: false, message: 'Failed to publish job' });
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// STAGE 2 — BULK publish all new scraped jobs in one click
+//   POST /api/tpo/publish-all-jobs
+// ═══════════════════════════════════════════════════════════════════
+const publishAllNewJobs = async (req, res) => {
+  try {
+    const { tpoId } = req.body;
+    const unpublished = await ScrapedJob.find({ publishedToStudents: { $ne: true } }).lean();
+    if (!unpublished.length) {
+      return res.status(200).json({ success: true, message: 'No new jobs to publish', count: 0 });
+    }
+
+    const OpenJob = require('../models/OpenJob');
+    const openJobs = await OpenJob.insertMany(
+      unpublished.map(j => ({
+        scrapedJobId: j._id,
+        companyName: j.company,
+        title: j.title,
+        description: j.stipend || '',
+        location: j.location || '',
+        requiredBranches: j.branches || [],
+        skills: j.skills || [],
+        type: j.type || 'Full-time',
+        package: j.stipend || '',
+        companyEmail: j.companyEmail || '',
+        portal: j.portal || '',
+        publishedBy: tpoId || null,
+        publishedAt: new Date(),
+        isNotified: false,
+        outreachStatus: 'none'
+      })),
+      { ordered: false }
+    );
+
+    // Bulk-mark as published
+    const ids = unpublished.map(j => j._id);
+    await ScrapedJob.updateMany({ _id: { $in: ids } }, { publishedToStudents: true });
+
+    // One combined notification per student
+    const students = await Student.find({}, '_id').lean();
+    if (students.length) {
+      const notifs = students.map(st => ({
+        studentId: st._id,
+        type: 'job',
+        message: `${openJobs.length} new job(s) published — check the Jobs section`,
+        driveId: null
+      }));
+      await Notification.insertMany(notifs, { ordered: false }).catch(() => {});
+    }
+
+    res.status(201).json({
+      success: true,
+      message: `${openJobs.length} jobs published`,
+      count: openJobs.length
+    });
+  } catch (err) {
+    console.error('publishAllNewJobs error:', err);
+    res.status(500).json({ success: false, message: 'Failed to bulk publish jobs' });
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// STAGE 2 — GET all open (published) jobs — student-facing
+//   GET /api/open-jobs
+//   (Already handled in openJobsRoutes, but add this as a fallback)
+// ═══════════════════════════════════════════════════════════════════
+const getPublishedJobs = async (req, res) => {
+  try {
+    const OpenJob = require('../models/OpenJob');
+    const jobs = await OpenJob.find().sort({ publishedAt: -1 }).lean();
+    res.status(200).json({ success: true, openJobs: jobs });
+  } catch (err) {
+    console.error('getPublishedJobs error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch jobs' });
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// STAGE 3 — GET applications for a specific open job (TPO view)
+//   GET /api/tpo/job-applications/:openJobId
+// ═══════════════════════════════════════════════════════════════════
+const getJobApplicantsTpo = async (req, res) => {
+  try {
+    const { openJobId } = req.params;
+    const Application = require('../models/Application');
+    const apps = await Application.find({ jobId: openJobId })
+      .populate('studentId', 'fullName email branch year cgpa rollNumber phone skills')
+      .sort({ appliedAt: -1 })
+      .lean();
+    res.status(200).json({ success: true, applications: apps, count: apps.length });
+  } catch (err) {
+    console.error('getJobApplicantsTpo error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch applicants' });
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// STAGE 3 — GET all applications across all open jobs (TPO aggregate)
+//   GET /api/applications/tpo
+//   (already exists — verify it populates studentId + jobId)
+// ═══════════════════════════════════════════════════════════════════
+
+
+
+// --------- STAGE 4-8 ---------
+const sendDriveRequestWithStudents = async (req, res) => {
+  try {
+    const {
+      companyName, companyEmail, role, message,
+      driveDate, location, package: pkg,
+      branches, scrapedJobId, openJobId, tpoId,
+      studentIds   // ← array of studentId strings selected by TPO
+    } = req.body;
+
+    if (!companyName || !companyEmail || !role) {
+      return res.status(400).json({
+        success: false,
+        message: 'companyName, companyEmail, and role are required'
+      });
+    }
+
+    // ── Fetch shortlisted student details for the email ──
+    const Student = require('../models/Student');
+    let studentRows = '';
+    let studentList = [];
+    if (Array.isArray(studentIds) && studentIds.length > 0) {
+      studentList = await Student.find({ _id: { $in: studentIds } })
+        .select('fullName branch year cgpa rollNumber email')
+        .lean();
+    } else if (openJobId || scrapedJobId) {
+      // Auto-pull all students who applied to this open job
+      const Application = require('../models/Application');
+      const jobRef = openJobId || scrapedJobId;
+      const apps = await Application.find({ jobId: jobRef })
+        .populate('studentId', 'fullName branch year cgpa rollNumber email')
+        .lean();
+      studentList = apps
+        .map(a => a.studentId)
+        .filter(Boolean);
+    }
+
+    if (studentList.length > 0) {
+      const rows = studentList.map((s, i) => `
+        <tr style="background:${i % 2 === 0 ? '#f8fafc' : '#fff'};">
+          <td style="padding:7px 10px;border-bottom:1px solid #e2e8f0;">${i + 1}</td>
+          <td style="padding:7px 10px;border-bottom:1px solid #e2e8f0;font-weight:600;">${s.fullName || '—'}</td>
+          <td style="padding:7px 10px;border-bottom:1px solid #e2e8f0;">${s.rollNumber || '—'}</td>
+          <td style="padding:7px 10px;border-bottom:1px solid #e2e8f0;">${s.branch || '—'}</td>
+          <td style="padding:7px 10px;border-bottom:1px solid #e2e8f0;">${s.year || '—'}</td>
+          <td style="padding:7px 10px;border-bottom:1px solid #e2e8f0;font-weight:600;">${s.cgpa != null ? s.cgpa : '—'}</td>
+        </tr>`).join('');
+
+      studentRows = `
+        <h3 style="font-size:15px;color:#1e293b;margin:24px 0 8px;">Shortlisted Students (${studentList.length})</h3>
+        <div style="overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;font-size:13px;color:#334155;">
+            <thead>
+              <tr style="background:#7c3aed;color:#fff;">
+                <th style="padding:9px 10px;text-align:left;">#</th>
+                <th style="padding:9px 10px;text-align:left;">Name</th>
+                <th style="padding:9px 10px;text-align:left;">Roll No.</th>
+                <th style="padding:9px 10px;text-align:left;">Branch</th>
+                <th style="padding:9px 10px;text-align:left;">Year</th>
+                <th style="padding:9px 10px;text-align:left;">CGPA</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>`;
+    }
+
+    // ── Create CompanyRequest record with a token ──
+    const CompanyRequest = require('../models/CompanyRequest');
+    const ScrapedJob     = require('../models/ScrapedJob');
+
+    const companyRequest = await CompanyRequest.create({
+      companyName: companyName.trim(),
+      companyEmail: companyEmail.trim(),
+      role: role.trim(),
+      message: (message || `We would like to invite ${companyName} for a campus recruitment drive.`).trim(),
+      driveDate: driveDate ? new Date(driveDate) : null,
+      location: location || '',
+      package: pkg || '',
+      branches: branches || [],
+      openJobId: openJobId || scrapedJobId || null,
+      tpoId: tpoId || null,
+      studentIds: studentList.map(s => s._id),
+      status: 'pending'
+    });
+
+    if (scrapedJobId) {
+      await ScrapedJob.findByIdAndUpdate(scrapedJobId, {
+        driveRequested: true,
+        requestId: companyRequest._id
+      }).catch(() => {});
+    }
+
+    const baseUrl = process.env.CALLBACK_BASE || `http://localhost:${process.env.PORT || 5005}`;
+    const acceptUrl = `${baseUrl}/api/drive-response/${companyRequest.token}/accept`;
+    const rejectUrl = `${baseUrl}/api/drive-response/${companyRequest.token}/reject`;
+
+    const nodemailer = require('nodemailer');
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_PASS }
+    });
+
+    await transporter.sendMail({
+      from: `"CampusPlace – TPO Office" <${process.env.GMAIL_USER}>`,
+      to: companyEmail,
+      subject: `Campus Drive Request – ${role} at JNTU Hyderabad`,
+      html: `
+        <div style="font-family:'Segoe UI',Arial,sans-serif;max-width:680px;margin:auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.08);">
+          <div style="background:linear-gradient(135deg,#4c1d95,#7c3aed);color:#fff;padding:28px 32px;">
+            <h2 style="margin:0 0 4px;font-size:22px;">🎓 CampusPlace – JNTU Hyderabad</h2>
+            <p style="margin:0;opacity:.85;font-size:14px;">Campus Placement Office · Drive Request</p>
+          </div>
+          <div style="padding:28px 32px;">
+            <p style="font-size:15px;color:#334155;">Dear <strong>${companyName}</strong> HR Team,</p>
+            <p style="font-size:14px;color:#475569;line-height:1.7;">
+              The Training &amp; Placement Office of <strong>JNTU Hyderabad</strong> would like to invite your
+              organization for a <strong>Campus Recruitment Drive</strong> for the role of <strong>${role}</strong>.
+            </p>
+
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:18px;margin:18px 0;">
+              <table style="width:100%;font-size:13.5px;color:#334155;">
+                <tr><td style="padding:5px 0;font-weight:600;width:150px;">Role:</td><td>${role}</td></tr>
+                ${driveDate ? `<tr><td style="padding:5px 0;font-weight:600;">Proposed Date:</td><td>${new Date(driveDate).toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' })}</td></tr>` : ''}
+                ${location ? `<tr><td style="padding:5px 0;font-weight:600;">Venue:</td><td>${location}</td></tr>` : ''}
+                ${pkg ? `<tr><td style="padding:5px 0;font-weight:600;">Package:</td><td>${pkg}</td></tr>` : ''}
+                ${branches && branches.length ? `<tr><td style="padding:5px 0;font-weight:600;">Eligible Branches:</td><td>${branches.join(', ')}</td></tr>` : ''}
+                <tr><td style="padding:5px 0;font-weight:600;">Shortlisted Count:</td><td><strong>${studentList.length} students</strong></td></tr>
+              </table>
+            </div>
+
+            ${message ? `<p style="font-size:14px;color:#475569;line-height:1.6;"><strong>Message from TPO:</strong> ${message}</p>` : ''}
+
+            ${studentRows}
+
+            <p style="font-size:14px;color:#475569;margin-top:24px;">Please confirm your participation by clicking one of the options below:</p>
+            <div style="display:flex;gap:14px;margin:24px 0;">
+              <a href="${acceptUrl}" style="display:inline-block;background:#16a34a;color:#fff;padding:14px 36px;border-radius:8px;text-decoration:none;font-weight:700;font-size:15px;">✅ Accept Drive</a>
+              <a href="${rejectUrl}" style="display:inline-block;background:#dc2626;color:#fff;padding:14px 36px;border-radius:8px;text-decoration:none;font-weight:700;font-size:15px;">❌ Decline</a>
+            </div>
+            <p style="font-size:12px;color:#94a3b8;margin-top:22px;">For queries, contact the TPO office at <a href="mailto:${process.env.GMAIL_USER}" style="color:#7c3aed;">${process.env.GMAIL_USER}</a></p>
+          </div>
+          <div style="background:#f1f5f9;padding:14px 32px;text-align:center;font-size:11px;color:#94a3b8;">© CampusPlace – JNTU Hyderabad T&amp;P Cell</div>
+        </div>`
+    });
+
+    res.status(201).json({
+      success: true,
+      message: `Drive request with ${studentList.length} students sent to ${companyName}`,
+      companyRequest
+    });
+  } catch (err) {
+    console.error('sendDriveRequestWithStudents error:', err);
+    res.status(500).json({ success: false, message: 'Failed to send drive request' });
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// STAGE 6 — server.js accept/reject token routes
+//  These already exist in server.js. The only gap is: after
+//  accept/reject, we must create a TPO Notification.
+//  Add this to server.js accept handler after request.save():
+// ═══════════════════════════════════════════════════════════════════
+/*
+  // ── AFTER request.save() in the /accept handler ──
+  const Notification = require('./models/Notification');
+  await Notification.create({
+    tpoId: request.tpoId || null,         // null triggers TPO-wide query
+    type: 'company_reply',
+    message: `✅ ${request.companyName} accepted the campus drive request for ${request.role}`,
+    companyRequestId: request._id,
+    read: false
+  }).catch(() => {});
+
+  // ── AFTER findOneAndUpdate in the /reject handler ──
+  await Notification.create({
+    tpoId: request.tpoId || null,
+    type: 'company_reply',
+    message: `❌ ${request.companyName} declined the campus drive request`,
+    companyRequestId: request._id,
+    read: false
+  }).catch(() => {});
+*/
+
+// ═══════════════════════════════════════════════════════════════════
+// STAGE 7 — GET TPO notifications (company replies + drive updates)
+//   GET /api/tpo/notifications
+// ═══════════════════════════════════════════════════════════════════
+const getTPONotificationsFull = async (req, res) => {
+  try {
+    const Notification = require('../models/Notification');
+    // Fetch both company_reply and drive notifications for the TPO panel
+    const notifications = await Notification.find({
+      type: { $in: ['company_reply', 'drive', 'shortlist'] }
+    })
+      .sort({ createdAt: -1 })
+      .limit(50)
+      .lean();
+
+    res.status(200).json({ success: true, notifications });
+  } catch (err) {
+    console.error('getTPONotificationsFull error:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch TPO notifications' });
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// STAGE 7 — Mark TPO notification as read
+//   PATCH /api/tpo/notifications/:id/read
+// ═══════════════════════════════════════════════════════════════════
+const markTPONotificationRead = async (req, res) => {
+  try {
+    const Notification = require('../models/Notification');
+    await Notification.findByIdAndUpdate(req.params.id, { read: true });
+    res.status(200).json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Failed to mark read' });
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// STAGE 8 — TPO shares drive info to students
+//   Combined: post notice + send emails + in-app notifications
+//   POST /api/tpo/share-drive-to-students
+// ═══════════════════════════════════════════════════════════════════
+const shareDriveToStudents = async (req, res) => {
+  try {
+    const {
+      driveId,
+      companyRequestId,
+      title,
+      content,
+      venue,
+      dateTime,
+      documents,
+      instructions,
+      tpoId,
+      sendEmail   // boolean — whether to also email students
+    } = req.body;
+
+    const Drive        = require('../models/Drive');
+    const Notice       = require('../models/Notice');
+    const Notification = require('../models/Notification');
+    const Student      = require('../models/Student');
+    const nodemailer   = require('nodemailer');
+
+    // ── Resolve drive ──
+    let drive = null;
+    if (driveId) {
+      drive = await Drive.findById(driveId).lean();
+    }
+    if (!drive && companyRequestId) {
+      drive = await Drive.findOne({ companyRequestId }).lean();
+    }
+
+    const companyName = drive ? drive.companyName : (title || 'Campus Drive');
+    const driveDate   = drive ? drive.date : null;
+    const driveRoles  = drive ? (drive.roles || drive.role || '') : '';
+
+    // ── 1. Post Notice ──
+    const notice = await Notice.create({
+      title: title || `Campus Drive: ${companyName}`,
+      content: content ||
+        `${companyName} is conducting a campus recruitment drive. ` +
+        `Role: ${driveRoles}. ` +
+        `Date: ${driveDate ? new Date(driveDate).toLocaleDateString('en-IN') : dateTime || 'TBD'}. ` +
+        `Venue: ${venue || (drive && drive.location) || 'College Campus'}. ` +
+        (instructions ? `Instructions: ${instructions}` : ''),
+      priority: 'high',
+      department: 'All',
+      postedBy: tpoId || null,
+      driveId: drive ? drive._id : null
+    });
+
+    // ── 2. In-app Notifications for all students ──
+    const students = await Student.find({}, '_id email fullName').lean();
+    if (students.length) {
+      const notifs = students.map(st => ({
+        studentId: st._id,
+        type: 'drive',
+        driveId: drive ? drive._id : null,
+        message: `📢 ${companyName} Drive — ${driveDate ? new Date(driveDate).toLocaleDateString('en-IN') : dateTime || 'TBD'} — Check Notice Board`,
+        read: false
+      }));
+      await Notification.insertMany(notifs, { ordered: false }).catch(() => {});
+    }
+
+    // ── 3. Optional email blast ──
+    let emailsSent = 0;
+    if (sendEmail && students.length) {
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_PASS }
+      });
+
+      const emailPromises = students.map(st =>
+        transporter.sendMail({
+          from: `"CampusPlace – TPO" <${process.env.GMAIL_USER}>`,
+          to: st.email,
+          subject: `🎓 Campus Drive: ${companyName}`,
+          html: `
+            <div style="font-family:'Segoe UI',Arial,sans-serif;max-width:600px;margin:auto;border-radius:12px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.08);">
+              <div style="background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:24px 28px;">
+                <h2 style="margin:0;">🎓 Campus Drive Announcement</h2>
+                <p style="margin:4px 0 0;opacity:.85;">${companyName}</p>
+              </div>
+              <div style="padding:24px 28px;">
+                <p>Dear <strong>${st.fullName || 'Student'}</strong>,</p>
+                <p>The Training &amp; Placement Office is pleased to announce an upcoming campus recruitment drive.</p>
+                <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:16px;margin:16px 0;">
+                  <table style="font-size:14px;color:#1e3a8a;width:100%;">
+                    <tr><td style="padding:4px 12px 4px 0;font-weight:700;">Company:</td><td>${companyName}</td></tr>
+                    <tr><td style="padding:4px 12px 4px 0;font-weight:700;">Role:</td><td>${driveRoles || '—'}</td></tr>
+                    <tr><td style="padding:4px 12px 4px 0;font-weight:700;">Date:</td><td>${driveDate ? new Date(driveDate).toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' }) : dateTime || 'TBD'}</td></tr>
+                    <tr><td style="padding:4px 12px 4px 0;font-weight:700;">Venue:</td><td>${venue || (drive && drive.location) || 'College Campus'}</td></tr>
+                    ${documents ? `<tr><td style="padding:4px 12px 4px 0;font-weight:700;">Documents:</td><td>${documents}</td></tr>` : ''}
+                  </table>
+                </div>
+                ${instructions ? `<p style="font-size:14px;color:#334155;"><strong>Instructions:</strong> ${instructions}</p>` : ''}
+                <p style="font-size:13px;color:#64748b;">Please check your placement dashboard for more details and to register your interest.</p>
+              </div>
+              <div style="background:#f1f5f9;padding:14px 28px;text-align:center;font-size:11px;color:#94a3b8;">© CampusPlace – JNTU Hyderabad T&amp;P Cell</div>
+            </div>`
+        }).catch(() => {})
+      );
+
+      await Promise.all(emailPromises);
+      emailsSent = students.length;
+    }
+
+    // ── 4. Update drive status to 'notified' if exists ──
+    if (drive) {
+      await Drive.findByIdAndUpdate(drive._id, { studentNotified: true });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Drive shared: notice posted, ${students.length} in-app notifications sent${sendEmail ? `, ${emailsSent} emails sent` : ''}`,
+      notice,
+      studentCount: students.length,
+      emailsSent
+    });
+  } catch (err) {
+    console.error('shareDriveToStudents error:', err);
+    res.status(500).json({ success: false, message: 'Failed to share drive info to students' });
+  }
+};
+
 
 module.exports = {
   tpoSignup,
@@ -842,12 +1309,18 @@ module.exports = {
   getTPOPlacementRecords,
   requestCompany,
   updateCompanyRequestStatus,
-  // New exports
-  sendDriveRequest,
-  getScrapedJobs,
-  saveScrapedJobs,
   shortlistStudentsForDrive,
   sendShortlistEmails,
-  getTPONotifications,
-  getCompanyRequests
+  getCompanyRequests,
+  
+  getScrapedJobs,
+  saveScrapedJobs,
+  publishJobToStudents,
+  publishAllNewJobs,
+  getPublishedJobs,
+  getJobApplicantsTpo,
+  sendDriveRequestWithStudents,
+  getTPONotificationsFull,
+  markTPONotificationRead,
+  shareDriveToStudents
 };
