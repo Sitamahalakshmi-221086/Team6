@@ -1854,6 +1854,7 @@
     renderCompanyPrep();
     window.fetchPrepResources();
     window.fetchStudentOffers();
+    window.fetchStudentInterviews();
 
     const h = new Date().getHours();
     const greet = document.getElementById('greet-msg');
@@ -1888,4 +1889,91 @@
 
     if (typeof lucide !== 'undefined') lucide.createIcons();
   });
+
+  // Interview functions
+  window.fetchStudentInterviews = async function() {
+    try {
+      const res = await fetch(`${API}/api/interviews/student/${studentId()}`);
+      const data = await res.json();
+      if (data.success) {
+        renderStudentInterviews(data.interviews);
+      }
+    } catch (err) {
+      console.error('fetchStudentInterviews error:', err);
+    }
+  };
+
+  function renderStudentInterviews(interviews) {
+    const upcoming = interviews.filter(i => ['scheduled', 'confirmed'].includes(i.status));
+    const completed = interviews.filter(i => i.status === 'completed');
+    const cancelled = interviews.filter(i => i.status === 'cancelled');
+
+    document.getElementById('student-upcoming-count').textContent = upcoming.length;
+    document.getElementById('student-completed-count').textContent = completed.length;
+    document.getElementById('student-cancelled-count').textContent = cancelled.length;
+    document.getElementById('sb-badge-interviews').textContent = upcoming.length;
+
+    renderStudentInterviewList('student-upcoming-interviews-list', upcoming);
+    renderStudentInterviewList('student-completed-interviews-list', completed);
+    renderStudentInterviewList('student-cancelled-interviews-list', cancelled);
+  }
+
+  function renderStudentInterviewList(containerId, interviews) {
+    const container = document.getElementById(containerId);
+    if (!interviews.length) {
+      container.innerHTML = '<div style="padding:40px;text-align:center;color:var(--txmu);">No interviews found</div>';
+      return;
+    }
+
+    container.innerHTML = interviews.map(interview => `
+      <div class="app-row" style="margin:8px 16px;border-bottom:1px solid var(--brs);">
+        <div class="co-logo" style="width:40px;height:40px;border-radius:10px;background:var(--PL);color:var(--P);font-size:9px;font-weight:800;display:grid;place-items:center;">${interview.jobId?.companyName?.slice(0, 3).toUpperCase() || 'CMP'}</div>
+        <div class="app-info" style="flex:1;">
+          <div class="app-title">${interview.jobId?.title || 'Unknown Job'} — ${interview.jobId?.companyName || 'Unknown Company'}</div>
+          <div class="app-meta">${new Date(interview.scheduledDate).toLocaleString()}</div>
+          <div class="app-meta">Type: ${interview.interviewType} | Duration: ${interview.duration}min</div>
+          ${interview.location ? `<div class="app-meta">Location: ${interview.location}</div>` : ''}
+          ${interview.meetingLink ? `<div class="app-meta">Link: <a href="${interview.meetingLink}" target="_blank">${interview.meetingLink}</a></div>` : ''}
+          ${interview.feedback ? `<div class="app-meta">Feedback: Rating ${interview.feedback.rating}/5 - ${interview.feedback.comments}</div>` : ''}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+          <span class="pill ${interview.status === 'confirmed' ? 'active' : interview.status === 'completed' ? 'registered' : interview.status === 'cancelled' ? 'closed' : 'pending'}">${interview.status}</span>
+          ${interview.status === 'scheduled' ? `
+            <button class="btn sm" onclick="confirmInterview('${interview._id}')">Confirm</button>
+          ` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  window.switchStudentInterviewTab = function(tab, btn) {
+    document.querySelectorAll('#pg-interviews .tab').forEach(t => t.classList.remove('on'));
+    document.querySelectorAll('#pg-interviews .tab-panel').forEach(p => p.classList.remove('on'));
+    btn.classList.add('on');
+    document.getElementById(`student-interviews-${tab}`).classList.add('on');
+  };
+
+  window.confirmInterview = async function(interviewId) {
+    try {
+      const res = await fetch(`${API}/api/interviews/${interviewId}/confirm`, {
+        method: 'PUT'
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert('Interview confirmed');
+        fetchStudentInterviews();
+      } else {
+        alert(data.message || 'Failed to confirm');
+      }
+    } catch (err) {
+      console.error('confirmInterview error:', err);
+      alert('Server error');
+    }
+  };
+
+  // Initialize interviews when page loads
+  if (studentId()) {
+    fetchStudentInterviews();
+  }
+
 })();

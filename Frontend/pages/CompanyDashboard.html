@@ -2013,6 +2013,17 @@
           </svg></span>
         <span class="sb-label">Campus Drives</span>
       </button>
+      <button class="nl" onclick="go('interviews',this)">
+        <span class="ic"><svg viewBox="0 0 24 24">
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+            <path d="M8 14l4-4 4 4" />
+          </svg></span>
+        <span class="sb-label">Interviews</span>
+        <span class="sb-badge" id="co-sb-interviews-badge">0</span>
+      </button>
       <div class="sb-sec">Manage</div>
       <button class="nl" onclick="go('profile',this)">
         <span class="ic"><svg viewBox="0 0 24 24">
@@ -2564,6 +2575,69 @@
           <div id="company-requests-list" style="min-height:180px;"></div>
         </div>
       </div><!-- /pg-drives -->
+
+      <!-- ══════════ INTERVIEWS ══════════ -->
+      <div class="page" id="pg-interviews">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+          <div class="page-hd" style="margin:0;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--P)" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+              <path d="M8 14l4-4 4 4" />
+            </svg>
+            Interview Management
+          </div>
+          <button class="btn" type="button" onclick="openScheduleInterviewForm()">
+            <svg viewBox="0 0 24 24">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Schedule Interview
+          </button>
+        </div>
+
+        <div id="schedule-interview-card" class="card" style="display:none;padding:16px 18px;margin-bottom:16px;">
+          <div style="font-weight:700;margin-bottom:10px;">Schedule New Interview</div>
+          <form id="schedule-interview-form">
+            <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;">
+              <div class="fg"><label>Application ID</label><input type="text" id="interview-app-id" placeholder="Application ID" required /></div>
+              <div class="fg"><label>Date & Time</label><input type="datetime-local" id="interview-datetime" required /></div>
+              <div class="fg"><label>Duration (min)</label><input type="number" id="interview-duration" value="60" min="30" max="180" /></div>
+              <div class="fg"><label>Type</label>
+                <select id="interview-type">
+                  <option value="Technical">Technical</option>
+                  <option value="HR">HR</option>
+                  <option value="Behavioral">Behavioral</option>
+                  <option value="Panel">Panel</option>
+                  <option value="Online">Online</option>
+                  <option value="Offline">Offline</option>
+                </select>
+              </div>
+              <div class="fg"><label>Location/Link</label><input type="text" id="interview-location" placeholder="Meeting room or link" /></div>
+              <button class="btn" type="submit">Schedule</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="tabs">
+          <button class="tab on" onclick="switchInterviewTab('upcoming',this)">Upcoming <span class="tab-cnt" id="upcoming-count">0</span></button>
+          <button class="tab" onclick="switchInterviewTab('completed',this)">Completed <span class="tab-cnt" id="completed-count">0</span></button>
+          <button class="tab" onclick="switchInterviewTab('cancelled',this)">Cancelled <span class="tab-cnt" id="cancelled-count">0</span></button>
+        </div>
+
+        <div class="tab-panel on" id="interviews-upcoming">
+          <div class="card" style="padding:0;" id="upcoming-interviews-list"></div>
+        </div>
+        <div class="tab-panel" id="interviews-completed">
+          <div class="card" style="padding:0;" id="completed-interviews-list"></div>
+        </div>
+        <div class="tab-panel" id="interviews-cancelled">
+          <div class="card" style="padding:0;" id="cancelled-interviews-list"></div>
+        </div>
+      </div><!-- /pg-interviews -->
 
       <!-- ══════════ COMPANY PROFILE ══════════ -->
       <div class="page" id="pg-profile">
@@ -3310,6 +3384,168 @@
         console.error('companyReply error:', err);
         showToast('Server error');
       }
+    }
+
+    // Interview functions
+    function openScheduleInterviewForm() {
+      const el = document.getElementById('schedule-interview-card');
+      if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+
+    async function fetchCompanyInterviews() {
+      try {
+        const res = await fetch(`${API_ROOT}/api/interviews/company/${companyId}`);
+        const data = await res.json();
+        if (data.success) {
+          renderInterviews(data.interviews);
+        }
+      } catch (err) {
+        console.error('fetchCompanyInterviews error:', err);
+      }
+    }
+
+    function renderInterviews(interviews) {
+      const upcoming = interviews.filter(i => ['scheduled', 'confirmed'].includes(i.status));
+      const completed = interviews.filter(i => i.status === 'completed');
+      const cancelled = interviews.filter(i => i.status === 'cancelled');
+
+      document.getElementById('upcoming-count').textContent = upcoming.length;
+      document.getElementById('completed-count').textContent = completed.length;
+      document.getElementById('cancelled-count').textContent = cancelled.length;
+      document.getElementById('co-sb-interviews-badge').textContent = upcoming.length;
+
+      renderInterviewList('upcoming-interviews-list', upcoming);
+      renderInterviewList('completed-interviews-list', completed);
+      renderInterviewList('cancelled-interviews-list', cancelled);
+    }
+
+    function renderInterviewList(containerId, interviews) {
+      const container = document.getElementById(containerId);
+      if (!interviews.length) {
+        container.innerHTML = '<div style="padding:40px;text-align:center;color:var(--txmu);">No interviews found</div>';
+        return;
+      }
+
+      container.innerHTML = interviews.map(interview => `
+        <div class="co-action-card" style="margin:8px 16px;border-bottom:1px solid var(--brs);">
+          <div style="flex:1;">
+            <div class="cac-top">${interview.studentId?.fullName || 'Unknown Student'} — ${interview.jobId?.title || 'Unknown Job'}</div>
+            <div class="cac-sub">${new Date(interview.scheduledDate).toLocaleString()}</div>
+            <div class="cac-sub">Type: ${interview.interviewType} | Duration: ${interview.duration}min</div>
+            ${interview.location ? `<div class="cac-sub">Location: ${interview.location}</div>` : ''}
+            ${interview.meetingLink ? `<div class="cac-sub">Link: <a href="${interview.meetingLink}" target="_blank">${interview.meetingLink}</a></div>` : ''}
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+            <span class="pill ${interview.status === 'confirmed' ? 'active' : interview.status === 'completed' ? 'registered' : interview.status === 'cancelled' ? 'closed' : 'pending'}">${interview.status}</span>
+            ${interview.status === 'scheduled' ? `
+              <button class="btn sm btn-danger" onclick="cancelInterview('${interview._id}')">Cancel</button>
+            ` : ''}
+            ${interview.status === 'completed' && !interview.feedback ? `
+              <button class="btn sm" onclick="addInterviewFeedback('${interview._id}')">Add Feedback</button>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function switchInterviewTab(tab, btn) {
+      document.querySelectorAll('#pg-interviews .tab').forEach(t => t.classList.remove('on'));
+      document.querySelectorAll('#pg-interviews .tab-panel').forEach(p => p.classList.remove('on'));
+      btn.classList.add('on');
+      document.getElementById(`interviews-${tab}`).classList.add('on');
+    }
+
+    async function cancelInterview(interviewId) {
+      const reason = prompt('Reason for cancellation:');
+      if (!reason) return;
+
+      try {
+        const res = await fetch(`${API_ROOT}/api/interviews/${interviewId}/cancel`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reason })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Interview cancelled');
+          fetchCompanyInterviews();
+        } else {
+          showToast(data.message || 'Failed to cancel');
+        }
+      } catch (err) {
+        console.error('cancelInterview error:', err);
+        showToast('Server error');
+      }
+    }
+
+    function addInterviewFeedback(interviewId) {
+      const rating = prompt('Rating (1-5):');
+      const comments = prompt('Comments:');
+      const recommended = confirm('Recommend for hire?');
+
+      if (!rating || !comments) return;
+
+      updateInterviewStatus(interviewId, 'completed', { rating: parseInt(rating), comments, recommended: recommended ? 'Yes' : 'No' });
+    }
+
+    async function updateInterviewStatus(interviewId, status, feedback = null) {
+      try {
+        const body = { status };
+        if (feedback) body.feedback = feedback;
+
+        const res = await fetch(`${API_ROOT}/api/interviews/${interviewId}/status`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`Interview ${status}`);
+          fetchCompanyInterviews();
+        } else {
+          showToast(data.message || 'Failed to update');
+        }
+      } catch (err) {
+        console.error('updateInterviewStatus error:', err);
+        showToast('Server error');
+      }
+    }
+
+    // Schedule interview form submission
+    document.getElementById('schedule-interview-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = {
+        applicationId: document.getElementById('interview-app-id').value,
+        scheduledDate: document.getElementById('interview-datetime').value,
+        duration: parseInt(document.getElementById('interview-duration').value),
+        interviewType: document.getElementById('interview-type').value,
+        location: document.getElementById('interview-location').value
+      };
+
+      try {
+        const res = await fetch(`${API_ROOT}/api/interviews/schedule`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Interview scheduled successfully');
+          document.getElementById('schedule-interview-form').reset();
+          document.getElementById('schedule-interview-card').style.display = 'none';
+          fetchCompanyInterviews();
+        } else {
+          showToast(data.message || 'Failed to schedule interview');
+        }
+      } catch (err) {
+        console.error('scheduleInterview error:', err);
+        showToast('Server error');
+      }
+    });
+
+    // Initialize interviews when page loads
+    if (companyId) {
+      fetchCompanyInterviews();
     }
 
 

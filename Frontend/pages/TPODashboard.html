@@ -11,6 +11,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <link rel="stylesheet" href="../css/tpodashboard.css">
   <script src="../js/campus-api.js" defer></script>
+  <script src="../js/tpo_placements.js" defer></script>
   <script src="../js/tpo.js" defer></script>
 </head>
 
@@ -755,7 +756,7 @@
           <div
             style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--brs);">
             <span style="font-size:13px;font-weight:750;color:var(--txm);">Recent Placement Records</span><button
-              class="btn sm" onclick="showToast('CSV exported.')">Export CSV</button>
+              class="btn sm" onclick="exportPlacementReport()">Export CSV</button>
           </div>
           <div class="tbl-head g5">
             <span>Student</span><span>Branch</span><span>Company</span><span>Role</span><span>Package</span>
