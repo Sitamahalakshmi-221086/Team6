@@ -1,0 +1,258 @@
+<!-- ═══════════════════════════════════════════════════════════════
+     CAMPUSPLACE — NEW HTML SNIPPETS FOR TPO DASHBOARD
+     Paste each section into TPODashboard.html at the noted locations
+═══════════════════════════════════════════════════════════════ -->
+
+
+<!-- ─────────────────────────────────────────────────────────────
+  STAGE 1 + 2 : SCRAPED JOBS PANEL
+  Add this as a new <div class="page" id="pg-openjobs"> section,
+  OR add the inner .card blocks inside your existing open-jobs page.
+──────────────────────────────────────────────────────────────── -->
+<div class="page" id="pg-openjobs">
+  <div class="page-head">
+    <h2>Open Jobs</h2>
+    <div style="display:flex;gap:8px;">
+      <button class="btn sec" onclick="syncOpenJobsNow()">⟳ Sync from Portals</button>
+      <button class="btn" onclick="publishAllScrapedJobs(this)">Publish All New</button>
+    </div>
+  </div>
+
+  <!-- Stage 1: TPO sees scraped jobs -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Scraped Jobs</div>
+        <div class="card-sub">From job portals — review and publish to students</div>
+      </div>
+      <span class="pill" id="scraped-jobs-count" style="font-size:12px;">0</span>
+    </div>
+    <div id="scraped-jobs-list">
+      <div style="padding:40px;text-align:center;color:var(--txmu);">Loading scraped jobs…</div>
+    </div>
+  </div>
+
+  <!-- Stage 2: Published jobs (student-facing view) -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Published Jobs</div>
+        <div class="card-sub">Jobs visible to students — click "View Applicants" to see who applied</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input type="text" id="oj-search" placeholder="Search jobs…"
+               style="width:180px;padding:7px 12px;border:1px solid var(--br);border-radius:8px;font-size:13px;background:var(--bg);"
+               oninput="renderOpenJobs()">
+      </div>
+    </div>
+
+    <div style="display:flex;gap:6px;flex-wrap:wrap;padding:0 0 12px;">
+      <button class="btn sm branch-pill on" onclick="filterByBranch('all',this)">All</button>
+      <button class="btn sm branch-pill" onclick="filterByBranch('CSE',this)">CSE</button>
+      <button class="btn sm branch-pill" onclick="filterByBranch('IT',this)">IT</button>
+      <button class="btn sm branch-pill" onclick="filterByBranch('ECE',this)">ECE</button>
+      <button class="btn sm branch-pill" onclick="filterByBranch('EEE',this)">EEE</button>
+      <button class="btn sm branch-pill" onclick="filterByBranch('MECH',this)">MECH</button>
+      <button class="btn sm branch-pill" onclick="filterByBranch('CIVIL',this)">CIVIL</button>
+    </div>
+
+    <div id="oj-all-list">
+      <div style="padding:20px;text-align:center;color:var(--txmu);">No published jobs yet</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ─────────────────────────────────────────────────────────────
+  STAGE 3 : APPLICANTS MODAL
+  Paste anywhere inside <body> (outside all .page divs)
+──────────────────────────────────────────────────────────────── -->
+<div class="overlay" id="applicants-modal" onclick="closeOverlay(event,'applicants-modal')">
+  <div class="modal" style="width:720px;max-width:96vw;">
+    <div class="modal-head">
+      <span id="applicants-modal-title">Applicants</span>
+      <span id="applicants-modal-count" class="pill" style="font-size:12px;">0</span>
+      <button class="icon-btn" onclick="closeModal('applicants-modal')">✕</button>
+    </div>
+    <div class="modal-body" style="max-height:70vh;overflow-y:auto;">
+      <div id="applicants-modal-list"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn sec" onclick="closeModal('applicants-modal')">Close</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ─────────────────────────────────────────────────────────────
+  STAGE 5 : SEND DRIVE REQUEST TO COMPANY (with student list)
+──────────────────────────────────────────────────────────────── -->
+<div class="overlay" id="send-drive-modal" onclick="closeOverlay(event,'send-drive-modal')">
+  <div class="modal" style="width:780px;max-width:96vw;">
+    <div class="modal-head">
+      <span>Send Drive Request to Company</span>
+      <button class="icon-btn" onclick="closeModal('send-drive-modal')">✕</button>
+    </div>
+    <div class="modal-body" style="max-height:80vh;overflow-y:auto;">
+
+      <!-- Company details row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group">
+          <label class="form-label">Company Name *</label>
+          <input id="dr-company" type="text" class="form-input" placeholder="e.g. Infosys">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Company Email *</label>
+          <input id="dr-company-email" type="email" class="form-input" placeholder="hr@company.com">
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group">
+          <label class="form-label">Role / Position *</label>
+          <input id="dr-role" type="text" class="form-input" placeholder="e.g. Software Engineer">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Package / CTC</label>
+          <input id="dr-package" type="text" class="form-input" placeholder="e.g. 6 LPA">
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group">
+          <label class="form-label">Proposed Drive Date</label>
+          <input id="dr-date" type="date" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Venue / Location</label>
+          <input id="dr-location" type="text" class="form-input" placeholder="e.g. College Auditorium">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Eligible Branches (comma-separated)</label>
+        <input id="dr-branches" type="text" class="form-input" placeholder="e.g. CSE, IT, ECE">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Message to Company</label>
+        <textarea id="dr-message" class="form-input" rows="3"
+          placeholder="We at the T&P Cell would like to invite you to conduct a campus recruitment drive…"></textarea>
+      </div>
+
+      <!-- Student selection table (populated by loadStudentsForDriveModal) -->
+      <div class="form-group">
+        <label class="form-label">Shortlisted Students to Include in Email</label>
+        <div id="dr-students-table" style="margin-top:6px;">
+          <div style="padding:12px;text-align:center;color:var(--txmu);font-size:13px;">
+            Open this modal from a specific job to load applicants.
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-foot">
+      <button class="btn sec" onclick="closeModal('send-drive-modal')">Cancel</button>
+      <button class="btn" onclick="submitSendDriveRequest(this)">Send Drive Request</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ─────────────────────────────────────────────────────────────
+  STAGE 8 : SHARE ACCEPTED DRIVE TO STUDENTS
+──────────────────────────────────────────────────────────────── -->
+<div class="overlay" id="share-drive-modal" onclick="closeOverlay(event,'share-drive-modal')">
+  <div class="modal" style="width:640px;max-width:96vw;">
+    <div class="modal-head">
+      <span>Share Drive Info to Students</span>
+      <button class="icon-btn" onclick="closeModal('share-drive-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="form-group">
+        <label class="form-label">Notice Title *</label>
+        <input id="sd-title" type="text" class="form-input"
+               placeholder="e.g. TCS Campus Drive — Register Now">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Notice Content</label>
+        <textarea id="sd-content" class="form-input" rows="3"
+          placeholder="Drive details for students… (leave blank to auto-generate)"></textarea>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group">
+          <label class="form-label">Date &amp; Time</label>
+          <input id="sd-datetime" type="text" class="form-input" placeholder="e.g. 15 April 2025, 9:00 AM">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Venue</label>
+          <input id="sd-venue" type="text" class="form-input" placeholder="e.g. Seminar Hall Block-A">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Documents to Carry</label>
+        <input id="sd-documents" type="text" class="form-input"
+               placeholder="e.g. Resume (3 copies), Aadhar, Degree certificates">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Special Instructions</label>
+        <textarea id="sd-instructions" class="form-input" rows="2"
+          placeholder="e.g. Formal dress code mandatory. Report by 8:45 AM."></textarea>
+      </div>
+
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13.5px;color:var(--txm);">
+        <input type="checkbox" id="sd-send-email" checked style="width:15px;height:15px;">
+        Also send email to all students (in addition to in-app notification)
+      </label>
+
+    </div>
+    <div class="modal-foot">
+      <button class="btn sec" onclick="closeModal('share-drive-modal')">Cancel</button>
+      <button class="btn" onclick="submitShareDriveToStudents(this)">Share to Students</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ─────────────────────────────────────────────────────────────
+  PATCH: Sidebar nav item for Open Jobs
+  Add this inside your existing <nav> in the sidebar
+  (after the Drives nav item)
+──────────────────────────────────────────────────────────────── -->
+<!--
+  <button class="nl" onclick="go('openjobs',this)">
+    <svg data-lucide="briefcase" width="18" height="18"></svg>
+    <span>Open Jobs</span>
+    <span id="sb-badge-openjobs" class="badge" style="display:none;"></span>
+  </button>
+-->
+
+
+<!-- ─────────────────────────────────────────────────────────────
+  PATCH: ojCard — add "View Applicants" button
+  Replace the existing ojCard() function call in oj-all-list items
+  OR add this line inside the existing ojCard() function in tpo.js:
+
+  const viewApplicantsBtn = `<button class="btn sm sec"
+      onclick="loadJobApplicants('${String(j._id)}','${(j.title||'').replace(/'/g,'')}')">
+      View Applicants</button>`;
+
+  Then add ${viewApplicantsBtn} inside the .oj-actions div.
+──────────────────────────────────────────────────────────────── -->
+
+
+<!-- ─────────────────────────────────────────────────────────────
+  PATCH: DOMContentLoaded additions
+  Add these lines inside the existing DOMContentLoaded handler in tpo.js,
+  right after the existing setTimeout block:
+
+  setTimeout(() => {
+      loadScrapedJobs();          // Stage 1 — scraper panel
+      loadTPONotificationsPanel();  // Stage 7 — company reply notifs
+  }, 300);
+──────────────────────────────────────────────────────────────── -->

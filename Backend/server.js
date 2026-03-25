@@ -42,7 +42,9 @@ app.use('/api/open-jobs',     require('./routes/openJobsRoutes'));
 app.use('/api/notifications', require('./routes/notificationsRoutes'));
 app.use('/api/jobs',          require('./routes/jobsRoutes'));
 app.use('/api/drives',        require('./routes/drivesPublicRoutes'));
-app.use('/api/applications',  require('./routes/applicationRoutes'));app.use('/api/scraper',       require('./routes/scraperRoutes'));
+app.use('/api/applications',  require('./routes/applicationRoutes'));
+app.use('/api/scraper',       require('./routes/scraperRoutes'));
+app.use('/api/offers',        require('./routes/offerRoutes'));
 
 // ── Start Job Scheduler ──────────────────────────────────────
 try {

@@ -2556,6 +2556,13 @@
             Completed / Past Drives</div>
           <div id="company-drives-completed-list"></div>
         </div>
+
+        <div class="card" style="padding:0;margin-top:16px;">
+          <div
+            style="padding:12px 16px;border-bottom:1px solid var(--brs);font-size:12px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.06em;background:var(--bgs);">
+            Incoming Drive Requests (from TPO)</div>
+          <div id="company-requests-list" style="min-height:180px;"></div>
+        </div>
       </div><!-- /pg-drives -->
 
       <!-- ══════════ COMPANY PROFILE ══════════ -->
@@ -3209,28 +3216,102 @@
           if (cd0) cd0.textContent = '0';
           return;
         }
+
         const now = new Date();
         const upcoming = [];
         const completed = [];
+
         data.drives.forEach((d) => {
           const dt = new Date(d.date);
           const row = `<div class="drive-row">
             <div class="dr-date"><div class="dr-dd">${isNaN(dt) ? '—' : dt.getDate()}</div><div class="dr-dm">${isNaN(dt) ? '' : dt.toLocaleString(undefined, { month: 'short' })}</div></div>
             <div class="dr-info"><div class="dr-name">${d.companyName || ''}</div><div class="dr-meta">${d.roles || ''} · ${d.eligibility || ''}</div></div>
-            <span class="pill ${d.status === 'Approved' ? 'active' : d.status === 'Rejected' ? 'closed' : 'pending'}">${d.status === 'Pending' ? 'Pending TPO' : d.status}</span>
+            <span class="pill ${d.status === 'scheduled' || d.status === 'approved' ? 'active' : d.status === 'rejected' ? 'closed' : 'pending'}">${d.status === 'pending' ? 'Pending TPO' : d.status}</span>
           </div>`;
-          if (!isNaN(dt) && dt >= now && d.status !== 'Rejected') upcoming.push(row);
+          if (!isNaN(dt) && dt >= now && d.status !== 'rejected') upcoming.push(row);
           else completed.push(row);
         });
+
         up.innerHTML = upcoming.length ? upcoming.join('') : '<p class="empty-state" style="padding:24px;text-align:center;color:var(--txmu);">No upcoming drives</p>';
         done.innerHTML = completed.length ? completed.join('') : '<p class="empty-state" style="padding:24px;text-align:center;color:var(--txmu);">No completed drives</p>';
         const cd = document.getElementById('cph-stat-drives');
-        if (cd) cd.textContent = String((data.drives || []).filter((d) => d.status === 'Approved').length);
+        if (cd) cd.textContent = String((data.drives || []).filter((d) => d.status === 'scheduled' || d.status === 'approved').length);
       } catch (e) {
         up.innerHTML = '<p class="empty-state" style="padding:24px;">Could not load drives</p>';
         done.innerHTML = '';
       }
     }
+
+    async function fetchCompanyRequests() {
+      const requestsContainer = document.getElementById('company-requests-list');
+      if (!requestsContainer) return;
+
+      requestsContainer.innerHTML = '<p class="loading"><span class="spinner"></span>Loading requests...</p>';
+      try {
+        const companyName = sessionStorage.getItem('companyName') || '';
+        if (!companyName) {
+          requestsContainer.innerHTML = '<p class="empty-state" style="padding:16px;text-align:center;color:var(--txmu);">Company not identified</p>';
+          return;
+        }
+
+        const res = await fetch(`${API_ROOT}/api/companies/requests?companyName=${encodeURIComponent(companyName)}`);
+        const data = await res.json();
+
+        if (!data.success || !data.requests || !data.requests.length) {
+          requestsContainer.innerHTML = '<p class="empty-state" style="padding:24px;text-align:center;color:var(--txmu);">No drive requests found</p>';
+          return;
+        }
+
+        requestsContainer.innerHTML = '';
+        data.requests.forEach((req) => {
+          const d = new Date(req.driveDate || req.createdAt);
+          const status = req.status || 'pending';
+          const card = document.createElement('div');
+          card.className = 'co-action-card';
+          card.innerHTML = `
+            <div style="flex:1;"><div class="cac-top">${req.companyName || 'Unknown'} &mdash; ${req.role || 'Role'}</div>
+            <div class="cac-sub">${req.message || 'No details provided'}</div>
+            <div class="cac-sub" style="margin-top:6px;">Date: ${isNaN(d) ? 'TBD' : d.toLocaleDateString()}</div>
+            <div class="cac-sub">Location: ${req.location || 'TPO decided'}</div>
+            <div class="cac-sub">Branches: ${req.branches?.join(', ') || 'All'}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+              <span class="pill ${status === 'accepted' ? 'active' : status === 'rejected' ? 'closed' : 'pending'}">${status}</span>
+              ${status === 'pending' ? `
+                <button class="btn sm btn-success" onclick="companyReply('${req._id}','accepted')">Accept</button>
+                <button class="btn sm btn-danger" onclick="companyReply('${req._id}','rejected')">Reject</button>
+              ` : ''}
+            </div>
+          `;
+          requestsContainer.appendChild(card);
+        });
+      } catch (err) {
+        console.error('fetchCompanyRequests error:', err);
+        requestsContainer.innerHTML = '<p class="empty-state" style="padding:24px;text-align:center;color:#a00;">Unable to load requests</p>';
+      }
+    }
+
+    async function companyReply(requestId, status) {
+      try {
+        const res = await fetch(`${API_ROOT}/api/companies/request/${requestId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`Drive request ${status}`);
+          await fetchCompanyRequests();
+          fetchCompanyDrives();
+        } else {
+          showToast(data.message || 'Failed to update request');
+        }
+      } catch (err) {
+        console.error('companyReply error:', err);
+        showToast('Server error');
+      }
+    }
+
 
     function openDriveRequestForm() {
       const el = document.getElementById('drive-request-card');

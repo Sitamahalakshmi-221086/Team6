@@ -78,6 +78,14 @@
         <span class="sb-label">My Applications</span>
         <span class="sb-badge" id="sb-badge-apps">0</span>
       </button>
+      <button class="nl" onclick="go('offers',this)">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg></span>
+        <span class="sb-label">Job Offers</span>
+        <span class="sb-badge" id="sb-badge-offers">0</span>
+      </button>
       <button class="nl" onclick="go('drives',this)">
         <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -837,6 +845,30 @@
         <div class="tab-panel" id="apps-closed">
           <div class="card" style="padding:0 14px;" id="apps-closed-list"></div>
         </div>
+      </div>
+
+      <!-- ═══════════════════ OFFERS ═══════════════════ -->
+      <div class="page" id="pg-offers">
+        <div class="page-hd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>Job Offers</div>
+        <div class="card" style="padding:18px 22px;margin-bottom:18px;">
+          <div
+            style="font-size:11px;font-weight:700;color:var(--txmu);text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;">
+            Your Offer Status</div>
+          <div class="pipeline-track">
+            <div class="ps done">
+              <div class="ps-circle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg></div>
+              <div class="ps-lbl">Offered</div>
+              <div class="ps-cnt" id="offers-count">0</div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="padding:0 14px;" id="offers-list"></div>
       </div>
 
       <!-- ═══════════════════ DRIVES ═══════════════════ -->

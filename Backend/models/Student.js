@@ -66,6 +66,11 @@ const studentSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  placementStatus: {
+    type: String,
+    enum: ['Unplaced', 'Placed', 'In Process'],
+    default: 'Unplaced'
+  },
   createdAt: {
     type: Date,
     default: Date.now

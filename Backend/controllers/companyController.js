@@ -420,69 +420,125 @@ const getCompanyRequests = async (req, res) => {
   }
 };
 
-const acceptCompanyRequest = async (req, res) => {
+const updateCompanyRequestStatus = async (req, res) => {
   try {
     const { id } = req.params;
+    const { status = 'accepted', date, location, details, roles, eligibility } = req.body || {};
+
+    if (!['pending', 'accepted', 'rejected'].includes(status)) {
+      return res.status(400).json({ success: false, message: 'Invalid status. Must be pending/accepted/rejected' });
+    }
+
     const companyRequest = await CompanyRequest.findById(id);
     if (!companyRequest) return res.status(404).json({ success: false, message: 'Request not found' });
 
-    if (companyRequest.status === 'accepted') {
-      const existingDrive = await Drive.findOne({ companyRequestId: companyRequest._id }).lean();
-      return res.status(200).json({ success: true, companyRequest, drive: existingDrive || null });
+    if (companyRequest.status === status) {
+      return res.status(200).json({ success: true, message: `Request already ${status}`, companyRequest });
     }
 
-    companyRequest.status = 'accepted';
+    companyRequest.status = status;
+    if (date) companyRequest.driveDate = new Date(date);
+    if (location) companyRequest.location = location;
+    if (details) companyRequest.details = details;
+    if (roles) companyRequest.role = roles;
     await companyRequest.save();
 
-    let companyId = null;
-    const company = await Company.findOne({
-      companyName: new RegExp(`^${String(companyRequest.companyName || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i')
-    }).select('_id').lean();
-    if (company) companyId = company._id;
+    let drive = null;
+    if (status === 'accepted') {
+      const existingDrive = await Drive.findOne({ companyRequestId: companyRequest._id }).lean();
+      if (existingDrive) {
+        drive = existingDrive;
+      } else {
+        let companyId = null;
+        const company = await Company.findOne({
+          companyName: new RegExp(`^${String(companyRequest.companyName || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i')
+        }).select('_id').lean();
+        if (company) companyId = company._id;
 
-    const drive = await Drive.create({
-      companyId,
-      companyName: companyRequest.companyName,
-      date: companyRequest.driveDate || new Date(),
-      location: companyRequest.location || '',
-      eligibility: companyRequest.details || 'As per request',
-      eligibleBranches: [],
-      roles: companyRequest.role,
-      role: companyRequest.role,
-      status: 'scheduled',
-      submittedBy: 'company',
-      companyRequestId: companyRequest._id
-    });
+        drive = await Drive.create({
+          companyId,
+          companyName: companyRequest.companyName,
+          date: companyRequest.driveDate || new Date(),
+          location: companyRequest.location || '',
+          eligibility: companyRequest.details || 'As per request',
+          eligibleBranches: [],
+          roles: companyRequest.role,
+          role: companyRequest.role,
+          status: 'scheduled',
+          submittedBy: 'company',
+          companyRequestId: companyRequest._id
+        });
+      }
 
-    const students = await Student.find().select('_id email fullName').lean();
-    if (students.length) {
-      const docs = students.map((st) => ({
-        studentId: st._id,
-        type: 'drive',
+      const students = await Student.find().select('_id email fullName').lean();
+      if (students.length) {
+        const docs = students.map((st) => ({
+          studentId: st._id,
+          type: 'drive',
+          driveId: drive._id,
+          message: `New drive scheduled: ${drive.companyName} - ${drive.roles}`
+        }));
+        await Notification.insertMany(docs, { ordered: false }).catch(() => {});
+        await Promise.all(
+          students.map(async (st) => {
+            try {
+              await transporter.sendMail({
+                from: `"CampusPlace" <${process.env.GMAIL_USER}>`,
+                to: st.email,
+                subject: `New Drive Scheduled: ${drive.companyName}`,
+                html: `<p>Hello ${st.fullName || 'Student'},</p><p>A new campus drive has been scheduled for <strong>${drive.companyName}</strong> (${drive.roles}). Please check your dashboard.</p>`
+              });
+            } catch (e) {}
+          })
+        );
+      }
+
+      await Notification.create({
+        tpoId: companyRequest.tpoId || null,
+        type: 'company_reply',
         driveId: drive._id,
-        message: `New drive scheduled: ${drive.companyName} - ${drive.roles}`
-      }));
-      await Notification.insertMany(docs, { ordered: false }).catch(() => {});
-      await Promise.all(
-        students.map(async (st) => {
-          try {
-            await transporter.sendMail({
-              from: `"CampusPlace" <${process.env.GMAIL_USER}>`,
-              to: st.email,
-              subject: `New Drive Scheduled: ${drive.companyName}`,
-              html: `<p>Hello ${st.fullName || 'Student'},</p><p>A new drive has been scheduled for <strong>${drive.companyName}</strong> (${drive.roles}). Please check your dashboard.</p>`
-            });
-          } catch (e) {}
-        })
-      );
+        companyRequestId: companyRequest._id,
+        message: `✅ ${companyRequest.companyName} accepted the drive request for "${companyRequest.role}"`,
+        read: false
+      }).catch(() => {});
+
+      if (process.env.GMAIL_USER) {
+        transporter.sendMail({
+          from: `"CampusPlace" <${process.env.GMAIL_USER}>`,
+          to: process.env.GMAIL_USER,
+          subject: `✅ Drive Accepted by ${companyRequest.companyName}`,
+          html: `<p>${companyRequest.companyName} has accepted the campus drive request for <strong>${companyRequest.role}</strong>.</p>`
+        }).catch(() => {});
+      }
+    }
+
+    if (status === 'rejected') {
+      await Notification.create({
+        tpoId: companyRequest.tpoId || null,
+        type: 'company_reply',
+        companyRequestId: companyRequest._id,
+        message: `❌ ${companyRequest.companyName} rejected the drive request for "${companyRequest.role}"`,
+        read: false
+      }).catch(() => {});
+
+      if (process.env.GMAIL_USER) {
+        transporter.sendMail({
+          from: `"CampusPlace" <${process.env.GMAIL_USER}>`,
+          to: process.env.GMAIL_USER,
+          subject: `❌ Drive Rejected by ${companyRequest.companyName}`,
+          html: `<p>${companyRequest.companyName} has rejected the campus drive request for <strong>${companyRequest.role}</strong>.</p>`
+        }).catch(() => {});
+      }
     }
 
     res.status(200).json({ success: true, companyRequest, drive });
   } catch (error) {
-    console.error('acceptCompanyRequest error:', error);
+    console.error('updateCompanyRequestStatus error:', error);
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
+
+const acceptCompanyRequest = updateCompanyRequestStatus;
 
 module.exports = {
   companySignup,
@@ -499,5 +555,6 @@ module.exports = {
   getCompanyStats,
   getCompanyDashboard,
   getCompanyRequests,
+  updateCompanyRequestStatus,
   acceptCompanyRequest
 };

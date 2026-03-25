@@ -1750,6 +1750,75 @@
     }
   };
 
+  // Offer functions
+  window.fetchStudentOffers = async function() {
+    const container = document.getElementById('offers-list');
+    if (!container) return;
+    container.innerHTML = '<p class="loading">Loading offers...</p>';
+    try {
+      const res = await fetch(`${API}/api/offers/student/${studentId()}`);
+      const data = await res.json();
+      if (!data.success || !data.offers || !data.offers.length) {
+        container.innerHTML = '<p class="empty-state" style="padding:24px;text-align:center;color:var(--txmu);">No job offers yet</p>';
+        const offersCount = document.getElementById('offers-count');
+        if (offersCount) offersCount.textContent = '0';
+        const sbBadge = document.getElementById('sb-badge-offers');
+        if (sbBadge) sbBadge.textContent = '0';
+        return;
+      }
+      container.innerHTML = data.offers.map(offer => `
+        <div class="card" style="padding:16px;margin-bottom:12px;">
+          <div style="font-weight:600;margin-bottom:8px;">${offer.jobId.title} at ${offer.jobId.companyName}</div>
+          <div style="color:var(--txmu);font-size:14px;margin-bottom:12px;">${offer.jobId.description || 'No description'}</div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn sm btn-success" onclick="acceptOffer('${offer._id}')">Accept</button>
+            <button class="btn sm btn-danger" onclick="rejectOffer('${offer._id}')">Reject</button>
+          </div>
+        </div>
+      `).join('');
+      const offersCount = document.getElementById('offers-count');
+      if (offersCount) offersCount.textContent = String(data.offers.length);
+      const sbBadge = document.getElementById('sb-badge-offers');
+      if (sbBadge) sbBadge.textContent = String(data.offers.length);
+    } catch (err) {
+      console.error('fetchStudentOffers error:', err);
+      container.innerHTML = '<p class="empty-state" style="padding:24px;text-align:center;color:#a00;">Unable to load offers</p>';
+    }
+  };
+
+  window.acceptOffer = async function(applicationId) {
+    try {
+      const res = await fetch(`${API}/api/offers/accept/${applicationId}`, { method: 'PUT' });
+      const data = await res.json();
+      if (data.success) {
+        alert('Offer accepted! Congratulations on your placement.');
+        await window.fetchStudentOffers();
+        await loadData(); // Refresh stats
+      } else {
+        alert(data.message || 'Failed to accept offer');
+      }
+    } catch (err) {
+      console.error('acceptOffer error:', err);
+      alert('Server error');
+    }
+  };
+
+  window.rejectOffer = async function(applicationId) {
+    try {
+      const res = await fetch(`${API}/api/offers/reject/${applicationId}`, { method: 'PUT' });
+      const data = await res.json();
+      if (data.success) {
+        alert('Offer rejected.');
+        await window.fetchStudentOffers();
+      } else {
+        alert(data.message || 'Failed to reject offer');
+      }
+    } catch (err) {
+      console.error('rejectOffer error:', err);
+      alert('Server error');
+    }
+  };
+
   window.addEventListener('DOMContentLoaded', async () => {
     if (
       sessionStorage.getItem('isLoggedIn') !== 'true' ||
@@ -1784,6 +1853,7 @@
     renderTests();
     renderCompanyPrep();
     window.fetchPrepResources();
+    window.fetchStudentOffers();
 
     const h = new Date().getHours();
     const greet = document.getElementById('greet-msg');
